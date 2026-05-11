@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id          String   @id @default(cuid())
+  email       String?  @unique
+  name        String?
+  projects    Project[]
+  cv          CV?
+  lastSyncAt  DateTime?
+  suggestions Suggestion[]
+  createdAt   DateTime @default(now())
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  techStack   String
+  bullets     String   // store AI result as JSON string
+  repoUrl     String?
+  lastEditedBy String   @default("AI")
+  lastEditedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model CV {
+  id         String   @id @default(cuid())
+  userId     String   @unique
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Personal Info
+  name       String   @default("")
+  email      String   @default("")
+  github     String   @default("")
+  linkedin   String   @default("")
+  phone      String   @default("")
+  location   String   @default("")
+  
+  // Summary
+  summary    String   @default("")
+  
+  // JSON serialized fields
+  skills     String   @default("{\"languages\":[],\"frameworks\":[],\"tools\":[]}")
+  experience String   @default("[]")
+  education  String   @default("[]")
+  
+  // Metadata
+  targetRole String   @default("Software Engineer")
+  atsScore   Int      @default(0)
+  slug       String   @unique @default(cuid())
+  
+  updatedAt    DateTime @updatedAt
+  lastEditedBy String   @default("AI")
+  lastEditedAt DateTime @default(now())
+}
+
+model Suggestion {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type         String   // 'NEW_PROJECT' | 'IMPROVE_PROJECT' | 'ADD_SKILL'
+  entityId     String?  // ID of the project or skill being improved
+  title        String
+  description  String
+  proposedData String   // JSON string of the new data
+  currentData  String?  // JSON string of old data (for diffing)
+  priority     Int      @default(1) // 3=New Project, 2=Improvement, 1=Skill
+  confidence   Float    @default(0.0)
+  status       String   @default("PENDING") // PENDING | APPLIED | REJECTED
+  createdAt    DateTime @default(now())
+}
