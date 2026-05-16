@@ -23,9 +23,18 @@ export async function POST(req: Request) {
   try {
     const { currentSkills } = await req.json();
 
+    let userId = session.user.id;
+    const email = session.user.email;
+
+    // SELF-HEALING: Resolve correct DB ID if session has provider ID
+    if (!userId.startsWith("c") && email) {
+      const dbUser = await prisma.user.findUnique({ where: { email } });
+      if (dbUser) userId = dbUser.id;
+    }
+
     // Fetch stored repos from GitHubData
     let githubData = await prisma.gitHubData.findUnique({
-      where: { userId: session.user.id },
+      where: { userId },
     });
 
     const token = (session.user as any).accessToken || githubData?.accessToken;
@@ -34,11 +43,11 @@ export async function POST(req: Request) {
       console.log("[VALIDATE-SKILLS] No data found but token exists. Triggering auto-sync...");
       // Import runSmartSync dynamically to avoid circular deps if any
       const { runSmartSync } = await import("@/lib/suggestionEngine");
-      await runSmartSync(session.user.id, token);
+      await runSmartSync(userId, token, email || undefined);
       
       // Re-fetch data after sync
       githubData = await prisma.gitHubData.findUnique({
-        where: { userId: session.user.id },
+        where: { userId },
       });
     }
 
