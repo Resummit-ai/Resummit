@@ -17,27 +17,25 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Token is required" }, { status: 400 });
     }
 
-    // RESOLVE CORRECT USER ID VIA EMAIL (The single source of truth)
-    const dbUser = await prisma.user.findUnique({
-      where: { email }
-    });
+    const { resolveUserId } = await import("@/lib/server/prisma");
+    const userId = await resolveUserId(session);
 
-    if (!dbUser) {
+    if (!userId) {
       return NextResponse.json({ error: "User record not found in database" }, { status: 404 });
     }
 
     await prisma.gitHubData.upsert({
-      where: { userId: dbUser.id },
+      where: { userId: userId },
       update: { accessToken },
       create: {
-        userId: dbUser.id,
+        userId: userId,
         accessToken,
         repositories: [],
         signals: {},
       }
     });
 
-    console.log("[GITHUB] Token synced successfully for user:", dbUser.id);
+    console.log("[GITHUB] Token synced successfully for user:", userId);
     return NextResponse.json({ success: true });
   } catch (error: any) {
     console.error("[GITHUB] Token sync error:", error);

@@ -11,10 +11,16 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  try {
+    const { resolveUserId } = await import("@/lib/server/prisma");
+    const userId = await resolveUserId(session);
+
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized - Could not resolve user identity" }, { status: 401 });
+    }
+
     // 1. Fetch user's GitHub data to get token
     const githubData = await prisma.gitHubData.findUnique({
-      where: { userId: session.user.id }
+      where: { userId }
     });
 
     const token = (session.user as any).accessToken || githubData?.accessToken;
@@ -23,8 +29,8 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "GitHub access token unavailable. Please re-login." }, { status: 400 });
     }
 
-    console.log("[SYNC] Starting manual sync for user:", session.user.id);
-    const result = await runSmartSync(session.user.id, token, session.user.email || undefined);
+    console.log("[SYNC] Starting manual sync for user:", userId);
+    const result = await runSmartSync(userId, token, session.user.email || undefined);
 
     return NextResponse.json({ 
       success: true, 
