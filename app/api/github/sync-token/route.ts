@@ -1,11 +1,13 @@
 import { auth } from "@/auth";
-const { prisma } = require("@/lib/server/db.js");
+import { prisma } from "@/lib/server/prisma";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const session = await auth();
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const email = session?.user?.email;
+
+  if (!email) {
+    return NextResponse.json({ error: "Unauthorized - No email found" }, { status: 401 });
   }
 
   try {
@@ -15,27 +17,27 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Token is required" }, { status: 400 });
     }
 
-    let userId = session.user.id;
-    const email = session.user.email;
+    // RESOLVE CORRECT USER ID VIA EMAIL (The single source of truth)
+    const dbUser = await prisma.user.findUnique({
+      where: { email }
+    });
 
-    // SELF-HEALING: If session.user.id is numeric (provider ID) instead of CUID, resolve correct DB ID
-    if (!userId.startsWith("c") && email) {
-      const dbUser = await prisma.user.findUnique({ where: { email } });
-      if (dbUser) userId = dbUser.id;
+    if (!dbUser) {
+      return NextResponse.json({ error: "User record not found in database" }, { status: 404 });
     }
 
     await prisma.gitHubData.upsert({
-      where: { userId },
+      where: { userId: dbUser.id },
       update: { accessToken },
       create: {
-        userId,
+        userId: dbUser.id,
         accessToken,
         repositories: [],
         signals: {},
       }
     });
 
-    console.log("[GITHUB] Token synced from client for user:", userId);
+    console.log("[GITHUB] Token synced successfully for user:", dbUser.id);
     return NextResponse.json({ success: true });
   } catch (error: any) {
     console.error("[GITHUB] Token sync error:", error);

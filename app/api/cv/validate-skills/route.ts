@@ -6,46 +6,37 @@ import { NextResponse } from "next/server";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-/**
- * POST /api/cv/validate-skills
- * Cross-references the user's current skill list against their actual GitHub repos.
- * Returns:
- *   - verified: skills backed by ≥2 repos
- *   - unverified: skills NOT found in any repo
- *   - suggested: skills found in repos but not currently listed
- */
 export async function POST(req: Request) {
   const session = await auth();
-  if (!session?.user?.id) {
+  const email = session?.user?.email;
+
+  if (!email) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const { currentSkills } = await req.json();
 
-    let userId = session.user.id;
-    const email = session.user.email;
+    // RESOLVE CORRECT USER ID VIA EMAIL
+    const dbUser = await prisma.user.findUnique({ 
+      where: { email },
+      include: { githubData: true }
+    });
 
-    // SELF-HEALING: Resolve correct DB ID if session has provider ID
-    if (!userId.startsWith("c") && email) {
-      const dbUser = await prisma.user.findUnique({ where: { email } });
-      if (dbUser) userId = dbUser.id;
+    if (!dbUser) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Fetch stored repos from GitHubData
-    let githubData = await prisma.gitHubData.findUnique({
-      where: { userId },
-    });
+    const userId = dbUser.id;
+    let githubData = dbUser.githubData;
 
     const token = (session.user as any).accessToken || githubData?.accessToken;
 
     if ((!githubData?.repositories || (githubData.repositories as any).length === 0) && token) {
       console.log("[VALIDATE-SKILLS] No data found but token exists. Triggering auto-sync...");
-      // Import runSmartSync dynamically to avoid circular deps if any
       const { runSmartSync } = await import("@/lib/suggestionEngine");
-      await runSmartSync(userId, token, email || undefined);
+      await runSmartSync(userId, token, email);
       
-      // Re-fetch data after sync
       githubData = await prisma.gitHubData.findUnique({
         where: { userId },
       });
@@ -54,7 +45,7 @@ export async function POST(req: Request) {
     if (!githubData?.repositories) {
       return NextResponse.json({
         requiresSync: true,
-        message: "No GitHub data found. Please run a GitHub sync first.",
+        message: "No GitHub data found.",
       });
     }
 
@@ -78,7 +69,7 @@ export async function POST(req: Request) {
     // Fetch high-confidence skill suggestions to merge
     const aiSuggestions = await prisma.suggestion.findMany({
       where: { 
-        userId: session.user.id, 
+        userId: userId, 
         type: "ADD_SKILL",
         status: "PENDING",
         confidence: { gte: 0.7 }
@@ -95,25 +86,12 @@ export async function POST(req: Request) {
       ...repoBasedSkills.tools,
     ].map(s => s.toLowerCase()));
 
-    // Also build a raw mention set (frequency ≥ 1, not just ≥ 2) for partial credit
-    const rawMentionSet = new Set<string>();
-    for (const repo of repos) {
-      if (repo.language) rawMentionSet.add(repo.language.toLowerCase());
-      const text = [repo.description || "", ...(repo.topics || [])].join(" ").toLowerCase();
-      // Check for any known technology mention
-      const techPatterns = [
-        "python", "javascript", "typescript", "java", "go", "rust", "kotlin", "swift",
-        "react", "next", "node", "express", "flask", "django", "fastapi", "streamlit",
-        "tensorflow", "pytorch", "postgres", "mongodb", "mysql", "redis", "firebase",
-        "aws", "gcp", "docker", "kubernetes", "graphql", "tailwind", "prisma",
-        "angular", "vue", "spring", "rails", "kafka", "airflow",
-      ];
-      for (const pat of techPatterns) {
-        if (text.includes(pat)) rawMentionSet.add(pat);
-      }
-    }
+    // Combine deterministic skills with high-confidence AI detected skills
+    const combinedVerifiedSet = new Set([
+      ...Array.from(repoSkillSet),
+      ...aiSkills.map(s => s.toLowerCase())
+    ]);
 
-    // Categorize each current skill
     const allCurrentSkills = [
       ...(currentSkills.languages || []),
       ...(currentSkills.frameworks || []),
@@ -123,15 +101,8 @@ export async function POST(req: Request) {
     const verified: string[] = [];
     const unverified: string[] = [];
 
-    // Combine deterministic skills with high-confidence AI detected skills
-    const combinedVerifiedSet = new Set([
-      ...Array.from(repoSkillSet),
-      ...aiSkills.map(s => s.toLowerCase())
-    ]);
-
     for (const skill of allCurrentSkills) {
       const skillLow = skill.toLowerCase();
-      // RUTHLESS INTEGRITY: Only include if explicitly found in repos (freq >= 2) or AI suggested (conf >= 0.7)
       if (combinedVerifiedSet.has(skillLow)) {
         verified.push(skill);
       } else {
@@ -147,7 +118,7 @@ export async function POST(req: Request) {
       tools: repoBasedSkills.tools.filter(s => !currentLower.has(s.toLowerCase())),
     };
 
-    // Build clean verified skill set split by category
+    // Cleaned set
     const CATEGORIES: Record<string, "languages" | "frameworks" | "tools"> = {
       "JavaScript": "languages", "TypeScript": "languages", "Python": "languages",
       "Java": "languages", "C++": "languages", "C": "languages", "Go": "languages",
@@ -168,7 +139,6 @@ export async function POST(req: Request) {
       languages: [], frameworks: [], tools: []
     };
 
-    // First, add existing verified skills
     for (const skill of verified) {
       const cat = CATEGORIES[skill] || "tools";
       if (!cleanedSkills[cat].find(s => s.toLowerCase() === skill.toLowerCase())) {
@@ -176,7 +146,6 @@ export async function POST(req: Request) {
       }
     }
     
-    // Then, add AI suggested skills that aren't already there
     for (const skill of aiSkills) {
       const cat = CATEGORIES[skill] || "tools";
       if (!cleanedSkills[cat].find(s => s.toLowerCase() === skill.toLowerCase())) {
@@ -188,11 +157,10 @@ export async function POST(req: Request) {
       verified,
       unverified,
       suggested,
-      cleanedSkills, // ready-to-apply cleaned version split by category
-      repoCount: repos.length,
+      cleanedSkills
     });
   } catch (error: any) {
-    console.error("[VALIDATE-SKILLS]", error);
+    console.error("[VALIDATE-SKILLS] Critical Error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
