@@ -501,6 +501,8 @@ export function EditorClient({
   // ── Skill Validation (cross-ref against real repos) ──
   const handleValidateSkills = async (autoRetry = true) => {
     setValidatingSkills(true);
+    // Clear old state so the new loader/results show fresh
+    if (autoRetry) setSkillValidation(null); 
     try {
       const res = await fetch("/api/cv/validate-skills", {
         method: "POST",
@@ -942,18 +944,23 @@ export function EditorClient({
       {skillValidation && (
         <div className="rounded-2xl border border-white/10 overflow-hidden">
           {(skillValidation as any).requiresSync ? (
-            <div className="bg-amber-500/5 p-6 flex flex-col items-center text-center">
-               <AlertTriangle className={`w-6 h-6 text-amber-500/40 mb-3 ${validatingSkills ? "animate-spin text-blue-500" : ""}`} />
-               <p className="text-xs font-bold text-amber-200/80 mb-1">
-                 {validatingSkills ? "Syncing Profile..." : "GitHub Intelligence Offline"}
-               </p>
-               <p className="text-[10px] text-neutral-500 mb-4 max-w-[240px]">
-                 {validatingSkills ? "We are indexing your engineering DNA to verify your mastery." : "We need to index your repositories before we can verify your technical mastery."}
-               </p>
-               {!validatingSkills && (
-                 <Link href="/dashboard/syncing" className="px-5 py-2 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 rounded-xl text-[9px] font-black uppercase tracking-widest text-amber-400 transition-all">
-                    Initialize Sync Terminal
-                 </Link>
+            <div className="bg-blue-500/[0.02] p-8 flex flex-col items-center text-center relative overflow-hidden">
+               {validatingSkills ? (
+                 <>
+                   <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent animate-pulse" />
+                   <Loader2 className="w-8 h-8 text-blue-500 animate-spin mb-4 relative z-10" />
+                   <p className="text-[11px] font-black uppercase tracking-[0.3em] text-blue-400 mb-2 relative z-10">AI Intelligence Scan</p>
+                   <p className="text-[10px] text-neutral-500 max-w-[200px] relative z-10">Syncing your engineering DNA from GitHub to verify your technical mastery...</p>
+                 </>
+               ) : (
+                 <>
+                   <AlertTriangle className="w-6 h-6 text-amber-500/40 mb-3" />
+                   <p className="text-xs font-bold text-amber-200/80 mb-1">GitHub Intelligence Offline</p>
+                   <p className="text-[10px] text-neutral-500 mb-4 max-w-[240px]">We need to index your repositories before we can verify your technical mastery.</p>
+                   <Link href="/dashboard/syncing" className="px-5 py-2 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 rounded-xl text-[9px] font-black uppercase tracking-widest text-amber-400 transition-all">
+                      Initialize Sync Terminal
+                   </Link>
+                 </>
                )}
             </div>
           ) : (
