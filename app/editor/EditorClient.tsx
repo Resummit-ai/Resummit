@@ -513,15 +513,27 @@ export function EditorClient({
       if (res.ok) {
         setSkillValidation(d);
         
-        // AUTO-INTEGRITY: If we found unverified skills, purge them automatically.
-        // If we found suggested skills, add them automatically.
-        if (d.unverified?.length > 0 || d.cleanedSkills) {
-           console.log("[INTEGRITY] Auto-pruning unverified skills and merging repo-backed mastery...");
-           setSkills({
+        // AUTO-INTEGRITY: Force purge all unverified junk and apply real mastery
+        if (d.unverified?.length > 0 || (d.cleanedSkills && Object.values(d.cleanedSkills).flat().length > 0)) {
+           console.log("[INTEGRITY] Purging junk and syncing database mastery...");
+           const newSkills = {
              languages: d.cleanedSkills.languages || [],
              frameworks: d.cleanedSkills.frameworks || [],
              tools: d.cleanedSkills.tools || [],
+           };
+           setSkills(newSkills);
+           
+           // Automatically save the cleaned state to the database so it sticks
+           const saveRes = await fetch("/api/cv/save", {
+             method: "POST",
+             headers: { "Content-Type": "application/json" },
+             body: JSON.stringify({ 
+               resumeId, 
+               versionId, 
+               updates: { skills: JSON.stringify(newSkills) } 
+             }),
            });
+           if (saveRes.ok) setSaveStatus("saved");
         }
       }
     } catch {

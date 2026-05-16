@@ -122,13 +122,8 @@ export async function POST(req: Request) {
 
     for (const skill of allCurrentSkills) {
       const skillLow = skill.toLowerCase();
-      // Verified if backed by repos or AI suggestions
-      const isVerified = combinedVerifiedSet.has(skillLow);
-      // Soft-verified: mentioned in at least 1 repo (partial credit)
-      const isSoftVerified = rawMentionSet.has(skillLow) || 
-        [...rawMentionSet].some(r => r.includes(skillLow) || skillLow.includes(r));
-
-      if (isVerified || isSoftVerified) {
+      // RUTHLESS INTEGRITY: Only include if explicitly found in repos (freq >= 2) or AI suggested (conf >= 0.7)
+      if (combinedVerifiedSet.has(skillLow)) {
         verified.push(skill);
       } else {
         unverified.push(skill);
