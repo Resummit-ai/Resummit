@@ -33,20 +33,23 @@ export interface CVData {
   skills: CVSkills;
   experience: CVExperience[];
   education: CVEducation[];
+  achievements?: string[];
   atsScore?: number;
   slug?: string;
 }
 
 export interface ProjectData {
   id: string;
-  name: string;
+  title: string;
   description: string;
-  techStack: string;
-  bullets: string[];
-  repoUrl?: string | null;
-  included?: boolean; // UI-only: whether to include in CV/PDF export
+  techStack: string[];
+  liveUrl?: string | null;
+  githubUrl?: string | null;
+  highlights: string[];
+  aiGenerated?: boolean;
+  included?: boolean; // UI-only
 }
 
 export type SaveStatus = "idle" | "saving" | "saved" | "error";
 
-export type EditorTab = "profile" | "skills" | "experience" | "projects";
+export type EditorTab = "profile" | "skills" | "experience" | "projects" | "education";

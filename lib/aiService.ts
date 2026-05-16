@@ -42,7 +42,7 @@ async function callOllama(prompt: string): Promise<string> {
   return data.response
 }
 
-async function callAI(prompt: string): Promise<string> {
+export async function callAI(prompt: string): Promise<string> {
   const mode = getAIMode()
   
   if (mode === 'gemini') {
@@ -69,7 +69,7 @@ async function callAI(prompt: string): Promise<string> {
   return await callOllama(prompt)
 }
 
-function safeParseJSON(raw: string): any {
+export function safeParseJSON(raw: string): any {
   const cleaned = raw
     .replace(/```json\n?/gi, '')
     .replace(/```\n?/gi, '')
@@ -88,9 +88,11 @@ export interface GeneratedCV {
     tools: string[]
   }
   projects: Array<{
-    name: string
-    tech: string
-    bullets: string[]
+    title: string
+    techStack: string[]
+    highlights: string[]
+    description: string
+    aiGenerated: boolean
   }>
 }
 
@@ -109,11 +111,12 @@ export async function generateCVFromRepos(
     language: r.language || 'Unknown',
     topics: r.topics || [],
     stars: r.stargazers_count || 0,
+    readme: r.readme ? r.readme.slice(0, 800) : '', // include README snippet
   }))
 
   const prompt = `You are a recruiter-grade resume generator. Your goal is to produce high-signal, authentic resume data for a ${targetRole}.
 
-Analyze these GitHub repositories and return JSON. 
+Analyze these GitHub repositories (including README excerpts where available) and return JSON.
 Return ONLY valid JSON. No markdown. No intro. No adjectives.
 
 {
@@ -122,15 +125,16 @@ Return ONLY valid JSON. No markdown. No intro. No adjectives.
    Sentence 2: Primary technologies used (e.g., 'Works with Python, TensorFlow, and AWS.').
    DO NOT START WITH: 'I am', 'Experienced', 'Passionate'.",
   "skills": {
-    "languages": ["deterministic languages from repo data"],
-    "frameworks": ["libraries/frameworks inferred from descriptions"],
+    "languages": ["deterministic languages from repo data only"],
+    "frameworks": ["libraries/frameworks inferred from descriptions and READMEs"],
     "tools": ["Git, Docker, APIs, etc."]
   },
   "projects": [
     {
-      "name": "repo name",
-      "tech": "PRIMARY LANGUAGE ONLY",
-      "bullets": [
+      "title": "repo name",
+      "techStack": ["LANGUAGE", "FRAMEWORK"],
+      "description": "One sentence technical summary based on README content",
+      "highlights": [
         "What was built + specific tech used + observable effect (e.g., 'Built a WhatsApp bot using Node.js to automate customer query responses.').",
         "Technical implementation detail + tech used + specific result (e.g., 'Implemented CNN + BiLSTM in Python to decode distorted text with sequence prediction.')."
       ]
@@ -139,11 +143,14 @@ Return ONLY valid JSON. No markdown. No intro. No adjectives.
 }
 
 STRICT CONSTRAINTS:
+- Use README content to write accurate, specific descriptions — not generic statements.
 - No buzzwords: leveraged, robust, scalable, utilized, streamlined, spearheaded, cutting-edge.
 - No adjectives: passionate, dedicated, dynamic, innovative.
 - Impact Forcing: Every bullet MUST include a result or observable effect. If no metric exists, describe the logical benefit (e.g. 'automated tasks').
 - Maximum 3 projects. Exactly 2 bullets per project.
 - Summary MUST be exactly 2 sentences.
+- SKILLS EXTRACTION: ONLY extract globally recognized technologies (e.g. React, Python, PostgreSQL, AWS). Do NOT extract random API names (e.g. Slack API, Meta API), repository names (e.g. ytmp3), random English words, or generic terms (e.g. APIs, unknown, requests).
+- description field MUST be a meaningful technical sentence, not "No description provided".
 
 Repositories:
 ${JSON.stringify(repoSummary, null, 2)}`
@@ -160,9 +167,11 @@ ${JSON.stringify(repoSummary, null, 2)}`
       tools: parsed.skills?.tools?.length ? parsed.skills.tools : ['Git'],
     },
     projects: (parsed.projects || []).slice(0, 3).map((p: any) => ({
-      name: p.projectName || p.name || 'Project',
-      tech: p.techStack || p.tech || 'JavaScript',
-      bullets: (p.bullets || ['Built this project using modern web technologies.']).slice(0, 2),
+      title: p.title || p.name || 'Project',
+      techStack: Array.isArray(p.techStack) ? p.techStack : [p.tech || 'JavaScript'],
+      description: p.description || 'Project built with modern technologies.',
+      highlights: (p.highlights || p.bullets || ['Built this project using modern web technologies.']).slice(0, 2),
+      aiGenerated: true,
     })),
   }
 }
@@ -170,13 +179,14 @@ ${JSON.stringify(repoSummary, null, 2)}`
 // Backward Compatibility Alias
 export const generateBatchBullets = generateCVFromRepos;
 
+
 export async function regenerateSummary(
   projects: any[],
   targetRole: string
 ): Promise<string> {
   const prompt = `Write a 2-sentence professional resume summary for a ${targetRole}.
 
-Based on these projects: ${projects.map(p => p.name).join(', ')}
+Based on these projects: ${projects.map(p => p.title || p.name).join(', ')}
 
 Rules:
 - Sentence 1: what they build (specific, no adjectives)
@@ -209,7 +219,7 @@ export async function regenerateBullet(
 ): Promise<string> {
   const prompt = `Rewrite this resume bullet to be stronger for a ${targetRole} role.
 
-Project: ${projectName} (${tech})
+Project: ${projectName} (${Array.isArray(tech) ? tech.join(', ') : tech})
 Original bullet: ${bullet}
 
 Rules:

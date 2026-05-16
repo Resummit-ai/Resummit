@@ -6,8 +6,8 @@ const nextConfig: NextConfig = {
   serverExternalPackages: [
     "@prisma/client",
     ".prisma/client",
-    "better-sqlite3",
-    "@prisma/adapter-better-sqlite3",
+    "pg",
+    "@prisma/adapter-pg",
   ],
 };
 

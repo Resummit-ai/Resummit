@@ -3,12 +3,56 @@ import axios from "axios";
 export interface GithubRepo {
   id: number;
   name: string;
+  full_name?: string;
   description: string | null;
   html_url: string;
   stargazers_count: number;
+  forks_count?: number;
   updated_at: string;
   fork: boolean;
   language: string | null;
+  topics?: string[];
+  // Enriched after fetch
+  readme?: string;
+  owner?: { login: string };
+}
+
+/**
+ * Fetch the README for a specific repo, returning plain text truncated to ~1500 chars.
+ * Returns empty string if no README exists or fetch fails.
+ */
+export async function fetchRepoReadme(
+  accessToken: string,
+  owner: string,
+  repoName: string
+): Promise<string> {
+  try {
+    // The Contents API returns base64-encoded content
+    const response = await axios.get(
+      `https://api.github.com/repos/${owner}/${repoName}/readme`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          Accept: "application/vnd.github.raw", // get raw text directly
+        },
+        responseType: "text",
+        timeout: 5000,
+      }
+    );
+    const raw: string = typeof response.data === "string" ? response.data : "";
+    // Strip markdown images/links, keep text content, truncate
+    const cleaned = raw
+      .replace(/!\[.*?\]\(.*?\)/g, "") // remove images
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") // inline links → label only
+      .replace(/#{1,6}\s/g, "") // remove heading hashes
+      .replace(/```[\s\S]*?```/g, "") // remove code blocks
+      .replace(/`[^`]+`/g, "") // remove inline code
+      .replace(/\s+/g, " ")
+      .trim();
+    return cleaned.slice(0, 1500);
+  } catch {
+    return "";
+  }
 }
 
 function normalize(name: string) {
@@ -37,10 +81,7 @@ function isJunkRepo(repo: GithubRepo) {
     /tutorial/
   ];
 
-  const lowSignal =
-    desc.length < 40 ||
-    !repo.language ||
-    daysSince(repo.updated_at) > 365;
+  const lowSignal = !repo.language && desc.length === 0;
 
   const isJunkName = junkPatterns.some((p) => p.test(n));
 
@@ -68,40 +109,19 @@ export async function fetchUserRepos(accessToken: string): Promise<GithubRepo[]>
   try {
     const response = await axios.get<GithubRepo[]>("https://api.github.com/user/repos", {
       headers: { Authorization: `Bearer ${accessToken}` },
-      params: { sort: "updated", per_page: 50, direction: "desc" },
+      params: { sort: "updated", per_page: 100, direction: "desc" },
     });
 
     const validRepos = response.data.filter(repo => !isJunkRepo(repo));
 
-    // Cluster by normalized name
-    const clusters: Record<string, GithubRepo[]> = {};
-    for (const repo of validRepos) {
-      const n = normalize(repo.name);
-      let matchedCluster = n;
-      for (const existingKey of Object.keys(clusters)) {
-        if (existingKey.includes(n) || n.includes(existingKey)) {
-          matchedCluster = existingKey;
-          break;
-        }
-      }
-      if (!clusters[matchedCluster]) clusters[matchedCluster] = [];
-      clusters[matchedCluster].push(repo);
+    // We return top 50 so user has more choices
+    return validRepos.sort((a, b) => scoreRepo(b) - scoreRepo(a)).slice(0, 50);
+  } catch (error: any) {
+    console.error("Error fetching GitHub repos:", error.response?.data || error.message);
+    if (error.response?.status === 401) {
+      throw new Error("GitHub token expired. Please sign out and sign back in to refresh your connection.");
     }
-
-    // Pick top repo from each cluster based on score
-    const deduped: GithubRepo[] = [];
-    for (const group of Object.values(clusters)) {
-      group.sort((a, b) => scoreRepo(b) - scoreRepo(a));
-      deduped.push(group[0]);
-    }
-
-    deduped.sort((a, b) => scoreRepo(b) - scoreRepo(a));
-    
-    // We return top 10 so DB layer can pick remaining slots
-    return deduped.slice(0, 10);
-  } catch (error) {
-    console.error("Error fetching GitHub repos:", error);
-    throw new Error("Failed to fetch repositories from GitHub.");
+    throw new Error(`Failed to fetch repositories from GitHub: ${error.response?.data?.message || error.message}`);
   }
 }
 

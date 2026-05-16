@@ -1,4 +1,5 @@
 import "server-only";
+export const dynamic = "force-dynamic";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/server/prisma";
 import { redirect } from "next/navigation";
@@ -11,57 +12,114 @@ export default async function EditorPage() {
     redirect("/login");
   }
 
-  // Load user's projects
-  const projects = await prisma.project.findMany({
-    where: { userId: session.user.id },
-    orderBy: { createdAt: "desc" },
+  // SELF-HEALING: Verify the user ID exists in the DB (in case of provider ID vs CUID mismatch)
+  let dbUser = await prisma.user.findUnique({
+    where: { id: session.user.id }
   });
 
-  // If no projects, redirect to start onboarding
-  if (projects.length === 0) {
-    redirect("/dashboard");
+  if (!dbUser && session.user.email) {
+    dbUser = await prisma.user.findUnique({
+      where: { email: session.user.email }
+    });
   }
 
-  // Fetch or create CV
-  let cv = await prisma.cV.findUnique({
-    where: { userId: session.user.id }
+  if (!dbUser) {
+    // If we still can't find the user, their session is completely invalid
+    redirect("/api/auth/signout");
+  }
+
+  const userId = dbUser.id; // Use the verified database ID
+
+  // Fetch or create Resume container
+  let resume = await prisma.resume.findFirst({
+    where: { userId: userId },
+    include: {
+      versions: {
+        where: { isMain: true },
+        take: 1
+      }
+    }
   });
 
-  if (!cv) {
-    cv = await prisma.cV.create({
+  if (!resume) {
+    // Check if we have GitHub data to pre-populate
+    const githubData = await prisma.gitHubData.findUnique({
+      where: { userId: userId }
+    });
+
+    resume = await prisma.resume.create({
       data: {
-        userId: session.user.id,
-        name: session.user.name || "GitHub User",
-        email: session.user.email || "",
+        userId: userId,
+        name: "My Professional Resume",
+        versions: {
+          create: {
+            versionName: "Main",
+            isMain: true,
+            personalInfo: {
+              name: dbUser.name || "",
+              email: dbUser.email || "",
+              github: dbUser.name ? `github.com/${dbUser.name.replace(/\s+/g, '')}` : "",
+              linkedin: "",
+              phone: "",
+              location: ""
+            },
+            summary: "Software engineer focused on building high-impact technical solutions.",
+            // If they have github data, we could pre-sync here, but for now just empty
+            projects: [],
+          }
+        }
+      },
+      include: {
+        versions: {
+          where: { isMain: true },
+          take: 1
+        }
       }
     });
   }
 
-  const defaultGithub = session.user.name ? `github.com/${session.user.name.replace(/\s+/g, '')}` : "";
+  const mainVersion = resume.versions[0];
+  if (!mainVersion) {
+    redirect("/dashboard");
+  }
 
-  // Parse server-side JSON to pass clean object down
-  const parsedCV = {
-    ...cv,
-    github: cv.github || defaultGithub,
-    skills: JSON.parse(cv.skills),
-    experience: JSON.parse(cv.experience),
-    education: JSON.parse(cv.education),
-  };
+  // Fetch signals
+  let githubData = await prisma.gitHubData.findUnique({
+    where: { userId: userId }
+  });
 
-  const formattedProjects = projects.map((p: typeof projects[number]) => ({
-    id: p.id,
-    name: p.name,
-    description: p.description || "",
-    techStack: p.techStack,
-    bullets: JSON.parse(p.bullets),
-    repoUrl: p.repoUrl,
-  }));
+  let signals = githubData?.signals as any || null;
+
+  // Self-healing: Generate signals if missing but repos exist
+  if (!signals && githubData && Array.isArray(githubData.repositories) && githubData.repositories.length > 0) {
+    const { generateEngineeringSignals } = await import("@/lib/server/githubIntelligence");
+    signals = await generateEngineeringSignals(githubData.repositories as any[], "General Software Engineer");
+    await prisma.gitHubData.update({
+      where: { id: githubData.id },
+      data: { signals: signals as any }
+    });
+  }
+
+  // Fetch suggestions
+  const suggestions = await prisma.suggestion.findMany({
+    where: { 
+      userId: userId,
+      status: "PENDING"
+    },
+    orderBy: { priority: "desc" }
+  });
+
+  const accessToken = (session as any)?.accessToken;
 
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-neutral-950">
       <EditorClient 
-        initialCV={parsedCV} 
-        initialProjects={formattedProjects} 
+        resumeId={resume.id}
+        versionId={mainVersion.id}
+        initialData={mainVersion} 
+        signals={signals}
+        accessToken={accessToken}
+        initialSuggestions={suggestions as any[]}
       />
     </div>
   );

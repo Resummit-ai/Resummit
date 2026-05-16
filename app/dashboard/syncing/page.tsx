@@ -18,49 +18,32 @@ export default function SyncingPage() {
 
     async function runSync() {
       try {
-        // 1. Fetch Repos
         setStep("FETCHING");
-        const fetchRes = await fetch("/api/sync/github");
-        if (!fetchRes.ok) {
-          const errData = await fetchRes.json().catch(() => ({}));
-          throw new Error(errData.error || "GitHub fetch failed");
-        }
-        const repos = await fetchRes.json();
-
-        // 2. Select Top Projects (Logic is already handled by API)
-        setStep("SELECTING");
-        const selectedProjects = repos; // Auto-select all from filtered payload
-
-        // 3. Generate AI Bullets
-        setStep("GENERATING");
-        const aiRes = await fetch("/api/sync/ai", {
-          method: "POST",
-          body: JSON.stringify({ projects: selectedProjects }),
-          headers: { "Content-Type": "application/json" },
-        });
-        if (!aiRes.ok) {
-          const errData = await aiRes.json().catch(() => ({}));
-          throw new Error(errData.error || "AI generation failed");
-        }
-        const aiData = await aiRes.json();
         
-        // 4. Save to Database
-        setStep("SAVING");
-        const saveRes = await fetch("/api/sync/save", {
+        // We use the new consolidated scan API
+        const response = await fetch("/api/sync/scan", {
           method: "POST",
-          body: JSON.stringify(aiData),
           headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ accessToken: (session.user as any).accessToken })
         });
-        if (!saveRes.ok) {
-          const errData = await saveRes.json().catch(() => ({}));
-          throw new Error(errData.error || "Saving failed");
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(errData.error || "Sync failed at engine level");
         }
 
-        setStep("COMPLETED");
-        setTimeout(() => router.push("/editor"), 1000);
+        const data = await response.json();
+        
+        if (data.skipped) {
+          setStep("COMPLETED"); // Already synced recently
+        } else {
+          setStep("COMPLETED");
+        }
+
+        setTimeout(() => router.push("/dashboard"), 1500);
       } catch (err: any) {
         setStep("ERROR");
-        setError(err.message || "An unexpected error occurred.");
+        setError(err.message || "An unexpected error occurred during synchronization.");
       }
     }
 
@@ -88,16 +71,16 @@ export default function SyncingPage() {
           {step === "FETCHING" && "Connecting to GitHub..."}
           {step === "SELECTING" && "Picking your best work..."}
           {step === "GENERATING" && "AI is writing your resume..."}
-          {step === "SAVING" && "Saving your progress..."}
+          {step === "SAVING" && "Saving your resume..."}
           {step === "COMPLETED" && "Everything is ready!"}
           {step === "ERROR" && "Sync Failed"}
         </h2>
 
         <p className="text-neutral-500">
-          {step === "FETCHING" && "Scrubbing repositories for high-impact data."}
+          {step === "FETCHING" && "Scrubbing repositories for technical data."}
           {step === "SELECTING" && "Analyzing stars and activity metrics."}
           {step === "GENERATING" && "Generating STAR-method bullets for ATS."}
-          {step === "SAVING" && "Finalizing your professional sync."}
+          {step === "SAVING" && "Finalizing your resume sync."}
           {step === "COMPLETED" && "Redirecting to your editor..."}
           {step === "ERROR" && error}
         </p>

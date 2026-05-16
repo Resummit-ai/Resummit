@@ -1,5 +1,6 @@
 import type { NextAuthConfig } from "next-auth";
 import GitHub from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
 
 export const authConfig = {
   providers: [
@@ -8,9 +9,13 @@ export const authConfig = {
       clientSecret: process.env.AUTH_GITHUB_SECRET,
       authorization: {
         params: {
-          scope: "read:user public_repo",
+          scope: "read:user user:email public_repo",
         },
       },
+    }),
+    Google({
+      clientId: process.env.AUTH_GOOGLE_ID,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET,
     }),
   ],
   callbacks: {
@@ -21,8 +26,13 @@ export const authConfig = {
       return token;
     },
     async session({ session, token }) {
-      if (token.sub && session.user) {
+      if (token.id && session.user) {
+        session.user.id = token.id as string;
+      } else if (token.sub && session.user) {
         session.user.id = token.sub;
+      }
+      
+      if (session.user) {
         (session.user as any).accessToken = token.accessToken;
       }
       return session;

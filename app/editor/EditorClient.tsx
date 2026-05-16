@@ -1,14 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import {
-  Download, Plus, Trash2, RotateCcw, Link as LinkIcon,
-  CheckCircle2, Activity, Eye, Sparkles, Target, X, Loader2,
-  User, Briefcase, Code2, GraduationCap, Zap, AlertTriangle,
-  ChevronDown, ChevronUp, Save, Wifi, WifiOff, ArrowUp, ArrowDown, ExternalLink,
-  Rocket
-} from "lucide-react";
+import { Download, Plus, Trash2, RotateCcw, Link as LinkIcon, CheckCircle2, Activity, Eye, Sparkles, Target, X, Loader2, User, Briefcase, Code2, GraduationCap, Zap, AlertTriangle, ChevronDown, ChevronUp, Save, Wifi, WifiOff, ArrowUp, ArrowDown, ExternalLink, Rocket, Cpu, Code, Terminal } from "lucide-react";
 import type { CVData, ProjectData, CVSkills, CVExperience, CVEducation, SaveStatus, EditorTab } from "@/lib/types";
+import { ResumePreview } from "@/components/editor/ResumePreview";
 
 // ─────────────────────────────────────────────
 // Sub-components
@@ -36,7 +31,7 @@ function InlineEdit({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         rows={rows}
-        className={`w-full bg-neutral-900/40 border border-white/5 rounded-xl px-4 py-3 text-sm text-neutral-200 placeholder:text-neutral-600 outline-none focus:border-blue-500/40 focus:ring-4 focus:ring-blue-500/5 transition-all resize-none leading-relaxed ${className}`}
+        className={`w-full bg-neutral-900/40 border border-white/5 rounded-xl px-4 py-3 text-[13px] text-neutral-200 placeholder:text-neutral-700 outline-none focus:border-blue-500/40 focus:ring-4 focus:ring-blue-500/5 transition-all resize-none leading-relaxed font-medium ${className}`}
       />
     );
   }
@@ -46,7 +41,7 @@ function InlineEdit({
       value={value || ""}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className={`w-full bg-neutral-900/40 border border-white/5 rounded-xl px-4 py-2.5 text-sm text-neutral-200 placeholder:text-neutral-600 outline-none focus:border-blue-500/40 focus:ring-4 focus:ring-blue-500/5 transition-all ${className}`}
+      className={`w-full bg-neutral-900/40 border border-white/5 rounded-xl px-4 py-2.5 text-[13px] text-neutral-200 placeholder:text-neutral-700 outline-none focus:border-blue-500/40 focus:ring-4 focus:ring-blue-500/5 transition-all font-medium ${className}`}
     />
   );
 }
@@ -67,7 +62,7 @@ function SkillTag({ label, onRemove }: { label: string; onRemove: () => void }) 
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500 mb-2 ml-1">
+    <label className="block text-[9px] font-black uppercase tracking-[0.15em] text-neutral-600 mb-1.5 ml-0.5">
       {children}
     </label>
   );
@@ -155,187 +150,93 @@ function ATSPanel({ data, onClose }: { data: any; onClose: () => void }) {
 // CV Preview (Right Panel)
 // ─────────────────────────────────────────────
 
-function CVPreview({ cv, projects }: { cv: CVData; projects: ProjectData[] }) {
-  const visibleProjects = projects.filter((p) => p.included !== false);
-  const skills = cv.skills || { languages: [], frameworks: [], tools: [] };
-
-  // Sanitize summary display (strip JSON strings if present)
-  let displaySummary = cv.summary || "";
-  if (displaySummary.trim().startsWith('{')) {
-    try {
-      const parsed = JSON.parse(displaySummary);
-      displaySummary = parsed.summary || parsed.Summary || Object.values(parsed)[0] as string;
-    } catch { /* ignore */ }
-  }
-
-  return (
-    <div className="bg-white w-[794px] min-h-[1122px] shadow-[0_40px_120px_-30px_rgba(0,0,0,0.2)] text-[#1a1a1b] font-inter flex flex-col overflow-hidden ring-1 ring-black/5">
-      {/* ── Precision Header (Centered) ── */}
-      <div className="pt-16 pb-10 px-16 text-center border-b-[3px] border-black">
-        <h1 className="text-[42px] font-black tracking-[-1.5px] leading-tight text-black mb-3 font-outfit uppercase">
-          {cv.name || "YOUR NAME"}
-        </h1>
-        <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-1.5 text-[10px] font-black text-stone-400 uppercase tracking-[2px]">
-          {cv.email && <span className="text-stone-800">{cv.email}</span>}
-          {cv.phone && <><span className="text-stone-200">|</span><span className="text-stone-800">{cv.phone}</span></>}
-          {cv.location && <><span className="text-stone-200">|</span><span>{cv.location}</span></>}
-          {cv.github && <><span className="text-stone-200">|</span><span className="text-blue-600 font-bold underline decoration-blue-200 decoration-2 underline-offset-4">{cv.github.replace(/^https?:\/\//, '')}</span></>}
-        </div>
-      </div>
-
-      {/* ── Balanced Body ── */}
-      <div className="flex flex-1">
-        {/* Left Column (Metadata) */}
-        <div className="w-[260px] shrink-0 bg-[#fafafa] px-12 py-12 space-y-12">
-          {/* Skills Audit */}
-          {(skills.languages.length > 0 || skills.frameworks.length > 0 || skills.tools.length > 0) && (
-            <div>
-              <h2 className="text-[11px] font-black uppercase tracking-[3px] text-black mb-8 pb-1 border-b border-stone-200 font-outfit">
-                Core Stack
-              </h2>
-              {skills.languages.length > 0 && (
-                <div className="mb-8">
-                  <p className="text-[9px] font-black uppercase tracking-widest text-stone-400 mb-2">Languages</p>
-                  <p className="text-[12px] text-stone-800 leading-[1.6] font-medium">{skills.languages.join(", ")}</p>
-                </div>
-              )}
-              {skills.frameworks.length > 0 && (
-                <div className="mb-8">
-                  <p className="text-[9px] font-black uppercase tracking-widest text-stone-400 mb-2">Frameworks</p>
-                  <p className="text-[12px] text-stone-800 leading-[1.6] font-medium">{skills.frameworks.join(", ")}</p>
-                </div>
-              )}
-              {skills.tools.length > 0 && (
-                <div>
-                  <p className="text-[9px] font-black uppercase tracking-widest text-stone-400 mb-2">Ecosystem</p>
-                  <p className="text-[12px] text-stone-800 leading-[1.6] font-medium">{skills.tools.join(", ")}</p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Academic Foundation */}
-          {cv.education.length > 0 && (
-            <div>
-              <h2 className="text-[11px] font-black uppercase tracking-[3px] text-black mb-8 pb-1 border-b border-stone-200 font-outfit">
-                Education
-              </h2>
-              {cv.education.map((edu, i) => (
-                <div key={i} className="mb-8 last:mb-0">
-                  <p className="text-[12px] font-black text-stone-900 leading-tight">{edu.school}</p>
-                  <p className="text-[11px] text-stone-500 mt-1 font-medium italic">{edu.degree}</p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <span className="text-[9px] font-black text-stone-400 uppercase tracking-widest">{edu.year}</span>
-                    {edu.gpa && <span className="text-[9px] font-black text-blue-600/50 uppercase tracking-widest">GPA {edu.gpa}</span>}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Right Column (Impact) */}
-        <div className="flex-1 px-14 py-12 space-y-12 bg-white">
-          {/* Summary */}
-          {displaySummary && (
-            <section>
-              <h2 className="text-[11px] font-black uppercase tracking-[3px] text-black mb-6 pb-1 border-b border-stone-200 font-outfit">
-                Executive Brief
-              </h2>
-              <p className="text-[13px] text-stone-700 leading-[1.8] font-medium tracking-tight">
-                {displaySummary}
-              </p>
-            </section>
-          )}
-
-          {/* Professional Experience */}
-          {cv.experience.length > 0 && (
-            <section>
-              <h2 className="text-[11px] font-black uppercase tracking-[3px] text-black mb-8 pb-1 border-b border-stone-200 font-outfit">
-                Professional Trajectory
-              </h2>
-              {cv.experience.map((exp, i) => (
-                <div key={i} className="mb-10 last:mb-0">
-                  <div className="flex justify-between items-baseline mb-1">
-                    <h3 className="text-[16px] font-black text-black font-outfit tracking-tight">{exp.company}</h3>
-                    <span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest shrink-0 ml-4">{exp.period}</span>
-                  </div>
-                  <p className="text-[12px] font-bold text-blue-600 uppercase tracking-[2px] mb-4">{exp.title}</p>
-                  <ul className="space-y-2.5">
-                    {exp.bullets.map((b, j) => (
-                      <li key={j} className="flex gap-4 text-[12px] text-stone-700 leading-[1.7] font-medium">
-                        <span className="mt-[7px] w-[5px] h-[5px] rounded-full bg-stone-300 shrink-0 shadow-[0_0_5px_rgba(0,0,0,0.1)]" />
-                        <span className="flex-1">{b}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </section>
-          )}
-
-          {/* Key Projects */}
-          {visibleProjects.length > 0 && (
-            <section>
-              <h2 className="text-[11px] font-black uppercase tracking-[3px] text-black mb-8 pb-1 border-b border-stone-200 font-outfit">
-                Selected Deep Work
-              </h2>
-              {visibleProjects.slice(0, 3).map((p, i) => (
-                <div key={i} className="mb-10 last:mb-0">
-                  <div className="flex justify-between items-baseline mb-2">
-                    <h3 className="text-[16px] font-black text-black font-outfit tracking-tight">{p.name}</h3>
-                    <span className="text-[9px] font-black text-blue-600/40 uppercase tracking-[3px] shrink-0 ml-4 bg-blue-50 px-2 py-0.5 rounded border border-blue-100">
-                      {p.techStack}
-                    </span>
-                  </div>
-                  <ul className="space-y-2.5">
-                    {p.bullets.map((b, j) => (
-                      <li key={j} className="flex gap-4 text-[12px] text-stone-700 leading-[1.7] font-medium">
-                        <span className="mt-[7px] w-[5px] h-[5px] rounded-full bg-blue-500/30 shrink-0 ring-4 ring-blue-50" />
-                        <span className="flex-1">{b}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </section>
-          )}
-        </div>
-      </div>
-
-      {/* Audit Seal */}
-      <div className="px-16 py-8 border-t border-stone-100 bg-[#fafafa] text-center mt-auto flex items-center justify-between">
-        <p className="text-[8px] text-stone-300 uppercase font-black tracking-[4px]">Verified Semantic Intelligence Audit</p>
-        <div className="flex items-center gap-2">
-           <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-           <span className="text-[8px] text-stone-500 uppercase font-black tracking-widest">Integrity Level: High</span>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // ─────────────────────────────────────────────
 // Main EditorClient
 // ─────────────────────────────────────────────
 
+function ensureArray<T>(val: any): T[] {
+  if (Array.isArray(val)) return val;
+  if (typeof val === 'string') {
+    try {
+      const parsed = JSON.parse(val);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+  return [];
+}
+
+import { SmartUpdateCenter } from "@/components/dashboard/SmartUpdateCenter";
+
 export function EditorClient({
-  initialCV,
-  initialProjects,
+  resumeId,
+  versionId,
+  initialData,
+  signals,
+  accessToken,
+  initialSuggestions = []
 }: {
-  initialCV: CVData;
-  initialProjects: ProjectData[];
+  resumeId: string;
+  versionId: string;
+  initialData: any; 
+  signals: any;
+  accessToken?: string;
+  initialSuggestions?: any[];
 }) {
-  const [cv, setCV] = useState<CVData>(initialCV);
-  const [projects, setProjects] = useState<ProjectData[]>(
-    initialProjects.map((p) => ({ ...p, included: true }))
+  const [mode, setMode] = useState<"non-specialized" | "specialized">("non-specialized");
+  // Map ResumeVersion fields to local state
+  const [personalInfo, setPersonalInfo] = useState<any>(
+    typeof initialData.personalInfo === 'string' 
+      ? JSON.parse(initialData.personalInfo) 
+      : (initialData.personalInfo || {})
   );
+  const [summary, setSummary] = useState<string>(initialData.summary || "");
+  
+  const [skills, setSkills] = useState<CVSkills>(() => {
+    const s = initialData.skills;
+    if (typeof s === 'string') {
+      try { return JSON.parse(s); } catch { }
+    }
+    return s || { languages: [], frameworks: [], tools: [] };
+  });
+
+  const [experience, setExperience] = useState<CVExperience[]>(() => ensureArray(initialData.experience));
+  const [projects, setProjects] = useState<ProjectData[]>(() => ensureArray(initialData.projects));
+  const [education, setEducation] = useState<CVEducation[]>(() => ensureArray(initialData.education));
+  const [achievements, setAchievements] = useState<string[]>(() => ensureArray(initialData.achievements || [""]));
+  
+  // LIVE PROJECTS SYNC: Remove redundant fetch on mount as initialData is already version-specific
+  // and fetching from /api/projects would corrupt specialized versions with 'Main' data.
+
+
   const [activeTab, setActiveTab] = useState<EditorTab>("profile");
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
   const [atsData, setAtsData] = useState<any>(null);
   const [atsError, setAtsError] = useState<string | null>(null);
   const [atsPanelOpen, setAtsPanelOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [isTailoring, setIsTailoring] = useState(false);
+  const [jdText, setJdText] = useState("");
+  const [jobTitle, setJobTitle] = useState("");
+
+  // Derived CV object for preview and PDF
+  const cv: CVData = {
+    name: personalInfo.name || "",
+    email: personalInfo.email || "",
+    phone: personalInfo.phone || "",
+    location: personalInfo.location || "",
+    github: personalInfo.github || "",
+    linkedin: personalInfo.linkedin || "",
+    summary,
+    targetRole: personalInfo.targetRole || "Software Engineer",
+    skills,
+    experience,
+    education,
+    achievements,
+    atsScore: initialData.atsScore,
+  };
 
   // AI action states
   const [regeneratingSummary, setRegeneratingSummary] = useState(false);
@@ -345,17 +246,40 @@ export function EditorClient({
   // Expanded project card tracking
   const [expandedProject, setExpandedProject] = useState<number | null>(0);
 
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [generatingExpBullets, setGeneratingExpBullets] = useState<number | null>(null);
+  const [expContext, setExpContext] = useState<Record<number, string>>({});
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isDirty = useRef(false);
 
   // ── Auto-save (debounced 2s) ──
   const saveCV = useCallback(async () => {
+    if (isSyncing) return; // DON'T save if we are currently syncing from GitHub
     setSaveStatus("saving");
     try {
+      // Deduplicate skills before saving
+      const dedupeArr = (arr: string[]) => [...new Set((arr || []).map(s => s.trim()).filter(Boolean))];
+      const dedupeSkills = (s: any) => ({
+        languages: dedupeArr(s?.languages || []),
+        frameworks: dedupeArr(s?.frameworks || []),
+        tools: dedupeArr(s?.tools || []),
+      });
+
       const res = await fetch("/api/cv/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cv, projects, lastEditedBy: "USER" }),
+        body: JSON.stringify({ 
+          versionId, 
+          data: {
+            personalInfo,
+            summary,
+            skills: dedupeSkills(skills),
+            experience,
+            projects,
+            education,
+            atsScore: atsData?.score || 0
+          }
+        }),
       });
       if (!res.ok) throw new Error("Save failed");
       setSaveStatus("saved");
@@ -363,22 +287,45 @@ export function EditorClient({
     } catch {
       setSaveStatus("error");
     }
-  }, [cv, projects]);
+  }, [versionId, personalInfo, summary, skills, experience, projects, education, atsData, isSyncing]);
+
 
   useEffect(() => {
+    // Skip the very first run on mount to prevent immediate save of unchanged data
     if (!isDirty.current) {
       isDirty.current = true;
       return;
     }
+
+    if (isSyncing) return; // PAUSE auto-save during sync
+    
     setSaveStatus("idle");
     if (saveTimer.current) clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(() => saveCV(), 2000);
-    return () => { if (saveTimer.current) clearTimeout(saveTimer.current); };
-  }, [cv, projects, saveCV]);
+    
+    // Set timer for 2 seconds
+    saveTimer.current = setTimeout(() => {
+      saveCV();
+    }, 2000);
+
+    return () => { 
+      if (saveTimer.current) clearTimeout(saveTimer.current); 
+    };
+  }, [personalInfo, summary, skills, experience, projects, education, isSyncing, saveCV]);
+
+  // ── beforeunload guard: save immediately if dirty on tab close ──
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (isDirty.current) {
+        saveCV();
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [saveCV]);
 
   // ── Load ATS score on mount ──
   useEffect(() => {
-    fetch("/api/cv/ats-score")
+    fetch(`/api/cv/ats-score?versionId=${versionId}`)
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();
@@ -390,79 +337,79 @@ export function EditorClient({
       .catch((e) => setAtsError(e.message));
   }, []);
 
-  // ── CV update helpers ──
-  const updateCV = (field: keyof CVData, val: any) =>
-    setCV((prev) => ({ ...prev, [field]: val }));
+  // ── State update helpers ──
+  const updatePersonalInfo = (field: string, val: any) =>
+    setPersonalInfo((prev: any) => ({ ...prev, [field]: val }));
 
   const updateSkills = (type: keyof CVSkills, val: string[]) =>
-    setCV((prev) => ({ ...prev, skills: { ...prev.skills, [type]: val } }));
+    setSkills((prev) => ({ ...prev, [type]: val }));
 
   const addSkill = (type: keyof CVSkills, raw: string) => {
     const val = raw.trim();
     if (!val) return;
-    const current = cv.skills[type] || [];
+    const current = skills[type] || [];
     if (!current.includes(val)) updateSkills(type, [...current, val]);
   };
 
   const removeSkill = (type: keyof CVSkills, idx: number) => {
-    const nu = [...(cv.skills[type] || [])];
+    const nu = [...(skills[type] || [])];
     nu.splice(idx, 1);
     updateSkills(type, nu);
   };
 
-  // ── Experience helpers ──
   const updateExp = (i: number, field: keyof CVExperience, val: any) => {
-    const nu = [...cv.experience];
+    const nu = [...experience];
     (nu[i] as any)[field] = val;
-    updateCV("experience", nu);
+    setExperience(nu);
   };
 
   const updateExpBullet = (expIdx: number, bulletIdx: number, val: string) => {
-    const nu = [...cv.experience];
+    const nu = [...experience];
     nu[expIdx] = { ...nu[expIdx], bullets: [...nu[expIdx].bullets] };
     nu[expIdx].bullets[bulletIdx] = val;
-    updateCV("experience", nu);
+    setExperience(nu);
   };
 
+
   const addExpBullet = (expIdx: number) => {
-    const nu = [...cv.experience];
+    const nu = [...experience];
     nu[expIdx] = { ...nu[expIdx], bullets: [...nu[expIdx].bullets, ""] };
-    updateCV("experience", nu);
+    setExperience(nu);
   };
 
   const removeExpBullet = (expIdx: number, bulletIdx: number) => {
-    const nu = [...cv.experience];
+    const nu = [...experience];
     nu[expIdx] = {
       ...nu[expIdx],
       bullets: nu[expIdx].bullets.filter((_, i) => i !== bulletIdx),
     };
-    updateCV("experience", nu);
+    setExperience(nu);
   };
 
   const addExperience = () => {
-    updateCV("experience", [
-      ...cv.experience,
+    setExperience([
+      ...experience,
       { company: "", title: "", period: "", bullets: [""] },
     ]);
   };
 
   const removeExperience = (i: number) => {
-    updateCV("experience", cv.experience.filter((_, idx) => idx !== i));
+    setExperience(experience.filter((_, idx) => idx !== i));
   };
 
   // ── Education helpers ──
   const updateEdu = (i: number, field: keyof CVEducation, val: string) => {
-    const nu = [...cv.education];
+    const nu = [...education];
     (nu[i] as any)[field] = val;
-    updateCV("education", nu);
+    setEducation(nu);
   };
 
   const addEducation = () => {
-    updateCV("education", [...cv.education, { school: "", degree: "", year: "", gpa: "" }]);
+    setEducation([...education, { school: "", degree: "", year: "", gpa: "" }]);
   };
 
   const removeEducation = (i: number) => {
-    updateCV("education", cv.education.filter((_, idx) => idx !== i));
+    setEducation(education.filter((_, idx) => idx !== i));
   };
 
   // ── Project helpers ──
@@ -472,11 +419,48 @@ export function EditorClient({
     setProjects(nu);
   };
 
+  // Fixes a highlight (bullet) at a specific index in a project
   const updateProjectBullet = (pIdx: number, bIdx: number, val: string) => {
     const nu = [...projects];
-    nu[pIdx] = { ...nu[pIdx], bullets: [...nu[pIdx].bullets] };
-    nu[pIdx].bullets[bIdx] = val;
+    const highlights = [...(nu[pIdx].highlights || [])];
+    highlights[bIdx] = val;
+    nu[pIdx] = { ...nu[pIdx], highlights };
     setProjects(nu);
+  };
+
+  const updateProjectHighlight = updateProjectBullet; // alias kept for compatibility
+
+  // ── AI Experience Bullet Generation ──
+  const handleGenerateExpBullets = async (i: number) => {
+    const exp = experience[i];
+    if (!exp.company && !exp.title) return;
+    setGeneratingExpBullets(i);
+    try {
+      const res = await fetch("/api/cv/generate-experience", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          company: exp.company,
+          title: exp.title,
+          period: exp.period,
+          context: expContext[i] || "",
+        }),
+      });
+      const d = await res.json();
+      if (d.bullets && Array.isArray(d.bullets)) {
+        const nu = [...experience];
+        // Replace only placeholder bullets, keep user-written ones
+        const existingMeaningful = nu[i].bullets.filter(
+          b => b.trim() && b !== "Achieved X by implementing Y resulting in Z% growth."
+        );
+        nu[i] = { ...nu[i], bullets: [...existingMeaningful, ...d.bullets] };
+        setExperience(nu);
+      }
+    } catch {
+      /* silent */
+    } finally {
+      setGeneratingExpBullets(null);
+    }
   };
 
   // ── AI actions ──
@@ -486,10 +470,10 @@ export function EditorClient({
       const res = await fetch("/api/cv/regenerate-summary", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ projects, targetRole: cv.targetRole }),
+        body: JSON.stringify({ projects, targetRole: personalInfo.targetRole }),
       });
       const d = await res.json();
-      if (d.summary) updateCV("summary", d.summary);
+      if (d.summary) setSummary(d.summary);
     } catch {
       /* silent */
     } finally {
@@ -506,19 +490,31 @@ export function EditorClient({
         body: JSON.stringify({
           projects,
           existing: [
-            ...(cv.skills.languages || []),
-            ...(cv.skills.frameworks || []),
-            ...(cv.skills.tools || []),
+            ...(skills.languages || []),
+            ...(skills.frameworks || []),
+            ...(skills.tools || []),
           ],
         }),
       });
       const d = await res.json();
       if (d.skills) {
         const s = d.skills;
-        updateCV("skills", {
-          languages: [...new Set([...(cv.skills.languages || []), ...(s.languages || [])])],
-          frameworks: [...new Set([...(cv.skills.frameworks || []), ...(s.frameworks || [])])],
-          tools: [...new Set([...(cv.skills.tools || []), ...(s.tools || [])])],
+        // Deduplicate case-insensitively when merging
+        const mergeUnique = (existing: string[], incoming: string[]) => {
+          const seen = new Set(existing.map(x => x.toLowerCase()));
+          const result = [...existing];
+          for (const item of incoming) {
+            if (item && !seen.has(item.toLowerCase())) {
+              result.push(item);
+              seen.add(item.toLowerCase());
+            }
+          }
+          return result;
+        };
+        setSkills({
+          languages: mergeUnique(skills.languages || [], s.languages || []),
+          frameworks: mergeUnique(skills.frameworks || [], s.frameworks || []),
+          tools: mergeUnique(skills.tools || [], s.tools || []),
         });
       }
     } catch {
@@ -542,7 +538,7 @@ export function EditorClient({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           bullet: current,
-          projectName: p.name,
+          projectName: p.title, // was p.name — ProjectData has `title`, not `name`
           tech: p.techStack,
           targetRole: cv.targetRole,
         }),
@@ -580,6 +576,38 @@ export function EditorClient({
     }
   };
 
+  const handleTailorResume = async () => {
+    if (!jdText) return;
+    setIsTailoring(true);
+    try {
+      const res = await fetch("/api/cv/tailor", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          resumeId, 
+          jobDescription: jdText,
+          jobTitle 
+        }),
+      });
+      const result = await res.json();
+      if (result.success) {
+        const d = result.data;
+        setPersonalInfo(d.personalInfo);
+        setSummary(d.summary);
+        setSkills(d.skills);
+        setExperience(d.experience);
+        setProjects(d.projects);
+        setEducation(d.education);
+        setActiveTab("profile");
+        alert("Resume successfully tailored for " + (jobTitle || "the position") + "!");
+      }
+    } catch (error) {
+      console.error("Tailoring failed", error);
+    } finally {
+      setIsTailoring(false);
+    }
+  };
+
   // ── Save status UI ──
   const SaveIndicator = () => {
     if (saveStatus === "idle") return null;
@@ -601,12 +629,6 @@ export function EditorClient({
     );
   };
 
-  const tabs: { id: EditorTab; label: string; icon: React.ReactNode }[] = [
-    { id: "profile", label: "Profile", icon: <User className="w-4 h-4" /> },
-    { id: "skills", label: "Mastery", icon: <Activity className="w-4 h-4" /> },
-    { id: "experience", label: "Trajectory", icon: <Briefcase className="w-4 h-4" /> },
-    { id: "projects", label: "Deep Work", icon: <Code2 className="w-4 h-4" /> },
-  ];
 
   // ─────────────────────────────────────────────
   // Tab: Profile
@@ -616,39 +638,39 @@ export function EditorClient({
       <div className="grid grid-cols-2 gap-4">
         <div className="col-span-1">
           <SectionLabel>Public Identity</SectionLabel>
-          <InlineEdit value={cv.name} onChange={(v) => updateCV("name", v)} placeholder="Full Name" />
+          <InlineEdit value={cv.name} onChange={(v) => updatePersonalInfo("name", v)} placeholder="Full Name" />
         </div>
         <div className="col-span-1">
-          <SectionLabel>High-Signal Role</SectionLabel>
+          <SectionLabel>Target Job Title</SectionLabel>
           <InlineEdit
             value={cv.targetRole}
-            onChange={(v) => updateCV("targetRole", v)}
+            onChange={(v) => updatePersonalInfo("targetRole", v)}
             placeholder="e.g. Senior Backend Engineer"
           />
         </div>
         <div className="col-span-2 grid grid-cols-2 gap-4">
           <div>
             <SectionLabel>Email Endpoint</SectionLabel>
-            <InlineEdit value={cv.email} onChange={(v) => updateCV("email", v)} placeholder="professional@email.com" />
+            <InlineEdit value={cv.email} onChange={(v) => updatePersonalInfo("email", v)} placeholder="professional@email.com" />
           </div>
           <div>
             <SectionLabel>Direct Contact</SectionLabel>
-            <InlineEdit value={cv.phone} onChange={(v) => updateCV("phone", v)} placeholder="+1 (555) 000 000" />
+            <InlineEdit value={cv.phone} onChange={(v) => updatePersonalInfo("phone", v)} placeholder="+1 (555) 000 000" />
           </div>
         </div>
         <div className="col-span-2">
           <SectionLabel>Global Location</SectionLabel>
-          <InlineEdit value={cv.location} onChange={(v) => updateCV("location", v)} placeholder="San Francisco, CA" />
+          <InlineEdit value={cv.location} onChange={(v) => updatePersonalInfo("location", v)} placeholder="San Francisco, CA" />
         </div>
         <div className="col-span-1">
           <SectionLabel>GitHub Source</SectionLabel>
-          <InlineEdit value={cv.github} onChange={(v) => updateCV("github", v)} placeholder="github.com/handle" />
+          <InlineEdit value={cv.github} onChange={(v) => updatePersonalInfo("github", v)} placeholder="github.com/handle" />
         </div>
         <div className="col-span-1">
           <SectionLabel>LinkedIn Node</SectionLabel>
           <InlineEdit
             value={cv.linkedin}
-            onChange={(v) => updateCV("linkedin", v)}
+            onChange={(v) => updatePersonalInfo("linkedin", v)}
             placeholder="linkedin.com/in/handle"
           />
         </div>
@@ -656,7 +678,7 @@ export function EditorClient({
 
       <div className="pt-4 border-t border-white/5">
         <div className="flex items-center justify-between mb-3">
-          <SectionLabel>Executive Summary</SectionLabel>
+          <SectionLabel>Professional Summary</SectionLabel>
           <button
             onClick={handleRegenerateSummary}
             disabled={regeneratingSummary}
@@ -667,12 +689,12 @@ export function EditorClient({
             ) : (
               <Sparkles className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
             )}
-            {regeneratingSummary ? "Analyzing Context" : "✦ Intelligence Brief"}
+            {regeneratingSummary ? "Analyzing Content" : "✦ AI Improve"}
           </button>
         </div>
         <InlineEdit
           value={cv.summary}
-          onChange={(v) => updateCV("summary", v)}
+          onChange={(v) => setSummary(v)}
           placeholder="Two sentences of high-impact technical positioning."
           multiline
           rows={5}
@@ -682,56 +704,88 @@ export function EditorClient({
            <p className="text-[10px] text-yellow-200/60 leading-relaxed font-medium">Recruiters scan this for 7 seconds. Aim for exactly two high-density sentences.</p>
         </div>
       </div>
+    </div>
+  );
 
-      {/* Education */}
-      <div className="pt-4 border-t border-white/5">
-        <div className="flex items-center justify-between mb-4">
-          <SectionLabel>Academic Foundation</SectionLabel>
+  const renderEducation = () => (
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="flex items-center justify-between mb-4">
+        <SectionLabel>Education</SectionLabel>
+        <button
+          onClick={addEducation}
+          className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-neutral-500 hover:text-white transition-all bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-full border border-white/5"
+        >
+          <Plus className="w-3.5 h-3.5" /> Entry
+        </button>
+      </div>
+      {education.map((edu, i) => (
+        <div key={i} className="group relative bg-[#121212] border border-white/5 rounded-2xl p-5 mb-4 hover:border-blue-500/20 transition-all">
           <button
-            onClick={addEducation}
-            className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-neutral-500 hover:text-white transition-all bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-full border border-white/5"
+            onClick={() => removeEducation(i)}
+            className="absolute top-4 right-4 text-neutral-700 hover:text-red-400 p-2 opacity-0 group-hover:opacity-100 transition-all rounded-lg hover:bg-red-500/5"
           >
-            <Plus className="w-3.5 h-3.5" /> Entry
+            <Trash2 className="w-4 h-4" />
           </button>
-        </div>
-        {cv.education.length === 0 && (
-          <div className="text-center py-8 bg-white/5 border border-dashed border-white/10 rounded-2xl text-neutral-600 text-xs font-medium">
-            No foundation data.{" "}
-            <button onClick={addEducation} className="text-blue-500 hover:underline">
-              Initialize Entry
-            </button>
-          </div>
-        )}
-        {cv.education.map((edu, i) => (
-          <div key={i} className="group relative bg-[#121212] border border-white/5 rounded-2xl p-5 mb-4 hover:border-blue-500/20 transition-all">
-            <button
-              onClick={() => removeEducation(i)}
-              className="absolute top-4 right-4 text-neutral-700 hover:text-red-400 p-2 opacity-0 group-hover:opacity-100 transition-all rounded-lg hover:bg-red-500/5"
-            >
-              <Trash2 className="w-4 h-4" />
-            </button>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="col-span-2">
-                <SectionLabel>Institution</SectionLabel>
-                <InlineEdit value={edu.school} onChange={(v) => updateEdu(i, "school", v)} placeholder="University Name" />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="col-span-2">
+              <SectionLabel>Institution</SectionLabel>
+              <InlineEdit value={edu.school} onChange={(v) => updateEdu(i, "school", v)} placeholder="University Name" />
+            </div>
+            <div className="col-span-1">
+              <SectionLabel>Degree / Certification</SectionLabel>
+              <InlineEdit value={edu.degree} onChange={(v) => updateEdu(i, "degree", v)} placeholder="B.Sc. in Engineering" />
+            </div>
+            <div className="col-span-1 grid grid-cols-2 gap-2">
+              <div>
+                 <SectionLabel>Completion</SectionLabel>
+                 <InlineEdit value={edu.year} onChange={(v) => updateEdu(i, "year", v)} placeholder="2024" />
               </div>
-              <div className="col-span-1">
-                <SectionLabel>Degree / Certification</SectionLabel>
-                <InlineEdit value={edu.degree} onChange={(v) => updateEdu(i, "degree", v)} placeholder="B.Sc. in Engineering" />
-              </div>
-              <div className="col-span-1 grid grid-cols-2 gap-2">
-                <div>
-                   <SectionLabel>Completion</SectionLabel>
-                   <InlineEdit value={edu.year} onChange={(v) => updateEdu(i, "year", v)} placeholder="2024" />
-                </div>
-                <div>
-                   <SectionLabel>GPA</SectionLabel>
-                   <InlineEdit value={edu.gpa || ""} onChange={(v) => updateEdu(i, "gpa", v)} placeholder="4.0" />
-                </div>
+              <div>
+                 <SectionLabel>GPA</SectionLabel>
+                 <InlineEdit value={edu.gpa || ""} onChange={(v) => updateEdu(i, "gpa", v)} placeholder="4.0" />
               </div>
             </div>
           </div>
-        ))}
+        </div>
+      ))}
+
+      {/* Achievements & Certifications */}
+      <div className="pt-8 border-t border-white/5">
+        <div className="flex items-center justify-between mb-4">
+          <SectionLabel>Achievements & Certifications</SectionLabel>
+          <button
+            onClick={() => setAchievements([...achievements, ""])}
+            className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-neutral-500 hover:text-white transition-all bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-full border border-white/5"
+          >
+            <Plus className="w-3.5 h-3.5" /> Achievement
+          </button>
+        </div>
+        <div className="space-y-3">
+          {achievements.map((ach, idx) => (
+            <div key={idx} className="flex gap-3 items-start group">
+              <div className="mt-4 w-1.5 h-1.5 rounded-full bg-neutral-800 shrink-0 group-hover:bg-blue-500 transition-colors" />
+              <div className="flex-1">
+                <InlineEdit
+                  value={ach}
+                  onChange={(v) => {
+                    const nu = [...achievements];
+                    nu[idx] = v;
+                    setAchievements(nu);
+                  }}
+                  placeholder="e.g. Google Cloud Professional Architect Certified"
+                  multiline
+                  rows={2}
+                />
+              </div>
+              <button
+                onClick={() => setAchievements(achievements.filter((_, i) => i !== idx))}
+                className="mt-2 text-neutral-700 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -787,6 +841,34 @@ export function EditorClient({
           </div>
         </div>
       ))}
+
+      <div className="pt-4 flex justify-end">
+        <button
+          onClick={saveCV}
+          disabled={saveStatus === "saving"}
+          className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+            saveStatus === "saved" 
+              ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" 
+              : "bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/20"
+          }`}
+        >
+          {saveStatus === "saving" ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+          {saveStatus === "saving" ? "Syncing..." : saveStatus === "saved" ? "Skills Saved" : "Save Skill Matrix"}
+        </button>
+      </div>
+
+      <div className="pt-8 border-t border-white/5">
+        <p className="text-[10px] font-bold uppercase tracking-[2px] text-neutral-500 mb-4 px-2">Smart Skill Updates</p>
+        <SmartUpdateCenter 
+          initialSuggestions={initialSuggestions} 
+          accessToken={accessToken} 
+          lastSyncAt={initialData.lastSyncAt || null} 
+          setProjects={setProjects}
+          setSkills={setSkills}
+          setIsSyncing={setIsSyncing}
+          filterType="skill"
+        />
+      </div>
     </div>
   );
 
@@ -842,12 +924,35 @@ export function EditorClient({
             <div className="pt-2">
               <div className="flex items-center justify-between mb-4">
                 <SectionLabel>High-Impact Outcomes</SectionLabel>
-                <button
-                  onClick={() => addExpBullet(i)}
-                  className="text-[9px] font-black uppercase tracking-widest text-neutral-600 hover:text-white flex items-center gap-2 bg-white/5 px-2.5 py-1 rounded-lg transition-all"
-                >
-                  <Plus className="w-3 h-3" /> Outcome
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => addExpBullet(i)}
+                    className="text-[9px] font-black uppercase tracking-widest text-neutral-600 hover:text-white flex items-center gap-2 bg-white/5 px-2.5 py-1 rounded-lg transition-all"
+                  >
+                    <Plus className="w-3 h-3" /> Outcome
+                  </button>
+                  <button
+                    onClick={() => handleGenerateExpBullets(i)}
+                    disabled={generatingExpBullets === i}
+                    className="text-[9px] font-black uppercase tracking-widest text-blue-400 hover:text-blue-300 flex items-center gap-1.5 bg-blue-500/10 hover:bg-blue-500/15 px-2.5 py-1 rounded-lg transition-all border border-blue-500/10 disabled:opacity-50"
+                  >
+                    {generatingExpBullets === i ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <Sparkles className="w-3 h-3" />
+                    )}
+                    {generatingExpBullets === i ? "Generating..." : "✦ AI Generate"}
+                  </button>
+                </div>
+              </div>
+              {/* Optional context hint for better AI output */}
+              <div className="mb-3">
+                <input
+                  value={expContext[i] || ""}
+                  onChange={(e) => setExpContext(prev => ({ ...prev, [i]: e.target.value }))}
+                  placeholder="Optional: hint the AI (e.g. 'Built ML dashboard, used Streamlit and Python')..."
+                  className="w-full bg-transparent border-b border-white/5 px-2 py-2 text-[11px] text-neutral-500 placeholder:text-neutral-700 outline-none focus:border-blue-500/30 transition-all"
+                />
               </div>
               <div className="space-y-3">
                 {exp.bullets.map((b, j) => (
@@ -886,152 +991,227 @@ export function EditorClient({
   );
 
   // ─────────────────────────────────────────────
-  // Tab: Deep Work (Projects)
+  // Tab: Projects
   // ─────────────────────────────────────────────
   const renderProjects = () => (
     <div className="space-y-6">
-      {projects.map((p, pIdx) => (
-        <div
-          key={p.id}
-          className={`border rounded-[2rem] overflow-hidden transition-all duration-500 shadow-xl ${
-            p.included === false
-              ? "border-white/5 bg-black/40 opacity-40 hover:opacity-70 scale-[0.98]"
-              : "border-white/5 bg-[#121212] hover:border-blue-500/30"
-          }`}
-        >
-          {/* Card header */}
-          <div
-            className="px-7 py-5 flex items-center justify-between cursor-pointer group/header"
-            onClick={() => setExpandedProject(expandedProject === pIdx ? null : pIdx)}
-          >
-            <div className="flex-1 min-w-0 mr-4">
-              <div className="flex items-center gap-3">
-                <p className="text-[15px] font-bold text-white truncate font-outfit tracking-tight">{p.name}</p>
-                {p.included === false && (
-                  <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 bg-neutral-800 text-neutral-400 rounded-lg border border-white/5">
-                    Isolated
-                  </span>
-                )}
-              </div>
-              <p className="text-[10px] font-bold uppercase tracking-[2px] text-neutral-600 mt-1">{p.techStack}</p>
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  updateProject(pIdx, "included", p.included === false ? true : false);
-                }}
-                className={`w-10 h-10 flex items-center justify-center rounded-2xl transition-all border ${
-                  p.included === false
-                    ? "text-neutral-700 bg-white/5 border-white/5 hover:border-white/10"
-                    : "text-blue-400 bg-blue-500/5 border-blue-500/10 hover:bg-blue-500/10"
-                }`}
-                title={p.included === false ? "Restore to CV" : "Isolate from CV"}
-              >
-                <Eye className="w-5 h-5" />
-              </button>
-              <div className={`w-10 h-10 flex items-center justify-center rounded-2xl bg-white/5 border border-white/5 transition-transform ${expandedProject === pIdx ? 'rotate-180 text-white' : 'text-neutral-600'}`}>
-                 <ChevronDown className="w-5 h-5" />
-              </div>
-            </div>
-          </div>
-
-          {/* Expanded content */}
-          {expandedProject === pIdx && (
-            <div className="p-7 space-y-6 border-t border-white/5 animate-in slide-in-from-top-4 duration-300">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <SectionLabel>Label</SectionLabel>
-                  <InlineEdit
-                    value={p.name}
-                    onChange={(v) => updateProject(pIdx, "name", v)}
-                    placeholder="Project Name"
-                  />
-                </div>
-                <div>
-                  <SectionLabel>Tech Substrate</SectionLabel>
-                  <InlineEdit
-                    value={p.techStack}
-                    onChange={(v) => updateProject(pIdx, "techStack", v)}
-                    placeholder="Languages / Frameworks"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <SectionLabel>High-Impact Bullets</SectionLabel>
-                <div className="space-y-3">
-                  {p.bullets.map((b, bIdx) => {
-                    const key = `${pIdx}-${bIdx}`;
-                    return (
-                      <div key={bIdx} className="flex gap-4 items-start group/proj-bullet">
-                        <div className="mt-4 w-1.5 h-1.5 rounded-full bg-neutral-800 shrink-0 group-hover/proj-bullet:bg-blue-500 transition-all shadow-[0_0_8px_rgba(37,99,235,0)] group-hover/proj-bullet:shadow-[0_0_8px_rgba(37,99,235,0.5)]" />
-                        <div className="flex-1 relative">
-                          <InlineEdit
-                            value={b}
-                            onChange={(v) => updateProjectBullet(pIdx, bIdx, v)}
-                            placeholder="Descriptive bullet point."
-                            multiline
-                            rows={2}
-                            className="text-[13px] pr-12 !bg-[#0a0a0a]"
-                          />
-                          <button
-                            onClick={() => handleRewriteBullet(pIdx, bIdx, b)}
-                            disabled={rewritingBullet === key}
-                            className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-xl bg-white/5 hover:bg-blue-500/20 text-neutral-600 hover:text-blue-400 border border-white/5 hover:border-blue-500/20 transition-all disabled:opacity-50"
-                            title="Semantic Rewrite"
-                          >
-                            {rewritingBullet === key ? (
-                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            ) : (
-                              <Zap className="w-3.5 h-3.5" />
-                            )}
-                          </button>
-                        </div>
-                        <button
-                          onClick={() => {
-                            const nu = [...projects];
-                            nu[pIdx] = { ...nu[pIdx], bullets: p.bullets.filter((_, i) => i !== bIdx) };
-                            setProjects(nu);
-                          }}
-                          className="mt-3 text-neutral-800 hover:text-red-400 transition-all opacity-0 group-hover/proj-bullet:opacity-100 p-1"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    );
-                  })}
-                </div>
-                <button
-                  onClick={() => {
-                    const nu = [...projects];
-                    nu[pIdx] = { ...nu[pIdx], bullets: [...p.bullets, ""] };
-                    setProjects(nu);
-                  }}
-                  className="mt-4 text-[9px] font-black uppercase tracking-widest text-neutral-700 hover:text-white flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-lg transition-all"
-                >
-                  <Plus className="w-3.5 h-3.5" /> Add Logic Node
-                </button>
-              </div>
-
-              {p.repoUrl && (
-                <div className="pt-4 border-t border-white/5">
-                   <a
-                     href={p.repoUrl}
-                     target="_blank"
-                     rel="noopener noreferrer"
-                     className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-neutral-400 hover:text-white transition-all"
-                   >
-                     <ExternalLink className="w-3.5 h-3.5" /> Raw Source Code
-                   </a>
-                </div>
-              )}
+      <div className="flex items-center justify-between px-2">
+        <div className="flex items-center gap-3">
+          <p className="text-[10px] font-bold uppercase tracking-[2px] text-neutral-500">Live Builds</p>
+          {isSyncing && (
+            <div className="flex items-center gap-2 px-2 py-0.5 bg-blue-500/10 border border-blue-500/20 rounded-md">
+              <Loader2 className="w-2 h-2 text-blue-400 animate-spin" />
+              <span className="text-[8px] font-black uppercase tracking-widest text-blue-400">Syncing...</span>
             </div>
           )}
         </div>
-      ))}
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => window.location.reload()}
+            className="text-[10px] font-bold text-neutral-500 hover:text-white transition-colors flex items-center gap-1"
+          >
+            <RotateCcw className="w-3 h-3" />
+            Reset
+          </button>
+        </div>
+      </div>
+
+      {projects.map((p, pIdx) => {
+        return (
+          <div
+            key={p.id}
+            className={`border rounded-[2rem] overflow-hidden transition-all duration-500 shadow-xl ${
+              p.included === false
+                ? "border-white/5 bg-black/40 opacity-40 hover:opacity-70 scale-[0.98]"
+                : "border-white/5 bg-[#121212] hover:border-blue-500/30"
+            }`}
+          >
+            <div
+              className="px-7 py-5 flex items-center justify-between cursor-pointer group/header"
+              onClick={() => setExpandedProject(expandedProject === pIdx ? null : pIdx)}
+            >
+              <div className="flex-1 min-w-0 mr-4">
+                <div className="flex items-center gap-3">
+                  <p className="text-[15px] font-bold text-white truncate font-outfit tracking-tight">{p.title || "Untitled Project"}</p>
+                  {p.included === false && <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 bg-neutral-800 text-neutral-400 rounded-lg border border-white/5">Excluded</span>}
+                  {p.aiGenerated && <span className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 bg-blue-500/10 text-blue-400 rounded border border-blue-500/10">AI</span>}
+                </div>
+                <p className="text-[10px] font-bold uppercase tracking-[2px] text-neutral-600 mt-1">{(p.techStack || []).join(" • ")}</p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  onClick={(e) => { e.stopPropagation(); updateProject(pIdx, "included", !p.included); }}
+                  className={`w-10 h-10 flex items-center justify-center rounded-2xl transition-all border ${p.included === false ? "text-neutral-700 bg-white/5 border-white/5" : "text-blue-400 bg-blue-500/5 border-blue-500/10"}`}
+                >
+                  <Eye className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (confirm("Delete this project?")) {
+                      setProjects(projects.filter((_, i) => i !== pIdx));
+                    }
+                  }}
+                  className="w-10 h-10 flex items-center justify-center rounded-2xl bg-red-500/5 border border-red-500/10 text-red-400 hover:bg-red-500/10 transition-all"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </button>
+                <div className={`w-10 h-10 flex items-center justify-center rounded-2xl bg-white/5 border border-white/5 transition-transform ${expandedProject === pIdx ? 'rotate-180' : ''}`}>
+                   <ChevronDown className="w-5 h-5" />
+                </div>
+              </div>
+            </div>
+
+            {expandedProject === pIdx && (
+              <div className="p-7 space-y-6 border-t border-white/5 animate-in slide-in-from-top-4 duration-300">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <SectionLabel>Project Title</SectionLabel>
+                    <InlineEdit value={p.title} onChange={(v) => updateProject(pIdx, "title", v)} placeholder="Project Title" />
+                  </div>
+                  <div>
+                    <SectionLabel>Tech Stack</SectionLabel>
+                  <InlineEdit 
+                    value={Array.isArray(p.techStack) ? p.techStack.join(", ") : (p.techStack || "")} 
+                    onChange={(v) => updateProject(pIdx, "techStack", v.split(",").map(t => t.trim()).filter(Boolean))} 
+                    placeholder="React, TypeScript, ..." 
+                  />
+                  </div>
+                </div>
+                <div>
+                  <SectionLabel>Description</SectionLabel>
+                  <InlineEdit value={p.description || ""} onChange={(v) => updateProject(pIdx, "description", v)} placeholder="A brief technical overview..." />
+                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <SectionLabel>Engineering Highlights</SectionLabel>
+                    <button onClick={() => { const nu = [...(p.highlights || []), ""]; updateProject(pIdx, "highlights", nu); }} className="text-[10px] font-bold text-blue-400">+ Add Bullet</button>
+                  </div>
+                  <div className="space-y-3">
+                    {(p.highlights || []).map((h, bIdx) => (
+                      <div key={bIdx} className="flex gap-2 group/bullet">
+                        <div className="flex-1">
+                          <InlineEdit value={h} onChange={(v) => { const nu = [...(p.highlights || [])]; nu[bIdx] = v; updateProject(pIdx, "highlights", nu); }} placeholder="Describe achievement..." multiline />
+                        </div>
+                        <button onClick={() => { const nu = (p.highlights || []).filter((_, i) => i !== bIdx); updateProject(pIdx, "highlights", nu); }} className="opacity-0 group-hover/bullet:opacity-100 p-2 text-neutral-600 hover:text-red-400 transition-all"><Trash2 className="w-4 h-4" /></button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-4 flex justify-end">
+                  <button
+                    onClick={(e) => { e.stopPropagation(); saveCV(); }}
+                    disabled={saveStatus === "saving"}
+                    className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                      saveStatus === "saved" 
+                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" 
+                        : "bg-white text-black hover:bg-neutral-200"
+                    }`}
+                  >
+                    {saveStatus === "saving" ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                    {saveStatus === "saving" ? "Saving..." : saveStatus === "saved" ? "Project Saved" : "Save Project"}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })}
+
+      {projects.length === 0 && (
+        <div className="text-center py-16 bg-[#111] border border-dashed border-white/5 rounded-[2rem]">
+          <Terminal className="w-10 h-10 text-neutral-800 mx-auto mb-4 stroke-[1.5]" />
+          <p className="text-neutral-600 text-sm font-bold mb-4 uppercase tracking-[2px]">No Active Builds</p>
+          <button onClick={() => setProjects([{ id: Math.random().toString(), title: "", description: "", techStack: [], highlights: [""] }])} className="px-8 py-3 bg-white/5 rounded-2xl text-[10px] font-black uppercase text-neutral-400 hover:text-white transition-all border border-white/5">Initiate Project</button>
+        </div>
+      )}
+
+      <div className="pt-8 border-t border-white/5">
+        <p className="text-[10px] font-bold uppercase tracking-[2px] text-neutral-500 mb-4 px-2">Smart Project Updates</p>
+        <SmartUpdateCenter 
+          initialSuggestions={initialSuggestions} 
+          accessToken={accessToken} 
+          lastSyncAt={initialData.lastSyncAt || null} 
+          setProjects={setProjects}
+          setSkills={setSkills}
+          setIsSyncing={setIsSyncing}
+          filterType="project"
+        />
+      </div>
     </div>
   );
+
+
+  // ─────────────────────────────────────────────
+  // Tab: Tailor
+  // ─────────────────────────────────────────────
+  const renderTailor = () => (
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="bg-blue-600/5 border border-blue-600/10 rounded-[2rem] p-8 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 blur-3xl" />
+        <h3 className="text-xl font-bold text-white mb-2 font-outfit">Job Description Specializer</h3>
+        <p className="text-sm text-blue-200/50 leading-relaxed mb-6">
+          Paste the job description below. Our AI will align your summary, skills, and projects to match the recruiter's specific requirements.
+        </p>
+
+        <div className="space-y-5">
+          <div>
+            <SectionLabel>Target Job Title</SectionLabel>
+            <input 
+              value={jobTitle}
+              onChange={(e) => setJobTitle(e.target.value)}
+              placeholder="e.g. Senior Frontend Engineer"
+              className="w-full bg-neutral-900/60 border border-white/5 rounded-2xl px-5 py-4 text-sm text-white outline-none focus:border-blue-500/40 transition-all"
+            />
+          </div>
+          <div>
+            <SectionLabel>Full Job Description</SectionLabel>
+            <textarea 
+              value={jdText}
+              onChange={(e) => setJdText(e.target.value)}
+              placeholder="Paste the JD here..."
+              rows={10}
+              className="w-full bg-neutral-900/60 border border-white/5 rounded-2xl px-5 py-4 text-sm text-white outline-none focus:border-blue-500/40 transition-all resize-none"
+            />
+          </div>
+          
+          <button
+            onClick={handleTailorResume}
+            disabled={isTailoring || !jdText}
+            className="w-full py-5 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-bold rounded-2xl flex items-center justify-center gap-3 transition-all shadow-xl shadow-blue-600/20 active:scale-[0.98]"
+          >
+            {isTailoring ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <Sparkles className="w-5 h-5" />
+            )}
+            {isTailoring ? "Orchestrating Tailored Version..." : "Generate Optimized Version"}
+          </button>
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-4">
+         <div className="p-6 bg-white/5 border border-white/5 rounded-[1.5rem]">
+            <h4 className="text-[10px] font-black uppercase tracking-widest text-neutral-500 mb-2">Benefit 01</h4>
+            <p className="text-xs text-neutral-400 leading-relaxed">Keywords are automatically injected into your skills and summary to pass ATS filters.</p>
+         </div>
+         <div className="p-6 bg-white/5 border border-white/5 rounded-[1.5rem]">
+            <h4 className="text-[10px] font-black uppercase tracking-widest text-neutral-500 mb-2">Benefit 02</h4>
+            <p className="text-xs text-neutral-400 leading-relaxed">Your professional summary is rewritten to solve the specific pain points mentioned in the JD.</p>
+         </div>
+      </div>
+    </div>
+  );
+
+  const tabs = [
+    { id: "profile", label: "Profile", icon: <User className="w-4 h-4" /> },
+    { id: "skills", label: "Skills", icon: <Cpu className="w-4 h-4" /> },
+    { id: "experience", label: "Experience", icon: <Briefcase className="w-4 h-4" /> },
+    { id: "projects", label: "Projects", icon: <div className="relative"><Code className="w-4 h-4" />{projects.length > 0 && <span className="absolute -top-2 -right-2 bg-blue-500 text-[8px] px-1 rounded-full">{projects.length}</span>}</div> },
+    { id: "education", label: "Education", icon: <GraduationCap className="w-4 h-4" /> },
+    { id: "tailor", label: "Match Job", icon: <Sparkles className="w-4 h-4" /> },
+  ];
 
   // ─────────────────────────────────────────────
   // Render
@@ -1039,22 +1219,19 @@ export function EditorClient({
   return (
     <div className="flex h-screen bg-[#050505] text-[#e5e5e5] overflow-hidden font-inter selection:bg-blue-500/30">
       {/* ── Left Sidebar Header ── */}
-      <div className="w-[480px] flex-shrink-0 flex flex-col border-r border-white/[0.03] bg-[#0a0a0a] shadow-[10px_0_40px_rgba(0,0,0,0.4)] z-20">
+      <div className="w-[420px] flex-shrink-0 flex flex-col border-r border-white/[0.03] bg-[#0a0a0a] shadow-[10px_0_40px_rgba(0,0,0,0.4)] z-20">
         {/* Superior Header */}
-        <header className="px-8 py-7 flex items-center justify-between border-b border-white/[0.03] relative bg-[#0a0a0a]">
+        <header className="px-6 py-5 flex items-center justify-between border-b border-white/[0.03] relative bg-[#0a0a0a]">
           <div className="absolute inset-0 bg-blue-600/5 blur-[80px] pointer-events-none" />
-          <div className="flex items-center gap-4 relative">
-             <div className="w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.4)] transform rotate-3">
-               <Rocket className="w-6 h-6 text-white" />
+          <div className="flex items-center gap-3 relative">
+             <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.3)] transform rotate-3">
+               <Rocket className="w-5 h-5 text-white" />
              </div>
             <div className="flex flex-col">
-               <span className="font-black text-xl tracking-tighter font-outfit uppercase">
+               <span className="font-black text-lg tracking-tighter font-outfit uppercase leading-none">
                  SCLADE<span className="text-blue-500">AI</span>
                </span>
-               <div className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-[9px] font-black uppercase tracking-[3px] text-neutral-600 leading-none">Core Engine / V2</span>
-               </div>
+               <span className="text-[8px] font-black uppercase tracking-[3px] text-neutral-600 mt-1">Core Engine V2</span>
             </div>
           </div>
           <div className="flex items-center gap-3 relative">
@@ -1063,77 +1240,102 @@ export function EditorClient({
         </header>
 
         {/* Global Action Bar */}
-        <div className="px-8 py-5 border-b border-white/[0.03] flex items-center justify-between bg-white/[0.01]">
-            <div className="flex items-center gap-3">
+        <div className="px-6 py-4 border-b border-white/[0.03] flex flex-col gap-4 bg-white/[0.01]">
+            <div className="flex items-center justify-between">
                {atsError ? (
-                 <div className="px-4 py-2 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] font-black uppercase flex items-center gap-2">
-                    <AlertTriangle className="w-3.5 h-3.5" /> Audit Error
+                 <div className="px-3 py-1.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-[9px] font-black uppercase flex items-center gap-2">
+                    <AlertTriangle className="w-3 h-3" /> Audit Error
                  </div>
                ) : atsData ? (
                  <button
                    onClick={() => setAtsPanelOpen(true)}
-                   className={`px-4 py-2 rounded-2xl border transition-all hover:scale-105 active:scale-95 flex items-center gap-2.5 text-[10px] font-black uppercase tracking-widest ${
+                   className={`px-3 py-1.5 rounded-xl border transition-all hover:scale-105 active:scale-95 flex items-center gap-2 text-[9px] font-black uppercase tracking-widest ${
                      atsData.score >= 70
                        ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.1)]"
                        : "bg-amber-500/10 text-amber-400 border-amber-500/20 shadow-[0_0_20px_rgba(245,158,11,0.1)]"
                    }`}
                  >
-                   <Target className="w-3.5 h-3.5" />
+                   <Target className="w-3 h-3" />
                    {atsData.score} Score
                  </button>
                ) : (
-                 <div className="px-4 py-2 rounded-2xl bg-white/5 border border-white/5 text-neutral-600 text-[10px] font-black uppercase animate-pulse flex items-center gap-2.5">
-                   <Loader2 className="w-3.5 h-3.5 animate-spin" /> Scoring...
+                 <div className="px-3 py-1.5 rounded-xl bg-white/5 border border-white/5 text-neutral-600 text-[9px] font-black uppercase animate-pulse flex items-center gap-2">
+                   <Loader2 className="w-3 h-3 animate-spin" /> Scoring
                  </div>
                )}
+
+               <button
+                 onClick={handleExportPDF}
+                 disabled={isExporting}
+                 className="flex items-center gap-2 bg-white text-black hover:bg-neutral-200 transition-all px-4 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest shadow-lg disabled:opacity-50"
+               >
+                 {isExporting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Download className="w-3 h-3" />}
+                 Export
+               </button>
             </div>
-            
-            <button
-              onClick={handleExportPDF}
-              disabled={isExporting}
-              className="flex items-center gap-2.5 bg-white text-black hover:bg-neutral-200 transition-all px-6 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-[0_10px_30px_rgba(255,255,255,0.15)] disabled:opacity-50 active:translate-y-0.5"
-            >
-              {isExporting ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-              ) : (
-                <Download className="w-3.5 h-3.5" />
-              )}
-              Export Audit
-            </button>
+
+            <div className="flex bg-neutral-900 p-1 rounded-xl border border-white/5 relative overflow-hidden h-10">
+              <div 
+                className={`absolute top-1 bottom-1 transition-all duration-500 ease-out rounded-lg ${
+                  mode === "non-specialized" ? "left-1 w-[49%] bg-white" : "left-[50%] w-[49%] bg-blue-600"
+                }`}
+              />
+              <button
+                onClick={() => setMode("non-specialized")}
+                className={`relative z-10 flex-1 py-1 text-[9px] font-black uppercase tracking-widest transition-all duration-500 ${
+                  mode === "non-specialized" ? "text-black" : "text-neutral-500 hover:text-white"
+                }`}
+              >
+                Non-Specialized
+              </button>
+              <button
+                onClick={() => setMode("specialized")}
+                className={`relative z-10 flex-1 py-1 text-[9px] font-black uppercase tracking-widest transition-all duration-500 ${
+                  mode === "specialized" ? "text-white" : "text-neutral-500 hover:text-white"
+                }`}
+              >
+                Specialized
+              </button>
+            </div>
         </div>
 
-        {/* Tab Selection */}
-        <div className="flex bg-black px-4 py-2 gap-2">
-          {tabs.map((tab) => (
+        <div className="flex bg-black px-2 py-2 gap-1 border-b border-white/[0.03]">
+          {tabs.filter(t => t.id !== "tailor").map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 flex items-center justify-center gap-2.5 py-4 text-[10px] font-bold uppercase tracking-[2px] transition-all rounded-2xl border ${
+              className={`flex-1 flex flex-col items-center justify-center gap-1.5 py-3 text-[8px] font-black uppercase tracking-widest transition-all rounded-xl border ${
                 activeTab === tab.id
-                  ? "bg-blue-600/10 border-blue-600/30 text-blue-400 shadow-inner"
-                  : "bg-transparent border-transparent text-neutral-600 hover:text-neutral-400 hover:bg-white/5"
+                  ? "bg-blue-600/10 border-blue-600/30 text-blue-400"
+                  : "bg-transparent border-transparent text-neutral-600 hover:text-neutral-400"
               }`}
             >
               {tab.icon}
-              <span className="hidden sm:inline">{tab.label}</span>
+              <span className="mt-0.5">{tab.label}</span>
             </button>
           ))}
         </div>
 
         {/* Tab Context Window */}
-        <div className="flex-1 overflow-y-auto px-8 py-8 pb-32 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto px-6 py-6 pb-32 custom-scrollbar">
           {activeTab === "profile" && renderProfile()}
           {activeTab === "skills" && renderSkills()}
           {activeTab === "experience" && renderExperience()}
           {activeTab === "projects" && renderProjects()}
+          {activeTab === "education" && renderEducation()}
         </div>
       </div>
 
       {/* ── Right Panel: Precision CV Preview ── */}
-      <div className="flex-1 bg-[#1a1a1a] overflow-y-auto flex px-12 py-16 justify-center items-start custom-scrollbar perspective-[1000px]">
-        <div className="relative group transition-all duration-700 hover:rotate-y-1">
+      <div className="flex-1 bg-[#1a1a1a] overflow-y-auto flex px-12 py-16 justify-center items-start custom-scrollbar">
+        <div className="relative group">
           <div className="absolute inset-0 bg-blue-600/5 blur-[120px] -z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
-          <CVPreview cv={cv} projects={projects} />
+          <ResumePreview 
+            data={cv} 
+            projects={projects} 
+            template="formal"
+            mode={mode}
+          />
         </div>
       </div>
 

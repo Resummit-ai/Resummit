@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { Check, X, ArrowRight, Zap, AlertCircle, RefreshCw } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Check, X, ArrowRight, Zap, AlertCircle, RefreshCw, Loader2, Save } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 interface Suggestion {
   id: string;
@@ -18,81 +20,160 @@ export function SmartUpdateCenter({
   initialSuggestions,
   lastSyncAt,
   accessToken,
+  setProjects,
+  setSkills,
+  setIsSyncing,
+  filterType,
 }: {
   initialSuggestions: Suggestion[];
   lastSyncAt: string | null;
   accessToken?: string;
+  setProjects?: (projects: any) => void;
+  setSkills?: (skills: any) => void;
+  setIsSyncing?: (syncing: boolean) => void;
+  filterType?: "project" | "skill";
 }) {
+  const router = useRouter();
+  const { data: session } = useSession();
   const [suggestions, setSuggestions] = useState(initialSuggestions);
   const [scanning, setScanning] = useState(false);
   const [scanError, setScanError] = useState<string | null>(null);
   const [reviewing, setReviewing] = useState<Suggestion | null>(null);
 
+  // KEEP STATE IN SYNC WITH SERVER PROPS
+  useEffect(() => {
+    setSuggestions(initialSuggestions);
+  }, [initialSuggestions]);
+
+  // AUTO-SYNC TOKEN: Ensure server has our latest token
+  useEffect(() => {
+    const sessionToken = (session?.user as any)?.accessToken;
+    if (sessionToken) {
+      console.log("[GITHUB] Syncing token from session...");
+      fetch("/api/github/sync-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ accessToken: sessionToken }),
+      }).catch(console.error);
+    }
+  }, [session]);
+
+  // AUTO-FETCH: Automatically scan on mount if we have no suggestions and no recent sync
+  useEffect(() => {
+    const hasToken = accessToken || (session?.user as any)?.accessToken;
+    if (!lastSyncAt && suggestions.length === 0 && hasToken && !scanning) {
+      console.log("[GITHUB] Auto-scanning on mount...");
+      handleScan();
+    }
+  }, [session, accessToken]);
+
   const handleScan = async () => {
+    if (setIsSyncing) setIsSyncing(true);
     setScanning(true);
     setScanError(null);
     try {
-      if (!accessToken) {
-        setScanError("GitHub access token unavailable. Please re-login.");
-        return;
-      }
-      const res = await fetch("/api/sync/scan", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ accessToken }),
-      });
+      const res = await fetch("/api/github/sync");
       const data = await res.json();
-      if (data.success) {
-        window.location.reload();
-      } else {
-        setScanError(data.error || "Scan failed. Please try again.");
+      
+      if (data.error) throw new Error(data.error);
+      
+      // Refresh the page to see new suggestions or fetch them
+      router.refresh();
+      
+      // If we have a direct suggestions list, update it
+      if (data.count === 0) {
+        setScanError("No new updates found at this time.");
       }
-    } catch {
-      setScanError("Network error during scan. Please try again.");
+    } catch (err: any) {
+      setScanError(err.message || "Failed to scan GitHub");
     } finally {
       setScanning(false);
+      if (setIsSyncing) setIsSyncing(false);
     }
   };
 
-  const handleApprove = async (id: string) => {
-    const res = await fetch("/api/suggestions/approve", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
-    });
-    if (res.ok) {
+  const handleApprove = async (id: string, proposed: any) => {
+    try {
+      const res = await fetch("/api/suggestions/approve", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, proposed }),
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        setSuggestions((prev) => prev.filter((s) => s.id !== id));
+        setReviewing(null);
+        
+        // REACTIVE UPDATE: If we have setter functions, update the parent state directly
+        if (data.project && setProjects) {
+          setProjects((prev: any[]) => {
+             const exists = prev.some(p => p.title.toLowerCase() === data.project.title.toLowerCase());
+             if (exists) return prev;
+             return [data.project, ...prev];
+          });
+        }
+
+        
+        // For skills — merge and deduplicate case-insensitively
+        if (data.skills && setSkills) {
+          setSkills((prev: any) => {
+            const mergeUnique = (existing: string[], incoming: string[]) => {
+              const seen = new Set((existing || []).map((x: string) => x.toLowerCase()));
+              const result = [...(existing || [])];
+              for (const item of (incoming || [])) {
+                if (item && !seen.has(item.toLowerCase())) {
+                  result.push(item);
+                  seen.add(item.toLowerCase());
+                }
+              }
+              return result;
+            };
+            return {
+              languages: mergeUnique(prev?.languages || [], data.skills.languages || []),
+              frameworks: mergeUnique(prev?.frameworks || [], data.skills.frameworks || []),
+              tools: mergeUnique(prev?.tools || [], data.skills.tools || []),
+            };
+          });
+        }
+
+
+        router.refresh();
+      }
+    } catch (err) {
+      console.error("Failed to approve suggestion", err);
+    }
+  };
+
+  const handleDiscard = async (id: string) => {
+    try {
+      await fetch("/api/suggestions/discard", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      setSuggestions((prev) => prev.filter((s) => s.id !== id));
+      setReviewing(null);
+    } catch (err) {
+      console.error("Failed to discard suggestion", err);
+      // Still filter locally for better UX
       setSuggestions((prev) => prev.filter((s) => s.id !== id));
       setReviewing(null);
     }
   };
 
-  const handleDiscard = async (id: string) => {
-    setSuggestions((prev) => prev.filter((s) => s.id !== id));
-    setReviewing(null);
-  };
-
   if (suggestions.length === 0 && !scanning) {
     return (
-      <div className="bg-neutral-900/50 border border-neutral-800 rounded-2xl p-8 text-center">
-        <div className="w-12 h-12 bg-neutral-800 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Check className="text-neutral-500 w-6 h-6" />
-        </div>
-        <h3 className="text-lg font-semibold mb-2">CV is up to date</h3>
-        <p className="text-neutral-500 text-sm mb-6">No new meaningful GitHub activity detected.</p>
-
-        {scanError && (
-          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-xs">
-            {scanError}
-          </div>
-        )}
-
+      <div className="bg-white/5 border border-white/10 rounded-2xl p-6 text-center">
+        <RefreshCw className="w-8 h-8 text-neutral-500 mx-auto mb-3" />
+        <p className="text-xs text-neutral-400 mb-4">
+          {scanError || "Your resume is up to date with your GitHub activity."}
+        </p>
         <button
           onClick={handleScan}
-          disabled={scanning}
-          className="inline-flex items-center gap-2 px-6 py-2 bg-neutral-800 hover:bg-neutral-700 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+          className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${scanning ? "animate-spin" : ""}`} />
-          {scanning ? "Scanning..." : "Force Scan Now"}
+          Check for updates
         </button>
       </div>
     );
@@ -100,181 +181,149 @@ export function SmartUpdateCenter({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between mb-2">
-        <h2 className="text-sm font-bold uppercase tracking-widest text-neutral-500">
-          Smart Updates
-          {suggestions.length > 0 && (
-            <span className="ml-2 px-1.5 py-0.5 bg-blue-500/20 text-blue-400 rounded text-[10px]">
-              {suggestions.length}
-            </span>
-          )}
-        </h2>
-        <button
-          onClick={handleScan}
-          disabled={scanning}
-          className="inline-flex items-center gap-1.5 text-xs text-blue-400 hover:text-blue-300 transition-colors disabled:opacity-50"
-        >
-          <RefreshCw className={`w-3 h-3 ${scanning ? "animate-spin" : ""}`} />
-          {scanning ? "Scanning..." : "Refresh"}
-        </button>
-      </div>
-
-      {scanError && (
-        <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-xs flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 shrink-0" />
-          {scanError}
+      {scanning && (
+        <div className="flex items-center gap-3 p-4 bg-blue-500/10 border border-blue-500/20 rounded-2xl animate-pulse">
+          <Zap className="w-4 h-4 text-blue-400" />
+          <span className="text-[10px] font-bold text-blue-400 uppercase tracking-wider">AI is scanning your GitHub...</span>
         </div>
       )}
 
-      <div className="grid gap-4">
-        {suggestions.map((s) => (
-          <div
-            key={s.id}
-            className="bg-neutral-900 border border-neutral-800 rounded-xl p-4 flex items-center justify-between group hover:border-blue-500/30 transition-colors"
+      {!scanning && suggestions.length > 0 && (
+        <div className="flex justify-end mb-2">
+          <button
+            onClick={handleScan}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-white/10 rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all text-neutral-400 hover:text-white"
           >
-            <div className="flex items-center gap-4">
-              <div
-                className={`p-2 rounded-lg ${
-                  s.priority === 3
-                    ? "bg-blue-500/10 text-blue-400"
-                    : "bg-violet-500/10 text-violet-400"
-                }`}
-              >
-                {s.type === "NEW_PROJECT" ? (
-                  <Zap className="w-5 h-5" />
-                ) : (
-                  <ArrowRight className="w-5 h-5" />
-                )}
-              </div>
-              <div>
-                <h4 className="font-bold text-sm text-white">{s.title}</h4>
-                <p className="text-xs text-neutral-500 leading-relaxed max-w-md">
-                  {s.description}
-                </p>
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="text-[10px] font-bold px-1.5 py-0.5 bg-neutral-800 rounded text-neutral-400 uppercase tracking-tighter">
-                    {Math.round(s.confidence * 100)}% Confidence
-                  </span>
-                </div>
+            <RefreshCw className="w-3 h-3" />
+            Rescan GitHub
+          </button>
+        </div>
+      )}
+
+      {!scanning && suggestions
+        .filter(s => {
+          if (!filterType) return true;
+          if (filterType === "project") return s.type === "NEW_PROJECT" || s.type === "IMPROVE_PROJECT";
+          return s.type === "ADD_SKILL";
+        })
+        .filter((s, i, arr) => arr.findIndex(t => t.title === s.title) === i)
+        .sort((a, b) => b.confidence - a.confidence)
+        .map((suggestion) => (
+        <div 
+          key={suggestion.id}
+          className="group relative bg-neutral-900/50 hover:bg-neutral-900 border border-white/5 hover:border-white/20 rounded-2xl p-4 transition-all"
+        >
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1">
+              <h4 className="text-[11px] font-black text-white uppercase tracking-wider mb-1">
+                {suggestion.title}
+              </h4>
+              <p className="text-[10px] text-neutral-400 leading-relaxed line-clamp-2">
+                {suggestion.description}
+              </p>
+              <div className="flex items-center gap-3 mt-3">
+                <span className="text-[9px] font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full uppercase">
+                  {Math.round(suggestion.confidence * 100)}% Confidence
+                </span>
               </div>
             </div>
-
-            <div className="flex items-center gap-2 shrink-0 ml-4">
+            
+            <div className="flex flex-col gap-2">
               <button
-                onClick={() => handleDiscard(s.id)}
-                className="p-1.5 text-neutral-600 hover:text-neutral-400 hover:bg-neutral-800 rounded-lg transition-colors"
-                title="Dismiss"
-              >
-                <X className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setReviewing(s)}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg transition-colors"
+                onClick={() => setReviewing(suggestion)}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all"
               >
                 Review
               </button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Review Modal */}
-      {reviewing && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-[#161616] border border-neutral-800 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl">
-            <div className="p-6 border-b border-neutral-800 flex justify-between items-center">
-              <div>
-                <h3 className="text-lg font-bold text-white">Review Update</h3>
-                <p className="text-xs text-neutral-500">{reviewing.title}</p>
-              </div>
               <button
-                onClick={() => setReviewing(null)}
-                className="text-neutral-500 hover:text-white p-2 hover:bg-neutral-800 rounded-lg transition-colors"
+                onClick={() => handleDiscard(suggestion.id)}
+                className="p-2 text-neutral-500 hover:text-red-400 transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
+          </div>
+        </div>
+      ))}
 
-            <div className="p-6 overflow-y-auto max-h-[60vh] space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-3">
-                  <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">
-                    Current
-                  </span>
-                  <div className="p-4 rounded-xl border border-neutral-800 bg-neutral-900/50 min-h-[150px]">
-                    {reviewing.currentData ? (
-                      <div className="opacity-50 line-through text-xs space-y-2">
-                        <p className="font-bold">
-                          {JSON.parse(reviewing.currentData).name}
-                        </p>
-                        <ul className="list-disc ml-4 space-y-1">
-                          {JSON.parse(reviewing.currentData).bullets.map(
-                            (b: string, i: number) => (
-                              <li key={i}>{b}</li>
-                            )
-                          )}
-                        </ul>
+      {/* Review Modal */}
+      {reviewing && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm">
+          <div className="bg-neutral-900 border border-white/10 rounded-3xl w-full max-w-xl overflow-hidden shadow-2xl">
+            <div className="p-8">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-sm font-black text-white uppercase tracking-[2px] mb-1">Review AI Suggestion</h3>
+                  <p className="text-[10px] text-neutral-400 uppercase tracking-wider">{reviewing.type.replace('_', ' ')}</p>
+                </div>
+                <button 
+                  onClick={() => setReviewing(null)}
+                  className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                >
+                  <X className="w-5 h-5 text-neutral-500" />
+                </button>
+              </div>
+
+              <div className="space-y-6">
+                <div className="p-6 bg-white/5 border border-white/10 rounded-2xl">
+                  <h5 className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mb-3">AI Proposed Changes</h5>
+                  <div className="text-xs text-white leading-relaxed">
+                    {/* Render specific fields based on type */}
+                    {reviewing.type === 'NEW_PROJECT' && (
+                      <div className="space-y-4">
+                        <div>
+                          <p className="text-[9px] font-bold text-neutral-500 uppercase mb-1">Project Name</p>
+                          <p className="font-bold">{JSON.parse(reviewing.proposedData).title}</p>
+                        </div>
+                        <div>
+                          <p className="text-[9px] font-bold text-neutral-500 uppercase mb-1">Description</p>
+                          <p>{JSON.parse(reviewing.proposedData).description}</p>
+                        </div>
+                        <div>
+                          <p className="text-[9px] font-bold text-neutral-500 uppercase mb-1">Key Highlights</p>
+                          <ul className="list-disc pl-4 mt-2 space-y-1">
+                            {(JSON.parse(reviewing.proposedData).highlights || []).map((h: string, i: number) => (
+                              <li key={i}>{h}</li>
+                            ))}
+                          </ul>
+                        </div>
                       </div>
-                    ) : (
-                      <p className="text-xs text-neutral-600 italic mt-10 text-center">
-                        No current data (New Project)
-                      </p>
+                    )}
+                    {reviewing.type === 'ADD_SKILL' && (
+                      <div className="space-y-4">
+                        {Object.entries(JSON.parse(reviewing.proposedData)).map(([cat, skills]: [string, any]) => (
+                          skills.length > 0 && (
+                            <div key={cat}>
+                              <p className="text-[9px] font-bold text-neutral-500 uppercase mb-2">{cat}</p>
+                              <div className="flex flex-wrap gap-2">
+                                {skills.map((s: string) => (
+                                  <span key={s} className="px-2 py-1 bg-white/10 rounded-lg text-[10px] font-bold">{s}</span>
+                                ))}
+                              </div>
+                            </div>
+                          )
+                        ))}
+                      </div>
                     )}
                   </div>
                 </div>
-                <div className="space-y-3">
-                  <span className="text-[10px] font-bold text-blue-500 uppercase tracking-widest">
-                    Proposed
-                  </span>
-                  <div className="p-4 rounded-xl border border-blue-500/20 bg-blue-500/5 min-h-[150px]">
-                    <div className="text-xs space-y-2 text-neutral-200">
-                      <p className="font-bold text-white">
-                        {JSON.parse(reviewing.proposedData).name}
-                      </p>
-                      <ul className="list-disc ml-4 space-y-1">
-                        {JSON.parse(reviewing.proposedData).bullets.map(
-                          (b: string, i: number) => (
-                            <li key={i}>{b}</li>
-                          )
-                        )}
-                      </ul>
-                    </div>
-                  </div>
+
+                <div className="flex gap-4">
+                  <button
+                    onClick={() => handleApprove(reviewing.id, JSON.parse(reviewing.proposedData))}
+                    className="flex-1 flex items-center justify-center gap-3 py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl text-xs font-black uppercase tracking-[2px] transition-all shadow-xl shadow-emerald-900/20"
+                  >
+                    <Check className="w-4 h-4" />
+                    Approve & Sync
+                  </button>
+                  <button
+                    onClick={() => handleDiscard(reviewing.id)}
+                    className="px-8 py-4 bg-white/5 hover:bg-red-500/20 text-neutral-400 hover:text-red-400 rounded-2xl text-xs font-bold uppercase tracking-[2px] transition-all"
+                  >
+                    Discard
+                  </button>
                 </div>
               </div>
-
-              <div className="bg-blue-500/5 border border-blue-500/10 rounded-xl p-4 flex gap-3">
-                <AlertCircle className="text-blue-400 w-5 h-5 shrink-0" />
-                <p className="text-xs text-blue-200/70 leading-relaxed">
-                  AI determined this as a high-confidence improvement. Applying this will update
-                  your{" "}
-                  {reviewing.type === "NEW_PROJECT"
-                    ? "Technical Projects list"
-                    : "existing project bullets"}
-                  .
-                </p>
-              </div>
-            </div>
-
-            <div className="p-6 bg-neutral-900 border-t border-neutral-800 flex justify-end gap-3">
-              <button
-                onClick={() => setReviewing(null)}
-                className="px-6 py-2.5 rounded-xl text-xs font-bold text-neutral-400 hover:text-white transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => handleDiscard(reviewing.id)}
-                className="px-6 py-2.5 rounded-xl text-xs font-bold text-neutral-500 hover:text-red-400 border border-neutral-700 hover:border-red-500/30 transition-all"
-              >
-                Discard
-              </button>
-              <button
-                onClick={() => handleApprove(reviewing.id)}
-                className="px-8 py-2.5 bg-blue-600 hover:bg-blue-500 rounded-xl text-xs font-bold text-white transition-all shadow-lg shadow-blue-600/20"
-              >
-                Approve & Apply
-              </button>
             </div>
           </div>
         </div>

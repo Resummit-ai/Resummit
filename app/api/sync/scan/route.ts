@@ -17,7 +17,7 @@ export async function POST(req: Request) {
        return NextResponse.json({ error: "GitHub access token required" }, { status: 400 });
     }
 
-    const result = await runSmartSync(session.user.id, accessToken);
+    const result = await runSmartSync(session.user.id, accessToken, session.user.email || undefined);
     return NextResponse.json(result);
   } catch (error: any) {
     console.error("Scan API Error:", error);

@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/server/prisma";
 import { NextResponse } from "next/server";
 import { calculateATSScore } from "@/lib/aiService";
+import { withCache } from "@/lib/server/cache";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -12,55 +13,65 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const { searchParams } = new URL(req.url);
+  const versionId = searchParams.get("versionId");
+
   try {
-    const cv = await prisma.cV.findUnique({ where: { userId: session.user.id } });
-    if (!cv || !cv.userId) {
-      return NextResponse.json({ error: "No CV found" }, { status: 404 });
+    let version;
+    if (versionId) {
+      version = await prisma.resumeVersion.findUnique({
+        where: { id: versionId, resume: { userId: session.user.id } }
+      });
+    } else {
+      version = await prisma.resumeVersion.findFirst({
+        where: { resume: { userId: session.user.id }, isMain: true }
+      });
     }
 
-    const projects = await prisma.project.findMany({ where: { userId: session.user.id } });
+    if (!version) {
+      return NextResponse.json({ error: "No resume version found" }, { status: 404 });
+    }
 
-    const safeParse = (val: any, fallback: any = []) => {
-      if (val === null || val === undefined) return fallback;
-      if (Array.isArray(val) || (typeof val === 'object' && val !== null)) return val;
-      if (typeof val === 'string' && val.trim().length > 0) {
-        try {
-          return JSON.parse(val);
-        } catch (e) {
-          return fallback;
-        }
-      }
-      return fallback;
-    };
-
-    const parsedSkills = safeParse(cv.skills, { languages: [], frameworks: [], tools: [] });
-    const parsedExp = safeParse(cv.experience, []);
-    const parsedEdu = safeParse(cv.education, []);
+    const personalInfo: any = version.personalInfo || {};
+    const skills: any = version.skills || {};
+    const experience: any = version.experience || [];
+    const education: any = version.education || [];
+    const projects: any = version.projects || [];
 
     const cvText = `
-Name: ${cv.name || "Anonymous"}
-Target Role: ${cv.targetRole || "Software Engineer"}
-Summary: ${cv.summary || "No summary provided."}
+Name: ${personalInfo.name || "Anonymous"}
+Target Role: ${personalInfo.targetRole || "Software Engineer"}
+Summary: ${version.summary || "No summary provided."}
 
 Skills:
-Languages: ${(parsedSkills.languages || []).join(", ")}
-Frameworks: ${(parsedSkills.frameworks || []).join(", ")}
-Tools: ${(parsedSkills.tools || []).join(", ")}
+Languages: ${(skills.languages || []).join(", ")}
+Frameworks: ${(skills.frameworks || []).join(", ")}
+Tools: ${(skills.tools || []).join(", ")}x
 
 Experience:
-${parsedExp.map((e: any) => `${e.company || 'Company'} (${e.title || 'Role'}): ${e.period || 'Period'}\n- ${(e.bullets || []).join("\n- ")}`).join("\n\n")}
+${experience.map((e: any) => `${e.company || 'Company'} (${e.title || 'Role'}): ${e.period || 'Period'}\n- ${(e.bullets || []).join("\n- ")}`).join("\n\n")}
 
 Education:
-${parsedEdu.map((e: any) => `${e.school || 'School'} (${e.degree || 'Degree'}): ${e.year || 'Year'}`).join("\n\n")}
+${education.map((e: any) => `${e.school || 'School'} (${e.degree || 'Degree'}): ${e.year || 'Year'}`).join("\n\n")}
 
 Projects:
-${projects.map((p: any) => `${p.name || 'Untitled'} (${p.techStack || 'Unspecified'})\n- ${safeParse(p.bullets).join("\n- ")}`).join("\n\n")}
+${projects.map((p: any) => `${p.title || p.name || 'Untitled'} (${p.techStack || 'Unspecified'})\n- ${(p.highlights || p.bullets || []).join("\n- ")}`).join("\n\n")}
     `;
 
-    const parsed = await calculateATSScore(cvText, cv.targetRole || "Software Engineer");
+    const payload = { 
+      content: cvText.trim(), 
+      target: personalInfo.targetRole || "Software Engineer" 
+    };
 
-    await prisma.cV.update({
-      where: { userId: session.user.id },
+    const parsed = await withCache(
+      "ats-score",
+      payload,
+      () => calculateATSScore(cvText, personalInfo.targetRole || "Software Engineer")
+    );
+
+    // Persist score to DB
+    await prisma.resumeVersion.update({
+      where: { id: version.id },
       data: { atsScore: parsed.score }
     });
 

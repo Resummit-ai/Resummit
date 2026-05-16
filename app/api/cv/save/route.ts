@@ -1,9 +1,36 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/server/prisma";
 import { NextResponse } from "next/server";
+import { z } from "zod";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+const projectSchema = z.object({
+  id: z.string(),
+  title: z.string().default("Untitled Project"),
+  description: z.string().nullish().default(""),
+  techStack: z.array(z.string()).nullish().default([]),
+  liveUrl: z.string().nullish(),
+  githubUrl: z.string().nullish(),
+  highlights: z.array(z.string()).nullish().default([]),
+  aiGenerated: z.boolean().optional().default(false),
+  included: z.boolean().optional().default(true),
+});
+
+const cvSchema = z.object({
+  versionId: z.string(),
+  data: z.object({
+    personalInfo: z.any(),
+    summary: z.string().default(""),
+    skills: z.any(),
+    experience: z.array(z.any()).default([]),
+    projects: z.array(projectSchema).default([]),
+    education: z.array(z.any()).default([]),
+    atsScore: z.number().optional().default(0),
+  }),
+});
+
 
 export async function POST(req: Request) {
   const session = await auth();
@@ -12,80 +39,31 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { cv, projects, lastEditedBy } = await req.json();
+    const body = await req.json();
+    const { versionId, data } = cvSchema.parse(body);
 
-    // 1. Update CV
-    await prisma.cV.upsert({
-      where: { userId: session.user.id },
-      update: {
-        name: cv.name || "",
-        email: cv.email || "",
-        github: cv.github || "",
-        linkedin: cv.linkedin || "",
-        phone: cv.phone || "",
-        location: cv.location || "",
-        summary: cv.summary || "",
-        skills: JSON.stringify(cv.skills || { languages: [], frameworks: [], tools: [] }),
-        targetRole: cv.targetRole || "Software Engineer",
-        atsScore: cv.atsScore || 0,
-        experience: JSON.stringify(cv.experience || []),
-        education: JSON.stringify(cv.education || []),
-        lastEditedBy: lastEditedBy || "AI",
-        lastEditedAt: new Date(),
-      },
-      create: {
-        userId: session.user.id,
-        name: cv.name || "",
-        email: cv.email || "",
-        github: cv.github || "",
-        linkedin: cv.linkedin || "",
-        phone: cv.phone || "",
-        location: cv.location || "",
-        summary: cv.summary || "",
-        skills: JSON.stringify(cv.skills || { languages: [], frameworks: [], tools: [] }),
-        targetRole: cv.targetRole || "Software Engineer",
-        atsScore: cv.atsScore || 0,
-        experience: JSON.stringify(cv.experience || []),
-        education: JSON.stringify(cv.education || []),
-        lastEditedBy: lastEditedBy || "AI",
+    // Update ResumeVersion
+    await prisma.resumeVersion.update({
+      where: { id: versionId },
+      data: {
+        personalInfo: data.personalInfo,
+        summary: data.summary,
+        skills: data.skills,
+        experience: data.experience,
+        projects: data.projects as any, // Cast to any because Prisma Json type is picky
+        education: data.education,
+        atsScore: data.atsScore || 0,
       }
     });
 
-    // 2. Update all projects
-    if (Array.isArray(projects)) {
-      const operations = projects.map((p: any) => {
-        if (p.id && !p.id.toString().startsWith("temp-") && !p.id.toString().startsWith("t-")) {
-          // Existing project
-          return prisma.project.update({
-            where: { id: p.id },
-            data: {
-              name: p.name,
-              techStack: p.techStack,
-              bullets: JSON.stringify(p.bullets),
-              lastEditedBy: lastEditedBy || "AI",
-              lastEditedAt: new Date(),
-            }
-          });
-        } else {
-          // New manual project added from UI
-          return prisma.project.create({
-            data: {
-              userId: session.user.id!,
-              name: p.name || "Untitled Project",
-              techStack: p.techStack || "General",
-              bullets: JSON.stringify(p.bullets || []),
-              description: "",
-              lastEditedBy: "USER",
-            }
-          });
-        }
-      });
-      await Promise.all(operations);
-    }
-
     return NextResponse.json({ success: true });
   } catch (error: any) {
-    console.error("AutoSave Error:", error);
+    if (error instanceof z.ZodError) {
+      console.error("AutoSave Validation Error:", JSON.stringify(error.errors, null, 2));
+      return NextResponse.json({ error: error.errors }, { status: 400 });
+    }
+    console.error("AutoSave Server Error:", error);
     return NextResponse.json({ error: "Failed to auto-save" }, { status: 500 });
   }
 }
+
