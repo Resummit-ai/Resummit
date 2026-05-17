@@ -8,9 +8,16 @@ export async function POST(req: Request) {
 
   try {
     const { accessToken } = await req.json();
+    
+    // resolveUserId now auto-creates the User if missing — preventing FK violations
     const userId = await resolveUserId(session);
+    
+    if (!userId) {
+      console.warn("[GITHUB] sync-token: Could not resolve userId for session email:", session.user?.email);
+      return NextResponse.json({ error: "User account not found. Please sign out and sign in again." }, { status: 404 });
+    }
 
-    if (!userId) return NextResponse.json({ error: "User not found" }, { status: 404 });
+    console.log("[GITHUB] sync-token: syncing token for resolved userId:", userId);
 
     await prisma.gitHubData.upsert({
       where: { userId },
@@ -23,8 +30,10 @@ export async function POST(req: Request) {
       }
     });
 
+    console.log("[GITHUB] Token synced successfully for user:", userId);
     return NextResponse.json({ success: true });
   } catch (error: any) {
+    console.error("[GITHUB] sync-token error:", error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

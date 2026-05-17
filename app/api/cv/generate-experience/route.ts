@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { prisma, resolveUserId } from "@/lib/server/prisma";
 import { callAI, safeParseJSON } from "@/lib/aiService";
 import { NextResponse } from "next/server";
 
@@ -7,7 +8,8 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
   const session = await auth();
-  if (!session?.user?.id) {
+  const userId = await resolveUserId(session);
+  if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

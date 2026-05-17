@@ -319,3 +319,65 @@ If no new skills can be inferred, return empty arrays.`;
     return { languages: [], frameworks: [], tools: [] };
   }
 }
+
+/**
+ * AI-powered skill extraction from rich GitHub repo context.
+ * Takes actual repo metadata (language, topics, README snippets) to extract
+ * skills with much higher accuracy than project titles alone.
+ */
+export async function suggestSkillsFromGitHub(
+  repos: Array<{ name: string; language: string | null; description: string | null; topics: string[]; readme: string }>,
+  projects: any[],
+  existing: string[]
+): Promise<{ languages: string[]; frameworks: string[]; tools: string[] }> {
+  if (repos.length === 0 && projects.length === 0) {
+    return { languages: [], frameworks: [], tools: [] };
+  }
+
+  const repoSummaries = repos.map(r => {
+    const parts = [];
+    if (r.name) parts.push(`Repo: ${r.name}`);
+    if (r.language) parts.push(`Language: ${r.language}`);
+    if (r.topics?.length) parts.push(`Topics: ${r.topics.join(", ")}`);
+    if (r.description) parts.push(`Description: ${r.description}`);
+    if (r.readme) parts.push(`README excerpt: ${r.readme.slice(0, 400)}`);
+    return parts.join(" | ");
+  }).join("\n");
+
+  const prompt = `You are a technical resume AI. Analyze the following GitHub repositories and extract the specific technical skills this engineer has demonstrated.
+
+GITHUB REPOSITORIES:
+${repoSummaries}
+
+RESUME PROJECTS (additional context):
+${projects.slice(0, 5).map((p: any) => `${p.title || p.name}: ${(p.techStack || []).join(", ")}`).join("\n")}
+
+ALREADY LISTED SKILLS (do NOT include these):
+${existing.join(", ") || "none"}
+
+RULES:
+- Only include skills clearly evidenced by the code/repos above
+- Classify each skill as: languages (programming languages), frameworks (libraries/frameworks), or tools (databases, cloud, devops, etc.)
+- Use proper formal names: "Node.js" not "nodejs", "PostgreSQL" not "postgres"
+- Minimum 3 per category if evidence exists
+- Do NOT hallucinate skills not mentioned in the repos
+
+Return ONLY valid JSON, no explanation:
+{
+  "languages": [],
+  "frameworks": [],
+  "tools": []
+}`;
+
+  const raw = await callAI(prompt);
+  try {
+    const parsed = safeParseJSON(raw);
+    return {
+      languages: Array.isArray(parsed.languages) ? parsed.languages.filter((s: any) => typeof s === "string" && s.length > 0) : [],
+      frameworks: Array.isArray(parsed.frameworks) ? parsed.frameworks.filter((s: any) => typeof s === "string" && s.length > 0) : [],
+      tools: Array.isArray(parsed.tools) ? parsed.tools.filter((s: any) => typeof s === "string" && s.length > 0) : [],
+    };
+  } catch {
+    return { languages: [], frameworks: [], tools: [] };
+  }
+}

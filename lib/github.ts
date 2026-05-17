@@ -204,7 +204,8 @@ const SKILL_MAP: Record<string, string> = {
   "playwright": "Playwright",
   "jest": "Jest",
 };
-export { SKILL_CATEGORIES } from "./skills-data";
+import { SKILL_CATEGORIES } from "./skills-data";
+export { SKILL_CATEGORIES };
 
 /**
  * Weighted skill extraction.

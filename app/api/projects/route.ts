@@ -1,19 +1,20 @@
 import { auth } from "@/auth";
-import { prisma } from "@/lib/server/prisma";
+import { prisma, resolveUserId } from "@/lib/server/prisma";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {
   const session = await auth();
-  if (!session?.user?.id) {
+  const userId = await resolveUserId(session);
+  if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const mainVersion = await prisma.resumeVersion.findFirst({
       where: { 
-        resume: { userId: session.user.id },
+        resume: { userId: userId },
         isMain: true 
       },
       select: { projects: true }

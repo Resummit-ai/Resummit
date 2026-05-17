@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { prisma } from "@/lib/server/prisma";
+import { prisma, resolveUserId } from "@/lib/server/prisma";
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
@@ -7,7 +7,8 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 export async function POST(req: Request) {
   const session = await auth();
-  if (!session?.user?.id) {
+  const userId = await resolveUserId(session);
+  if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -21,7 +22,7 @@ export async function POST(req: Request) {
     // 1. Fetch the main version of the resume
     const mainVersion = await prisma.resumeVersion.findFirst({
       where: { 
-        resume: { id: resumeId, userId: session.user.id },
+        resume: { id: resumeId, userId: userId },
         isMain: true 
       }
     });

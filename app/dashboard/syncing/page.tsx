@@ -24,7 +24,7 @@ export default function SyncingPage() {
         const response = await fetch("/api/sync/scan", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ accessToken: (session.user as any).accessToken })
+          body: JSON.stringify({ accessToken: (session?.user as any)?.accessToken })
         });
 
         if (!response.ok) {

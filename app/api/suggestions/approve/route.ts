@@ -1,24 +1,18 @@
 import { auth } from "@/auth";
-import { prisma } from "@/lib/server/prisma";
+import { prisma, resolveUserId } from "@/lib/server/prisma";
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 
 export async function POST(req: Request) {
   const session = await auth();
-  if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const userId = await resolveUserId(session);
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
     const body = await req.json();
     const { id } = body;
     console.log('[APPROVE] raw request body:', JSON.stringify(body, null, 2));
     
-    // SELF-HEALING: Resolve DB User ID
-    let dbUser = await prisma.user.findUnique({ where: { id: session.user.id } });
-    if (!dbUser && session.user.email) {
-      dbUser = await prisma.user.findUnique({ where: { email: session.user.email } });
-    }
-    const userId = dbUser?.id || session.user.id;
-
     const suggestion = await prisma.suggestion.findUnique({
       where: { id, userId }
     });
@@ -62,7 +56,7 @@ export async function POST(req: Request) {
         updatedProjects.unshift(projectToAdd);
       }
     } else if (suggestion.type === "IMPROVE_PROJECT" && suggestion.entityId) {
-      updatedProjects = currentProjects.map(p => 
+      updatedProjects = currentProjects.map((p: any) => 
         p.id === suggestion.entityId 
           ? { ...p, ...projectToAdd, id: p.id }
           : p

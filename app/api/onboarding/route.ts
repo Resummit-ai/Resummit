@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { prisma } from "@/lib/server/prisma";
+import { prisma, resolveUserId } from "@/lib/server/prisma";
 import { NextResponse } from "next/server";
 import { generateCVFromRepos } from "@/lib/aiService";
 import { generateEngineeringSignals } from "@/lib/server/githubIntelligence";
@@ -10,7 +10,8 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
   const session = await auth();
-  if (!session?.user?.id) {
+  const userId = await resolveUserId(session);
+  if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -19,7 +20,7 @@ export async function POST(req: Request) {
 
     // 1. Update user profile
     const user = await prisma.user.update({
-      where: { id: session.user.id },
+      where: { id: userId },
       data: {
         githubUsername: github,
         linkedinUrl: linkedin,
@@ -31,7 +32,7 @@ export async function POST(req: Request) {
     // 2. Fetch GitHub repos (Initial sync)
     const githubRes = await axios.get(`https://api.github.com/users/${github}/repos?sort=updated&per_page=10`, {
       headers: {
-        Authorization: `token ${(session.user as any).accessToken}`,
+        Authorization: `token ${(session?.user as any)?.accessToken || ""}`,
       }
     });
 
@@ -47,13 +48,13 @@ export async function POST(req: Request) {
         userId: user.id,
         repositories: repos,
         signals: signals as any,
-        accessToken: (session.user as any).accessToken,
+        accessToken: (session?.user as any)?.accessToken || null,
         lastSyncedAt: new Date(),
       },
       update: {
         repositories: repos,
         signals: signals as any,
-        accessToken: (session.user as any).accessToken,
+        accessToken: (session?.user as any)?.accessToken || null,
         lastSyncedAt: new Date(),
       }
     });

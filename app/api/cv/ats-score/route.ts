@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { prisma } from "@/lib/server/prisma";
+import { prisma, resolveUserId } from "@/lib/server/prisma";
 import { NextResponse } from "next/server";
 import { calculateATSScore } from "@/lib/aiService";
 import { withCache } from "@/lib/server/cache";
@@ -9,7 +9,8 @@ export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {
   const session = await auth();
-  if (!session?.user?.id) {
+  const userId = await resolveUserId(session);
+  if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -19,12 +20,18 @@ export async function GET(req: Request) {
   try {
     let version;
     if (versionId) {
+      // First find the version by ID
       version = await prisma.resumeVersion.findUnique({
-        where: { id: versionId, resume: { userId: session.user.id } }
+        where: { id: versionId },
+        include: { resume: { select: { userId: true } } }
       });
+      // Then verify ownership
+      if (version && (version as any).resume?.userId !== userId) {
+        return NextResponse.json({ error: "No resume version found" }, { status: 404 });
+      }
     } else {
       version = await prisma.resumeVersion.findFirst({
-        where: { resume: { userId: session.user.id }, isMain: true }
+        where: { resume: { userId: userId }, isMain: true }
       });
     }
 

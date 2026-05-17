@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Copy, Eye, FileText, Printer, RotateCcw, Save, Trash2 } from "lucide-react";
 import { ResumePreview } from "./ResumePreview";
+import { ProjectData } from "@/lib/types";
 
 interface Project {
   id: string;
@@ -141,7 +142,29 @@ export function CVEditor({
           <span className="text-xs font-mono text-neutral-600">A4 • 1 PAGE TARGET</span>
         </header>
         <div className="flex-1 overflow-y-auto p-12 flex justify-center bg-neutral-900/20">
-          <ResumePreview projects={projects} user={user} />
+          <ResumePreview 
+            data={{
+              name: user?.name || "",
+              email: user?.email || "",
+              phone: user?.phone || "",
+              location: user?.location || "",
+              github: user?.githubUsername ? `github.com/${user.githubUsername}` : "",
+              linkedin: user?.linkedinUrl || "",
+              summary: user?.summary || "",
+              targetRole: user?.targetRole || "Software Engineer",
+              skills: { languages: [], frameworks: [], tools: [] },
+              experience: [],
+              education: []
+            }} 
+            projects={projects.map(p => ({
+              id: p.id,
+              title: p.name,
+              description: p.description,
+              techStack: p.techStack ? p.techStack.split(",").map(s => s.trim()) : [],
+              highlights: p.bullets,
+              included: true
+            }))}
+          />
         </div>
       </div>
     </div>

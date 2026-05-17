@@ -2,8 +2,9 @@ import { prisma } from "@/lib/server/prisma";
 import { notFound } from "next/navigation";
 import { Download } from "lucide-react";
 
-export default async function PublicCVPage({ params }: { params: { slug: string } }) {
-  const cv = await prisma.cV.findUnique({ where: { slug: params.slug } });
+export default async function PublicCVPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const cv = await prisma.cV.findUnique({ where: { slug: slug } });
   
   if (!cv) {
     notFound();
@@ -23,13 +24,13 @@ export default async function PublicCVPage({ params }: { params: { slug: string 
       {/* Download Action */}
       <div className="max-w-[794px] w-full flex justify-end mb-4">
         {/* We would wire this up with a client component to trigger the fetch export, but for simplicity here we assume standard print behavior or an API ping */}
-        <button 
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm"
-          onClick="window.print()" // Standard fallback, though standard Next.js would use a client component wrapper
+        <a 
+          href="javascript:window.print()"
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm cursor-pointer"
         >
           <Download className="w-4 h-4" />
           Download PDF
-        </button>
+        </a>
       </div>
 
       {/* CV Document Wrapper */}
@@ -77,7 +78,7 @@ export default async function PublicCVPage({ params }: { params: { slug: string 
           <section className="mb-6">
             <h2 className="text-xs font-bold uppercase tracking-widest border-b border-neutral-800 pb-1 mb-3">Technical Projects</h2>
             <div className="space-y-4">
-              {projects.map((p) => {
+              {projects.map((p: any) => {
                 const bullets = typeof p.bullets === "string" ? JSON.parse(p.bullets) : p.bullets;
                 return (
                   <div key={p.id}>

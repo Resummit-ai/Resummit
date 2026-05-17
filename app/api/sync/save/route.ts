@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { prisma } from "@/lib/server/prisma";
+import { prisma, resolveUserId } from "@/lib/server/prisma";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
@@ -16,7 +16,8 @@ const LANGUAGE_OVERRIDES: Record<string, string> = {
 
 export async function POST(req: Request) {
   const session = await auth();
-  if (!session?.user) {
+  const userId = await resolveUserId(session);
+  if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -41,25 +42,25 @@ export async function POST(req: Request) {
 
     // Ensure the NextAuth session user exists in the Prisma SQLite database
     const userDb = await prisma.user.upsert({
-      where: { id: session.user.id! },
+      where: { id: userId },
       update: {},
       create: {
-        id: session.user.id!,
-        name: session.user.name || "GitHub User",
-        email: session.user.email || null,
+        id: userId,
+        name: session?.user?.name || "GitHub User",
+        email: session?.user?.email || null,
       }
     });
 
     // Upsert the CV state with newly generated AI context
     await prisma.cV.upsert({
-      where: { userId: session.user.id! },
+      where: { userId: userId },
       update: {
         summary: summary || "",
         skills: skillsString,
         experience: experience ? JSON.stringify(experience) : "[]",
       },
       create: {
-        userId: session.user.id!,
+        userId: userId,
         name: userDb.name || "",
         email: userDb.email || "",
         summary: summary || "",
@@ -72,12 +73,12 @@ export async function POST(req: Request) {
     // TEMPORARY FIX: Wipe ALL existing projects to clear the bugged 18-project state 
     // from the previous engine. (The previous bugs inserted them as "USER").
     await prisma.project.deleteMany({
-      where: { userId: session.user.id! }
+      where: { userId: userId }
     });
 
     // Capacity check: Max 3 total projects
     const userProjectsCount = await prisma.project.count({
-      where: { userId: session.user.id!, lastEditedBy: "USER" }
+      where: { userId: userId, lastEditedBy: "USER" }
     });
 
     const remainingSlots = Math.max(0, 3 - userProjectsCount);
@@ -87,7 +88,7 @@ export async function POST(req: Request) {
     const createOperations = projectsToInsert.map((p: any) =>
       prisma.project.create({
         data: {
-          userId: session.user.id!,
+          userId: userId,
           name: p.projectName || p.name,
           description: p.description || "",
           techStack: p.tech || p.techStack || "",

@@ -1,15 +1,16 @@
 import { auth } from "@/auth";
-import { prisma } from "@/lib/server/prisma";
+import { prisma, resolveUserId } from "@/lib/server/prisma";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const session = await auth();
-  if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const userId = await resolveUserId(session);
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
     const { id } = await req.json();
     await prisma.suggestion.update({
-      where: { id, userId: session.user.id },
+      where: { id, userId: userId },
       data: { status: "REJECTED" }
     });
     return NextResponse.json({ success: true });

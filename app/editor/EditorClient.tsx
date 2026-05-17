@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { Download, Plus, Trash2, RotateCcw, Link as LinkIcon, CheckCircle2, Activity, Eye, Sparkles, Target, X, Loader2, User, Briefcase, Code2, GraduationCap, Zap, AlertTriangle, ChevronDown, ChevronUp, Save, Wifi, WifiOff, ArrowUp, ArrowDown, ExternalLink, Rocket, Cpu, Code, Terminal } from "lucide-react";
+import { Download, Plus, Trash2, RotateCcw, Link as LinkIcon, CheckCircle2, Activity, Eye, Sparkles, Target, X, Loader2, User, Briefcase, Code2, GraduationCap, Zap, AlertTriangle, ChevronDown, ChevronUp, Save, Wifi, WifiOff, ArrowUp, ArrowDown, ExternalLink, Rocket, Cpu, Code, Terminal, GitBranch } from "lucide-react";
 import type { CVData, ProjectData, CVSkills, CVExperience, CVEducation, SaveStatus, EditorTab } from "@/lib/types";
 import { ResumePreview } from "@/components/editor/ResumePreview";
 
@@ -906,196 +906,146 @@ export function EditorClient({
   // Tab: Mastery (Skills)
   // ─────────────────────────────────────────────
   const renderSkills = () => (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex items-center justify-between bg-blue-500/5 border border-blue-500/10 rounded-2xl p-6">
-        <div className="max-w-[180px]">
-           <h3 className="text-xs font-bold text-white mb-1">Intelligence Audit</h3>
-           <p className="text-[10px] text-blue-200/50 leading-relaxed font-medium">Let AI analyze your project source code to extract high-signal skills.</p>
-        </div>
-        <button
-          onClick={handleSuggestSkills}
-          disabled={suggestingSkills}
-          className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 shadow-xl shadow-blue-600/20 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all disabled:opacity-50 active:scale-95"
-        >
-          {suggestingSkills ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <Sparkles className="w-4 h-4" />
-          )}
-          {suggestingSkills ? "Extracting" : "✦ Sync Knowledge"}
-        </button>
-      </div>
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
-      {(["languages", "frameworks", "tools"] as (keyof CVSkills)[]).map((type) => (
-        <div key={type} className="group">
-          <SectionLabel>{type}</SectionLabel>
-          <div className="flex flex-wrap gap-2.5 mb-3 min-h-[50px] p-4 bg-neutral-900/60 border border-white/5 rounded-[1.25rem] group-focus-within:border-blue-500/30 transition-all shadow-inner">
-            {(cv.skills[type] || []).map((s, i) => (
-              <SkillTag key={i} label={s} onRemove={() => removeSkill(type, i)} />
-            ))}
-            {(cv.skills[type] || []).length === 0 && (
-              <span className="text-neutral-700 text-xs italic font-medium pt-1">No data points indexed...</span>
-            )}
-          </div>
-          <div className="relative">
-            <input
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === ",") {
-                  e.preventDefault();
-                  addSkill(type, e.currentTarget.value);
-                  e.currentTarget.value = "";
-                }
-              }}
-              placeholder={`Add ${type} (comma separated)...`}
-              className="w-full bg-transparent border-b border-white/5 px-2 py-3 text-xs text-neutral-400 placeholder:text-neutral-700 outline-none focus:border-blue-500/50 transition-all font-medium"
-            />
-            <div className="absolute right-2 top-3 text-[9px] font-bold text-neutral-700 pointer-events-none uppercase tracking-tighter">Enter to Index</div>
-          </div>
-        </div>
-      ))}
-
-      {/* Skill Validation Panel */}
-      {skillValidation && (
-        <div className="rounded-2xl border border-white/10 overflow-hidden">
-          {(skillValidation as any).requiresSync ? (
-            <div className="bg-blue-500/[0.02] p-8 flex flex-col items-center text-center relative overflow-hidden">
-               {validatingSkills ? (
-                 <>
-                   <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent animate-pulse" />
-                   <Loader2 className="w-8 h-8 text-blue-500 animate-spin mb-4 relative z-10" />
-                   <p className="text-[11px] font-black uppercase tracking-[0.3em] text-blue-400 mb-2 relative z-10">AI Intelligence Scan</p>
-                   <p className="text-[10px] text-neutral-500 max-w-[200px] relative z-10">Syncing your engineering DNA from GitHub to verify your technical mastery...</p>
-                 </>
-               ) : (
-                 <>
-                   <AlertTriangle className="w-6 h-6 text-amber-500/40 mb-3" />
-                   <p className="text-xs font-bold text-amber-200/80 mb-1">GitHub Intelligence Offline</p>
-                   <p className="text-[10px] text-neutral-500 mb-4 max-w-[240px]">We need to index your repositories before we can verify your technical mastery.</p>
-                   <Link href="/dashboard/syncing" className="px-5 py-2 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 rounded-xl text-[9px] font-black uppercase tracking-widest text-amber-400 transition-all">
-                      Initialize Sync Terminal
-                   </Link>
-                 </>
-               )}
+      {/* GitHub Sync Card */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-blue-900/20 via-indigo-900/10 to-transparent border border-blue-500/15 rounded-2xl p-5">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(59,130,246,0.08),transparent_60%)]" />
+        <div className="relative flex items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <GitBranch className="w-3.5 h-3.5 text-blue-400" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-300">GitHub Skill Sync</span>
             </div>
-          ) : (
-            <>
-              <div className="bg-white/[0.03] px-5 py-3 flex items-center justify-between border-b border-white/5">
-                <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-white">Validation Results</p>
-                  <p className="text-[9px] text-neutral-500 mt-0.5">
-                    ✅ {skillValidation.verified.length} verified by repos &nbsp;·&nbsp; ❌ {skillValidation.unverified.length} not found in any project
-                  </p>
-                </div>
-                <button
-                  onClick={handleRemoveUnverified}
-                  disabled={skillValidation.unverified.length === 0}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 text-[9px] font-black uppercase tracking-widest transition-all disabled:opacity-30"
-                >
-                  <Trash2 className="w-3 h-3" />
-                  Remove {skillValidation.unverified.length} Unverified
-                </button>
-              </div>
-              <div className="p-4">
-                {/* Unverified skills */}
-                {skillValidation.unverified.length > 0 && (
-                  <div className="mb-4">
-                    <p className="text-[9px] font-bold uppercase tracking-widest text-red-400 mb-2">❌ Not Found in Your GitHub Repos</p>
-                    <div className="flex flex-wrap gap-2">
-                      {skillValidation.unverified.map((s, i) => (
-                        <span key={i} className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-red-500/5 border border-red-500/20 text-[9px] font-bold text-red-300">
-                          {s}
-                          <button onClick={() => {
-                            const uLow = s.toLowerCase();
-                            setSkills({
-                              languages: (skills.languages || []).filter(x => x.toLowerCase() !== uLow),
-                              frameworks: (skills.frameworks || []).filter(x => x.toLowerCase() !== uLow),
-                              tools: (skills.tools || []).filter(x => x.toLowerCase() !== uLow),
-                            });
-                            setSkillValidation(prev => prev ? { ...prev, unverified: prev.unverified.filter(x => x !== s) } : null);
-                          }} className="text-red-500 hover:text-red-300 ml-0.5"><X className="w-2.5 h-2.5" /></button>
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {/* Verified skills */}
-                {skillValidation.verified.length > 0 && (
-                  <div className="mb-4">
-                    <p className="text-[9px] font-bold uppercase tracking-widest text-emerald-400 mb-2">✅ Verified by GitHub Activity</p>
-                    <div className="flex flex-wrap gap-2">
-                      {skillValidation.verified.map((s, i) => (
-                        <span key={i} className="px-2.5 py-1 rounded-lg bg-emerald-500/5 border border-emerald-500/20 text-[9px] font-bold text-emerald-300">
-                          {s}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {/* Suggested skills from repos not yet listed */}
-                {[...(skillValidation.suggested.languages || []), ...(skillValidation.suggested.frameworks || []), ...(skillValidation.suggested.tools || [])].length > 0 && (
-                  <div>
-                    <p className="text-[9px] font-bold uppercase tracking-widest text-blue-400 mb-2">💡 Found in Repos but Not Listed</p>
-                    <div className="flex flex-wrap gap-2">
-                      {([...skillValidation.suggested.languages, ...skillValidation.suggested.frameworks, ...skillValidation.suggested.tools]).map((s, i) => (
-                        <button
-                          key={i}
-                          onClick={() => {
-                            const cat = skillValidation.suggested.languages.includes(s) ? "languages"
-                              : skillValidation.suggested.frameworks.includes(s) ? "frameworks" : "tools";
-                            setSkills(prev => ({ ...prev, [cat]: [...(prev[cat] || []), s] }));
-                            setSkillValidation(prev => prev ? {
-                              ...prev,
-                              suggested: {
-                                languages: prev.suggested.languages.filter(x => x !== s),
-                                frameworks: prev.suggested.frameworks.filter(x => x !== s),
-                                tools: prev.suggested.tools.filter(x => x !== s),
-                              }
-                            } : null);
-                          }}
-                          className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-500/5 border border-blue-500/20 text-[9px] font-bold text-blue-300 hover:bg-blue-500/15 transition-all"
-                        >
-                          <Plus className="w-2.5 h-2.5" />{s}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </>
-          )}
-        </div>
-      )}
-
-      <div className="pt-4 flex items-center justify-between gap-3">
-        {/* Auto-validation indicator — shows while scanning in background */}
-        {validatingSkills && (
-          <span className="flex items-center gap-1.5 text-[9px] font-bold text-blue-400 uppercase tracking-[0.2em] animate-pulse">
-            <Loader2 className="w-3 h-3 animate-spin" /> {skillValidation ? "Syncing engineering profile..." : "Validating skills..."}
-          </span>
-        )}
-        <div className="ml-auto">
+            <p className="text-[10px] text-neutral-500 leading-relaxed max-w-[220px]">
+              Scans your repos &amp; README files to auto-discover technologies you've actually used.
+            </p>
+          </div>
           <button
-            onClick={saveCV}
-            disabled={saveStatus === "saving"}
-            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
-              saveStatus === "saved" 
-                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" 
-                : "bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/20"
-            }`}
+            onClick={handleSuggestSkills}
+            disabled={suggestingSkills}
+            className="shrink-0 flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-500 disabled:bg-blue-600/40 shadow-lg shadow-blue-600/25 text-white rounded-xl text-[9px] font-black uppercase tracking-widest transition-all active:scale-95"
           >
-            {saveStatus === "saving" ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
-            {saveStatus === "saving" ? "Syncing..." : saveStatus === "saved" ? "Skills Saved" : "Save Skill Matrix"}
+            {suggestingSkills ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <GitBranch className="w-3.5 h-3.5" />
+            )}
+            {suggestingSkills ? "Scanning..." : "Sync from GitHub"}
           </button>
         </div>
       </div>
 
+      {/* Skill Categories */}
+      {(["languages", "frameworks", "tools"] as (keyof CVSkills)[]).map((type) => {
+        const labels: Record<string, string> = {
+          languages: "Languages",
+          frameworks: "Frameworks & Libraries",
+          tools: "Tools & Platforms",
+        };
+        const placeholders: Record<string, string> = {
+          languages: "e.g. Python, TypeScript, Go...",
+          frameworks: "e.g. React, FastAPI, TensorFlow...",
+          tools: "e.g. Docker, PostgreSQL, AWS...",
+        };
+        const colors: Record<string, string> = {
+          languages: "bg-violet-500/10 text-violet-300 border-violet-500/20 hover:bg-violet-500/20",
+          frameworks: "bg-sky-500/10 text-sky-300 border-sky-500/20 hover:bg-sky-500/20",
+          tools: "bg-emerald-500/10 text-emerald-300 border-emerald-500/20 hover:bg-emerald-500/20",
+        };
+        const dotColors: Record<string, string> = {
+          languages: "bg-violet-400",
+          frameworks: "bg-sky-400",
+          tools: "bg-emerald-400",
+        };
 
-      <div className="pt-8 border-t border-white/5">
-        <p className="text-[10px] font-bold uppercase tracking-[2px] text-neutral-500 mb-4 px-2">Smart Skill Updates</p>
-        <SmartUpdateCenter 
-          initialSuggestions={initialSuggestions} 
-          accessToken={accessToken} 
-          lastSyncAt={initialData.lastSyncAt || null} 
+        return (
+          <div key={type} className="space-y-3">
+            {/* Category Header */}
+            <div className="flex items-center gap-2">
+              <div className={`w-1.5 h-1.5 rounded-full ${dotColors[type]}`} />
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-neutral-400">
+                {labels[type]}
+              </span>
+              <span className="text-[9px] text-neutral-700 font-bold">
+                ({(skills[type] || []).length})
+              </span>
+            </div>
+
+            {/* Chips */}
+            <div className="flex flex-wrap gap-2 min-h-[44px] p-3 bg-[#0f0f0f] border border-white/[0.06] rounded-xl transition-all focus-within:border-white/15">
+              {(skills[type] || []).map((s, i) => (
+                <span
+                  key={i}
+                  className={`group flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[10px] font-bold transition-all ${colors[type]}`}
+                >
+                  {s}
+                  <button
+                    onClick={() => removeSkill(type, i)}
+                    className="opacity-0 group-hover:opacity-100 transition-opacity text-current hover:text-red-400"
+                  >
+                    <X className="w-2.5 h-2.5" />
+                  </button>
+                </span>
+              ))}
+              {(skills[type] || []).length === 0 && (
+                <span className="text-[10px] text-neutral-700 italic font-medium self-center">
+                  No {labels[type].toLowerCase()} added yet
+                </span>
+              )}
+            </div>
+
+            {/* Add Input */}
+            <div className="relative group">
+              <input
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === ",") {
+                    e.preventDefault();
+                    const val = e.currentTarget.value.trim();
+                    if (val) {
+                      // Handle comma-separated batch input
+                      const parts = val.split(",").map(v => v.trim()).filter(Boolean);
+                      parts.forEach(part => addSkill(type, part));
+                      e.currentTarget.value = "";
+                    }
+                  }
+                }}
+                placeholder={placeholders[type]}
+                className="w-full bg-transparent border border-white/[0.06] group-hover:border-white/10 focus:border-blue-500/40 rounded-xl px-3.5 py-2.5 text-[11px] text-neutral-300 placeholder:text-neutral-700 outline-none transition-all font-medium"
+              />
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 pointer-events-none">
+                <kbd className="text-[8px] font-bold text-neutral-700 bg-white/5 px-1.5 py-0.5 rounded">Enter</kbd>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+
+      {/* Skill validation runs silently in background */}
+
+      {/* Save Button */}
+      <div className="pt-2 flex items-center justify-end">
+        <button
+          onClick={saveCV}
+          disabled={saveStatus === "saving"}
+          className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+            saveStatus === "saved"
+              ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+              : "bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/20"
+          }`}
+        >
+          {saveStatus === "saving" ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+          {saveStatus === "saving" ? "Saving..." : saveStatus === "saved" ? "Saved ✓" : "Save Skills"}
+        </button>
+      </div>
+
+      {/* Smart Updates — GitHub AI suggestions below */}
+      <div className="pt-6 border-t border-white/[0.04]">
+        <p className="text-[10px] font-bold uppercase tracking-[2px] text-neutral-600 mb-4 px-1">Smart Skill Updates</p>
+        <SmartUpdateCenter
+          initialSuggestions={initialSuggestions}
+          accessToken={accessToken}
+          lastSyncAt={initialData.lastSyncAt || null}
           setProjects={setProjects}
           setSkills={setSkills}
           setIsSyncing={setIsSyncing}
@@ -1478,11 +1428,7 @@ export function EditorClient({
         {/* Global Action Bar */}
         <div className="px-6 py-4 border-b border-white/[0.03] flex flex-col gap-4 bg-white/[0.01]">
             <div className="flex items-center justify-between">
-               {atsError ? (
-                 <div className="px-3 py-1.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-[9px] font-black uppercase flex items-center gap-2">
-                    <AlertTriangle className="w-3 h-3" /> Audit Error
-                 </div>
-               ) : atsData ? (
+               {atsData ? (
                  <button
                    onClick={() => setAtsPanelOpen(true)}
                    className={`px-3 py-1.5 rounded-xl border transition-all hover:scale-105 active:scale-95 flex items-center gap-2 text-[9px] font-black uppercase tracking-widest ${
@@ -1539,7 +1485,7 @@ export function EditorClient({
           {tabs.filter(t => t.id !== "tailor").map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => setActiveTab(tab.id as EditorTab)}
               className={`flex-1 flex flex-col items-center justify-center gap-1.5 py-3 text-[8px] font-black uppercase tracking-widest transition-all rounded-xl border ${
                 activeTab === tab.id
                   ? "bg-blue-600/10 border-blue-600/30 text-blue-400"

@@ -229,7 +229,7 @@ const BulletList = ({ bullets, isProject = false }: { bullets: string[]; isProje
   <View>
     {bullets.map((b, i) => (
       <View key={i} style={styles.bulletRow}>
-        <View style={[styles.bulletDot, isProject && styles.bulletProjectDot]} />
+        <View style={[styles.bulletDot, isProject ? styles.bulletProjectDot : {}]} />
         <Text style={styles.bulletText}>{b}</Text>
       </View>
     ))}
@@ -383,12 +383,13 @@ export const CVDocument = ({ cv, projects }: { cv: CVData; projects: ProjectData
               <View style={styles.section}>
                 <Text style={[styles.sectionTitle, { color: "#000000", borderBottomColor: "#000000" }]}>Selected Deep Work</Text>
                 {includedProjects.map((p, i) => {
-                  const bullets = typeof p.bullets === "string" ? JSON.parse(p.bullets as any) : p.bullets;
+                  const bullets = Array.isArray(p.highlights) ? p.highlights : (typeof p.highlights === "string" ? JSON.parse(p.highlights as any) : []);
+                  const techStr = Array.isArray(p.techStack) ? p.techStack.join(", ") : p.techStack;
                   return (
                     <View key={i} style={styles.entry}>
                       <View style={styles.entryHeader}>
-                        <Text style={styles.entryTitle}>{p.name}</Text>
-                        <Text style={styles.entryTech}>{p.techStack}</Text>
+                        <Text style={styles.entryTitle}>{p.title || "Untitled Project"}</Text>
+                        {techStr ? <Text style={styles.entryTech}>{techStr}</Text> : null}
                       </View>
                       {bullets?.length > 0 && <BulletList bullets={bullets} isProject />}
                     </View>
