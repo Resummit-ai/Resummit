@@ -411,8 +411,9 @@ export function EditorClient({
   const [suggestingSkills, setSuggestingSkills] = useState(false);
   const [rewritingBullet, setRewritingBullet] = useState<string | null>(null); // "projIdx-bulletIdx"
 
-  // Expanded project card tracking
+  // Expanded card tracking
   const [expandedProject, setExpandedProject] = useState<number | null>(0);
+  const [expandedExperience, setExpandedExperience] = useState<number | null>(0);
 
   const [isSyncing, setIsSyncing] = useState(false);
   const [generatingExpBullets, setGeneratingExpBullets] = useState<number | null>(null);
@@ -1237,91 +1238,110 @@ export function EditorClient({
 
       {cv.experience.map((exp, i) => (
         <div key={i} className="bg-[#121212] border border-white/5 rounded-[2rem] overflow-hidden group hover:border-blue-500/20 transition-all shadow-lg">
-          <div className="px-6 py-4 flex items-center justify-between bg-white/[0.02] cursor-pointer hover:bg-white/[0.04] transition-colors border-b border-white/5">
+          <div 
+            onClick={() => setExpandedExperience(expandedExperience === i ? null : i)}
+            className="px-6 py-4 flex items-center justify-between bg-white/[0.02] cursor-pointer hover:bg-white/[0.04] transition-colors border-b border-white/5"
+          >
             <div className="flex-1 min-w-0 mr-3">
-              <p className="text-sm font-bold text-white truncate font-outfit">{exp.company || "Project Node"}</p>
+              <p className="text-sm font-bold text-white truncate font-outfit">{exp.company || "New Experience"}</p>
               <div className="flex items-center gap-2 mt-0.5">
                  <p className="text-[10px] font-black uppercase tracking-widest text-[#444] group-hover:text-blue-500 transition-colors uppercase truncate">{exp.title || "Position"}</p>
                  <span className="w-1 h-1 rounded-full bg-neutral-800" />
-                 <p className="text-[10px] font-bold text-neutral-600 truncate">{exp.period || "00/0000 – 00/0000"}</p>
+                 <p className="text-[10px] font-bold text-neutral-600 truncate">{exp.period || "No Dates Set"}</p>
               </div>
             </div>
-            <button onClick={() => removeExperience(i)} className="p-2 text-neutral-700 hover:text-red-400 hover:bg-red-500/5 transition-all rounded-xl">
-               <Trash2 className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+              <button 
+                onClick={() => removeExperience(i)} 
+                className="p-2 text-neutral-700 hover:text-red-400 hover:bg-red-500/5 transition-all rounded-xl"
+                title="Delete Experience"
+              >
+                 <Trash2 className="w-4 h-4" />
+              </button>
+              <button 
+                onClick={() => setExpandedExperience(expandedExperience === i ? null : i)}
+                className="p-2 text-neutral-500 hover:text-white transition-colors"
+                title={expandedExperience === i ? "Collapse" : "Expand"}
+              >
+                {expandedExperience === i ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              </button>
+            </div>
           </div>
-          <div className="p-6 space-y-5">
-            <div className="grid grid-cols-2 gap-5">
-              <div className="col-span-2 md:col-span-1">
-                <SectionLabel>Company / Organization</SectionLabel>
-                <InlineEdit value={exp.company} onChange={(v) => updateExp(i, "company", v)} placeholder="Company Name" />
-              </div>
-              <div className="col-span-2 md:col-span-1">
-                <SectionLabel>Dates / Period</SectionLabel>
-                <ExperienceDatePicker value={exp.period} onChange={(v) => updateExp(i, "period", v)} />
-              </div>
-              <div className="col-span-2">
-                <SectionLabel>Job Title</SectionLabel>
-                <InlineEdit value={exp.title} onChange={(v) => updateExp(i, "title", v)} placeholder="Software Engineer / Technical Lead" />
-              </div>
-            </div>
-
-            <div className="pt-2">
-              <div className="flex items-center justify-between mb-4">
-                <SectionLabel>Achievements & Responsibilities</SectionLabel>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => addExpBullet(i)}
-                    className="text-[9px] font-black uppercase tracking-widest text-neutral-600 hover:text-white flex items-center gap-2 bg-white/5 px-2.5 py-1 rounded-lg transition-all"
-                  >
-                    <Plus className="w-3 h-3" /> Outcome
-                  </button>
-                  <button
-                    onClick={() => handleGenerateExpBullets(i)}
-                    disabled={generatingExpBullets === i}
-                    className="text-[9px] font-black uppercase tracking-widest text-blue-400 hover:text-blue-300 flex items-center gap-1.5 bg-blue-500/10 hover:bg-blue-500/15 px-2.5 py-1 rounded-lg transition-all border border-blue-500/10 disabled:opacity-50"
-                  >
-                    {generatingExpBullets === i ? (
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                    ) : (
-                      <Sparkles className="w-3 h-3" />
-                    )}
-                    {generatingExpBullets === i ? "Generating..." : "✦ AI Generate"}
-                  </button>
+          
+          {expandedExperience === i && (
+            <div className="p-6 space-y-5">
+              <div className="grid grid-cols-2 gap-5">
+                <div className="col-span-2">
+                  <SectionLabel>Company / Organization</SectionLabel>
+                  <InlineEdit value={exp.company} onChange={(v) => updateExp(i, "company", v)} placeholder="Company Name" />
+                </div>
+                <div className="col-span-2">
+                  <SectionLabel>Dates / Period</SectionLabel>
+                  <ExperienceDatePicker value={exp.period} onChange={(v) => updateExp(i, "period", v)} />
+                </div>
+                <div className="col-span-2">
+                  <SectionLabel>Job Title</SectionLabel>
+                  <InlineEdit value={exp.title} onChange={(v) => updateExp(i, "title", v)} placeholder="Software Engineer / Technical Lead" />
                 </div>
               </div>
-              {/* Optional context hint for better AI output */}
-              <div className="mb-3">
-                <input
-                  value={expContext[i] || ""}
-                  onChange={(e) => setExpContext(prev => ({ ...prev, [i]: e.target.value }))}
-                  placeholder="Optional: hint the AI (e.g. 'Built ML dashboard, used Streamlit and Python')..."
-                  className="w-full bg-transparent border-b border-white/5 px-2 py-2 text-[11px] text-neutral-500 placeholder:text-neutral-700 outline-none focus:border-blue-500/30 transition-all"
-                />
-              </div>
-              <div className="space-y-3">
-                {exp.bullets.map((b, j) => (
-                  <div key={j} className="flex gap-3 items-start group/bullet">
-                    <div className="mt-4 w-1.5 h-1.5 rounded-full bg-neutral-800 shrink-0 group-hover/bullet:bg-blue-500 transition-colors shadow-[0_0_8px_rgba(37,99,235,0)] group-hover/bullet:shadow-[0_0_8px_rgba(37,99,235,0.5)]" />
-                    <InlineEdit
-                      value={b}
-                      onChange={(v) => updateExpBullet(i, j, v)}
-                      placeholder="Achieved X by implementing Y resulting in Z% growth."
-                      multiline
-                      rows={2}
-                      className="flex-1 text-[13px] !bg-white/[0.02] hover:!bg-white/[0.04]"
-                    />
+
+              <div className="pt-2">
+                <div className="flex items-center justify-between mb-4">
+                  <SectionLabel>Achievements & Responsibilities</SectionLabel>
+                  <div className="flex items-center gap-2">
                     <button
-                      onClick={() => removeExpBullet(i, j)}
-                      className="mt-3 text-neutral-800 hover:text-red-400 transition-all opacity-0 group-hover/bullet:opacity-100 p-1"
+                      onClick={() => addExpBullet(i)}
+                      className="text-[9px] font-black uppercase tracking-widest text-neutral-600 hover:text-white flex items-center gap-2 bg-white/5 px-2.5 py-1 rounded-lg transition-all"
                     >
-                      <X className="w-4 h-4" />
+                      <Plus className="w-3 h-3" /> Outcome
+                    </button>
+                    <button
+                      onClick={() => handleGenerateExpBullets(i)}
+                      disabled={generatingExpBullets === i}
+                      className="text-[9px] font-black uppercase tracking-widest text-blue-400 hover:text-blue-300 flex items-center gap-1.5 bg-blue-500/10 hover:bg-blue-500/15 px-2.5 py-1 rounded-lg transition-all border border-blue-500/10 disabled:opacity-50"
+                    >
+                      {generatingExpBullets === i ? (
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                      ) : (
+                        <Sparkles className="w-3 h-3" />
+                      )}
+                      {generatingExpBullets === i ? "Generating..." : "✦ AI Generate"}
                     </button>
                   </div>
-                ))}
+                </div>
+                {/* Optional context hint for better AI output */}
+                <div className="mb-3">
+                  <input
+                    value={expContext[i] || ""}
+                    onChange={(e) => setExpContext(prev => ({ ...prev, [i]: e.target.value }))}
+                    placeholder="Optional: hint the AI (e.g. 'Built ML dashboard, used Streamlit and Python')..."
+                    className="w-full bg-transparent border-b border-white/5 px-2 py-2 text-[11px] text-neutral-500 placeholder:text-neutral-700 outline-none focus:border-blue-500/30 transition-all"
+                  />
+                </div>
+                <div className="space-y-3">
+                  {exp.bullets.map((b, j) => (
+                    <div key={j} className="flex gap-3 items-start group/bullet">
+                      <div className="mt-4 w-1.5 h-1.5 rounded-full bg-neutral-800 shrink-0 group-hover/bullet:bg-blue-500 transition-colors shadow-[0_0_8px_rgba(37,99,235,0)] group-hover/bullet:shadow-[0_0_8px_rgba(37,99,235,0.5)]" />
+                      <InlineEdit
+                        value={b}
+                        onChange={(v) => updateExpBullet(i, j, v)}
+                        placeholder="Achieved X by implementing Y resulting in Z% growth."
+                        multiline
+                        rows={2}
+                        className="flex-1 text-[13px] !bg-white/[0.02] hover:!bg-white/[0.04]"
+                      />
+                      <button
+                        onClick={() => removeExpBullet(i, j)}
+                        className="mt-3 text-neutral-800 hover:text-red-400 transition-all opacity-0 group-hover/bullet:opacity-100 p-1"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       ))}
 
