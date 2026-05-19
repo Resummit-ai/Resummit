@@ -271,7 +271,7 @@ export async function regenerateSummary(
 
   const prompt = `Write a highly detailed, professional 2-sentence resume summary for a ${targetRole} candidate. This must summarize their overall software engineering capabilities, highlighting their full-stack depth and machine learning/AI integration competencies without focusing on just a single project.
 
-Crucial Rule: Do NOT mention or invent any programming languages, frameworks, or tools that are NOT listed in the Skills Grid or Projects/Experience sections below. Stick strictly to what is verified.
+Crucial Rule: Do NOT mention or invent any programming languages, frameworks, or tools that are NOT listed in the verified Active Skills Grid or Projects/Experience sections below. Stick strictly to what is verified. For example, do not mention FastAPI unless it is listed below.
 
 Profile Info:
 ${readmeCtx}
@@ -287,7 +287,8 @@ ${projectsCtx}
 
 Rules:
 - Sentence 1: A strong, technically rich description of the candidate's core expertise as a ${targetRole}, emphasizing their experience in building scalable distributed systems, modular full-stack architectures, and AI/ML-driven features. Keep it broad and highly professional to represent their entire career scope rather than a single project.
-- Sentence 2: A concrete, high-signal synthesis of their primary technical stack and tools, selected strictly from the verified skills grid and projects (e.g. 'Deploys high-performance architectures utilizing Next.js, FastAPI, PostgreSQL, and TensorFlow for end-to-end data processing and product delivery.').
+- Sentence 2: A concrete, high-signal synthesis of their primary technical stack and tools, selected strictly from the verified skills grid and projects (e.g. 'Deploys architectures utilizing React, Node.js, and PostgreSQL for end-to-end product delivery.').
+- Do NOT repeat any technology name or tool (such as TensorFlow) twice in the summary or inside the same sentence. Keep every skill mention unique.
 - No adjectives (passionate, motivated, expert, seasoned, junior, senior) or generic filler sentences.
 - No buzzwords.
 - Make sure BOTH sentences are complete, substantial, and dense with technical context.
