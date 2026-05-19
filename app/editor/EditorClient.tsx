@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Download, Plus, Trash2, RotateCcw, Link as LinkIcon, CheckCircle2, Activity, Eye, Sparkles, Target, X, Loader2, User, Briefcase, Code2, GraduationCap, Zap, AlertTriangle, ChevronDown, ChevronUp, Save, Wifi, WifiOff, ArrowUp, ArrowDown, ExternalLink, Rocket, Cpu, Code, Terminal, GitBranch } from "lucide-react";
 import type { CVData, ProjectData, CVSkills, CVExperience, CVEducation, SaveStatus, EditorTab } from "@/lib/types";
 import { ResumePreview } from "@/components/editor/ResumePreview";
+import { normalizeAndDedupeSkills } from "@/lib/skills-data";
 
 // ─────────────────────────────────────────────
 // Sub-components
@@ -266,13 +267,8 @@ export function EditorClient({
     if (isSyncing) return; // DON'T save if we are currently syncing from GitHub
     setSaveStatus("saving");
     try {
-      // Deduplicate skills before saving
-      const dedupeArr = (arr: string[]) => [...new Set((arr || []).map(s => s.trim()).filter(Boolean))];
-      const dedupeSkills = (s: any) => ({
-        languages: dedupeArr(s?.languages || []),
-        frameworks: dedupeArr(s?.frameworks || []),
-        tools: dedupeArr(s?.tools || []),
-      });
+      // Authoritatively normalize categories and cross-deduplicate skills before saving
+      const dedupeSkills = (s: any) => normalizeAndDedupeSkills(s);
 
       // Auto-fix duplicate words in experience titles before saving
       const cleanedExperience = experience.map(exp => ({

@@ -21,3 +21,57 @@ export const SKILL_CATEGORIES: Record<string, "languages" | "frameworks" | "tool
   "Elasticsearch": "tools", "Prometheus": "tools", "Grafana": "tools",
   "Selenium": "tools", "Playwright": "tools", "Jest": "tools",
 };
+
+export function normalizeAndDedupeSkills(skills: any) {
+  const languages = new Set<string>();
+  const frameworks = new Set<string>();
+  const tools = new Set<string>();
+  
+  const seen = new Set<string>();
+
+  const processCategory = (items: any[], originalCat: "languages" | "frameworks" | "tools") => {
+    if (!Array.isArray(items)) return;
+    for (const item of items) {
+      if (typeof item !== "string") continue;
+      const trimmed = item.trim();
+      if (!trimmed) continue;
+      const lower = trimmed.toLowerCase();
+      if (seen.has(lower)) continue;
+      seen.add(lower);
+
+      // Find authoritative category
+      let matchedKey = "";
+      let foundCategory: "languages" | "frameworks" | "tools" | null = null;
+      for (const [key, cat] of Object.entries(SKILL_CATEGORIES)) {
+        if (key.toLowerCase() === lower) {
+          matchedKey = key;
+          foundCategory = cat;
+          break;
+        }
+      }
+
+      if (foundCategory) {
+        if (foundCategory === "languages") languages.add(matchedKey);
+        else if (foundCategory === "frameworks") frameworks.add(matchedKey);
+        else tools.add(matchedKey);
+      } else {
+        // Unrecognized skill, preserve original category
+        if (originalCat === "languages") languages.add(trimmed);
+        else if (originalCat === "frameworks") frameworks.add(trimmed);
+        else tools.add(trimmed);
+      }
+    }
+  };
+
+  if (skills) {
+    processCategory(skills.languages || [], "languages");
+    processCategory(skills.frameworks || [], "frameworks");
+    processCategory(skills.tools || [], "tools");
+  }
+
+  return {
+    languages: Array.from(languages),
+    frameworks: Array.from(frameworks),
+    tools: Array.from(tools),
+  };
+}

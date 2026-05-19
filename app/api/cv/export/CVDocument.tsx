@@ -1,6 +1,7 @@
 import React from "react";
 import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
 import type { CVData, ProjectData } from "@/lib/types";
+import { normalizeAndDedupeSkills } from "@/lib/skills-data";
 
 // Standard Times-Roman styles matching the FormalTemplate in ResumePreview.tsx perfectly
 const styles = StyleSheet.create({
@@ -158,8 +159,9 @@ const BulletList = ({ bullets }: { bullets: string[] }) => (
 );
 
 export const CVDocument = ({ cv, projects }: { cv: CVData; projects: ProjectData[] }) => {
-  // Gracefully parse JSON properties if passed as raw strings
-  const skills = typeof cv.skills === "string" ? JSON.parse(cv.skills as any) : cv.skills;
+  // Gracefully parse and normalize skills properties
+  const rawSkills = typeof cv.skills === "string" ? JSON.parse(cv.skills as any) : cv.skills;
+  const skills = normalizeAndDedupeSkills(rawSkills);
   const experience = typeof cv.experience === "string" ? JSON.parse(cv.experience as any) : cv.experience;
   const education = typeof cv.education === "string" ? JSON.parse(cv.education as any) : cv.education;
 
@@ -186,12 +188,12 @@ export const CVDocument = ({ cv, projects }: { cv: CVData; projects: ProjectData
   if (cv.phone) contactParts.push(cv.phone);
   if (cv.github) {
     contactParts.push(
-      cv.github.replace(/https?:\/\/(www\.)?github\.com\//, "").replace(/\/$/, "")
+      `github.com/${cv.github.replace(/https?:\/\/(www\.)?github\.com\//, "").replace(/\/$/, "")}`
     );
   }
   if (cv.linkedin) {
     contactParts.push(
-      cv.linkedin.replace(/https?:\/\/(www\.)?linkedin\.com\/in\//, "").replace(/\/$/, "")
+      `linkedin.com/in/${cv.linkedin.replace(/https?:\/\/(www\.)?linkedin\.com\/in\//, "").replace(/\/$/, "")}`
     );
   }
 
@@ -250,12 +252,6 @@ export const CVDocument = ({ cv, projects }: { cv: CVData; projects: ProjectData
                 <View style={styles.skillLine}>
                   <Text style={styles.skillLabel}>Tools &amp; Cloud:</Text>
                   <Text style={styles.skillText}>{skills.tools.join(", ")}</Text>
-                </View>
-              )}
-              {cv.targetRole && (
-                <View style={styles.skillLine}>
-                  <Text style={styles.skillLabel}>Fields of Interest:</Text>
-                  <Text style={styles.skillText}>{cv.targetRole}</Text>
                 </View>
               )}
             </View>

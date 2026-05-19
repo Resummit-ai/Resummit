@@ -1,6 +1,7 @@
 "use client";
 
 import { CVData, CVExperience, CVEducation, CVSkills, ProjectData } from "@/lib/types";
+import { normalizeAndDedupeSkills } from "@/lib/skills-data";
 
 interface ResumePreviewProps {
   data: CVData;
@@ -30,6 +31,8 @@ function FormalTemplate({
   projects: ProjectData[];
   mode: "non-specialized" | "specialized";
 }) {
+  const displaySkills = normalizeAndDedupeSkills(data.skills);
+
   // Parse summary if it was accidentally stored as JSON
   let displaySummary = data.summary || "";
   if (displaySummary.trim().startsWith("{")) {
@@ -114,7 +117,7 @@ function FormalTemplate({
           {data.phone && <span>• {data.phone}</span>}
           {data.github && (
             <span>
-              •{" "}
+              • github.com/
               {data.github
                 .replace(/https?:\/\/(www\.)?github\.com\//, "")
                 .replace(/\/$/, "")}
@@ -122,7 +125,7 @@ function FormalTemplate({
           )}
           {data.linkedin && (
             <span>
-              •{" "}
+              • linkedin.com/in/
               {data.linkedin
                 .replace(/https?:\/\/(www\.)?linkedin\.com\/in\//, "")
                 .replace(/\/$/, "")}
@@ -143,24 +146,19 @@ function FormalTemplate({
       {/* Expert-Level Skills */}
       <Section title={mode === "specialized" ? "Technical Skills" : "Expert-Level Skills"}>
         <div style={{ fontSize: "8.5pt", lineHeight: 1.5 }}>
-          {(data.skills?.languages || []).length > 0 && (
+          {(displaySkills.languages || []).length > 0 && (
             <div>
-              <b>Languages:</b> {data.skills.languages.join(", ")}
+              <b>Languages:</b> {displaySkills.languages.join(", ")}
             </div>
           )}
-          {(data.skills?.frameworks || []).length > 0 && (
+          {(displaySkills.frameworks || []).length > 0 && (
             <div>
-              <b>Frameworks:</b> {data.skills.frameworks.join(", ")}
+              <b>Frameworks:</b> {displaySkills.frameworks.join(", ")}
             </div>
           )}
-          {(data.skills?.tools || []).length > 0 && (
+          {(displaySkills.tools || []).length > 0 && (
             <div>
-              <b>Tools &amp; Cloud:</b> {data.skills.tools.join(", ")}
-            </div>
-          )}
-          {data.targetRole && (
-            <div>
-              <b>Fields of Interest:</b> {data.targetRole}
+              <b>Tools &amp; Cloud:</b> {displaySkills.tools.join(", ")}
             </div>
           )}
         </div>

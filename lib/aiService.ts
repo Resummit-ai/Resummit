@@ -250,14 +250,15 @@ export async function regenerateSummary(
   projects: any[],
   targetRole: string
 ): Promise<string> {
-  const prompt = `Write a 2-sentence professional resume summary for a ${targetRole}.
+  const prompt = `Write a highly punchy, 2-sentence professional resume summary for a ${targetRole} role, focusing on engineering depth.
 
 Based on these projects: ${projects.map(p => p.title || p.name).join(', ')}
 
 Rules:
-- Sentence 1: what they build (specific, no adjectives)
-- Sentence 2: technologies they use
-- No buzzwords
+- Sentence 1: A highly punchy technical description of the systems and domain they specialize in and build products for (tailored specifically to a ${targetRole} role).
+- Sentence 2: Direct, non-generic list of primary technologies they deploy (e.g. 'Builds distributed web architectures using Next.js, FastAPI, and PostgreSQL').
+- No adjectives (passionate, motivated, expert, seasoned) or generic filler sentences.
+- No buzzwords.
 - RETURN ONLY THE RAW SUMMARY TEXT! DO NOT WRAP IN JSON! NO BRACKETS! NO KEYS! ONLY TEXT!
 `
 
