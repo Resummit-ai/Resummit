@@ -88,7 +88,7 @@ export default async function DashboardPage() {
 
       {/* Top Nav */}
       <nav className="relative z-50 border-b border-[var(--sclade-card-border)] bg-[var(--sclade-nav-bg)] backdrop-blur-xl sticky top-0 transition-colors duration-200 px-8 py-5">
-        <div className="max-w-[1440px] mx-auto flex items-center justify-between w-full">
+        <div className="w-full flex items-center justify-between">
           <div className="flex items-center gap-12">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
@@ -105,7 +105,7 @@ export default async function DashboardPage() {
         </div>
       </nav>
 
-      <main className="relative z-10 max-w-[1440px] mx-auto p-8 md:p-12 xl:py-16">
+      <main className="relative z-10 w-full px-8 py-8 md:px-16 md:py-12 xl:py-16">
         <header className="mb-12">
            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-500 text-[10px] uppercase font-bold tracking-widest mb-4">
              AI Active • Claude-3.5
