@@ -145,7 +145,7 @@ export default async function PublicCVPage({ params }: { params: Promise<{ slug:
       </div>
 
       <footer className="mt-12 text-center text-sm text-neutral-500 print:hidden">
-        Built with Sclade AI
+        Built with Resummit AI
       </footer>
     </div>
   );

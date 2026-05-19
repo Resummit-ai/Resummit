@@ -87,23 +87,25 @@ export default async function DashboardPage() {
       <div className="absolute top-0 left-0 w-full h-[300px] bg-gradient-to-b from-blue-600/[0.03] to-transparent pointer-events-none opacity-50 dark:opacity-100" />
 
       {/* Top Nav */}
-      <nav className="relative z-50 px-8 py-5 flex items-center justify-between border-b border-[var(--sclade-card-border)] bg-[var(--sclade-nav-bg)] backdrop-blur-xl sticky top-0 transition-colors duration-200">
-        <div className="flex items-center gap-12">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <Rocket className="w-4 h-4 text-white" />
+      <nav className="relative z-50 border-b border-[var(--sclade-card-border)] bg-[var(--sclade-nav-bg)] backdrop-blur-xl sticky top-0 transition-colors duration-200 px-8 py-5">
+        <div className="max-w-[1440px] mx-auto flex items-center justify-between w-full">
+          <div className="flex items-center gap-12">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <Rocket className="w-4 h-4 text-white" />
+              </div>
+              <span className="font-bold text-xl tracking-tight uppercase">RESUMMIT</span>
             </div>
-            <span className="font-bold text-xl tracking-tight uppercase">RESUMMIT</span>
+            <div className="hidden md:flex items-center gap-8 text-[11px] font-bold uppercase tracking-widest text-[var(--sclade-text-secondary)]">
+               <Link href="/dashboard" className="text-[var(--sclade-text-primary)] border-b-2 border-blue-500 pb-1 -mb-[22px]">Dashboard</Link>
+               <Link href="/editor" className="hover:text-[var(--sclade-text-primary)] transition-colors">Editor</Link>
+            </div>
           </div>
-          <div className="hidden md:flex items-center gap-8 text-[11px] font-bold uppercase tracking-widest text-[var(--sclade-text-secondary)]">
-             <Link href="/dashboard" className="text-[var(--sclade-text-primary)] border-b-2 border-blue-500 pb-1 -mb-[22px]">Dashboard</Link>
-             <Link href="/editor" className="hover:text-[var(--sclade-text-primary)] transition-colors">Editor</Link>
-          </div>
+          <DashboardControls user={dbUser} />
         </div>
-        <DashboardControls user={dbUser} />
       </nav>
 
-      <main className="relative z-10 max-w-7xl mx-auto p-8 md:p-12">
+      <main className="relative z-10 max-w-[1440px] mx-auto p-8 md:p-12 xl:py-16">
         <header className="mb-12">
            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-500 text-[10px] uppercase font-bold tracking-widest mb-4">
              AI Active • Claude-3.5
@@ -260,7 +262,7 @@ export default async function DashboardPage() {
 
               <div className="relative overflow-hidden group p-8 rounded-[2.5rem] bg-gradient-to-br from-blue-600 to-blue-800 shadow-2xl shadow-blue-500/20">
                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-3xl -mr-16 -mt-16 group-hover:bg-white/20 transition-all" />
-                 <h3 className="font-bold text-2xl mb-2">Sclade Pro</h3>
+                 <h3 className="font-bold text-2xl mb-2">Resummit Pro</h3>
                  <p className="text-blue-100 text-sm mb-8 leading-relaxed opacity-80">Unlock real-time ATS monitoring and multi-version resume management.</p>
                  <button className="w-full py-4 bg-white text-blue-700 font-bold rounded-2xl text-sm hover:translate-y-[-2px] transition-all shadow-xl active:scale-95">
                     Upgrade Now
