@@ -271,6 +271,11 @@ export async function regenerateSummary(
 
   const prompt = `Write a highly detailed, professional 2-sentence resume summary for a ${targetRole} candidate. This must summarize their overall software engineering capabilities, highlighting their full-stack depth and machine learning/AI integration competencies without focusing on just a single project.
 
+You MUST respond with a valid JSON object matching this schema:
+{
+  "summary": "Your descriptive, technically dense 2-sentence summary here."
+}
+
 Crucial Rule: Do NOT mention or invent any programming languages, frameworks, or tools that are NOT listed in the verified Active Skills Grid or Projects/Experience sections below. Stick strictly to what is verified. For example, do not mention FastAPI unless it is listed below.
 
 Profile Info:
@@ -292,22 +297,28 @@ Rules:
 - No adjectives (passionate, motivated, expert, seasoned, junior, senior) or generic filler sentences.
 - No buzzwords.
 - Make sure BOTH sentences are complete, substantial, and dense with technical context.
-- RETURN ONLY THE RAW SUMMARY TEXT! DO NOT WRAP IN JSON! NO BRACKETS! NO KEYS! ONLY TEXT!
 `;
 
   const raw = await callAI(prompt)
   
-  let cleaned = raw.replace(/^"|"$/g, '').trim();
-  if (cleaned.startsWith('{')) {
-    try {
-      const parsed = JSON.parse(cleaned);
-      cleaned = parsed.summary || parsed.Summary || Object.values(parsed)[0];
-    } catch {
-       // fallback if JSON parse fails
+  let cleaned = "";
+  try {
+    const parsed = JSON.parse(raw);
+    cleaned = parsed.summary || parsed.Summary || Object.values(parsed)[0];
+  } catch {
+    // fallback if JSON parsing fails or raw is raw text
+    cleaned = raw.replace(/^"|"$/g, '').trim();
+    if (cleaned.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(cleaned);
+        cleaned = parsed.summary || parsed.Summary || Object.values(parsed)[0];
+      } catch {
+        // ignore
+      }
     }
   }
   
-  return cleaned;
+  return typeof cleaned === 'string' ? cleaned : JSON.stringify(cleaned);
 }
 
 export async function regenerateBullet(
