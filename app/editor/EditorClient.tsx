@@ -71,6 +71,175 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 // ─────────────────────────────────────────────
+// Experience Date Picker Component
+// ─────────────────────────────────────────────
+
+function ExperienceDatePicker({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const currentYear = new Date().getFullYear();
+  const YEARS = Array.from({ length: 25 }, (_, idx) => (currentYear - idx).toString());
+
+  // Parse current value
+  const parsePeriod = (periodStr: string) => {
+    const defaultVal = {
+      startMonth: "Jan",
+      startYear: currentYear.toString(),
+      endMonth: "Dec",
+      endYear: currentYear.toString(),
+      isPresent: true,
+    };
+
+    if (!periodStr) return defaultVal;
+
+    const parts = periodStr.split(/[–-]/).map((s) => s.trim());
+    if (parts.length === 0) return defaultVal;
+
+    const parsePart = (part: string) => {
+      if (!part) return { month: "Jan", year: currentYear.toString(), isPresent: false };
+      if (part.toLowerCase().includes("present")) {
+        return { month: "Present", year: "", isPresent: true };
+      }
+      const words = part.split(/\s+/).filter(Boolean);
+      
+      let m = "Jan";
+      if (words.length > 0) {
+        const wordLower = words[0].toLowerCase();
+        const found = MONTHS.find(mon => mon.toLowerCase().startsWith(wordLower.slice(0, 3)));
+        if (found) m = found;
+        else m = words[0];
+      }
+
+      if (words.length >= 2) {
+        return { month: m, year: words[1], isPresent: false };
+      } else if (words.length === 1) {
+        const y = parseInt(words[0]);
+        if (!isNaN(y) && y > 1900 && y < 2100) {
+          return { month: "Jan", year: words[0], isPresent: false };
+        } else {
+          return { month: m, year: currentYear.toString(), isPresent: false };
+        }
+      }
+      return { month: "Jan", year: currentYear.toString(), isPresent: false };
+    };
+
+    const start = parsePart(parts[0]);
+    const end = parts.length > 1 ? parsePart(parts[1]) : { month: "Present", year: "", isPresent: true };
+
+    return {
+      startMonth: start.month,
+      startYear: start.year,
+      endMonth: end.isPresent ? "Present" : end.month,
+      endYear: end.isPresent ? currentYear.toString() : end.year,
+      isPresent: end.isPresent || periodStr.toLowerCase().includes("present"),
+    };
+  };
+
+  const { startMonth, startYear, endMonth, endYear, isPresent } = parsePeriod(value);
+
+  const update = (updates: {
+    startMonth?: string;
+    startYear?: string;
+    endMonth?: string;
+    endYear?: string;
+    isPresent?: boolean;
+  }) => {
+    const sM = updates.startMonth !== undefined ? updates.startMonth : startMonth;
+    const sY = updates.startYear !== undefined ? updates.startYear : startYear;
+    const pres = updates.isPresent !== undefined ? updates.isPresent : isPresent;
+    const eM = updates.endMonth !== undefined ? updates.endMonth : endMonth;
+    const eY = updates.endYear !== undefined ? updates.endYear : endYear;
+
+    if (pres) {
+      onChange(`${sM} ${sY} – Present`);
+    } else {
+      onChange(`${sM} ${sY} – ${eM} ${eY}`);
+    }
+  };
+
+  return (
+    <div className="space-y-3 bg-neutral-950/20 border border-white/5 rounded-2xl p-4">
+      <div className="grid grid-cols-2 gap-2.5">
+        <div>
+          <label className="text-[9px] font-black uppercase tracking-widest text-neutral-600 block mb-1">Start Month</label>
+          <select
+            value={startMonth}
+            onChange={(e) => update({ startMonth: e.target.value })}
+            className="w-full bg-neutral-900/60 border border-white/5 rounded-xl px-3 py-2 text-[12px] text-neutral-200 outline-none focus:border-blue-500/40 transition-all font-semibold cursor-pointer"
+          >
+            {MONTHS.map((m) => (
+              <option key={m} value={m} className="bg-neutral-950 text-neutral-200">{m}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="text-[9px] font-black uppercase tracking-widest text-neutral-600 block mb-1">Start Year</label>
+          <select
+            value={startYear}
+            onChange={(e) => update({ startYear: e.target.value })}
+            className="w-full bg-neutral-900/60 border border-white/5 rounded-xl px-3 py-2 text-[12px] text-neutral-200 outline-none focus:border-blue-500/40 transition-all font-semibold cursor-pointer"
+          >
+            {YEARS.map((y) => (
+              <option key={y} value={y} className="bg-neutral-950 text-neutral-200">{y}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2 py-0.5">
+        <input
+          type="checkbox"
+          id={`present-checkbox-${value}`}
+          checked={isPresent}
+          onChange={(e) => update({ isPresent: e.target.checked })}
+          className="rounded border-white/10 bg-neutral-900/40 text-blue-500 focus:ring-blue-500/30 w-3.5 h-3.5 cursor-pointer accent-blue-500"
+        />
+        <label
+          htmlFor={`present-checkbox-${value}`}
+          className="text-[11px] font-bold text-neutral-400 select-none cursor-pointer hover:text-neutral-200 transition-colors"
+        >
+          Currently work here (Present)
+        </label>
+      </div>
+
+      {!isPresent && (
+        <div className="grid grid-cols-2 gap-2.5">
+          <div>
+            <label className="text-[9px] font-black uppercase tracking-widest text-neutral-600 block mb-1">End Month</label>
+            <select
+              value={endMonth === "Present" ? "Dec" : endMonth}
+              onChange={(e) => update({ endMonth: e.target.value })}
+              className="w-full bg-neutral-900/60 border border-white/5 rounded-xl px-3 py-2 text-[12px] text-neutral-200 outline-none focus:border-blue-500/40 transition-all font-semibold cursor-pointer"
+            >
+              {MONTHS.map((m) => (
+                <option key={m} value={m} className="bg-neutral-950 text-neutral-200">{m}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="text-[9px] font-black uppercase tracking-widest text-neutral-600 block mb-1">End Year</label>
+            <select
+              value={endYear}
+              onChange={(e) => update({ endYear: e.target.value })}
+              className="w-full bg-neutral-900/60 border border-white/5 rounded-xl px-3 py-2 text-[12px] text-neutral-200 outline-none focus:border-blue-500/40 transition-all font-semibold cursor-pointer"
+            >
+              {YEARS.map((y) => (
+                <option key={y} value={y} className="bg-neutral-950 text-neutral-200">{y}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────
 // ATS Score Panel
 // ─────────────────────────────────────────────
 
@@ -1085,14 +1254,14 @@ export function EditorClient({
             </button>
           </div>
           <div className="p-6 space-y-5">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
+            <div className="grid grid-cols-2 gap-5">
+              <div className="col-span-2 md:col-span-1">
                 <SectionLabel>Company / Organization</SectionLabel>
                 <InlineEdit value={exp.company} onChange={(v) => updateExp(i, "company", v)} placeholder="Company Name" />
               </div>
-              <div>
+              <div className="col-span-2 md:col-span-1">
                 <SectionLabel>Dates / Period</SectionLabel>
-                <InlineEdit value={exp.period} onChange={(v) => updateExp(i, "period", v)} placeholder="e.g. June 2021 – Present" />
+                <ExperienceDatePicker value={exp.period} onChange={(v) => updateExp(i, "period", v)} />
               </div>
               <div className="col-span-2">
                 <SectionLabel>Job Title</SectionLabel>
