@@ -269,7 +269,7 @@ export async function regenerateSummary(
     ? `GitHub Profile Bio/README Info:\n${profileReadme.slice(0, 1000)}`
     : "";
 
-  const prompt = `Write a highly punchy, 2-sentence professional resume summary for a ${targetRole} candidate. This must be a summary of the PERSON's overall software engineering career and history, NOT a summary of a single project.
+  const prompt = `Write a highly detailed, professional 2-sentence resume summary for a ${targetRole} candidate. This must summarize their overall software engineering capabilities, highlighting their full-stack depth and machine learning/AI integration competencies without focusing on just a single project.
 
 Crucial Rule: Do NOT mention or invent any programming languages, frameworks, or tools that are NOT listed in the Skills Grid or Projects/Experience sections below. Stick strictly to what is verified.
 
@@ -286,10 +286,11 @@ Active Projects Portfolio:
 ${projectsCtx}
 
 Rules:
-- Sentence 1: A highly punchy professional summary of the candidate's career as a ${targetRole}. Focus broadly on their experience building scalable systems, web/AI architectures, and core software engineering domains, keeping it broad enough to represent their full history rather than focusing on a single dominant project.
-- Sentence 2: A direct list of primary technologies they specialize in, chosen STRICTLY from the verified active skills grid above (e.g. 'Builds distributed web architectures using Next.js, FastAPI, and PostgreSQL').
-- No adjectives (passionate, motivated, expert, seasoned) or generic filler sentences.
+- Sentence 1: A strong, technically rich description of the candidate's core expertise as a ${targetRole}, emphasizing their experience in building scalable distributed systems, modular full-stack architectures, and AI/ML-driven features. Keep it broad and highly professional to represent their entire career scope rather than a single project.
+- Sentence 2: A concrete, high-signal synthesis of their primary technical stack and tools, selected strictly from the verified skills grid and projects (e.g. 'Deploys high-performance architectures utilizing Next.js, FastAPI, PostgreSQL, and TensorFlow for end-to-end data processing and product delivery.').
+- No adjectives (passionate, motivated, expert, seasoned, junior, senior) or generic filler sentences.
 - No buzzwords.
+- Make sure BOTH sentences are complete, substantial, and dense with technical context.
 - RETURN ONLY THE RAW SUMMARY TEXT! DO NOT WRAP IN JSON! NO BRACKETS! NO KEYS! ONLY TEXT!
 `;
 
