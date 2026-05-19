@@ -191,10 +191,10 @@ ${JSON.stringify(repoSummary, null, 2)}`
         : [language, "Node.js", "Git"];
       
       const highlights = [
-        `Developed ${r.name} using ${language} to streamline repository functionality and architecture.`,
+        `Engineered ${r.name} using ${language} to resolve bottleneck latency and improve component runtime efficiency.`,
         r.description 
-          ? `Implemented clean code patterns and integrated ${techStack.join(', ')} to enhance user experience.`
-          : `Engineered project components and modular architecture to optimize performance and deployment.`
+          ? `Integrated ${techStack.join(', ')} and structured standard code patterns to increase application reliability.`
+          : `Refactored core modules and component interfaces to decrease loading times and accelerate deployment pipelines.`
       ];
 
       return {
@@ -254,7 +254,7 @@ export async function regenerateSummary(
   profileReadme?: string
 ): Promise<string> {
   const projectsCtx = projects && projects.length > 0 
-    ? projects.map(p => `- ${p.title || p.name}: ${p.description || ""} (Tech: ${Array.isArray(p.tech) ? p.tech.join(', ') : p.tech || ""})`).join('\n')
+    ? projects.map(p => `- ${p.title || p.name}: ${p.description || ""} (Tech: ${Array.isArray(p.techStack) ? p.techStack.join(', ') : (p.techStack || p.tech || "")})`).join('\n')
     : "No projects specified.";
 
   const skillsCtx = skills 
