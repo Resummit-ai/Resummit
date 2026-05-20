@@ -22,6 +22,33 @@ export function ResumePreview({
   return <FormalTemplate data={data} projects={projects} mode={mode} />;
 }
 
+function parseAndRenderLinks(text: string) {
+  const urlRegex = /(https?:\/\/[^\s]+|(?:credly\.com|coursera\.org|github\.com|linkedin\.com|devpost\.com|credly\.com\/badges)\/[^\s]+)/gi;
+  const parts = text.split(urlRegex);
+  return parts.map((part, index) => {
+    if (part.match(urlRegex)) {
+      const href = part.startsWith("http") ? part : `https://${part}`;
+      let cleanLabel = part.replace(/^https?:\/\/(www\.)?/, "");
+      if (cleanLabel.length > 40) {
+        cleanLabel = cleanLabel.substring(0, 37) + "...";
+      }
+      return (
+        <a
+          key={index}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ textDecoration: "underline", color: "#1a0dab" }}
+          className="hover:text-blue-600 transition-colors"
+        >
+          {cleanLabel}
+        </a>
+      );
+    }
+    return part;
+  });
+}
+
 function FormalTemplate({
   data,
   projects,
@@ -391,7 +418,7 @@ function FormalTemplate({
                       marginBottom: "1px",
                     }}
                   >
-                    {ach}
+                    {parseAndRenderLinks(ach)}
                   </li>
                 ))}
             </ul>

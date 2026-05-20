@@ -146,13 +146,37 @@ const styles = StyleSheet.create({
   },
 });
 
+const parseAndRenderPdfText = (text: string) => {
+  const urlRegex = /(https?:\/\/[^\s]+|(?:credly\.com|coursera\.org|github\.com|linkedin\.com|devpost\.com|credly\.com\/badges)\/[^\s]+)/gi;
+  const parts = text.split(urlRegex);
+  return (
+    <>
+      {parts.map((part, index) => {
+        if (part.match(urlRegex)) {
+          const href = part.startsWith("http") ? part : `https://${part}`;
+          let cleanLabel = part.replace(/^https?:\/\/(www\.)?/, "");
+          if (cleanLabel.length > 40) {
+            cleanLabel = cleanLabel.substring(0, 37) + "...";
+          }
+          return (
+            <Link key={index} style={{ textDecoration: "underline", color: "#1a0dab" }} src={href}>
+              {cleanLabel}
+            </Link>
+          );
+        }
+        return part;
+      })}
+    </>
+  );
+};
+
 // Render bullets using simple bullet design matching standard HTML list styling
 const BulletList = ({ bullets }: { bullets: string[] }) => (
   <View>
     {bullets.map((b, i) => (
       <View key={i} style={styles.bulletRow}>
         <View style={styles.bulletDot} />
-        <Text style={styles.bulletText}>{b}</Text>
+        <Text style={styles.bulletText}>{parseAndRenderPdfText(b)}</Text>
       </View>
     ))}
   </View>
