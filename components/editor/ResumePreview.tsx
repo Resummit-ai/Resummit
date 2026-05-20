@@ -153,16 +153,12 @@ function FormalTemplate({
       highlights: (p.highlights || []).filter((h) => h.trim()).slice(0, 2),
     }));
 
-  // Content density score: more content = tighter spacing
-  const totalBullets =
-    cleanExperience.reduce((s, e) => s + e.bullets.length, 0) +
-    includedProjects.reduce((s, p) => s + p.highlights.length, 0);
-  const dense = totalBullets > 7 || cleanExperience.length + includedProjects.length > 4;
-
-  const secTitle = dense ? "text-[9.5pt]" : "text-[10.5pt]";
-  const bodyText = dense ? "text-[8.5pt]" : "text-[9.5pt]";
-  const secGap = dense ? "mb-1.5" : "mb-2.5";
-  const itemGap = dense ? "space-y-1.5" : "space-y-2.5";
+  // Always compact — user has a full CV (3 jobs, 3 projects, 5+ certs, education)
+  const dense = true;
+  const secTitle = "text-[9pt]";
+  const bodyText = "text-[7.8pt]";
+  const secGap = "mb-1";
+  const itemGap = "space-y-1";
 
   return (
     <div
@@ -170,15 +166,15 @@ function FormalTemplate({
       id="printable-resume"
       style={{
         fontFamily: "'Times New Roman', Times, serif",
-        padding: "8mm 10mm",
+        padding: "6mm 9mm",
         boxSizing: "border-box",
       }}
     >
       {/* ── Header ── */}
-      <header style={{ textAlign: "center", marginBottom: "5px" }}>
+      <header style={{ textAlign: "center", marginBottom: "3px" }}>
         <div
           style={{
-            fontSize: "22pt",
+            fontSize: "18pt",
             fontWeight: "bold",
             color: "#1a202c",
             lineHeight: 1.1,
@@ -247,7 +243,7 @@ function FormalTemplate({
       {/* ── Section renderer helper ── */}
       {/* Professional Summary */}
       <Section title={mode === "specialized" ? "Technical Summary" : "Professional Summary"}>
-        <p style={{ fontSize: "9pt", lineHeight: 1.4, color: "#2d3748" }}>
+        <p style={{ fontSize: "7.8pt", lineHeight: 1.35, color: "#2d3748" }}>
           {displaySummary ||
             "Software engineer building impactful products. Experienced in modern web and cloud technologies."}
         </p>
@@ -255,7 +251,7 @@ function FormalTemplate({
 
       {/* Expert-Level Skills */}
       <Section title={mode === "specialized" ? "Technical Skills" : "Expert-Level Skills"}>
-        <div style={{ fontSize: "8.5pt", lineHeight: 1.5 }}>
+        <div style={{ fontSize: "7.8pt", lineHeight: 1.35 }}>
           {(displaySkills.languages || []).length > 0 && (
             <div>
               <b>Languages:</b> {displaySkills.languages.join(", ")}
@@ -487,7 +483,7 @@ function FormalTemplate({
                           )}
                         </span>
                         {date && (
-                          <span style={{ fontSize: "8.5pt", fontWeight: "bold", color: "#1a202c", whiteSpace: "nowrap", marginLeft: "8px" }}>
+                          <span style={{ fontSize: "7.8pt", fontWeight: "bold", color: "#1a202c", whiteSpace: "nowrap", marginLeft: "6px" }}>
                             {date}
                           </span>
                         )}
@@ -511,16 +507,16 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div style={{ marginBottom: "7px" }}>
+    <div style={{ marginBottom: "4px" }}>
       <div
         style={{
-          fontSize: "9.5pt",
+          fontSize: "8.5pt",
           fontWeight: "bold",
           textTransform: "uppercase",
           letterSpacing: "0.05em",
           borderTop: "1.5px solid #1a202c",
-          paddingTop: "3px",
-          marginBottom: "4px",
+          paddingTop: "2px",
+          marginBottom: "3px",
         }}
       >
         {title}

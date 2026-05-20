@@ -39,8 +39,10 @@ export async function POST(req: Request) {
         experience: data.experience,
         projects: data.projects,
         education: data.education,
+        achievements: data.achievements || [],
         atsScore: data.atsScore || 0,
       };
+
     } 
     // Handle partial 'updates' object (auto-integrity save)
     else if (updates) {
@@ -50,6 +52,7 @@ export async function POST(req: Request) {
       if (updates.experience) prismaData.experience = updates.experience;
       if (updates.projects) prismaData.projects = updates.projects;
       if (updates.education) prismaData.education = updates.education;
+      if (updates.achievements) prismaData.achievements = updates.achievements;
     } else {
       return NextResponse.json({ error: "No data or updates provided" }, { status: 400 });
     }

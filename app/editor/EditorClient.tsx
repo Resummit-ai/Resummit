@@ -486,6 +486,7 @@ export function EditorClient({
             experience: cleanedExperience,
             projects,
             education,
+            achievements,
             atsScore: atsData?.score || 0
           }
         }),
@@ -502,7 +503,7 @@ export function EditorClient({
     } catch {
       setSaveStatus("error");
     }
-  }, [versionId, personalInfo, summary, skills, experience, projects, education, atsData, isSyncing]);
+  }, [versionId, personalInfo, summary, skills, experience, projects, education, achievements, atsData, isSyncing]);
 
 
 
@@ -526,7 +527,7 @@ export function EditorClient({
     return () => { 
       if (saveTimer.current) clearTimeout(saveTimer.current); 
     };
-  }, [personalInfo, summary, skills, experience, projects, education, isSyncing, saveCV]);
+  }, [personalInfo, summary, skills, experience, projects, education, achievements, isSyncing, saveCV]);
 
   // ── beforeunload guard: save immediately if dirty on tab close ──
   useEffect(() => {
