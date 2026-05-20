@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { Download, Plus, Trash2, RotateCcw, Link as LinkIcon, CheckCircle2, Activity, Eye, Sparkles, Target, X, Loader2, User, Briefcase, Code2, GraduationCap, Zap, AlertTriangle, ChevronDown, ChevronUp, Save, Wifi, WifiOff, ArrowUp, ArrowDown, ExternalLink, Rocket, Cpu, Code, Terminal, GitBranch } from "lucide-react";
+import { Download, Plus, Trash2, RotateCcw, Link as LinkIcon, CheckCircle2, Activity, Eye, Sparkles, Target, X, Loader2, User, Briefcase, Code2, GraduationCap, Zap, AlertTriangle, ChevronDown, ChevronUp, Save, Wifi, WifiOff, ArrowUp, ArrowDown, ExternalLink, Rocket, Cpu, Code, Terminal, GitBranch, Lock } from "lucide-react";
 import type { CVData, ProjectData, CVSkills, CVExperience, CVEducation, SaveStatus, EditorTab } from "@/lib/types";
 import { ResumePreview } from "@/components/editor/ResumePreview";
 import { normalizeAndDedupeSkills } from "@/lib/skills-data";
@@ -354,6 +354,7 @@ export function EditorClient({
   initialSuggestions?: any[];
 }) {
   const [mode, setMode] = useState<"non-specialized" | "specialized">("non-specialized");
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   // Map ResumeVersion fields to local state
   const [personalInfo, setPersonalInfo] = useState<any>(
     typeof initialData.personalInfo === 'string' 
@@ -1667,12 +1668,11 @@ export function EditorClient({
                 Non-Specialized
               </button>
               <button
-                onClick={() => setMode("specialized")}
-                className={`relative z-10 flex-1 py-1 text-[9px] font-black uppercase tracking-widest transition-all duration-500 ${
-                  mode === "specialized" ? "text-white" : "text-neutral-500 hover:text-white"
-                }`}
+                onClick={() => setShowUpgradeModal(true)}
+                className="relative z-10 flex-1 py-1 text-[9px] font-black uppercase tracking-widest transition-all duration-500 text-neutral-500 hover:text-neutral-300 flex items-center justify-center gap-1.5 cursor-pointer"
               >
-                Specialized
+                <span>Specialized</span>
+                <Lock className="w-2.5 h-2.5 text-neutral-600 shrink-0" />
               </button>
             </div>
         </div>
@@ -1720,6 +1720,74 @@ export function EditorClient({
       {/* Audit Modal Reveal */}
       {atsPanelOpen && atsData && (
         <ATSPanel data={atsData} onClose={() => setAtsPanelOpen(false)} />
+      )}
+
+      {/* Premium Upgrade Modal */}
+      {showUpgradeModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-xl animate-fade-in">
+          <div className="w-[440px] bg-[#0c0c0e] border border-white/[0.08] p-8 rounded-[2.5rem] relative overflow-hidden shadow-[0_0_50px_rgba(37,99,235,0.15)] transition-all duration-300">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 blur-[100px] pointer-events-none" />
+            
+            <button 
+              onClick={() => setShowUpgradeModal(false)}
+              className="absolute top-6 right-6 p-2 text-neutral-500 hover:text-white rounded-full hover:bg-white/5 transition-all"
+            >
+              <X className="w-4 h-4" />
+            </button>
+            
+            <div className="flex flex-col items-center text-center mt-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl flex items-center justify-center shadow-[0_0_30px_rgba(245,158,11,0.2)] mb-6 relative group">
+                <span className="absolute inset-0 rounded-3xl bg-amber-400 animate-ping opacity-25" />
+                <Lock className="w-6 h-6 text-black stroke-[2.5]" />
+              </div>
+              
+              <h3 className="font-extrabold text-xl tracking-tight uppercase text-white font-outfit mb-3">
+                Unlock Specialized Tuning
+              </h3>
+              
+              <p className="text-neutral-400 text-xs leading-relaxed max-w-sm mb-8">
+                Tuning your resume for specialized roles is a Resummit Pro feature. Upgrade to customize your technical identity and projects.
+              </p>
+              
+              <div className="w-full space-y-4 mb-8 text-left bg-white/[0.02] border border-white/[0.04] p-5 rounded-2xl">
+                <div className="flex items-start gap-3">
+                  <div className="w-5 h-5 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                    <Sparkles className="w-3 h-3 text-blue-400" />
+                  </div>
+                  <div>
+                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-white">Role-Specific Specializations</h4>
+                    <p className="text-[9px] text-neutral-500 mt-1 leading-normal">Tailor experience, skills, and bullets for Frontend, Backend, ML, or Mobile domains.</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <div className="w-5 h-5 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                    <Cpu className="w-3 h-3 text-blue-400" />
+                  </div>
+                  <div>
+                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-white">Recruiter Alignment Signals</h4>
+                    <p className="text-[9px] text-neutral-500 mt-1 leading-normal">Verify stack confidence ratios and score compatibility against specific hiring target profiles.</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="w-full space-y-3">
+                <button 
+                  onClick={() => { alert("Upgrade to Resummit Pro clicked!"); }}
+                  className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-lg shadow-blue-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                >
+                  Upgrade to Resummit Pro
+                </button>
+                <button 
+                  onClick={() => setShowUpgradeModal(false)}
+                  className="w-full py-3 bg-transparent text-neutral-500 hover:text-neutral-300 text-[10px] uppercase font-black tracking-widest transition-all"
+                >
+                  Continue with Non-Specialized
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
       
       <style jsx global>{`
