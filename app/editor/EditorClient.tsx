@@ -1722,7 +1722,7 @@ export function EditorClient({
         <ATSPanel data={atsData} onClose={() => setAtsPanelOpen(false)} />
       )}
 
-      {/* Premium Upgrade Modal */}
+      {/* Specialized Coming Soon Modal */}
       {showUpgradeModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-xl animate-fade-in">
           <div className="w-[440px] bg-[#0c0c0e] border border-white/[0.08] p-8 rounded-[2.5rem] relative overflow-hidden shadow-[0_0_50px_rgba(37,99,235,0.15)] transition-all duration-300">
@@ -1736,17 +1736,17 @@ export function EditorClient({
             </button>
             
             <div className="flex flex-col items-center text-center mt-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl flex items-center justify-center shadow-[0_0_30px_rgba(245,158,11,0.2)] mb-6 relative group">
-                <span className="absolute inset-0 rounded-3xl bg-amber-400 animate-ping opacity-25" />
-                <Lock className="w-6 h-6 text-black stroke-[2.5]" />
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-3xl flex items-center justify-center shadow-[0_0_30px_rgba(37,99,235,0.3)] mb-6 relative group">
+                <span className="absolute inset-0 rounded-3xl bg-blue-500 animate-ping opacity-25" />
+                <Sparkles className="w-6 h-6 text-white stroke-[2.5]" />
               </div>
               
               <h3 className="font-extrabold text-xl tracking-tight uppercase text-white font-outfit mb-3">
-                Unlock Specialized Tuning
+                Specialized Tuning Coming Soon
               </h3>
               
               <p className="text-neutral-400 text-xs leading-relaxed max-w-sm mb-8">
-                Tuning your resume for specialized roles is a Resummit Pro feature. Upgrade to customize your technical identity and projects.
+                We are currently training our specialized AI models to compile role-specific resume hierarchies with absolute high-signal metrics. Stay tuned!
               </p>
               
               <div className="w-full space-y-4 mb-8 text-left bg-white/[0.02] border border-white/[0.04] p-5 rounded-2xl">
@@ -1755,7 +1755,7 @@ export function EditorClient({
                     <Sparkles className="w-3 h-3 text-blue-400" />
                   </div>
                   <div>
-                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-white">Role-Specific Specializations</h4>
+                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-white">Role-Specific Tuning</h4>
                     <p className="text-[9px] text-neutral-500 mt-1 leading-normal">Tailor experience, skills, and bullets for Frontend, Backend, ML, or Mobile domains.</p>
                   </div>
                 </div>
@@ -1765,24 +1765,18 @@ export function EditorClient({
                     <Cpu className="w-3 h-3 text-blue-400" />
                   </div>
                   <div>
-                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-white">Recruiter Alignment Signals</h4>
+                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-white">Recruiter Calibration</h4>
                     <p className="text-[9px] text-neutral-500 mt-1 leading-normal">Verify stack confidence ratios and score compatibility against specific hiring target profiles.</p>
                   </div>
                 </div>
               </div>
               
-              <div className="w-full space-y-3">
-                <button 
-                  onClick={() => { alert("Upgrade to Resummit Pro clicked!"); }}
-                  className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-lg shadow-blue-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
-                >
-                  Upgrade to Resummit Pro
-                </button>
+              <div className="w-full">
                 <button 
                   onClick={() => setShowUpgradeModal(false)}
-                  className="w-full py-3 bg-transparent text-neutral-500 hover:text-neutral-300 text-[10px] uppercase font-black tracking-widest transition-all"
+                  className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-lg shadow-blue-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
                 >
-                  Continue with Non-Specialized
+                  Stay Tuned
                 </button>
               </div>
             </div>
