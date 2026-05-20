@@ -315,7 +315,13 @@ export const CVDocument = ({ cv, projects }: { cv: CVData; projects: ProjectData
                   <Text style={styles.entryTimeRight}>{edu.year}</Text>
                 </View>
                 <Text style={styles.entrySubtitle}>
-                  {edu.school}{edu.gpa ? ` • GPA: ${edu.gpa}` : ""}
+                  {edu.school}{edu.gpa ? ` • ${
+                    edu.gpaType === "percentage"
+                      ? `Percentage: ${edu.gpa}${edu.gpa.includes('%') ? '' : '%'}`
+                      : edu.gpaType === "cgpa"
+                        ? `CGPA: ${edu.gpa}`
+                        : `GPA: ${edu.gpa}`
+                  }` : ""}
                 </Text>
               </View>
             ))}

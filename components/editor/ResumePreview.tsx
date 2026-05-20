@@ -313,7 +313,15 @@ function FormalTemplate({
                 </div>
                 <div style={{ fontSize: "8.5pt", color: "#4a5568" }}>
                   {edu.school}
-                  {edu.gpa && ` • GPA: ${edu.gpa}`}
+                  {edu.gpa && (
+                    ` • ${
+                      (edu as any).gpaType === "percentage"
+                        ? `Percentage: ${edu.gpa}${edu.gpa.includes('%') ? '' : '%'}`
+                        : (edu as any).gpaType === "cgpa"
+                          ? `CGPA: ${edu.gpa}`
+                          : `GPA: ${edu.gpa}`
+                    }`
+                  )}
                 </div>
               </div>
             ))}
