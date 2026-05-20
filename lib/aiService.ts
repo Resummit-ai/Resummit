@@ -269,7 +269,7 @@ export async function regenerateSummary(
     ? `GitHub Profile Bio/README Info:\n${profileReadme.slice(0, 1000)}`
     : "";
 
-  const prompt = `Write a highly detailed, professional 2-sentence resume summary for a ${targetRole} candidate. This must summarize their overall software engineering capabilities, highlighting their full-stack depth and machine learning/AI integration competencies without focusing on just a single project.
+  const prompt = `Write a highly detailed, professional 2-sentence resume summary for a ${targetRole} candidate. This must summarize their overall software engineering capabilities and core expertise based strictly on their actual projects, skills, and experience without focusing on just a single project.
 
 You MUST respond with a valid JSON object matching this schema:
 {
@@ -291,7 +291,7 @@ Active Projects Portfolio:
 ${projectsCtx}
 
 Rules:
-- Sentence 1: A strong, technically rich description of the candidate's core expertise as a ${targetRole}, emphasizing their experience in building scalable distributed systems, modular full-stack architectures, and AI/ML-driven features. Keep it broad and highly professional to represent their entire career scope rather than a single project.
+- Sentence 1: A strong, technically rich description of the candidate's core expertise as a ${targetRole}, tailoring the domain focus directly to their actual background and active stack. Keep it broad and highly professional to represent their entire career scope rather than a single project.
 - Sentence 2: A concrete, high-signal synthesis of their primary technical stack and tools, selected strictly from the verified skills grid and projects (e.g. 'Deploys architectures utilizing React, Node.js, and PostgreSQL for end-to-end product delivery.').
 - Do NOT repeat any technology name or tool (such as TensorFlow) twice in the summary or inside the same sentence. Keep every skill mention unique.
 - No adjectives (passionate, motivated, expert, seasoned, junior, senior) or generic filler sentences.
