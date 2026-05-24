@@ -252,10 +252,13 @@ export default async function DashboardPage() {
 
               <div className="relative overflow-hidden group p-8 rounded-[2.5rem] bg-gradient-to-br from-blue-600 to-blue-800 shadow-2xl shadow-blue-500/20">
                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-3xl -mr-16 -mt-16 group-hover:bg-white/20 transition-all" />
-                 <h3 className="font-bold text-2xl mb-2">Resummit Pro</h3>
+                 <div className="flex items-center gap-3 mb-2">
+                    <h3 className="font-bold text-2xl">Resummit Pro</h3>
+                    <span className="px-2.5 py-0.5 bg-white/20 text-white text-[9px] font-bold uppercase tracking-wider rounded-full">Coming Soon</span>
+                 </div>
                  <p className="text-blue-100 text-sm mb-8 leading-relaxed opacity-80">Unlock real-time ATS monitoring and multi-version resume management.</p>
-                 <button className="w-full py-4 bg-white text-blue-700 font-bold rounded-2xl text-sm hover:translate-y-[-2px] transition-all shadow-xl active:scale-95">
-                    Upgrade Now
+                 <button disabled className="w-full py-4 bg-white/10 border border-white/25 text-white/80 font-bold rounded-2xl text-sm cursor-not-allowed select-none transition-all">
+                    Coming Soon
                  </button>
               </div>
 
