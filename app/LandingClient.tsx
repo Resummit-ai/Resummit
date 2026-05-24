@@ -451,7 +451,7 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
           height: 1123px;
           background: #ffffff;
           color: #0f172a;
-          padding: 50px 45px;
+          padding: 28px 36px;
           font-family: "'Times New Roman', Georgia, serif";
           text-align: left;
           color-scheme: light;
@@ -939,6 +939,49 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
             border-radius: 16px !important;
           }
         }
+
+        .preview-grid-container {
+          display: grid;
+          grid-template-columns: 1fr 1.1fr;
+          gap: 60px;
+          align-items: center;
+        }
+
+        .preview-left-column {
+          display: flex;
+          justify-content: center;
+          width: 100%;
+          padding: 20px 0;
+          box-sizing: border-box;
+        }
+
+        .preview-right-column {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          text-align: left;
+        }
+
+        @media (max-width: 980px) {
+          .preview-grid-container {
+            grid-template-columns: 1fr;
+            gap: 40px;
+          }
+
+          .preview-right-column {
+            order: -1;
+            text-align: center;
+            align-items: center;
+          }
+          
+          .preview-right-column .label,
+          .preview-right-column .title,
+          .preview-right-column .desc {
+            text-align: center !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+          }
+        }
       ` }} />
 
       <div className="landing-body">
@@ -1056,22 +1099,13 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
         </section>
 
         {/* Resume Preview Section */}
-        <section className="section" id="preview-section" style={{ background: "var(--surface-2)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
-          <div className="container">
-            <div className="section-head reveal" style={{ textAlign: "center", marginBottom: "40px" }}>
-              <div className="label">Interactive Output</div>
-              <div className="title" style={{ margin: "0 auto 18px auto" }}>
-                Recruiter-Ready.<br />ATS-Optimized.
-              </div>
-              <div className="desc" style={{ margin: "0 auto" }}>
-                Here is a real resume generated from developer commits. It uses professional formatting, clean sections, and is fully optimized for Applicant Tracking Systems (ATS).
-              </div>
-            </div>
-
+        <section className="section" id="preview-section" style={{ background: "var(--surface-2)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", padding: "80px 0" }}>
+          <div className="container preview-grid-container">
+            
+            {/* Left Column: Interactive CV Preview */}
             <div 
               ref={resumeContainerRef}
-              className="reveal" 
-              style={{ display: "flex", justifyContent: "center", width: "100%", padding: "20px 10px", boxSizing: "border-box" }}
+              className="reveal preview-left-column"
             >
               <div 
                 className="resume-preview-wrapper"
@@ -1087,9 +1121,9 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
                   } : {}}
                 >
                   {/* Resume Header */}
-                  <div style={{ textAlign: "center", marginBottom: "18px" }}>
-                    <h2 style={{ fontSize: "24px", fontWeight: "bold", margin: "0 0 4px 0", color: "#0f172a", fontFamily: "'Times New Roman', Georgia, serif", letterSpacing: "1px" }}>ALEX DEVELOPER</h2>
-                    <div style={{ fontSize: "11px", color: "#475569", display: "flex", justifyContent: "center", flexWrap: "wrap", gap: "8px", fontFamily: "'Times New Roman', Georgia, serif" }}>
+                  <div style={{ textAlign: "center", marginBottom: "12px" }}>
+                    <h2 style={{ fontSize: "20px", fontWeight: "bold", margin: "0 0 2px 0", color: "#0f172a", fontFamily: "'Times New Roman', Georgia, serif", letterSpacing: "1px" }}>ALEX DEVELOPER</h2>
+                    <div style={{ fontSize: "10px", color: "#475569", display: "flex", justifyContent: "center", flexWrap: "wrap", gap: "6px", fontFamily: "'Times New Roman', Georgia, serif" }}>
                       <span>Jalandhar, Punjab, India (Open to Remote)</span>
                       <span>•</span>
                       <span>alex.developer@email.com</span>
@@ -1103,211 +1137,211 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
                   </div>
 
                   {/* Technical Summary */}
-                  <div style={{ marginBottom: "16px" }}>
+                  <div style={{ marginBottom: "10px" }}>
                     <div style={{
-                      fontSize: "13px",
+                      fontSize: "11.5px",
                       fontWeight: "bold",
                       textTransform: "uppercase",
                       letterSpacing: "0.5px",
                       borderTop: "1.5px solid #0f172a",
-                      paddingTop: "5px",
-                      marginBottom: "8px",
+                      paddingTop: "4px",
+                      marginBottom: "6px",
                       color: "#0f172a",
                       fontFamily: "'Times New Roman', Georgia, serif"
                     }}>
                       TECHNICAL SUMMARY
                     </div>
-                    <p style={{ margin: 0, color: "#334155", fontSize: "11px", lineHeight: "1.45", fontFamily: "'Times New Roman', Georgia, serif", textAlign: "justify" }}>
+                    <p style={{ margin: 0, color: "#334155", fontSize: "9.8px", lineHeight: "1.35", fontFamily: "'Times New Roman', Georgia, serif", textAlign: "justify" }}>
                       Innovative Full-Stack Software Engineer expert in building high-throughput distributed systems and AI capabilities. Proficient in Python, JavaScript, and TypeScript with deep hands-on expertise in Next.js, Node.js, Flask, Prisma, and AWS. Adept at transforming complex data streams and model inference into clean, production-grade applications that drive business value.
                     </p>
                   </div>
 
                   {/* Technical Skills */}
-                  <div style={{ marginBottom: "16px" }}>
+                  <div style={{ marginBottom: "10px" }}>
                     <div style={{
-                      fontSize: "13px",
+                      fontSize: "11.5px",
                       fontWeight: "bold",
                       textTransform: "uppercase",
                       letterSpacing: "0.5px",
                       borderTop: "1.5px solid #0f172a",
-                      paddingTop: "5px",
-                      marginBottom: "8px",
+                      paddingTop: "4px",
+                      marginBottom: "6px",
                       color: "#0f172a",
                       fontFamily: "'Times New Roman', Georgia, serif"
                     }}>
                       TECHNICAL SKILLS
                     </div>
-                    <div style={{ margin: 0, color: "#334155", fontSize: "11px", lineHeight: "1.45", fontFamily: "'Times New Roman', Georgia, serif" }}>
-                      <div style={{ margin: "2px 0" }}><strong>Languages:</strong> Python, JavaScript, TypeScript</div>
-                      <div style={{ margin: "2px 0" }}><strong>Frameworks:</strong> Next.js, Node.js, React, Express, Flask, Django</div>
-                      <div style={{ margin: "2px 0" }}><strong>Tools &amp; Platforms:</strong> AWS, PostgreSQL, Git, Docker, TensorFlow, OpenCV, Prisma, Redis, MongoDB, Jupyter, Slack, Bolt.io</div>
+                    <div style={{ margin: 0, color: "#334155", fontSize: "9.8px", lineHeight: "1.35", fontFamily: "'Times New Roman', Georgia, serif" }}>
+                      <div style={{ margin: "1px 0" }}><strong>Languages:</strong> Python, JavaScript, TypeScript</div>
+                      <div style={{ margin: "1px 0" }}><strong>Frameworks:</strong> Next.js, Node.js, React, Express, Flask, Django</div>
+                      <div style={{ margin: "1px 0" }}><strong>Tools &amp; Platforms:</strong> AWS, PostgreSQL, Git, Docker, TensorFlow, OpenCV, Prisma, Redis, MongoDB, Jupyter, Slack, Bolt.io</div>
                     </div>
                   </div>
 
                   {/* Professional Experience */}
-                  <div style={{ marginBottom: "16px" }}>
+                  <div style={{ marginBottom: "10px" }}>
                     <div style={{
-                      fontSize: "13px",
+                      fontSize: "11.5px",
                       fontWeight: "bold",
                       textTransform: "uppercase",
                       letterSpacing: "0.5px",
                       borderTop: "1.5px solid #0f172a",
-                      paddingTop: "5px",
-                      marginBottom: "8px",
+                      paddingTop: "4px",
+                      marginBottom: "6px",
                       color: "#0f172a",
                       fontFamily: "'Times New Roman', Georgia, serif"
                     }}>
                       PROFESSIONAL EXPERIENCE
                     </div>
                     
-                    <div style={{ marginBottom: "10px" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0f172a", fontSize: "11.5px", marginBottom: "2px", fontFamily: "'Times New Roman', Georgia, serif" }}>
+                    <div style={{ marginBottom: "4px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0f172a", fontSize: "10.5px", marginBottom: "1px", fontFamily: "'Times New Roman', Georgia, serif" }}>
                         <span>Software &amp; AI Engineer Intern</span>
                         <span>Mar 2026 — Present</span>
                       </div>
-                      <div style={{ fontSize: "10.5px", color: "#475569", fontStyle: "italic", marginBottom: "4px", fontFamily: "'Times New Roman', Georgia, serif" }}>AI Innovation Labs (Remote)</div>
-                      <ul style={{ margin: "0 0 0 16px", padding: 0, listStyleType: "disc", color: "#334155", fontSize: "11px", lineHeight: "1.4", fontFamily: "'Times New Roman', Georgia, serif" }}>
-                        <li style={{ marginBottom: "2px" }}>Designed AI-powered customer support chatbot systems using Python and TensorFlow, increasing support ticket resolution efficiency by 34%.</li>
-                        <li style={{ marginBottom: "2px" }}>Implemented classification algorithms in Python for predictive modeling of user engagement patterns, yielding a 12% boost in retention.</li>
-                        <li style={{ marginBottom: "2px" }}>Automated functional QA scripts using Selenium WebDriver, cutting regression test duration by 60%.</li>
+                      <div style={{ fontSize: "9.5px", color: "#475569", fontStyle: "italic", marginBottom: "2px", fontFamily: "'Times New Roman', Georgia, serif" }}>AI Innovation Labs (Remote)</div>
+                      <ul style={{ margin: "0 0 0 14px", padding: 0, listStyleType: "disc", color: "#334155", fontSize: "9.8px", lineHeight: "1.3", fontFamily: "'Times New Roman', Georgia, serif" }}>
+                        <li style={{ marginBottom: "1px" }}>Designed AI-powered customer support chatbot systems using Python and TensorFlow, increasing support ticket resolution efficiency by 34%.</li>
+                        <li style={{ marginBottom: "1px" }}>Implemented classification algorithms in Python for predictive modeling of user engagement patterns, yielding a 12% boost in retention.</li>
+                        <li style={{ marginBottom: "1px" }}>Automated functional QA scripts using Selenium WebDriver, cutting regression test duration by 60%.</li>
                       </ul>
                     </div>
 
-                    <div style={{ marginBottom: "10px" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0f172a", fontSize: "11.5px", marginBottom: "2px", fontFamily: "'Times New Roman', Georgia, serif" }}>
+                    <div style={{ marginBottom: "4px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0f172a", fontSize: "10.5px", marginBottom: "1px", fontFamily: "'Times New Roman', Georgia, serif" }}>
                         <span>Junior Software Engineer</span>
                         <span>Jun 2025 — Aug 2025</span>
                       </div>
-                      <div style={{ fontSize: "10.5px", color: "#475569", fontStyle: "italic", marginBottom: "4px", fontFamily: "'Times New Roman', Georgia, serif" }}>Oros AI Solutions</div>
-                      <ul style={{ margin: "0 0 0 16px", padding: 0, listStyleType: "disc", color: "#334155", fontSize: "11px", lineHeight: "1.4", fontFamily: "'Times New Roman', Georgia, serif" }}>
-                        <li style={{ marginBottom: "2px" }}>Engineered and scaled a Node.js/Express backend serving 15,000+ active concurrent users with 99.9% uptime, reducing server response latency by 28%.</li>
-                        <li style={{ marginBottom: "2px" }}>Built and documented a high-performance RESTful Django API for microservices, increasing data sync speeds by 40%.</li>
-                        <li style={{ marginBottom: "2px" }}>Integrated automated integration tests using Pytest and Behave, boosting pipeline code coverage to 92%.</li>
+                      <div style={{ fontSize: "9.5px", color: "#475569", fontStyle: "italic", marginBottom: "2px", fontFamily: "'Times New Roman', Georgia, serif" }}>Oros AI Solutions</div>
+                      <ul style={{ margin: "0 0 0 14px", padding: 0, listStyleType: "disc", color: "#334155", fontSize: "9.8px", lineHeight: "1.3", fontFamily: "'Times New Roman', Georgia, serif" }}>
+                        <li style={{ marginBottom: "1px" }}>Engineered and scaled a Node.js/Express backend serving 15,000+ active concurrent users with 99.9% uptime, reducing server response latency by 28%.</li>
+                        <li style={{ marginBottom: "1px" }}>Built and documented a high-performance RESTful Django API for microservices, increasing data sync speeds by 40%.</li>
+                        <li style={{ marginBottom: "1px" }}>Integrated automated integration tests using Pytest and Behave, boosting pipeline code coverage to 92%.</li>
                       </ul>
                     </div>
                   </div>
 
                   {/* Technical Projects */}
-                  <div style={{ marginBottom: "16px" }}>
+                  <div style={{ marginBottom: "10px" }}>
                     <div style={{
-                      fontSize: "13px",
+                      fontSize: "11.5px",
                       fontWeight: "bold",
                       textTransform: "uppercase",
                       letterSpacing: "0.5px",
                       borderTop: "1.5px solid #0f172a",
-                      paddingTop: "5px",
-                      marginBottom: "8px",
+                      paddingTop: "4px",
+                      marginBottom: "6px",
                       color: "#0f172a",
                       fontFamily: "'Times New Roman', Georgia, serif"
                     }}>
                       TECHNICAL PROJECTS
                     </div>
                     
-                    <div style={{ marginBottom: "10px" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0f172a", fontSize: "11.5px", marginBottom: "2px", fontFamily: "'Times New Roman', Georgia, serif" }}>
+                    <div style={{ marginBottom: "4px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0f172a", fontSize: "10.5px", marginBottom: "1px", fontFamily: "'Times New Roman', Georgia, serif" }}>
                         <span>Nexio</span>
-                        <span style={{ fontStyle: "italic", fontWeight: "normal", color: "#475569", fontSize: "10.5px" }}>Python, TensorFlow</span>
+                        <span style={{ fontStyle: "italic", fontWeight: "normal", color: "#475569", fontSize: "9.5px" }}>Python, TensorFlow</span>
                       </div>
-                      <p style={{ margin: "0 0 4px 0", color: "#334155", fontSize: "11px", lineHeight: "1.4", fontFamily: "'Times New Roman', Georgia, serif", textAlign: "justify" }}>
+                      <p style={{ margin: "0 0 2px 0", color: "#334155", fontSize: "9.8px", lineHeight: "1.3", fontFamily: "'Times New Roman', Georgia, serif", textAlign: "justify" }}>
                         Nexio is a high-density, multi-tenant AI ecosystem designed for hyper-growth sales teams, combining professional CRM capabilities with a distributed Neural Persona engine.
                       </p>
-                      <ul style={{ margin: "0 0 0 16px", padding: 0, listStyleType: "disc", color: "#334155", fontSize: "11px", lineHeight: "1.4", fontFamily: "'Times New Roman', Georgia, serif" }}>
-                        <li style={{ marginBottom: "2px" }}>Automated intent scoring using TensorFlow and asynchronous workers results in sub-500ms response times for lead intake.</li>
-                        <li style={{ marginBottom: "2px" }}>Distributed idempotency ensured through Redis-backed locking and atomic MongoDB logic, preventing re-execution during retry storms.</li>
+                      <ul style={{ margin: "0 0 0 14px", padding: 0, listStyleType: "disc", color: "#334155", fontSize: "9.8px", lineHeight: "1.3", fontFamily: "'Times New Roman', Georgia, serif" }}>
+                        <li style={{ marginBottom: "1px" }}>Automated intent scoring using TensorFlow and asynchronous workers results in sub-500ms response times for lead intake.</li>
+                        <li style={{ marginBottom: "1px" }}>Distributed idempotency ensured through Redis-backed locking and atomic MongoDB logic, preventing re-execution during retry storms.</li>
                       </ul>
                     </div>
 
-                    <div style={{ marginBottom: "10px" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0f172a", fontSize: "11.5px", marginBottom: "2px", fontFamily: "'Times New Roman', Georgia, serif" }}>
+                    <div style={{ marginBottom: "4px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0f172a", fontSize: "10.5px", marginBottom: "1px", fontFamily: "'Times New Roman', Georgia, serif" }}>
                         <span>Billiq</span>
-                        <span style={{ fontStyle: "italic", fontWeight: "normal", color: "#475569", fontSize: "10.5px" }}>Next.js, Prisma</span>
+                        <span style={{ fontStyle: "italic", fontWeight: "normal", color: "#475569", fontSize: "9.5px" }}>Next.js, Prisma</span>
                       </div>
-                      <p style={{ margin: "0 0 4px 0", color: "#334155", fontSize: "11px", lineHeight: "1.4", fontFamily: "'Times New Roman', Georgia, serif", textAlign: "justify" }}>
+                      <p style={{ margin: "0 0 2px 0", color: "#334155", fontSize: "9.8px", lineHeight: "1.3", fontFamily: "'Times New Roman', Georgia, serif", textAlign: "justify" }}>
                         Billiq is an intelligent, hardware-free POS and digital billing platform that sends instant receipts via WhatsApp, manages kitchen workflows with a real-time KDS, and uses transaction data for automated customer marketing.
                       </p>
-                      <ul style={{ margin: "0 0 0 16px", padding: 0, listStyleType: "disc", color: "#334155", fontSize: "11px", lineHeight: "1.4", fontFamily: "'Times New Roman', Georgia, serif" }}>
-                        <li style={{ marginBottom: "2px" }}>Utilizes Prisma ORM to manage database schema and Next.js App Router for server-side rendering, enabling seamless integration of real-time analytics with the POS system.</li>
-                        <li style={{ marginBottom: "2px" }}>Leverages Server-Sent Events (SSE) to deliver instant receipts via WhatsApp without requiring app installs, improving customer satisfaction and reducing support queries.</li>
+                      <ul style={{ margin: "0 0 0 14px", padding: 0, listStyleType: "disc", color: "#334155", fontSize: "9.8px", lineHeight: "1.3", fontFamily: "'Times New Roman', Georgia, serif" }}>
+                        <li style={{ marginBottom: "1px" }}>Utilizes Prisma ORM to manage database schema and Next.js App Router for server-side rendering, enabling seamless integration of real-time analytics with the POS system.</li>
+                        <li style={{ marginBottom: "1px" }}>Leverages Server-Sent Events (SSE) to deliver instant receipts via WhatsApp without requiring app installs, improving customer satisfaction and reducing support queries.</li>
                       </ul>
                     </div>
 
-                    <div style={{ marginBottom: "10px" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0f172a", fontSize: "11.5px", marginBottom: "2px", fontFamily: "'Times New Roman', Georgia, serif" }}>
+                    <div style={{ marginBottom: "4px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0f172a", fontSize: "10.5px", marginBottom: "1px", fontFamily: "'Times New Roman', Georgia, serif" }}>
                         <span>Clustering-Crop-Health-Patterns-from-Multispectral-Satellite-Imagery</span>
-                        <span style={{ fontStyle: "italic", fontWeight: "normal", color: "#475569", fontSize: "10.5px" }}>Python</span>
+                        <span style={{ fontStyle: "italic", fontWeight: "normal", color: "#475569", fontSize: "9.5px" }}>Python</span>
                       </div>
-                      <p style={{ margin: "0 0 4px 0", color: "#334155", fontSize: "11px", lineHeight: "1.4", fontFamily: "'Times New Roman', Georgia, serif", textAlign: "justify" }}>
+                      <p style={{ margin: "0 0 2px 0", color: "#334155", fontSize: "9.8px", lineHeight: "1.3", fontFamily: "'Times New Roman', Georgia, serif", textAlign: "justify" }}>
                         Automates crop health pattern discovery from multispectral satellite imagery using unsupervised machine learning, enabling data-driven insights for agricultural decision-making.
                       </p>
-                      <ul style={{ margin: "0 0 0 16px", padding: 0, listStyleType: "disc", color: "#334155", fontSize: "11px", lineHeight: "1.4", fontFamily: "'Times New Roman', Georgia, serif" }}>
-                        <li style={{ marginBottom: "2px" }}>Applies three clustering algorithms (K-Means, HDBSCAN, GMM) to a seven-index spectral feature space in Python.</li>
-                        <li style={{ marginBottom: "2px" }}>Generates actionable heat maps and yield predictions without requiring labelled training data.</li>
+                      <ul style={{ margin: "0 0 0 14px", padding: 0, listStyleType: "disc", color: "#334155", fontSize: "9.8px", lineHeight: "1.3", fontFamily: "'Times New Roman', Georgia, serif" }}>
+                        <li style={{ marginBottom: "1px" }}>Applies three clustering algorithms (K-Means, HDBSCAN, GMM) to a seven-index spectral feature space in Python.</li>
+                        <li style={{ marginBottom: "1px" }}>Generates actionable heat maps and yield predictions without requiring labelled training data.</li>
                       </ul>
                     </div>
                   </div>
 
                   {/* Education */}
-                  <div style={{ marginBottom: "16px" }}>
+                  <div style={{ marginBottom: "10px" }}>
                     <div style={{
-                      fontSize: "13px",
+                      fontSize: "11.5px",
                       fontWeight: "bold",
                       textTransform: "uppercase",
                       letterSpacing: "0.5px",
                       borderTop: "1.5px solid #0f172a",
-                      paddingTop: "5px",
-                      marginBottom: "8px",
+                      paddingTop: "4px",
+                      marginBottom: "6px",
                       color: "#0f172a",
                       fontFamily: "'Times New Roman', Georgia, serif"
                     }}>
                       EDUCATION
                     </div>
                     
-                    <div style={{ marginBottom: "6px" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0f172a", fontSize: "11.5px", marginBottom: "2px", fontFamily: "'Times New Roman', Georgia, serif" }}>
+                    <div style={{ marginBottom: "4px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0f172a", fontSize: "10.5px", marginBottom: "1px", fontFamily: "'Times New Roman', Georgia, serif" }}>
                         <span>B.Tech Computer Science AI &amp; ML</span>
                         <span>Expected 2027</span>
                       </div>
-                      <div style={{ fontSize: "11px", color: "#475569", fontStyle: "italic", fontFamily: "'Times New Roman', Georgia, serif" }}>LPU Technical Academy</div>
+                      <div style={{ fontSize: "9.8px", color: "#475569", fontStyle: "italic", fontFamily: "'Times New Roman', Georgia, serif" }}>LPU Technical Academy</div>
                     </div>
 
                     <div>
-                      <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0f172a", fontSize: "11.5px", marginBottom: "2px", fontFamily: "'Times New Roman', Georgia, serif" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0f172a", fontSize: "10.5px", marginBottom: "1px", fontFamily: "'Times New Roman', Georgia, serif" }}>
                         <span>High School Graduation (Science / PCM Stream)</span>
                         <span>Jun 2021 — May 2023</span>
                       </div>
-                      <div style={{ fontSize: "11px", color: "#475569", fontStyle: "italic", fontFamily: "'Times New Roman', Georgia, serif" }}>Sarvodaya Central Academy • CBSE Board • Percentage: 75%</div>
+                      <div style={{ fontSize: "9.8px", color: "#475569", fontStyle: "italic", fontFamily: "'Times New Roman', Georgia, serif" }}>Sarvodaya Central Academy • CBSE Board • Percentage: 75%</div>
                     </div>
                   </div>
 
                   {/* Achievements & Certifications */}
                   <div>
                     <div style={{
-                      fontSize: "13px",
+                      fontSize: "11.5px",
                       fontWeight: "bold",
                       textTransform: "uppercase",
                       letterSpacing: "0.5px",
                       borderTop: "1.5px solid #0f172a",
-                      paddingTop: "5px",
-                      marginBottom: "8px",
+                      paddingTop: "4px",
+                      marginBottom: "6px",
                       color: "#0f172a",
                       fontFamily: "'Times New Roman', Georgia, serif"
                     }}>
                       ACHIEVEMENTS &amp; CERTIFICATIONS
                     </div>
-                    <div style={{ fontSize: "11px", color: "#334155", lineHeight: "1.45", fontFamily: "'Times New Roman', Georgia, serif" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "2px" }}>
+                    <div style={{ fontSize: "9.8px", color: "#334155", lineHeight: "1.35", fontFamily: "'Times New Roman', Georgia, serif" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1px" }}>
                         <span>• Cloud Integration Specialist Certification <a href="https://credly.com" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "underline", color: "#1a0dab", fontWeight: "bold", cursor: "pointer" }}>[Link]</a></span>
                         <span style={{ fontWeight: "bold" }}>Dec 2025</span>
                       </div>
-                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "2px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1px" }}>
                         <span>• freeCodeCamp Responsive Web Design Developer Certification <a href="https://freecodecamp.org" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "underline", color: "#1a0dab", fontWeight: "bold", cursor: "pointer" }}>[Link]</a></span>
                         <span style={{ fontWeight: "bold" }}>2025</span>
                       </div>
-                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "2px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1px" }}>
                         <span>• Open-Source Hackathon Participation Certificate <a href="https://github.com" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "underline", color: "#1a0dab", fontWeight: "bold", cursor: "pointer" }}>[Link]</a></span>
                         <span style={{ fontWeight: "bold" }}>2025</span>
                       </div>
-                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "2px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1px" }}>
                         <span>• Computational Systems &amp; Finite Automata Excellence <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "underline", color: "#1a0dab", fontWeight: "bold", cursor: "pointer" }}>[Link]</a></span>
                         <span style={{ fontWeight: "bold" }}>2025</span>
                       </div>
@@ -1316,6 +1350,43 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
                 </div>
               </div>
             </div>
+
+            {/* Right Column: Copy & Micro-Features */}
+            <div className="reveal preview-right-column" style={{ display: "flex", flexDirection: "column", gap: "24px", maxWidth: "600px", margin: "0 auto" }}>
+              <div>
+                <div className="label" style={{ textAlign: "left", margin: "0 0 12px 0" }}>Interactive Output</div>
+                <h2 className="title" style={{ textAlign: "left", margin: "0 0 18px 0", fontSize: "clamp(2.2rem, 3.8vw, 3rem)", lineHeight: "1.1", fontWeight: "800", color: "var(--text)" }}>
+                  Recruiter-Ready.<br />ATS-Optimized.
+                </h2>
+                <p className="desc" style={{ textAlign: "left", margin: "0", fontSize: "1.05rem", color: "var(--muted)", lineHeight: "1.65" }}>
+                  Here is a real resume generated from developer commits. It uses professional formatting, clean sections, and is fully optimized for Applicant Tracking Systems (ATS).
+                </p>
+              </div>
+
+              {/* Premium Feature Items */}
+              <div style={{ marginTop: "16px", display: "flex", flexDirection: "column", gap: "24px" }}>
+                <div style={{ display: "flex", gap: "16px", alignItems: "flex-start" }}>
+                  <div style={{ background: "rgba(79, 140, 255, 0.1)", color: "var(--primary)", padding: "10px", borderRadius: "12px", display: "flex", flexShrink: 0 }}>
+                    <Cpu size={22} />
+                  </div>
+                  <div>
+                    <h4 style={{ color: "var(--text)", fontWeight: "700", fontSize: "1.05rem", marginBottom: "4px" }}>AI Bullets Generation</h4>
+                    <p style={{ color: "var(--muted)", fontSize: "0.92rem", lineHeight: "1.5" }}>Parses your GitHub commits to write structured, accomplishment-focused resume points automatically.</p>
+                  </div>
+                </div>
+                
+                <div style={{ display: "flex", gap: "16px", alignItems: "flex-start" }}>
+                  <div style={{ background: "rgba(79, 140, 255, 0.1)", color: "var(--primary)", padding: "10px", borderRadius: "12px", display: "flex", flexShrink: 0 }}>
+                    <FileCheck size={22} />
+                  </div>
+                  <div>
+                    <h4 style={{ color: "var(--text)", fontWeight: "700", fontSize: "1.05rem", marginBottom: "4px" }}>ATS Parser Certified</h4>
+                    <p style={{ color: "var(--muted)", fontSize: "0.92rem", lineHeight: "1.5" }}>Conforms strictly to single-page PDF structures, typography limits, and machine-readable content rules.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </section>
 
