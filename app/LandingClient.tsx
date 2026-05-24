@@ -463,7 +463,7 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
           height: 1123px;
           background: #ffffff;
           color: #0f172a;
-          padding: 40px 44px 50px 44px;
+          padding: 40px 44px 92px 44px;
           font-family: "'Times New Roman', Georgia, serif";
           text-align: left;
           color-scheme: light;
@@ -1111,7 +1111,7 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
         </section>
 
         {/* Resume Preview Section */}
-        <section className="section" id="preview-section" style={{ background: "var(--surface-2)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", padding: "80px 0" }}>
+        <section className="section" id="preview-section" style={{ background: "var(--surface-2)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", padding: "100px 0 130px 0" }}>
           <div className="container preview-grid-container" ref={resumeContainerRef}>
             
             {/* Left Column: Interactive CV Preview */}
@@ -1131,7 +1131,7 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
                   } : {}}
                 >
                   {/* Resume Header */}
-                  <div style={{ textAlign: "center", marginBottom: "16px" }}>
+                  <div style={{ textAlign: "center", marginBottom: "14px" }}>
                     <h2 style={{ fontSize: "22px", fontWeight: "bold", margin: "0 0 4px 0", color: "#0f172a", fontFamily: "'Times New Roman', Georgia, serif", letterSpacing: "1px" }}>ALEX DEVELOPER</h2>
                     <div style={{ fontSize: "11px", color: "#475569", display: "flex", justifyContent: "center", flexWrap: "wrap", gap: "8px", fontFamily: "'Times New Roman', Georgia, serif" }}>
                       <span>Jalandhar, Punjab, India (Open to Remote)</span>
@@ -1147,7 +1147,7 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
                   </div>
 
                   {/* Technical Summary */}
-                  <div style={{ marginBottom: "12px" }}>
+                  <div style={{ marginBottom: "8px" }}>
                     <div style={{
                       fontSize: "11.5px",
                       fontWeight: "bold",
@@ -1167,7 +1167,7 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
                   </div>
 
                   {/* Technical Skills */}
-                  <div style={{ marginBottom: "12px" }}>
+                  <div style={{ marginBottom: "8px" }}>
                     <div style={{
                       fontSize: "11.5px",
                       fontWeight: "bold",
@@ -1189,7 +1189,7 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
                   </div>
 
                   {/* Professional Experience */}
-                  <div style={{ marginBottom: "12px" }}>
+                  <div style={{ marginBottom: "8px" }}>
                     <div style={{
                       fontSize: "11.5px",
                       fontWeight: "bold",
@@ -1204,7 +1204,7 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
                       PROFESSIONAL EXPERIENCE
                     </div>
                     
-                    <div style={{ marginBottom: "8px" }}>
+                    <div style={{ marginBottom: "6px" }}>
                       <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0f172a", fontSize: "11.5px", marginBottom: "2px", fontFamily: "'Times New Roman', Georgia, serif" }}>
                         <span>Software &amp; AI Engineer Intern</span>
                         <span>Mar 2026 — Present</span>
@@ -1217,7 +1217,7 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
                       </ul>
                     </div>
 
-                    <div style={{ marginBottom: "8px" }}>
+                    <div style={{ marginBottom: "6px" }}>
                       <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0f172a", fontSize: "11.5px", marginBottom: "2px", fontFamily: "'Times New Roman', Georgia, serif" }}>
                         <span>Junior Software Engineer</span>
                         <span>Jun 2025 — Aug 2025</span>
@@ -1232,7 +1232,7 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
                   </div>
 
                   {/* Technical Projects */}
-                  <div style={{ marginBottom: "12px" }}>
+                  <div style={{ marginBottom: "8px" }}>
                     <div style={{
                       fontSize: "11.5px",
                       fontWeight: "bold",
@@ -1247,7 +1247,7 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
                       TECHNICAL PROJECTS
                     </div>
                     
-                    <div style={{ marginBottom: "8px" }}>
+                    <div style={{ marginBottom: "6px" }}>
                       <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0f172a", fontSize: "11.5px", marginBottom: "2px", fontFamily: "'Times New Roman', Georgia, serif" }}>
                         <span>Nexio</span>
                         <span style={{ fontStyle: "italic", fontWeight: "normal", color: "#475569", fontSize: "10.5px" }}>Python, TensorFlow</span>
@@ -1261,7 +1261,7 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
                       </ul>
                     </div>
 
-                    <div style={{ marginBottom: "8px" }}>
+                    <div style={{ marginBottom: "6px" }}>
                       <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0f172a", fontSize: "11.5px", marginBottom: "2px", fontFamily: "'Times New Roman', Georgia, serif" }}>
                         <span>Billiq</span>
                         <span style={{ fontStyle: "italic", fontWeight: "normal", color: "#475569", fontSize: "10.5px" }}>Next.js, Prisma</span>
@@ -1275,7 +1275,7 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
                       </ul>
                     </div>
 
-                    <div style={{ marginBottom: "8px" }}>
+                    <div style={{ marginBottom: "6px" }}>
                       <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0f172a", fontSize: "11.5px", marginBottom: "2px", fontFamily: "'Times New Roman', Georgia, serif" }}>
                         <span>Clustering-Crop-Health-Patterns-from-Multispectral-Satellite-Imagery</span>
                         <span style={{ fontStyle: "italic", fontWeight: "normal", color: "#475569", fontSize: "10.5px" }}>Python</span>
@@ -1291,7 +1291,7 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
                   </div>
 
                   {/* Education */}
-                  <div style={{ marginBottom: "12px" }}>
+                  <div style={{ marginBottom: "8px" }}>
                     <div style={{
                       fontSize: "11.5px",
                       fontWeight: "bold",
@@ -1306,7 +1306,7 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
                       EDUCATION
                     </div>
                     
-                    <div style={{ marginBottom: "4px" }}>
+                    <div style={{ marginBottom: "3px" }}>
                       <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0f172a", fontSize: "11.5px", marginBottom: "2px", fontFamily: "'Times New Roman', Georgia, serif" }}>
                         <span>B.Tech Computer Science AI &amp; ML</span>
                         <span>Expected 2027</span>
@@ -1339,19 +1339,19 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
                       ACHIEVEMENTS &amp; CERTIFICATIONS
                     </div>
                     <div style={{ fontSize: "10.5px", color: "#334155", lineHeight: "1.4", fontFamily: "'Times New Roman', Georgia, serif" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "3px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "2px" }}>
                         <span>• Cloud Integration Specialist Certification <a href="https://credly.com" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "underline", color: "#1a0dab", fontWeight: "bold", cursor: "pointer" }}>[Link]</a></span>
                         <span style={{ fontWeight: "bold" }}>Dec 2025</span>
                       </div>
-                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "3px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "2px" }}>
                         <span>• freeCodeCamp Responsive Web Design Developer Certification <a href="https://freecodecamp.org" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "underline", color: "#1a0dab", fontWeight: "bold", cursor: "pointer" }}>[Link]</a></span>
                         <span style={{ fontWeight: "bold" }}>2025</span>
                       </div>
-                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "3px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "2px" }}>
                         <span>• Open-Source Hackathon Participation Certificate <a href="https://github.com" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "underline", color: "#1a0dab", fontWeight: "bold", cursor: "pointer" }}>[Link]</a></span>
                         <span style={{ fontWeight: "bold" }}>2025</span>
                       </div>
-                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "3px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "2px" }}>
                         <span>• Computational Systems &amp; Finite Automata Excellence <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "underline", color: "#1a0dab", fontWeight: "bold", cursor: "pointer" }}>[Link]</a></span>
                         <span style={{ fontWeight: "bold" }}>2025</span>
                       </div>
@@ -1362,36 +1362,36 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
             </div>
 
             {/* Right Column: Copy & Micro-Features */}
-            <div className="reveal preview-right-column" style={{ display: "flex", flexDirection: "column", gap: "24px", maxWidth: "600px", margin: "0 auto" }}>
+            <div className="reveal preview-right-column" style={{ display: "flex", flexDirection: "column", gap: "32px", maxWidth: "600px", margin: "0 auto" }}>
               <div>
-                <div className="label" style={{ textAlign: "left", margin: "0 0 12px 0" }}>Interactive Output</div>
-                <h2 className="title" style={{ textAlign: "left", margin: "0 0 18px 0", fontSize: "clamp(2.2rem, 3.8vw, 3rem)", lineHeight: "1.1", fontWeight: "800", color: "var(--text)" }}>
+                <div className="label" style={{ textAlign: "left", margin: "0 0 12px 0", fontSize: "0.9rem" }}>Interactive Output</div>
+                <h2 className="title" style={{ textAlign: "left", margin: "0 0 20px 0", fontSize: "clamp(2.8rem, 4.8vw, 3.8rem)", lineHeight: "1.1", fontWeight: "800", color: "var(--text)" }}>
                   Recruiter-Ready.<br />ATS-Optimized.
                 </h2>
-                <p className="desc" style={{ textAlign: "left", margin: "0", fontSize: "1.05rem", color: "var(--muted)", lineHeight: "1.65" }}>
+                <p className="desc" style={{ textAlign: "left", margin: "0", fontSize: "1.25rem", color: "var(--muted)", lineHeight: "1.7" }}>
                   Here is a real resume generated from developer commits. It uses professional formatting, clean sections, and is fully optimized for Applicant Tracking Systems (ATS).
                 </p>
               </div>
 
               {/* Premium Feature Items */}
-              <div style={{ marginTop: "16px", display: "flex", flexDirection: "column", gap: "24px" }}>
-                <div style={{ display: "flex", gap: "16px", alignItems: "flex-start" }}>
-                  <div style={{ background: "rgba(79, 140, 255, 0.1)", color: "var(--primary)", padding: "10px", borderRadius: "12px", display: "flex", flexShrink: 0 }}>
-                    <Cpu size={22} />
+              <div style={{ marginTop: "16px", display: "flex", flexDirection: "column", gap: "28px" }}>
+                <div style={{ display: "flex", gap: "18px", alignItems: "flex-start" }}>
+                  <div style={{ background: "rgba(79, 140, 255, 0.1)", color: "var(--primary)", padding: "14px", borderRadius: "12px", display: "flex", flexShrink: 0 }}>
+                    <Cpu size={26} />
                   </div>
                   <div>
-                    <h4 style={{ color: "var(--text)", fontWeight: "700", fontSize: "1.05rem", marginBottom: "4px" }}>AI Bullets Generation</h4>
-                    <p style={{ color: "var(--muted)", fontSize: "0.92rem", lineHeight: "1.5" }}>Parses your GitHub commits to write structured, accomplishment-focused resume points automatically.</p>
+                    <h4 style={{ color: "var(--text)", fontWeight: "700", fontSize: "1.28rem", marginBottom: "6px" }}>AI Bullets Generation</h4>
+                    <p style={{ color: "var(--muted)", fontSize: "1.06rem", lineHeight: "1.6" }}>Parses your GitHub commits to write structured, accomplishment-focused resume points automatically.</p>
                   </div>
                 </div>
                 
-                <div style={{ display: "flex", gap: "16px", alignItems: "flex-start" }}>
-                  <div style={{ background: "rgba(79, 140, 255, 0.1)", color: "var(--primary)", padding: "10px", borderRadius: "12px", display: "flex", flexShrink: 0 }}>
-                    <FileCheck size={22} />
+                <div style={{ display: "flex", gap: "18px", alignItems: "flex-start" }}>
+                  <div style={{ background: "rgba(79, 140, 255, 0.1)", color: "var(--primary)", padding: "14px", borderRadius: "12px", display: "flex", flexShrink: 0 }}>
+                    <FileCheck size={26} />
                   </div>
                   <div>
-                    <h4 style={{ color: "var(--text)", fontWeight: "700", fontSize: "1.05rem", marginBottom: "4px" }}>ATS Parser Certified</h4>
-                    <p style={{ color: "var(--muted)", fontSize: "0.92rem", lineHeight: "1.5" }}>Conforms strictly to single-page PDF structures, typography limits, and machine-readable content rules.</p>
+                    <h4 style={{ color: "var(--text)", fontWeight: "700", fontSize: "1.28rem", marginBottom: "6px" }}>ATS Parser Certified</h4>
+                    <p style={{ color: "var(--muted)", fontSize: "1.06rem", lineHeight: "1.6" }}>Conforms strictly to single-page PDF structures, typography limits, and machine-readable content rules.</p>
                   </div>
                 </div>
               </div>
