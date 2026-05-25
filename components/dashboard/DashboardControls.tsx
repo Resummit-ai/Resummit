@@ -221,27 +221,30 @@ export function DashboardControls({ user }: DashboardControlsProps) {
       </button>
 
       {/* Settings Side-Drawer */}
-      <AnimatePresence>
-        {showSettings && mounted && createPortal(
-          <>
-            {/* Backdrop Blur Overlay */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.5 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9999] cursor-pointer"
-              onClick={() => setShowSettings(false)}
-            />
+      {mounted && createPortal(
+        <AnimatePresence>
+          {showSettings && (
+            <>
+              {/* Backdrop Blur Overlay */}
+              <motion.div
+                key="settings-backdrop"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.5 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9999] cursor-pointer"
+                onClick={() => setShowSettings(false)}
+              />
 
-            {/* Slide-over Panel */}
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-[var(--sclade-popover-bg)] border-l border-[var(--sclade-popover-border)] backdrop-blur-2xl shadow-2xl z-[10000] p-8 flex flex-col justify-between text-[var(--sclade-text-primary)]"
-            >
-              <div>
+              {/* Slide-over Panel */}
+              <motion.div
+                key="settings-panel"
+                initial={{ x: "100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "100%" }}
+                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-[var(--sclade-popover-bg)] border-l border-[var(--sclade-popover-border)] backdrop-blur-2xl shadow-2xl z-[10000] p-8 flex flex-col justify-between text-[var(--sclade-text-primary)]"
+              >
+                <div>
                 {/* Header */}
                 <div className="flex items-center justify-between border-b border-black/5 dark:border-white/5 pb-5 mb-8">
                   <div className="flex items-center gap-3">
@@ -353,10 +356,11 @@ export function DashboardControls({ user }: DashboardControlsProps) {
                 </button>
               </div>
             </motion.div>
-          </>,
-          document.body
+          </>
         )}
-      </AnimatePresence>
+      </AnimatePresence>,
+      document.body
+    )}
 
       {/* ── User Avatar ── */}
       <div className="h-8 w-[1px] bg-white/10 mx-2" />
