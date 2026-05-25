@@ -201,8 +201,12 @@ export function SmartUpdateCenter({
       router.refresh();
       
       // If we have a direct suggestions list, update it
-      if (count === 0 && isMounted.current) {
-        setScanError("No new updates found at this time.");
+      if (isMounted.current) {
+        if (skipped) {
+          setScanError("Scan cooldown active. Please wait a minute before scanning again.");
+        } else if (count === 0) {
+          setScanError("No new updates found at this time.");
+        }
       }
     } catch (err: any) {
       if (isMounted.current) {
