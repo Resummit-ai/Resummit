@@ -6,14 +6,22 @@ import { GitBranch, Brain, FileDown, KeyRound, Terminal, Cpu, FileCheck } from "
 import { signOut } from "next-auth/react";
 import { motion } from "framer-motion";
 
-export function LandingClient({ hasSession }: { hasSession?: boolean }) {
+export function LandingClient({ 
+  hasSession, 
+  userName = "", 
+  userEmail = "" 
+}: { 
+  hasSession?: boolean; 
+  userName?: string; 
+  userEmail?: string; 
+}) {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [resumeScale, setResumeScale] = useState(1);
   const [isMounted, setIsMounted] = useState(false);
 
   // Feedback Form State
-  const [feedbackName, setFeedbackName] = useState("");
-  const [feedbackEmail, setFeedbackEmail] = useState("");
+  const [feedbackName, setFeedbackName] = useState(userName);
+  const [feedbackEmail, setFeedbackEmail] = useState(userEmail);
   const [feedbackRating, setFeedbackRating] = useState(5);
   const [feedbackMsg, setFeedbackMsg] = useState("");
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
@@ -1791,7 +1799,28 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
 
               {/* Sleek Interactive Feedback Form */}
               <div className="feedback-form-container">
-                {feedbackSubmitted ? (
+                {!hasSession ? (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    style={{ textAlign: "center", padding: "30px 10px" }}
+                  >
+                    <div style={{ width: "64px", height: "64px", borderRadius: "22px", background: "linear-gradient(135deg, rgba(79, 140, 255, 0.15), rgba(79, 140, 255, 0.05))", border: "1px solid rgba(79, 140, 255, 0.25)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px auto", color: "var(--primary)" }}>
+                      <KeyRound style={{ width: "26px", height: "26px", strokeWidth: 2 }} />
+                    </div>
+                    <h3 style={{ color: "white", fontSize: "1.25rem", fontWeight: 700, marginBottom: "12px", letterSpacing: "-0.02em" }}>Authentication Required</h3>
+                    <p style={{ fontSize: "0.9rem", color: "var(--muted)", marginBottom: "26px", lineHeight: "1.6" }}>
+                      Please connect your GitHub account to share your feedback, feature requests, or bug reports with us.
+                    </p>
+                    <Link 
+                      href="/login" 
+                      className="primary-btn" 
+                      style={{ textDecoration: "none", display: "inline-flex", width: "100%", justifyContent: "center", padding: "14px 24px", borderRadius: "16px" }}
+                    >
+                      Connect GitHub to Submit Feedback
+                    </Link>
+                  </motion.div>
+                ) : feedbackSubmitted ? (
                   <motion.div 
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -1816,7 +1845,7 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
                   <form onSubmit={handleFeedbackSubmit} className="space-y-4" style={{ display: "flex", flexDirection: "column" }}>
                     <h3>Share Your Feedback</h3>
                     <p>Help us improve your workspace experience. We review every message.</p>
-
+ 
                     <div className="feedback-form-group">
                       <label>Full Name</label>
                       <input 
@@ -1828,7 +1857,7 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
                         className="feedback-input"
                       />
                     </div>
-
+ 
                     <div className="feedback-form-group">
                       <label>Email Address</label>
                       <input 
@@ -1840,7 +1869,7 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
                         className="feedback-input"
                       />
                     </div>
-
+ 
                     <div className="feedback-form-group">
                       <label>Workspace Rating</label>
                       <div className="rating-buttons">
@@ -1856,7 +1885,7 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
                         ))}
                       </div>
                     </div>
-
+ 
                     <div className="feedback-form-group">
                       <label>Your Message</label>
                       <textarea 
@@ -1867,7 +1896,7 @@ export function LandingClient({ hasSession }: { hasSession?: boolean }) {
                         className="feedback-input feedback-textarea"
                       />
                     </div>
-
+ 
                     <button 
                       type="submit" 
                       disabled={feedbackSubmitting}

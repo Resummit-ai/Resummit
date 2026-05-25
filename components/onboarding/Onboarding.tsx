@@ -39,23 +39,35 @@ const EXPERIENCE_LEVELS = [
 ];
 
 export function Onboarding() {
-  const [step, setStep] = useState<Step>("setup");
+  const [step, setStep] = useState<Step>("synthesis");
   const [github, setGithub] = useState("");
   const [linkedin, setLinkedin] = useState("");
-  const [role, setRole] = useState("");
-  const [exp, setExp] = useState("");
-  const [isSynthesizing, setIsSynthesizing] = useState(false);
+  const [role, setRole] = useState("Software Engineer");
+  const [exp, setExp] = useState("MID");
+  const [isSynthesizing, setIsSynthesizing] = useState(true);
   const [synthesisLogs, setSynthesisLogs] = useState<string[]>([]);
+  const [hasTriggered, setHasTriggered] = useState(false);
   const router = useRouter();
   const { data: session } = useSession();
 
   useEffect(() => {
-    if (session?.user && (session.user as any).githubUsername) {
-      setGithub((session.user as any).githubUsername);
+    if (session?.user && !hasTriggered) {
+      setHasTriggered(true);
+      const resolvedGithub = (session.user as any).githubUsername || "";
+      setGithub(resolvedGithub);
+      startSynthesis(resolvedGithub, "Software Engineer", "MID");
     }
-  }, [session]);
+  }, [session, hasTriggered]);
 
-  const startSynthesis = async () => {
+  const startSynthesis = async (
+    targetGithub?: string,
+    targetRole?: string,
+    targetExp?: string
+  ) => {
+    const activeGithub = targetGithub !== undefined ? targetGithub : github;
+    const activeRole = targetRole !== undefined ? targetRole : role;
+    const activeExp = targetExp !== undefined ? targetExp : exp;
+
     setStep("synthesis");
     setIsSynthesizing(true);
     
@@ -72,26 +84,32 @@ export function Onboarding() {
 
     for (let i = 0; i < logs.length; i++) {
       setSynthesisLogs(prev => [...prev, logs[i]]);
-      await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 1000));
+      await new Promise(resolve => setTimeout(resolve, 600 + Math.random() * 600));
     }
 
     try {
       const res = await fetch("/api/onboarding", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ github, linkedin, role, exp }),
+        body: JSON.stringify({ 
+          github: activeGithub, 
+          linkedin: linkedin || "", 
+          role: activeRole, 
+          exp: activeExp 
+        }),
       });
       
       if (!res.ok) throw new Error("Synthesis failed");
       
       // Final log
       setSynthesisLogs(prev => [...prev, "Identity synthesis complete."]);
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
       router.refresh();
     } catch (err) {
       console.error(err);
       setIsSynthesizing(false);
+      setStep("setup"); // Switch back to manual setup if auto-synthesis fails
     }
   };
 
@@ -233,7 +251,7 @@ export function Onboarding() {
               <button
                 type="button"
                 disabled={!github || !role || !exp}
-                onClick={startSynthesis}
+                onClick={() => startSynthesis()}
                 className="group w-full max-w-md py-5 bg-white text-black hover:bg-neutral-200 disabled:opacity-50 disabled:hover:bg-white rounded-2xl font-bold text-base transition-all shadow-xl shadow-white/5 active:scale-[0.98] inline-flex items-center justify-center gap-3"
               >
                 Analyze and Generate Resume

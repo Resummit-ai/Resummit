@@ -16,7 +16,11 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { github, linkedin, role, exp } = await req.json();
+    const body = await req.json().catch(() => ({}));
+    const github = body.github || "";
+    const linkedin = body.linkedin || "";
+    const role = body.role || "Software Engineer";
+    const exp = body.exp || "MID";
 
     // 2. Fetch GitHub repos (Initial sync)
     let repos = [];
@@ -120,6 +124,8 @@ export async function POST(req: Request) {
     const generated = await generateCVFromRepos(repos, role);
 
     // 5. Create Resume and Version
+    const primaryLanguage = generated.skills?.languages?.[0] || "TypeScript";
+    
     await prisma.resume.create({
       data: {
         userId: user.id,
@@ -131,12 +137,44 @@ export async function POST(req: Request) {
               name: user.name || "",
               email: user.email || "",
               targetRole: role,
-              github: `github.com/${github}`,
+              github: github ? `github.com/${github}` : "",
               linkedin: linkedin || "",
             },
             summary: generated.summary,
             skills: generated.skills,
             projects: generated.projects,
+            experience: [
+              {
+                company: "Tech Solutions Inc. (Example)",
+                title: `Senior ${role}`,
+                period: "2024 - Present",
+                bullets: [
+                  `Led a high-performing agile engineering team to design and deploy scalable backend applications using ${primaryLanguage}, reducing query latency by 35%.`,
+                  `Engineered resilient automated service pipelines and database schemas, maintaining 99.99% system availability under heavy workload profiles.`,
+                  `Optimized codebases and refactored core components into clean architectural divisions, reducing overall load bounds and enhancing developer experience.`
+                ]
+              },
+              {
+                company: "Innovative Tech Labs (Example)",
+                title: `${role}`,
+                period: "2022 - 2024",
+                bullets: [
+                  `Collaborated with product designers to build and deploy high-performance user-facing modules and responsive views.`,
+                  `Designed and executed standard end-to-end and unit testing processes, boosting baseline code coverage metrics by 25%.`
+                ]
+              }
+            ],
+            education: [
+              {
+                degree: "Bachelor of Science in Computer Science (Example)",
+                school: "State University of Technology",
+                period: "2018 - 2022"
+              }
+            ],
+            achievements: [
+              "Recipient of the Engineering Excellence Award for outstanding contribution to platform scalability and structural optimization.",
+              "Awarded First Place at the national Developer Innovation Hackathon for creating high-performance collaborative workspace solutions."
+            ],
             isMain: true,
             atsScore: 0, // Will be scored in background or on first view
           }
