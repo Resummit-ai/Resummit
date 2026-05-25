@@ -7,35 +7,39 @@ const inter = { variable: 'font-sans' };
 const outfit = { variable: 'font-display' };
 
 export const metadata: Metadata = {
-  title: "Resummit — AI Resume Builder from GitHub",
-  description: "Turn your GitHub repos and commits into ATS-ready resumes using AI.",
+  title: "Resummit — GitHub Resume Intelligence by Adel Muhammed",
+  description: "Built from your work. Not from templates. Resummit, created by Adel Muhammed, turns real engineering work into professional resumes developers can confidently share with recruiters and hiring teams.",
   keywords: [
+    "GitHub Resume Builder",
+    "Developer Resume Intelligence",
+    "ATS Optimized Resume",
+    "Adel Muhammed",
     "Resummit",
-    "AI Resume Builder",
-    "GitHub Resume",
-    "ATS Resume",
-    "Developer Resume",
+    "Software Engineer Resume",
+    "Tech CV Builder"
   ],
-  metadataBase: new URL("https://resummit.vercel.app"),
+  authors: [{ name: "Adel Muhammed", url: "https://github.com/dragon486" }],
+  creator: "Adel Muhammed",
+  metadataBase: new URL("https://resummit.com"),
   openGraph: {
-    title: "Resummit — AI Resume Builder from GitHub",
-    description: "Turn your GitHub repos and commits into ATS-ready resumes using AI.",
+    title: "Resummit — GitHub Resume Intelligence by Adel Muhammed",
+    description: "Built from your work. Not from templates. Resummit, created by Adel Muhammed, turns real engineering work into professional resumes developers can confidently share with recruiters and hiring teams.",
     url: "https://resummit.vercel.app",
     siteName: "Resummit",
     images: [
       {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
+        url: "/icon.png",
+        width: 512,
+        height: 512,
       },
     ],
     type: "website",
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Resummit — AI Resume Builder from GitHub",
-    description: "Turn your GitHub repos and commits into ATS-ready resumes using AI.",
-    images: ["/og-image.png"],
+    card: "summary",
+    title: "Resummit — GitHub Resume Intelligence by Adel Muhammed",
+    description: "Built from your work. Not from templates. Resummit, created by Adel Muhammed, turns real engineering work into professional resumes developers can confidently share with recruiters and hiring teams.",
+    images: ["/icon.png"],
   },
   icons: {
     icon: "/icon.png",
