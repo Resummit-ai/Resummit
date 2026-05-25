@@ -7,32 +7,39 @@ const inter = { variable: 'font-sans' };
 const outfit = { variable: 'font-display' };
 
 export const metadata: Metadata = {
-  title: "Resummit — GitHub Resume Intelligence by Adel Muhammed",
-  description: "Built from your work. Not from templates. Resummit, created by Adel Muhammed, turns real engineering work into professional resumes developers can confidently share with recruiters and hiring teams.",
+  title: "Resummit — AI Resume Builder from GitHub",
+  description: "Turn your GitHub repos and commits into ATS-ready resumes using AI.",
   keywords: [
-    "GitHub Resume Builder",
-    "Developer Resume Intelligence",
-    "ATS Optimized Resume",
-    "Adel Muhammed",
     "Resummit",
-    "Software Engineer Resume",
-    "Tech CV Builder"
+    "AI Resume Builder",
+    "GitHub Resume",
+    "ATS Resume",
+    "Developer Resume",
   ],
-  authors: [{ name: "Adel Muhammed", url: "https://github.com/dragon486" }],
-  creator: "Adel Muhammed",
-  metadataBase: new URL("https://resummit.com"),
+  metadataBase: new URL("https://resummit.vercel.app"),
   openGraph: {
-    title: "Resummit — GitHub Resume Intelligence by Adel Muhammed",
-    description: "Built from your work. Not from templates. Resummit turns real engineering work into professional resumes developers can confidently share with recruiters and hiring teams.",
+    title: "Resummit — AI Resume Builder from GitHub",
+    description: "Turn your GitHub repos and commits into ATS-ready resumes using AI.",
+    url: "https://resummit.vercel.app",
     siteName: "Resummit",
-    locale: "en_US",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Resummit — GitHub Resume Intelligence by Adel Muhammed",
-    description: "Built from your work. Not from templates. Resummit turns real engineering work into professional resumes developers can confidently share with recruiters and hiring teams.",
-  }
+    title: "Resummit — AI Resume Builder from GitHub",
+    description: "Turn your GitHub repos and commits into ATS-ready resumes using AI.",
+    images: ["/og-image.png"],
+  },
+  icons: {
+    icon: "/icon.png",
+  },
 };
 
 export default function RootLayout({
