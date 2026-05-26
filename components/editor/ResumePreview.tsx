@@ -186,7 +186,7 @@ function FormalTemplate({
   let bulletMarginBottom = "2px";
   let skillLineMarginBottom = "1px";
 
-  if (score > 54) {
+  if (score > 62) {
     // Super Dense
     fontSizeBody = "7.2pt";
     fontSizeSecTitle = "8pt";
@@ -208,7 +208,7 @@ function FormalTemplate({
     entryGap = "2px";
     bulletMarginBottom = "0.2px";
     skillLineMarginBottom = "0.2px";
-  } else if (score > 46) {
+  } else if (score > 52) {
     // Very Dense
     fontSizeBody = "7.6pt";
     fontSizeSecTitle = "8.5pt";
@@ -230,7 +230,7 @@ function FormalTemplate({
     entryGap = "3px";
     bulletMarginBottom = "0.5px";
     skillLineMarginBottom = "0.5px";
-  } else if (score > 36) {
+  } else if (score > 42) {
     // Dense
     fontSizeBody = "8pt";
     fontSizeSecTitle = "9pt";

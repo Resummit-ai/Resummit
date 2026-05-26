@@ -27,7 +27,7 @@ const getDynamicStyles = (score: number) => {
   let skillLineMarginBottom = 1;
   let fontSizeName = 22;
 
-  if (score > 54) {
+  if (score > 62) {
     // Super Dense
     fontSizeBody = 7.2;
     fontSizeSecTitle = 8;
@@ -50,7 +50,7 @@ const getDynamicStyles = (score: number) => {
     entryGap = 2;
     bulletMarginBottom = 0.2;
     skillLineMarginBottom = 0.2;
-  } else if (score > 46) {
+  } else if (score > 52) {
     // Very Dense
     fontSizeBody = 7.6;
     fontSizeSecTitle = 8.5;
@@ -73,7 +73,7 @@ const getDynamicStyles = (score: number) => {
     entryGap = 3;
     bulletMarginBottom = 0.5;
     skillLineMarginBottom = 0.5;
-  } else if (score > 36) {
+  } else if (score > 42) {
     // Dense
     fontSizeBody = 8;
     fontSizeSecTitle = 9;
