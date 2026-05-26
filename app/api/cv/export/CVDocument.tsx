@@ -569,7 +569,7 @@ export const CVDocument = ({ cv, projects }: { cv: CVData; projects: ProjectData
                 const { title, date, url } = parseAchievementString(ach);
                 const href = url ? (url.startsWith("http") ? url : `https://${url}`) : null;
                 return (
-                  <View key={idx} style={{ flexDirection: "row", marginBottom: 3.5, paddingLeft: 12, alignItems: "baseline" }}>
+                  <View key={idx} style={{ flexDirection: "row", marginBottom: 3.5, paddingLeft: 12 }}>
                     <View style={[styles.bulletDot, { marginTop: 3.5 }]} />
                     <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: "baseline" }}>
                       <Text style={[styles.bulletText, { flex: 1 }]}>
