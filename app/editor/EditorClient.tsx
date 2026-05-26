@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { Download, Plus, Trash2, RotateCcw, Link as LinkIcon, CheckCircle2, Activity, Eye, Sparkles, Target, X, Loader2, User, Briefcase, Code2, GraduationCap, Zap, AlertTriangle, ChevronDown, ChevronUp, Save, Wifi, WifiOff, ArrowUp, ArrowDown, ExternalLink, Rocket, Cpu, Code, Terminal, GitBranch, Lock, Sun, Moon, RefreshCw } from "lucide-react";
+import { Download, GripVertical, Plus, Trash2, RotateCcw, Link as LinkIcon, CheckCircle2, Activity, Eye, Sparkles, Target, X, Loader2, User, Briefcase, Code2, GraduationCap, Zap, AlertTriangle, ChevronDown, ChevronUp, Save, Wifi, WifiOff, ArrowUp, ArrowDown, ExternalLink, Rocket, Cpu, Code, Terminal, GitBranch, Lock, Sun, Moon, RefreshCw } from "lucide-react";
 import type { CVData, ProjectData, CVSkills, CVExperience, CVEducation, SaveStatus, EditorTab } from "@/lib/types";
 import { ResumePreview } from "@/components/editor/ResumePreview";
 import { normalizeAndDedupeSkills } from "@/lib/skills-data";
@@ -405,6 +405,8 @@ export function EditorClient({
   const [achievements, setAchievements] = useState<string[]>(() => ensureArray(initialData.achievements || [""]));  
   const [achFetching, setAchFetching] = useState<Record<number, boolean>>({});
   const [achNote, setAchNote] = useState<Record<number, string>>({});
+  const [draggedProjectIdx, setDraggedProjectIdx] = useState<number | null>(null);
+  const [dragOverProjectIdx, setDragOverProjectIdx] = useState<number | null>(null);
   
   // LIVE PROJECTS SYNC: Remove redundant fetch on mount as initialData is already version-specific
   // and fetching from /api/projects would corrupt specialized versions with 'Main' data.
@@ -1709,19 +1711,64 @@ export function EditorClient({
       </div>
 
       {projects.map((p, pIdx) => {
+        const isCurrentlyDragged = draggedProjectIdx === pIdx;
+        const isDraggedOver = dragOverProjectIdx === pIdx;
+
         return (
           <div
             key={p.id}
-            className={`border rounded-[2rem] overflow-hidden transition-all duration-500 shadow-xl ${
-              p.included === false
+            draggable
+            onDragStart={(e) => {
+              setDraggedProjectIdx(pIdx);
+              e.dataTransfer.setData("text/plain", pIdx.toString());
+              e.dataTransfer.effectAllowed = "move";
+            }}
+            onDragEnd={() => {
+              setDraggedProjectIdx(null);
+              setDragOverProjectIdx(null);
+            }}
+            onDragOver={(e) => {
+              e.preventDefault();
+              if (draggedProjectIdx === null || draggedProjectIdx === pIdx) return;
+              setDragOverProjectIdx(pIdx);
+            }}
+            onDragLeave={() => {
+              setDragOverProjectIdx(null);
+            }}
+            onDrop={(e) => {
+              e.preventDefault();
+              const sourceIdx = parseInt(e.dataTransfer.getData("text/plain"), 10);
+              if (isNaN(sourceIdx) || sourceIdx === pIdx) return;
+              
+              const updated = [...projects];
+              const [removed] = updated.splice(sourceIdx, 1);
+              updated.splice(pIdx, 0, removed);
+              setProjects(updated);
+              
+              setDraggedProjectIdx(null);
+              setDragOverProjectIdx(null);
+              isDirty.current = true;
+              saveCV();
+            }}
+            className={`border rounded-[2rem] overflow-hidden transition-all duration-300 shadow-xl ${
+              isCurrentlyDragged 
+                ? "opacity-30 border-blue-500/50 scale-[0.98]" 
+                : isDraggedOver
+                ? "border-blue-500 bg-blue-500/5 translate-y-1"
+                : p.included === false
                 ? "border-[var(--sclade-card-border)] bg-[var(--sclade-input-bg)] opacity-40 hover:opacity-70 scale-[0.98]"
                 : "border-[var(--sclade-card-border)] bg-[var(--sclade-card-bg)] hover:border-blue-500/30"
             }`}
           >
             <div
-              className="px-7 py-5 flex items-center justify-between cursor-pointer group/header"
+              className="px-7 py-5 flex items-center justify-between cursor-pointer group/header relative"
               onClick={() => setExpandedProject(expandedProject === pIdx ? null : pIdx)}
             >
+              {/* Drag Handle Indicator */}
+              <div className="mr-3 text-neutral-600 group-hover/header:text-neutral-400 cursor-grab active:cursor-grabbing transition-colors self-center flex items-center h-full">
+                <GripVertical className="w-4 h-4 shrink-0" />
+              </div>
+
               <div className="flex-1 min-w-0 mr-4">
                 <div className="flex items-center gap-3">
                   <p className="text-[15px] font-bold text-[var(--sclade-text-primary)] truncate font-outfit tracking-tight">{p.title || "Untitled Project"}</p>
