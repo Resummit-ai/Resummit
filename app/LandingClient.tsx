@@ -1853,7 +1853,7 @@ export function LandingClient({
                         required
                         value={feedbackName}
                         onChange={(e) => setFeedbackName(e.target.value)}
-                        placeholder="Adel Muhammed"
+                        placeholder="e.g. Alex Rivera"
                         className="feedback-input"
                       />
                     </div>
@@ -1865,7 +1865,7 @@ export function LandingClient({
                         required
                         value={feedbackEmail}
                         onChange={(e) => setFeedbackEmail(e.target.value)}
-                        placeholder="adelmuhammed786@gmail.com"
+                        placeholder="e.g. alex@example.com"
                         className="feedback-input"
                       />
                     </div>
