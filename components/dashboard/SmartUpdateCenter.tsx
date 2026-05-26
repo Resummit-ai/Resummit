@@ -147,7 +147,7 @@ export function SmartUpdateCenter({
       setScanError(null);
     }
     try {
-      const res = await fetch("/api/github/sync");
+      const res = await fetch("/api/github/sync?force=true");
       const data = await res.json();
       
       if (data.error) throw new Error(data.error);

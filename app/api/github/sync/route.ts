@@ -9,6 +9,9 @@ export async function GET(req: Request) {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   try {
+    const { searchParams } = new URL(req.url);
+    const force = searchParams.get("force") === "true";
+
     const userId = await resolveUserId(session);
     if (!userId) return NextResponse.json({ error: "User not found" }, { status: 401 });
     const githubData = await prisma.gitHubData.findUnique({ where: { userId } });
@@ -19,7 +22,7 @@ export async function GET(req: Request) {
         { status: 400 }
       );
     }
-    const result = await runSmartSync(userId, token, session.user.email || undefined);
+    const result = await runSmartSync(userId, token, session.user.email || undefined, force);
     return NextResponse.json({ success: true, result });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

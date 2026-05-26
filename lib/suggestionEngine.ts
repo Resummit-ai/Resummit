@@ -30,7 +30,7 @@ function isRealSkill(skill: string, repoName: string): boolean {
   return true;
 }
 
-export async function runSmartSync(userId: string, accessToken: string, email?: string) {
+export async function runSmartSync(userId: string, accessToken: string, email?: string, force = false) {
   // 1. Fetch User with new relations
   let user = await prisma.user.findUnique({
     where: { id: userId },
@@ -66,7 +66,9 @@ export async function runSmartSync(userId: string, accessToken: string, email?: 
 
   // 2. Cooldown Check (1 minute to prevent lockout and allow retries)
   const oneMinuteAgo = new Date(Date.now() - 1 * 60 * 1000);
-  if (user.githubData?.lastSyncedAt && user.githubData.lastSyncedAt > oneMinuteAgo) {
+  const hasNoSuggestions = (user.suggestions || []).length === 0;
+
+  if (!force && !hasNoSuggestions && user.githubData?.lastSyncedAt && user.githubData.lastSyncedAt > oneMinuteAgo) {
     if (process.env.NODE_ENV !== "development") {
       console.log("Sync cooldown active. Skipping...");
       return { skipped: true, reason: "COOLDOWN_ACTIVE" };
