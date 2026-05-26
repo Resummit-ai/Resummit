@@ -1550,7 +1550,7 @@ export function EditorClient({
             onClick={addExperience}
             className="px-8 py-3 bg-[var(--sclade-btn-secondary-bg)] rounded-2xl text-[10px] font-black uppercase text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] transition-all border border-[var(--sclade-popover-border)]"
           >
-            Create First Node
+            Add Experience
           </button>
         </div>
       )}
@@ -1562,16 +1562,6 @@ export function EditorClient({
         return (
           <div
             key={`exp-${i}`}
-            draggable
-            onDragStart={(e) => {
-              setDraggedExpIdx(i);
-              e.dataTransfer.setData("text/plain", i.toString());
-              e.dataTransfer.effectAllowed = "move";
-            }}
-            onDragEnd={() => {
-              setDraggedExpIdx(null);
-              setDragOverExpIdx(null);
-            }}
             onDragOver={(e) => {
               e.preventDefault();
               if (draggedExpIdx === null || draggedExpIdx === i) return;
@@ -1608,7 +1598,24 @@ export function EditorClient({
               className="px-6 py-4 flex items-center justify-between bg-[var(--sclade-glass-tint)] cursor-pointer hover:opacity-90 transition-all border-b border-[var(--sclade-card-border)] relative group/header"
             >
               {/* Drag Handle Indicator */}
-              <div className="mr-3 text-neutral-600 group-hover/header:text-neutral-400 cursor-grab active:cursor-grabbing transition-colors self-center flex items-center h-full">
+              <div 
+                draggable={true}
+                onDragStart={(e) => {
+                  e.stopPropagation();
+                  setDraggedExpIdx(i);
+                  e.dataTransfer.setData("text/plain", i.toString());
+                  e.dataTransfer.effectAllowed = "move";
+                }}
+                onDragEnd={(e) => {
+                  e.stopPropagation();
+                  setDraggedExpIdx(null);
+                  setDragOverExpIdx(null);
+                }}
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent toggling accordion when clicking/dragging the grip handle
+                }}
+                className="mr-3 text-neutral-600 group-hover/header:text-neutral-400 cursor-grab active:cursor-grabbing transition-colors self-center flex items-center h-full p-1 hover:bg-neutral-800/30 rounded"
+              >
                 <GripVertical className="w-4 h-4 shrink-0" />
               </div>
 
@@ -1727,7 +1734,7 @@ export function EditorClient({
           className="w-full h-20 flex flex-col items-center justify-center gap-1 border border-dashed border-white/5 hover:border-blue-500/30 bg-white/[0.01] hover:bg-blue-500/5 rounded-[2rem] text-neutral-600 hover:text-blue-400 transition-all duration-300 group"
         >
           <Plus className="w-5 h-5 group-hover:rotate-90 transition-transform" />
-          <span className="text-[10px] font-black uppercase tracking-[2px]">Append Career Node</span>
+          <span className="text-[10px] font-black uppercase tracking-[2px]">Add Experience</span>
         </button>
       ) : (
         <div className="w-full h-14 flex items-center justify-center gap-2 border border-dashed border-amber-600/20 bg-amber-600/5 rounded-[2rem]">
@@ -1770,16 +1777,6 @@ export function EditorClient({
         return (
           <div
             key={p.id}
-            draggable
-            onDragStart={(e) => {
-              setDraggedProjectIdx(pIdx);
-              e.dataTransfer.setData("text/plain", pIdx.toString());
-              e.dataTransfer.effectAllowed = "move";
-            }}
-            onDragEnd={() => {
-              setDraggedProjectIdx(null);
-              setDragOverProjectIdx(null);
-            }}
             onDragOver={(e) => {
               e.preventDefault();
               if (draggedProjectIdx === null || draggedProjectIdx === pIdx) return;
@@ -1818,7 +1815,24 @@ export function EditorClient({
               onClick={() => setExpandedProject(expandedProject === pIdx ? null : pIdx)}
             >
               {/* Drag Handle Indicator */}
-              <div className="mr-3 text-neutral-600 group-hover/header:text-neutral-400 cursor-grab active:cursor-grabbing transition-colors self-center flex items-center h-full">
+              <div 
+                draggable={true}
+                onDragStart={(e) => {
+                  e.stopPropagation();
+                  setDraggedProjectIdx(pIdx);
+                  e.dataTransfer.setData("text/plain", pIdx.toString());
+                  e.dataTransfer.effectAllowed = "move";
+                }}
+                onDragEnd={(e) => {
+                  e.stopPropagation();
+                  setDraggedProjectIdx(null);
+                  setDragOverProjectIdx(null);
+                }}
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent toggling accordion when clicking/dragging the grip handle
+                }}
+                className="mr-3 text-neutral-600 group-hover/header:text-neutral-400 cursor-grab active:cursor-grabbing transition-colors self-center flex items-center h-full p-1 hover:bg-neutral-800/30 rounded"
+              >
                 <GripVertical className="w-4 h-4 shrink-0" />
               </div>
 
