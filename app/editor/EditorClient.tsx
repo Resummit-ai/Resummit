@@ -1726,7 +1726,8 @@ export function EditorClient({
             </div>
           )}
         </div>
-      ))}
+      );
+    })}
 
       {experience.length < 3 ? (
         <button
