@@ -57,11 +57,20 @@ const structuredData = {
   author: { "@type": "Person", name: "Adel Muhammed", url: "https://github.com/dragon486" },
 };
 
+const siteNameStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Resummit",
+  alternateName: ["Resummit AI", "Resummit App"],
+  url: BASE_URL,
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${outfit.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteNameStructuredData) }} />
         <script dangerouslySetInnerHTML={{
           __html: `try{const t=localStorage.getItem('sclade-theme');if(t==='light'){document.documentElement.classList.add('light');document.documentElement.classList.remove('dark')}else{document.documentElement.classList.add('dark');document.documentElement.classList.remove('light')}}catch(_){}`
         }} />
