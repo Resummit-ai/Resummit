@@ -25,6 +25,22 @@ const nextConfig: NextConfig = {
     "@prisma/adapter-pg",
   ],
 
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "resummit-ai.vercel.app",
+          },
+        ],
+        destination: "https://resummit.vercel.app/:path*",
+        permanent: true,
+      },
+    ];
+  },
+
   async headers() {
     return [
       {
