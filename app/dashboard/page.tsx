@@ -8,6 +8,7 @@ import Link from "next/link";
 import { SmartUpdateCenter } from "@/components/dashboard/SmartUpdateCenter";
 import { DashboardControls } from "@/components/dashboard/DashboardControls";
 import { ATSScoreCard } from "@/components/dashboard/ATSScoreCard";
+import { UserIdentify } from "@/components/providers/user-identify";
 import { Onboarding } from "@/components/onboarding/Onboarding";
 import { EngineeringSignals } from "@/lib/server/githubIntelligence";
 
@@ -64,6 +65,13 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-[var(--sclade-bg)] text-[var(--sclade-text-primary)] selection:bg-blue-500/30 font-outfit transition-colors duration-200">
+      {/* Identify user in PostHog — links all sessions to this user's email */}
+      <UserIdentify
+        userId={dbUser.id}
+        email={dbUser.email ?? ""}
+        name={dbUser.name}
+        githubUsername={dbUser.githubUsername}
+      />
       {/* Premium Gradient Header Background */}
       <div className="absolute top-0 left-0 w-full h-[300px] bg-gradient-to-b from-blue-600/[0.03] to-transparent pointer-events-none opacity-50 dark:opacity-100" />
 

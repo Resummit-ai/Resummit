@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { AuthProvider } from "@/components/providers/auth-provider";
+import { PostHogProvider, PageViewTracker } from "@/components/providers/posthog-provider";
 import { Analytics } from "@vercel/analytics/next";
+import { Suspense } from "react";
 import "./globals.css";
 
 const inter = { variable: 'font-sans' };
@@ -76,7 +78,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         }} />
       </head>
       <body className="font-sans min-h-full bg-[var(--sclade-bg)] text-[var(--sclade-text-primary)] flex flex-col transition-colors duration-200">
-        <AuthProvider>{children}</AuthProvider>
+        <PostHogProvider>
+          <AuthProvider>{children}</AuthProvider>
+          <Suspense fallback={null}>
+            <PageViewTracker />
+          </Suspense>
+        </PostHogProvider>
         <Analytics />
       </body>
     </html>
