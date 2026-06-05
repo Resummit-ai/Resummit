@@ -3,6 +3,7 @@ import { prisma, resolveUserId } from "@/lib/server/prisma";
 import { NextResponse } from "next/server";
 import { calculateATSScore } from "@/lib/aiService";
 import { withCache } from "@/lib/server/cache";
+import { checkRateLimit } from "@/lib/server/ratelimit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -13,6 +14,10 @@ export async function GET(req: Request) {
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  // Rate limit: 5 ATS audits per hour per user
+  const limited = await checkRateLimit(userId, "atsScore");
+  if (limited) return limited;
 
   const { searchParams } = new URL(req.url);
   const versionId = searchParams.get("versionId");

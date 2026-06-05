@@ -3,10 +3,11 @@ import type { Metadata } from "next";
 import { auth, signOut } from "@/auth";
 import { prisma, resolveUserId } from "@/lib/server/prisma";
 import { redirect } from "next/navigation";
-import { LayoutDashboard, FileText, Settings, Rocket, ArrowRight, Bell, User, Cpu, Target, Zap, Shield, Sparkles, BarChart3, Activity } from "lucide-react";
+import { LayoutDashboard, FileText, ArrowRight, Cpu, Activity, Target, Zap } from "lucide-react";
 import Link from "next/link";
 import { SmartUpdateCenter } from "@/components/dashboard/SmartUpdateCenter";
 import { DashboardControls } from "@/components/dashboard/DashboardControls";
+import { ATSScoreCard } from "@/components/dashboard/ATSScoreCard";
 import { Onboarding } from "@/components/onboarding/Onboarding";
 import { EngineeringSignals } from "@/lib/server/githubIntelligence";
 
@@ -111,34 +112,11 @@ export default async function DashboardPage() {
            {/* Left/Middle Column - Suggestions & Activity */}
            <div className="lg:col-span-8 space-y-10">
               
-               {/* Resume Health Card */}
-               <div className="glass-panel p-8 rounded-[2.5rem] bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] relative overflow-hidden group transition-all duration-200">
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 blur-[100px] pointer-events-none group-hover:bg-blue-500/10 transition-all duration-700" />
-                  
-                  <div className="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
-                     <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-4">
-                           <Target className="w-3.5 h-3.5 text-blue-500" />
-                           <h3 className="text-[10px] font-black text-[var(--sclade-text-secondary)] uppercase tracking-[0.2em]">Resume Performance</h3>
-                        </div>
-                        <div className="flex items-baseline gap-3">
-                           <span className="text-6xl font-bold tracking-tighter">{mainVersion?.atsScore || 0}</span>
-                           <span className="text-[var(--sclade-text-secondary)] font-medium text-xl">/100</span>
-                        </div>
-                        <p className="text-[var(--sclade-text-secondary)] mt-4 max-w-md text-sm leading-relaxed font-medium">
-                           Your technical identity is <strong>{mainVersion?.atsScore ? (mainVersion.atsScore > 85 ? "Market-Ready" : "Optimizing") : "Indexing"}</strong>. 
-                           {mainVersion?.atsScore && mainVersion.atsScore < 85 && " AI suggests strengthening project metrics."}
-                        </p>
-                     </div>
-                     
-                     <div className="w-full md:w-auto">
-                        <Link href="/editor" className="flex items-center gap-3 px-8 py-5 bg-neutral-900 text-white dark:bg-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all shadow-xl shadow-black/10 dark:shadow-white/5 active:scale-95 group/btn">
-                           Open OS Editor
-                           <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                        </Link>
-                     </div>
-                  </div>
-               </div>
+               {/* Live ATS Score Card */}
+               <ATSScoreCard
+                 storedScore={mainVersion?.atsScore ?? 0}
+                 versionId={mainVersion?.id}
+               />
 
                {/* Engineering DNA Core */}
                {signals && (

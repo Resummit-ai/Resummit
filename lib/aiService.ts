@@ -3,10 +3,27 @@ import 'server-only'
 
 import fs from 'fs'
 import path from 'path'
+import { logger } from './server/logger'
+import { Redis } from '@upstash/redis'
 
 const OLLAMA_URL = process.env.OLLAMA_URL || 'http://localhost:11434'
 const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'llama3.2'
 const GEMINI_MODEL = 'gemini-2.0-flash' // gemini-1.5-flash deprecated from v1beta API
+
+/** Daily AI call limit per user (free tier) */
+const DAILY_AI_LIMIT = parseInt(process.env.AI_DAILY_LIMIT_PER_USER || '10', 10);
+
+// Upstash Redis for budget tracking (shared config)
+const REDIS_URL = process.env.UPSTASH_REDIS_REST_URL;
+const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
+let _redis: Redis | null = null;
+function getBudgetRedis(): Redis | null {
+  if (_redis) return _redis;
+  if (REDIS_URL && REDIS_TOKEN && REDIS_URL.startsWith('https://')) {
+    try { _redis = new Redis({ url: REDIS_URL, token: REDIS_TOKEN }); } catch { _redis = null; }
+  }
+  return _redis;
+}
 
 type AIMode = 'gemini' | 'ollama'
 
@@ -33,7 +50,7 @@ function getAIMode(): AIMode {
   return 'ollama'
 }
 
-async function callGemini(prompt: string): Promise<string> {
+async function callGemini(prompt: string, ctx?: AICallContext): Promise<string> {
   const { GoogleGenerativeAI } = await import('@google/generative-ai')
   const key = getGeminiKey()
   const genAI = new GoogleGenerativeAI(key!)
@@ -41,7 +58,18 @@ async function callGemini(prompt: string): Promise<string> {
     model: GEMINI_MODEL,
     generationConfig: { responseMimeType: 'application/json' }
   })
+  const start = Date.now();
   const result = await model.generateContent(prompt)
+  const usage = result.response.usageMetadata;
+  logger.ai({
+    userId:          ctx?.userId ?? 'anon',
+    feature:         ctx?.feature ?? 'unknown',
+    model:           GEMINI_MODEL,
+    promptTokens:    usage?.promptTokenCount,
+    candidateTokens: usage?.candidatesTokenCount,
+    totalTokens:     usage?.totalTokenCount,
+    durationMs:      Date.now() - start,
+  });
   return result.response.text()
 }
 
@@ -63,12 +91,51 @@ async function callOllama(prompt: string): Promise<string> {
   return data.response
 }
 
-export async function callAI(prompt: string): Promise<string> {
+export interface AICallContext {
+  userId?: string;
+  feature?: string;
+}
+
+/**
+ * Check & increment the per-user daily AI budget.
+ * Returns true if the user is within their limit (or Redis is offline).
+ */
+async function checkAIBudget(userId?: string): Promise<boolean> {
+  if (!userId) return true; // no user context → allow (background jobs)
+  const redis = getBudgetRedis();
+  if (!redis) return true; // Redis offline → allow
+
+  const now = new Date();
+  // Key expires at next midnight UTC
+  const midnight = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
+  const ttlSeconds = Math.floor((midnight.getTime() - now.getTime()) / 1000);
+
+  const key = `ai:budget:${userId}:${now.toISOString().slice(0, 10)}`;
+  try {
+    const count = await redis.incr(key);
+    if (count === 1) await redis.expire(key, ttlSeconds);
+    if (count > DAILY_AI_LIMIT) {
+      logger.ai({ userId, feature: 'budget.exceeded', model: GEMINI_MODEL, totalTokens: 0 });
+      return false;
+    }
+  } catch {
+    return true; // Redis error → allow
+  }
+  return true;
+}
+
+export async function callAI(prompt: string, ctx?: AICallContext): Promise<string> {
   const mode = getAIMode()
+
+  // Check per-user daily budget before making any AI call
+  const withinBudget = await checkAIBudget(ctx?.userId);
+  if (!withinBudget) {
+    throw new Error('AI_DAILY_LIMIT_EXCEEDED');
+  }
   
   if (mode === 'gemini') {
     try {
-      return await callGemini(prompt)
+      return await callGemini(prompt, ctx)
     } catch (error: any) {
       // If quota hit (429), try Ollama as emergency fallback
       if (error.message?.includes('429') || 

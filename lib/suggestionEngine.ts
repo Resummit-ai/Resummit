@@ -64,11 +64,13 @@ export async function runSmartSync(userId: string, accessToken: string, email?: 
 
   if (!user) throw new Error("User not found");
 
-  // 2. Cooldown Check (1 minute to prevent lockout and allow retries)
-  const oneMinuteAgo = new Date(Date.now() - 1 * 60 * 1000);
+  // Cooldown: 1 hour in production to prevent GitHub API exhaustion.
+  // Dev mode bypasses this so you can iterate quickly.
+  const ONE_HOUR = 60 * 60 * 1000;
+  const cooldownAgo = new Date(Date.now() - ONE_HOUR);
   const hasNoSuggestions = (user.suggestions || []).length === 0;
 
-  if (!force && !hasNoSuggestions && user.githubData?.lastSyncedAt && user.githubData.lastSyncedAt > oneMinuteAgo) {
+  if (!force && !hasNoSuggestions && user.githubData?.lastSyncedAt && user.githubData.lastSyncedAt > cooldownAgo) {
     if (process.env.NODE_ENV !== "development") {
       console.log("Sync cooldown active. Skipping...");
       return { skipped: true, reason: "COOLDOWN_ACTIVE" };

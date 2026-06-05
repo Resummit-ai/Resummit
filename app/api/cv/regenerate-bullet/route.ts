@@ -3,6 +3,7 @@ import { prisma, resolveUserId } from "@/lib/server/prisma";
 import { NextResponse } from "next/server";
 import { regenerateBullet } from "@/lib/aiService";
 import { withCache } from "@/lib/server/cache";
+import { checkRateLimit } from "@/lib/server/ratelimit";
 import { z } from "zod";
 
 export const runtime = "nodejs";
@@ -21,6 +22,10 @@ export async function POST(req: Request) {
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  // Rate limit: 10 regenerations per hour per user (shared bucket with summary)
+  const limited = await checkRateLimit(userId, "regenerate");
+  if (limited) return limited;
 
   try {
     const body = await req.json();

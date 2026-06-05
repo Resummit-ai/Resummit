@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 import { regenerateSummary } from "@/lib/aiService";
 import { fetchRepoReadme } from "@/lib/github";
 import { withCache } from "@/lib/server/cache";
+import { checkRateLimit } from "@/lib/server/ratelimit";
+import { decryptToken } from "@/lib/server/crypto";
 import { z } from "zod";
 
 export const runtime = "nodejs";
@@ -23,6 +25,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // Rate limit: 10 regenerations per hour per user
+  const limited = await checkRateLimit(userId, "regenerate");
+  if (limited) return limited;
+
   try {
     const body = await req.json();
     const { projects, skills, experience, targetRole } = schema.parse(body);
@@ -39,7 +45,8 @@ export async function POST(req: Request) {
         where: { userId },
         select: { accessToken: true }
       });
-      const accessToken = githubData?.accessToken;
+      const rawToken = githubData?.accessToken;
+      const accessToken = rawToken ? decryptToken(rawToken) : undefined;
 
       if (accessToken && githubUsername) {
         // A user's profile README is located in a repository named exactly after their username

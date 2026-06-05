@@ -1,6 +1,8 @@
 import { auth } from "@/auth";
 import { prisma, resolveUserId } from "@/lib/server/prisma";
 import { runSmartSync } from "@/lib/suggestionEngine";
+import { checkRateLimit } from "@/lib/server/ratelimit";
+import { decryptToken } from "@/lib/server/crypto";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -14,14 +16,21 @@ export async function GET(req: Request) {
 
     const userId = await resolveUserId(session);
     if (!userId) return NextResponse.json({ error: "User not found" }, { status: 401 });
+
+    // Rate limit: 3 syncs per hour per user (force=true counts the same)
+    const limited = await checkRateLimit(userId, "githubSync");
+    if (limited) return limited;
+
     const githubData = await prisma.gitHubData.findUnique({ where: { userId } });
-    const token = (session.user as any).accessToken || githubData?.accessToken;
-    if (!token) {
+    const rawToken = (session.user as any).accessToken || githubData?.accessToken;
+    if (!rawToken) {
       return NextResponse.json(
         { error: "No GitHub connection found. Please sign out and sign in using your GitHub account to enable synchronization." },
         { status: 400 }
       );
     }
+    // Decrypt the token (no-op if it's still plaintext during migration window)
+    const token = decryptToken(rawToken);
     const result = await runSmartSync(userId, token, session.user.email || undefined, force);
     return NextResponse.json({ success: true, result });
   } catch (error: any) {
