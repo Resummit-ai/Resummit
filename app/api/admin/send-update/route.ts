@@ -4,8 +4,6 @@ import { prisma } from "@/lib/server/prisma";
 import { Resend } from "resend";
 import { z } from "zod";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const schema = z.object({
   subject: z.string().min(1).max(200),
   html:    z.string().min(1).max(100_000),
@@ -26,6 +24,11 @@ export async function POST(req: Request) {
   if (!session?.user?.email || session.user.email !== ADMIN_EMAIL) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
+
+  if (!process.env.RESEND_API_KEY) {
+    return NextResponse.json({ error: "Resend API key is not configured" }, { status: 500 });
+  }
+  const resend = new Resend(process.env.RESEND_API_KEY);
 
   const body = await req.json();
   const parsed = schema.safeParse(body);
