@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { Bell, Settings, User, X, Check, Shield, Cpu, RefreshCw, Moon, Sparkles, Sun } from "lucide-react";
+import { Bell, Settings, User, X, Check, Shield, Cpu, RefreshCw, Moon, Sparkles, Sun, LogOut } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import { signOut } from "next-auth/react";
 
 interface DashboardControlsProps {
   user: {
@@ -345,14 +346,21 @@ export function DashboardControls({ user }: DashboardControlsProps) {
                 </div>
               </div>
 
-              {/* Footer Save button */}
-              <div>
+              {/* Footer Buttons */}
+              <div className="flex flex-col gap-2.5">
                 <button
                   onClick={() => setShowSettings(false)}
                   className="w-full py-4.5 bg-neutral-950 text-white dark:bg-white dark:text-black hover:opacity-90 active:scale-98 transition-all font-black text-xs uppercase tracking-widest rounded-2xl flex items-center justify-center gap-2 shadow-xl cursor-pointer"
                 >
                   <Check className="w-4 h-4" />
                   Save Parameters
+                </button>
+                <button
+                  onClick={() => signOut({ callbackUrl: "/" })}
+                  className="w-full py-3.5 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 hover:border-red-500/30 active:scale-98 transition-all font-bold text-xs uppercase tracking-widest rounded-2xl flex items-center justify-center gap-2 cursor-pointer mt-1"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Sign Out
                 </button>
               </div>
             </motion.div>
