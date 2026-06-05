@@ -3,6 +3,9 @@ import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 
 export const authConfig = {
+  // trustHost lets NextAuth work correctly behind Vercel's proxy and
+  // across preview deployments without "Invalid redirect_uri" errors.
+  trustHost: true,
   providers: [
     GitHub({
       clientId: process.env.AUTH_GITHUB_ID,
@@ -18,27 +21,8 @@ export const authConfig = {
       clientSecret: process.env.AUTH_GOOGLE_SECRET,
     }),
   ],
-  callbacks: {
-    async jwt({ token, account }) {
-      if (account) {
-        token.accessToken = account.access_token;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (token.id && session.user) {
-        session.user.id = token.id as string;
-      } else if (token.sub && session.user) {
-        session.user.id = token.sub;
-      }
-      
-      if (session.user) {
-        (session.user as any).accessToken = token.accessToken;
-        (session.user as any).githubUsername = token.githubUsername;
-      }
-      return session;
-    },
-  },
+  // jwt/session callbacks are defined in auth.ts — NOT here.
+  // Defining them in both places causes them to conflict.
   pages: {
     signIn: "/login",
   },

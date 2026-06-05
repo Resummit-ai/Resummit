@@ -7,7 +7,6 @@ import { logger } from "@/lib/server/logger";
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
   callbacks: {
-    ...authConfig.callbacks,
     async signIn({ user, account, profile }) {
       if (!user.email) {
         logger.auth("denied.no_email", { provider: account?.provider });
@@ -84,6 +83,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
 
       return token;
+    },
+
+    async session({ session, token }) {
+      // Map JWT fields onto the session object so client components
+      // and server-side resolveUserId() can read them.
+      if (session.user) {
+        if (token.id)              session.user.id            = token.id as string;
+        else if (token.sub)        session.user.id            = token.sub;
+        (session.user as any).accessToken    = token.accessToken;
+        (session.user as any).githubUsername = token.githubUsername;
+      }
+      return session;
     },
   },
   // Events deliberately left empty: signIn callback handles everything.
