@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { auth, signOut } from "@/auth";
 import { prisma, resolveUserId } from "@/lib/server/prisma";
 import { redirect } from "next/navigation";
-import { LayoutDashboard, FileText, ArrowRight, Cpu, Activity, Target, Zap } from "lucide-react";
+import { LayoutDashboard, FileText, ArrowRight, Cpu, Activity, Target, Zap, Shield } from "lucide-react";
 import Link from "next/link";
 import { SmartUpdateCenter } from "@/components/dashboard/SmartUpdateCenter";
 import { DashboardControls } from "@/components/dashboard/DashboardControls";
@@ -16,9 +16,10 @@ export const metadata: Metadata = {
   title: "Resummit Dashboard — Developer Engineering DNA",
   description: "View your ATS scores, analyze stack confidence, track technical achievements, and manage your professional developer resume. Built on your real work, not templates.",
 };
-
 export default async function DashboardPage() {
   const session = await auth();
+  const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "adelmuhammed786@gmail.com";
+  const isSystemAdmin = session?.user?.email === ADMIN_EMAIL;
 
   if (!session?.user) {
     redirect("/login");
@@ -98,6 +99,9 @@ export default async function DashboardPage() {
             <div className="hidden md:flex items-center gap-8 text-[11px] font-bold uppercase tracking-widest text-[var(--sclade-text-secondary)]">
                <Link href="/dashboard" className="text-[var(--sclade-text-primary)] border-b-2 border-blue-500 pb-1 -mb-[22px]">Dashboard</Link>
                <Link href="/editor" className="hover:text-[var(--sclade-text-primary)] transition-colors">Editor</Link>
+               {isSystemAdmin && (
+                 <Link href="/admin" className="hover:text-[var(--sclade-text-primary)] text-blue-500 transition-colors">Admin</Link>
+               )}
             </div>
           </div>
           <DashboardControls user={dbUser} />
@@ -233,6 +237,22 @@ export default async function DashboardPage() {
                        </div>
                        <ArrowRight className="w-4 h-4 text-[var(--sclade-text-muted)] group-hover:translate-x-1 transition-transform" />
                     </Link>
+                    {isSystemAdmin && (
+                       <Link href="/admin" className="group flex items-center justify-between p-5 bg-[var(--sclade-btn-secondary-bg)] rounded-3xl border border-[var(--sclade-card-border)] text-[var(--sclade-text-primary)] hover:border-emerald-500/30 hover:bg-[var(--sclade-card-bg)] transition-all">
+                          <div className="flex items-center gap-4">
+                             <div className="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+                               <Shield className="w-5 h-5" />
+                             </div>
+                             <div className="flex flex-col">
+                                <span className="text-sm font-bold uppercase tracking-wide">Admin Console</span>
+                                <span className="text-[10px] text-[var(--sclade-text-secondary)] uppercase tracking-widest">
+                                   Broadcasts & Registry
+                                </span>
+                             </div>
+                          </div>
+                          <ArrowRight className="w-4 h-4 text-[var(--sclade-text-muted)] group-hover:translate-x-1 transition-transform" />
+                       </Link>
+                    )}
                  </div>
               </div>
 
