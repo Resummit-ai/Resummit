@@ -64,11 +64,13 @@ export async function POST(req: Request) {
     batches.push(emails.slice(i, i + 50));
   }
 
+  const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
+
   for (const batch of batches) {
     try {
-      await resend.batch.send(
+      const response = await resend.batch.send(
         batch.map((to: string) => ({
-          from:    "Resummit <updates@resummit.dev>",
+          from:    `Resummit <${fromEmail}>`,
           to,
           subject,
           html,
@@ -78,6 +80,11 @@ export async function POST(req: Request) {
           },
         }))
       );
+
+      if (response.error) {
+        throw new Error(response.error.message);
+      }
+
       batch.forEach((email: string) => results.push({ email, success: true }));
     } catch (err: any) {
       batch.forEach((email: string) =>
