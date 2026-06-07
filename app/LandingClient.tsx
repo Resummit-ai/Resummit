@@ -2308,6 +2308,69 @@ export function LandingClient({
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
         }
+
+        /* Mobile Responsiveness for widgets */
+        @media (max-width: 600px) {
+          /* GitHub Card Mobile tweaks */
+          .github-magic-card {
+            padding: 16px;
+          }
+          .github-repo-header {
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+          }
+          .github-commit-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+          }
+          .github-commit-left {
+            max-width: 100%;
+          }
+          .github-commit-title {
+            white-space: normal;
+            font-size: 0.88rem;
+          }
+          .github-commit-meta {
+            flex-wrap: wrap;
+            gap: 4px 6px;
+            font-size: 0.72rem;
+          }
+          .github-commit-right {
+            width: 100%;
+            justify-content: flex-start;
+            border-top: 1px solid rgba(240, 246, 252, 0.05);
+            padding-top: 8px;
+            margin-top: 2px;
+          }
+          
+          /* Resume Card Mobile tweaks */
+          .resume-magic-card {
+            padding: 24px 20px;
+          }
+          .resume-header {
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+          }
+          .resume-name {
+            font-size: 1.3rem;
+          }
+          .resume-job-meta {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+            font-size: 0.85rem;
+          }
+          .resume-bullet-point {
+            font-size: 0.8rem;
+          }
+          .ats-badge-hud {
+            right: 12px;
+            padding: 4px 10px;
+            font-size: 0.7rem;
+          }
+        }
       ` }} />
 
       <div className="landing-body">
