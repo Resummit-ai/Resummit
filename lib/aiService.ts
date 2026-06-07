@@ -62,13 +62,13 @@ async function callGemini(prompt: string, ctx?: AICallContext): Promise<string> 
   const result = await model.generateContent(prompt)
   const usage = result.response.usageMetadata;
   logger.ai({
-    userId:          ctx?.userId ?? 'anon',
-    feature:         ctx?.feature ?? 'unknown',
-    model:           GEMINI_MODEL,
-    promptTokens:    usage?.promptTokenCount,
+    userId: ctx?.userId ?? 'anon',
+    feature: ctx?.feature ?? 'unknown',
+    model: GEMINI_MODEL,
+    promptTokens: usage?.promptTokenCount,
     candidateTokens: usage?.candidatesTokenCount,
-    totalTokens:     usage?.totalTokenCount,
-    durationMs:      Date.now() - start,
+    totalTokens: usage?.totalTokenCount,
+    durationMs: Date.now() - start,
   });
   return result.response.text()
 }
@@ -132,15 +132,15 @@ export async function callAI(prompt: string, ctx?: AICallContext): Promise<strin
   if (!withinBudget) {
     throw new Error('AI_DAILY_LIMIT_EXCEEDED');
   }
-  
+
   if (mode === 'gemini') {
     try {
       return await callGemini(prompt, ctx)
     } catch (error: any) {
       // If quota hit (429), try Ollama as emergency fallback
-      if (error.message?.includes('429') || 
-          error.message?.includes('quota') ||
-          error.message?.includes('RESOURCE_EXHAUSTED')) {
+      if (error.message?.includes('429') ||
+        error.message?.includes('quota') ||
+        error.message?.includes('RESOURCE_EXHAUSTED')) {
         console.warn('[AI] Gemini quota hit — falling back to Ollama')
         try {
           return await callOllama(prompt)
@@ -152,7 +152,7 @@ export async function callAI(prompt: string, ctx?: AICallContext): Promise<strin
       throw error
     }
   }
-  
+
   // Dev mode: Ollama only
   return await callOllama(prompt)
 }
@@ -249,17 +249,17 @@ ${JSON.stringify(repoSummary, null, 2)}`
     parsed = safeParseJSON(raw)
   } catch (err) {
     console.warn("[AI] callAI failed inside generateCVFromRepos. Falling back to deterministic resume parsing.", err);
-    
+
     // Deterministic parsing of repo names, languages, and descriptions
     const projectsList = repos.slice(0, 3).map((r, idx) => {
       const language = r.language || "TypeScript";
-      const techStack = Array.isArray(r.topics) && r.topics.length > 0 
-        ? r.topics.slice(0, 3) 
+      const techStack = Array.isArray(r.topics) && r.topics.length > 0
+        ? r.topics.slice(0, 3)
         : [language, "Node.js", "Git"];
-      
+
       const highlights = [
         `Engineered ${r.name} using ${language} to resolve bottleneck latency and improve component runtime efficiency.`,
-        r.description 
+        r.description
           ? `Integrated ${techStack.join(', ')} and structured standard code patterns to increase application reliability.`
           : `Refactored core modules and component interfaces to decrease loading times and accelerate deployment pipelines.`
       ];
@@ -289,11 +289,11 @@ ${JSON.stringify(repoSummary, null, 2)}`
 
   // Validate and fill defaults if model misses fields
   return {
-    summary: Array.isArray(parsed.summary) 
-      ? parsed.summary.join(' ') 
-      : (typeof parsed.summary === 'string' 
-          ? parsed.summary 
-          : 'Software engineer building web applications and tools. Experienced in JavaScript and Python.'),
+    summary: Array.isArray(parsed.summary)
+      ? parsed.summary.join(' ')
+      : (typeof parsed.summary === 'string'
+        ? parsed.summary
+        : 'Software engineer building web applications and tools. Experienced in JavaScript and Python.'),
     skills: {
       languages: parsed.skills?.languages || [],
       frameworks: parsed.skills?.frameworks || [],
@@ -320,11 +320,11 @@ export async function regenerateSummary(
   targetRole: string,
   profileReadme?: string
 ): Promise<string> {
-  const projectsCtx = projects && projects.length > 0 
+  const projectsCtx = projects && projects.length > 0
     ? projects.map(p => `- ${p.title || p.name}: ${p.description || ""} (Tech: ${Array.isArray(p.techStack) ? p.techStack.join(', ') : (p.techStack || p.tech || "")})`).join('\n')
     : "No projects specified.";
 
-  const skillsCtx = skills 
+  const skillsCtx = skills
     ? `Languages: ${(skills.languages || []).join(', ')}\nFrameworks: ${(skills.frameworks || []).join(', ')}\nTools & Cloud: ${(skills.tools || []).join(', ')}`
     : "No skills specified.";
 
@@ -374,21 +374,21 @@ Rules:
     const langs = Array.isArray(skills?.languages) ? skills.languages : [];
     const frams = Array.isArray(skills?.frameworks) ? skills.frameworks : [];
     const tls = Array.isArray(skills?.tools) ? skills.tools : [];
-    
+
     const techLangs = langs.length > 0 ? langs.slice(0, 3) : ["TypeScript", "JavaScript", "Python"];
     const techFrams = frams.length > 0 ? frams.slice(0, 3) : ["React", "Next.js", "Node.js"];
     const techTools = tls.length > 0 ? tls.slice(0, 2) : ["Git", "Docker"];
-    
+
     const rolesWord = targetRole || "Software Engineer";
     const langString = techLangs.slice(0, 3).join(", ");
     const sent1 = `Engineers high-impact applications and software systems as a ${rolesWord}, focusing on clean architecture and reliable integration using ${langString}.`;
-    
+
     const framToolString = [...techFrams.slice(0, 2), ...techTools.slice(0, 1)].join(", ");
     const sent2 = `Deploys and maintains performant backend and frontend architectures employing ${framToolString} to increase run-time performance and application delivery.`;
-    
+
     return `${sent1} ${sent2}`;
   }
-  
+
   let cleaned = "";
   try {
     const parsed = JSON.parse(raw);
@@ -405,7 +405,7 @@ Rules:
       }
     }
   }
-  
+
   return typeof cleaned === 'string' ? cleaned : JSON.stringify(cleaned);
 }
 
@@ -436,8 +436,8 @@ Rules:
     const cleanBullet = bullet.replace(/^\s*[-\*•]\s*/, '').trim();
     const startsWithVerb = /^[A-Z][a-z]+ed\b/.test(cleanBullet);
     const verb = startsWithVerb ? "" : "Enhanced ";
-    const techInject = techStr && !cleanBullet.toLowerCase().includes(techStr.toLowerCase()) 
-      ? ` with ${techStr}` 
+    const techInject = techStr && !cleanBullet.toLowerCase().includes(techStr.toLowerCase())
+      ? ` with ${techStr}`
       : "";
     raw = `${verb}${cleanBullet}${techInject}`;
   }
@@ -502,12 +502,12 @@ ${cvText.slice(0, 3000)}`
     };
   } catch (error: any) {
     console.warn("[AI] ATS calculation failed, returning deterministic fallback score:", error);
-    return { 
+    return {
       score: 75,
       breakdown: { skills: 70, projects: 75, impact: 80, overall: 75 },
       weakSignals: [],
-      topIssues: ['AI evaluation temporarily offline; displaying active estimation.'], 
-      quickFixes: ['Connect more GitHub projects and enrich bullet details.'] 
+      topIssues: ['AI evaluation temporarily offline; displaying active estimation.'],
+      quickFixes: ['Connect more GitHub projects and enrich bullet details.']
     };
   }
 }

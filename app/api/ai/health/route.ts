@@ -9,7 +9,7 @@ export async function GET() {
 
   const geminiKey = process.env.GEMINI_API_KEY
   const hasGeminiKey = !!(geminiKey && geminiKey.length > 10)
-  
+
   // Check Ollama
   let ollamaStatus = 'offline'
   let ollamaModels: string[] = []
