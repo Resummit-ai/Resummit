@@ -1287,7 +1287,7 @@ export function LandingClient({
               </p>
 
               <div className="hero-actions">
-                <Link href={hasSession ? "/dashboard" : "/login"} className="primary-btn">{hasSession ? "Go to Dashboard" : "Get Started"}</Link>
+                <Link href={hasSession ? "/dashboard" : "/login"} className="primary-btn">{hasSession ? "Go to Dashboard" : "Get Started — It's Free"}</Link>
                 <button 
                   onClick={() => {
                     const element = document.getElementById("preview-section");
@@ -1298,6 +1298,30 @@ export function LandingClient({
                 >
                   See Resume Preview
                 </button>
+              </div>
+
+              {/* Trust line */}
+              <div style={{ display: "flex", alignItems: "center", gap: "18px", marginTop: "8px", flexWrap: "wrap" }}>
+                <span style={{ fontSize: "0.82rem", color: "var(--muted)", display: "flex", alignItems: "center", gap: "6px" }}>
+                  <svg viewBox="0 0 20 20" fill="currentColor" style={{ width: "14px", height: "14px", color: "#10b981", flexShrink: 0 }}><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                  Free to start · No credit card required
+                </span>
+                <span style={{ fontSize: "0.82rem", color: "var(--muted)", display: "flex", alignItems: "center", gap: "6px" }}>
+                  <svg viewBox="0 0 20 20" fill="currentColor" style={{ width: "14px", height: "14px", color: "#10b981", flexShrink: 0 }}><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                  Read-only GitHub access · Never writes to your repos
+                </span>
+              </div>
+
+              {/* Social proof badge */}
+              <div style={{ display: "inline-flex", alignItems: "center", gap: "10px", marginTop: "20px", padding: "10px 18px", borderRadius: "100px", background: "rgba(79,140,255,0.08)", border: "1px solid rgba(79,140,255,0.2)" }}>
+                <div style={{ display: "flex", gap: "-6px" }}>
+                  {["🧑‍💻","👩‍💻","🧑‍🎓"].map((e, i) => (
+                    <span key={i} style={{ fontSize: "1.1rem", marginLeft: i > 0 ? "-4px" : 0 }}>{e}</span>
+                  ))}
+                </div>
+                <span style={{ fontSize: "0.82rem", color: "var(--muted)", fontWeight: 600 }}>
+                  Joined by <span style={{ color: "var(--primary)", fontWeight: 700 }}>developers</span> from 10+ countries since launch
+                </span>
               </div>
             </div>
 
@@ -1615,6 +1639,87 @@ export function LandingClient({
           </div>
         </section>
 
+        {/* Before / After Transformation Section */}
+        <section className="section reveal" style={{ padding: "90px 0", background: "var(--bg)" }}>
+          <div className="container">
+            <div className="section-head reveal" style={{ marginBottom: "56px" }}>
+              <div className="label">The Magic</div>
+              <div className="title" style={{ fontSize: "clamp(2rem, 4vw, 3rem)" }}>
+                From raw commit<br />to recruiter-ready bullet
+              </div>
+              <div className="desc" style={{ maxWidth: "580px", margin: "0 auto" }}>
+                Resummit reads what you actually built — and translates it into the professional language recruiters expect.
+              </div>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: "24px", alignItems: "center", maxWidth: "960px", margin: "0 auto" }}>
+
+              {/* Before card */}
+              <div className="reveal" style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "20px", padding: "28px 32px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "20px" }}>
+                  <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#ef4444" }} />
+                  <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#f59e0b" }} />
+                  <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#10b981" }} />
+                  <span style={{ marginLeft: "8px", fontSize: "0.72rem", color: "var(--muted)", fontFamily: "monospace", letterSpacing: "0.05em", textTransform: "uppercase", fontWeight: 700 }}>Your GitHub</span>
+                </div>
+                <div style={{ fontFamily: "monospace", fontSize: "0.88rem", color: "var(--muted)", lineHeight: "1.7" }}>
+                  <div style={{ color: "#64748b", marginBottom: "4px" }}>$ git log --oneline</div>
+                  <div style={{ color: "var(--text)", marginBottom: "2px" }}>a3f2c1e <span style={{ color: "#94a3b8" }}>add weather api integration</span></div>
+                  <div style={{ color: "var(--text)", marginBottom: "2px" }}>b8e4d2f <span style={{ color: "#94a3b8" }}>fix render bug on mobile</span></div>
+                  <div style={{ color: "var(--text)", marginBottom: "12px" }}>c9a1b3d <span style={{ color: "#94a3b8" }}>hook up openweather api</span></div>
+                  <div style={{ padding: "10px 14px", background: "rgba(255,255,255,0.03)", borderRadius: "10px", border: "1px solid var(--border)", fontSize: "0.82rem" }}>
+                    <div style={{ color: "#64748b", marginBottom: "4px", fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.08em" }}>README</div>
+                    <div style={{ color: "var(--muted)" }}>Built using React. Shows weather data.</div>
+                  </div>
+                </div>
+                <div style={{ marginTop: "16px", display: "inline-flex", alignItems: "center", gap: "6px", padding: "5px 12px", borderRadius: "100px", background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", fontSize: "0.72rem", color: "#ef4444", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                  Raw · Unpolished
+                </div>
+              </div>
+
+              {/* Arrow */}
+              <div className="reveal" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
+                <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "var(--primary)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 24px rgba(79,140,255,0.35)", flexShrink: 0 }}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: "20px", height: "20px" }}>
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </div>
+                <span style={{ fontSize: "0.7rem", color: "var(--primary)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", textAlign: "center", whiteSpace: "nowrap" }}>AI Synthesis</span>
+              </div>
+
+              {/* After card */}
+              <div className="reveal" style={{ background: "linear-gradient(135deg, rgba(79,140,255,0.06), rgba(79,140,255,0.02))", border: "1px solid rgba(79,140,255,0.25)", borderRadius: "20px", padding: "28px 32px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "20px" }}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: "16px", height: "16px" }}>
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" />
+                  </svg>
+                  <span style={{ fontSize: "0.72rem", color: "var(--primary)", fontFamily: "monospace", letterSpacing: "0.05em", textTransform: "uppercase", fontWeight: 700 }}>Resummit Output</span>
+                </div>
+                <div style={{ fontSize: "0.95rem", color: "var(--text)", lineHeight: "1.75", fontFamily: "'Times New Roman', Georgia, serif" }}>
+                  <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
+                    <span style={{ color: "var(--primary)", fontWeight: 700, flexShrink: 0, fontFamily: "Inter, sans-serif" }}>•</span>
+                    <span>Developed a <strong>React-based weather application</strong> integrating the OpenWeather API, delivering real-time forecast data with dynamic UI rendering across <strong>120+ iterative commits</strong>.</span>
+                  </div>
+                  <div style={{ display: "flex", gap: "10px" }}>
+                    <span style={{ color: "var(--primary)", fontWeight: 700, flexShrink: 0, fontFamily: "Inter, sans-serif" }}>•</span>
+                    <span>Resolved critical <strong>cross-device rendering inconsistencies</strong>, achieving consistent viewport compatibility across mobile and desktop breakpoints.</span>
+                  </div>
+                </div>
+                <div style={{ marginTop: "16px", display: "inline-flex", alignItems: "center", gap: "6px", padding: "5px 12px", borderRadius: "100px", background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)", fontSize: "0.72rem", color: "#10b981", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                  ✓ ATS-Optimized · Recruiter-Ready
+                </div>
+              </div>
+            </div>
+
+            {/* CTA under transformation */}
+            <div className="reveal" style={{ textAlign: "center", marginTop: "48px" }}>
+              <Link href={hasSession ? "/dashboard" : "/login"} className="primary-btn" style={{ display: "inline-flex" }}>
+                {hasSession ? "Generate My Resume" : "Try It Free — Connect GitHub"}
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* Features Section */}
         <section className="section" id="features">
           <div className="container">
@@ -1797,30 +1902,9 @@ export function LandingClient({
                 </div>
               </div>
 
-              {/* Sleek Interactive Feedback Form */}
+              {/* Sleek Interactive Feedback Form — open to all visitors */}
               <div className="feedback-form-container">
-                {!hasSession ? (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    style={{ textAlign: "center", padding: "30px 10px" }}
-                  >
-                    <div style={{ width: "64px", height: "64px", borderRadius: "22px", background: "linear-gradient(135deg, rgba(79, 140, 255, 0.15), rgba(79, 140, 255, 0.05))", border: "1px solid rgba(79, 140, 255, 0.25)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px auto", color: "var(--primary)" }}>
-                      <KeyRound style={{ width: "26px", height: "26px", strokeWidth: 2 }} />
-                    </div>
-                    <h3 style={{ color: "white", fontSize: "1.25rem", fontWeight: 700, marginBottom: "12px", letterSpacing: "-0.02em" }}>Authentication Required</h3>
-                    <p style={{ fontSize: "0.9rem", color: "var(--muted)", marginBottom: "26px", lineHeight: "1.6" }}>
-                      Please connect your GitHub account to share your feedback, feature requests, or bug reports with us.
-                    </p>
-                    <Link 
-                      href="/login" 
-                      className="primary-btn" 
-                      style={{ textDecoration: "none", display: "inline-flex", width: "100%", justifyContent: "center", padding: "14px 24px", borderRadius: "16px" }}
-                    >
-                      Connect GitHub to Submit Feedback
-                    </Link>
-                  </motion.div>
-                ) : feedbackSubmitted ? (
+                {feedbackSubmitted ? (
                   <motion.div 
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -1844,7 +1928,7 @@ export function LandingClient({
                 ) : (
                   <form onSubmit={handleFeedbackSubmit} className="space-y-4" style={{ display: "flex", flexDirection: "column" }}>
                     <h3>Share Your Feedback</h3>
-                    <p>Help us improve your workspace experience. We review every message.</p>
+                    <p>Help us improve Resummit. We read every message.</p>
  
                     <div className="feedback-form-group">
                       <label>Full Name</label>
@@ -1871,7 +1955,7 @@ export function LandingClient({
                     </div>
  
                     <div className="feedback-form-group">
-                      <label>Workspace Rating</label>
+                      <label>Rating</label>
                       <div className="rating-buttons">
                         {[1, 2, 3, 4, 5].map((val) => (
                           <button
