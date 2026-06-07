@@ -905,7 +905,6 @@ export function LandingClient({
             gap: 16px;
           }
           .magic-arrow-container {
-            transform: rotate(90deg);
             margin: 12px 0;
           }
         }
