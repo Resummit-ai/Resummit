@@ -27,6 +27,7 @@ export default function AdminDashboard() {
   const [sending, setSending] = useState(false);
   const [sendResult, setSendResult] = useState<{ sent: number; failed: number; error?: string } | null>(null);
   const [previewMode, setPreviewMode] = useState(false);
+  const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
 
   useEffect(() => {
     // Check if the current user is an admin
@@ -36,7 +37,9 @@ export default function AdminDashboard() {
         if (res.status === 200) {
           setIsAdmin(true);
           const data = await res.json();
-          setUsers(data.users || []);
+          const loadedUsers = data.users || [];
+          setUsers(loadedUsers);
+          setSelectedUserIds(loadedUsers.map((u: UserItem) => u.id));
         } else {
           setIsAdmin(false);
         }
@@ -62,7 +65,7 @@ export default function AdminDashboard() {
       const res = await fetch("/api/admin/send-update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ subject, html: htmlContent }),
+        body: JSON.stringify({ subject, html: htmlContent, userIds: selectedUserIds }),
       });
 
       const data = await res.json();
@@ -252,7 +255,7 @@ export default function AdminDashboard() {
 
                 <button
                   type="submit"
-                  disabled={sending || users.length === 0}
+                  disabled={sending || selectedUserIds.length === 0}
                   className="w-full py-4.5 bg-blue-600 hover:bg-blue-500 disabled:bg-neutral-800 disabled:text-neutral-500 disabled:cursor-not-allowed text-white font-black text-xs uppercase tracking-widest rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-blue-600/10 transition-all cursor-pointer"
                 >
                   {sending ? (
@@ -263,7 +266,7 @@ export default function AdminDashboard() {
                   ) : (
                     <>
                       <Send className="w-4 h-4" />
-                      Send to all {users.length} users
+                      Send to {selectedUserIds.length} selected users
                     </>
                   )}
                 </button>
@@ -275,10 +278,29 @@ export default function AdminDashboard() {
           <div className="lg:col-span-5 space-y-6">
             <div className="glass-panel p-8 rounded-[2rem] bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] flex flex-col max-h-[640px]">
               <div className="mb-6">
-                <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                  <Users className="w-5 h-5 text-violet-400" />
-                  User Registry
-                </h3>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-bold flex items-center gap-2">
+                    <Users className="w-5 h-5 text-violet-400" />
+                    User Registry
+                  </h3>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedUserIds(users.map(u => u.id))}
+                      className="text-[9px] font-black uppercase tracking-wider text-blue-500 hover:text-blue-400 transition-colors cursor-pointer"
+                    >
+                      Select All
+                    </button>
+                    <span className="text-neutral-600 text-[9px]">|</span>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedUserIds([])}
+                      className="text-[9px] font-black uppercase tracking-wider text-neutral-500 hover:text-neutral-400 transition-colors cursor-pointer"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                </div>
 
                 {/* Search Bar */}
                 <div className="relative">
@@ -303,22 +325,40 @@ export default function AdminDashboard() {
                   filteredUsers.map((u) => (
                     <div
                       key={u.id}
-                      className="p-4 rounded-2xl bg-black/[0.02] dark:bg-white/[0.01] border border-black/5 dark:border-white/5 hover:border-blue-500/10 transition-all flex justify-between items-center"
+                      className={`p-4 rounded-2xl bg-black/[0.02] dark:bg-white/[0.01] border transition-all flex justify-between items-center ${
+                        selectedUserIds.includes(u.id)
+                          ? "border-blue-500/30 bg-blue-500/[0.01]"
+                          : "border-black/5 dark:border-white/5"
+                      }`}
                     >
-                      <div className="space-y-1">
-                        <span className="text-xs font-bold text-neutral-800 dark:text-neutral-200 block">
-                          {u.name || "Anonymous User"}
-                        </span>
-                        <span className="text-[10px] text-neutral-500 dark:text-neutral-400 block truncate font-semibold">
-                          {u.email}
-                        </span>
-                        {u.githubUsername && (
-                          <span className="inline-block px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/5 text-[9px] text-neutral-400 font-bold uppercase tracking-wider">
-                            github: {u.githubUsername}
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <input
+                          type="checkbox"
+                          checked={selectedUserIds.includes(u.id)}
+                          onChange={() => {
+                            setSelectedUserIds(prev =>
+                              prev.includes(u.id)
+                                ? prev.filter(id => id !== u.id)
+                                : [...prev, u.id]
+                            );
+                          }}
+                          className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                        />
+                        <div className="space-y-1 min-w-0 flex-1">
+                          <span className="text-xs font-bold text-neutral-800 dark:text-neutral-200 block truncate">
+                            {u.name || "Anonymous User"}
                           </span>
-                        )}
+                          <span className="text-[10px] text-neutral-500 dark:text-neutral-400 block truncate font-semibold">
+                            {u.email}
+                          </span>
+                          {u.githubUsername && (
+                            <span className="inline-block px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/5 text-[9px] text-neutral-400 font-bold uppercase tracking-wider">
+                              github: {u.githubUsername}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      <div className="text-right">
+                      <div className="text-right flex-shrink-0 ml-4">
                         <div className="text-[9px] text-neutral-400 dark:text-neutral-600 font-bold uppercase tracking-wide flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
                           {new Date(u.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
