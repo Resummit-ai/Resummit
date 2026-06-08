@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/server/prisma";
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 import { z } from "zod";
 
 const schema = z.object({
@@ -25,10 +25,25 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  if (!process.env.RESEND_API_KEY) {
-    return NextResponse.json({ error: "Resend API key is not configured" }, { status: 500 });
+  const smtpHost = process.env.SMTP_HOST || "smtp.gmail.com";
+  const smtpPort = parseInt(process.env.SMTP_PORT || "465", 10);
+  const smtpSecure = process.env.SMTP_SECURE === "true" || smtpPort === 465;
+  const smtpUser = process.env.SMTP_USER;
+  const smtpPass = process.env.SMTP_PASS;
+
+  if (!smtpUser || !smtpPass) {
+    return NextResponse.json({ error: "SMTP credentials (SMTP_USER and SMTP_PASS) are not configured" }, { status: 500 });
   }
-  const resend = new Resend(process.env.RESEND_API_KEY);
+
+  const transporter = nodemailer.createTransport({
+    host: smtpHost,
+    port: smtpPort,
+    secure: smtpSecure,
+    auth: {
+      user: smtpUser,
+      pass: smtpPass,
+    },
+  });
 
   const body = await req.json();
   const parsed = schema.safeParse(body);
@@ -55,41 +70,23 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "No users with emails found" }, { status: 400 });
   }
 
-  // Resend supports batch sending — max 100 per call
   const results: { email: string; success: boolean; error?: string }[] = [];
+  const fromEmail = process.env.SMTP_FROM_EMAIL || smtpUser;
 
-  // Split into batches of 50
-  const batches = [];
-  for (let i = 0; i < emails.length; i += 50) {
-    batches.push(emails.slice(i, i + 50));
-  }
-
-  const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
-
-  for (const batch of batches) {
+  for (const email of emails) {
     try {
-      const response = await resend.batch.send(
-        batch.map((to: string) => ({
-          from:    `Resummit <${fromEmail}>`,
-          to,
-          subject,
-          html,
-          headers: {
-            // Helps with deliverability / unsubscribe compliance
-            "List-Unsubscribe": `<mailto:unsubscribe@resummit.dev?subject=Unsubscribe>`,
-          },
-        }))
-      );
-
-      if (response.error) {
-        throw new Error(response.error.message);
-      }
-
-      batch.forEach((email: string) => results.push({ email, success: true }));
+      await transporter.sendMail({
+        from: `Resummit <${fromEmail}>`,
+        to: email,
+        subject,
+        html,
+        headers: {
+          "List-Unsubscribe": `<mailto:unsubscribe@resummit.dev?subject=Unsubscribe>`,
+        },
+      });
+      results.push({ email, success: true });
     } catch (err: any) {
-      batch.forEach((email: string) =>
-        results.push({ email, success: false, error: err.message })
-      );
+      results.push({ email, success: false, error: err.message });
     }
   }
 
