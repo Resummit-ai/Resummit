@@ -54,7 +54,7 @@ export default function AdminDashboard() {
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!confirm(`Are you sure you want to send this email to all ${users.length} users?`)) {
+    if (!confirm(`Are you sure you want to send this email to the ${selectedUserIds.length} selected users?`)) {
       return;
     }
 
@@ -72,10 +72,10 @@ export default function AdminDashboard() {
       if (res.ok) {
         setSendResult({ sent: data.sent, failed: data.failed });
       } else {
-        setSendResult({ sent: 0, failed: users.length, error: data.error || "Failed to send emails" });
+        setSendResult({ sent: 0, failed: selectedUserIds.length, error: data.error || "Failed to send emails" });
       }
     } catch (err: any) {
-      setSendResult({ sent: 0, failed: users.length, error: err.message || "An unexpected error occurred" });
+      setSendResult({ sent: 0, failed: selectedUserIds.length, error: err.message || "An unexpected error occurred" });
     } finally {
       setSending(false);
     }
