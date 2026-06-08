@@ -38,6 +38,8 @@ const limiters = {
   cvSave:              makeRatelimiter(30, 3600),
   /** 5 suggestion fetches/hour */
   suggestions:         makeRatelimiter(5,  3600),
+  /** 5 feedback submissions/hour per IP */
+  feedback:            makeRatelimiter(5,  3600),
 } as const;
 
 type LimiterKey = keyof typeof limiters;
