@@ -2266,33 +2266,47 @@ export function EditorClient({
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-              {/* Score Indicator */}
-              <div className="md:col-span-4 flex flex-col items-center justify-center p-6 bg-white/[0.02] border border-white/5 rounded-3xl md:sticky md:top-6 h-fit">
-                <div className="relative w-28 h-28 flex items-center justify-center">
-                  <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                    <circle
-                      cx="50"
-                      cy="50"
-                      r="40"
-                      className="stroke-neutral-800"
-                      strokeWidth="8"
-                      fill="transparent"
-                    />
-                    <circle
-                      cx="50"
-                      cy="50"
-                      r="40"
-                      className="stroke-blue-500 transition-all duration-1000"
-                      strokeWidth="8"
-                      fill="transparent"
-                      strokeDasharray="251.2"
-                      strokeDashoffset={251.2 - (251.2 * matchScore) / 100}
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  <span className="absolute text-2xl font-black font-outfit">{matchScore}%</span>
+              {/* Left Column: Score and Status (Sticky Sidebar) */}
+              <div className="md:col-span-4 space-y-4 md:sticky md:top-6 h-fit">
+                {/* Score Indicator */}
+                <div className="flex flex-col items-center justify-center p-6 bg-white/[0.02] border border-white/5 rounded-3xl">
+                  <div className="relative w-28 h-28 flex items-center justify-center">
+                    <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="40"
+                        className="stroke-neutral-800"
+                        strokeWidth="8"
+                        fill="transparent"
+                      />
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="40"
+                        className="stroke-blue-500 transition-all duration-1000"
+                        strokeWidth="8"
+                        fill="transparent"
+                        strokeDasharray="251.2"
+                        strokeDashoffset={251.2 - (251.2 * matchScore) / 100}
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                    <span className="absolute text-2xl font-black font-outfit">{matchScore}%</span>
+                  </div>
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-neutral-500 mt-4 font-outfit">Match Strength</h4>
                 </div>
-                <h4 className="text-[10px] font-black uppercase tracking-widest text-neutral-500 mt-4">Match Strength</h4>
+
+                {/* CV Alignment Status Card */}
+                <div className="p-6 bg-blue-500/5 border border-blue-500/10 rounded-3xl text-left">
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-2 flex items-center gap-1.5 font-outfit">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                    CV Alignment Status
+                  </h4>
+                  <p className="text-xs text-[var(--sclade-text-secondary)] leading-relaxed font-medium">
+                    Experience bullets, project descriptions, and skills are fully synchronized with the target job requirements.
+                  </p>
+                </div>
               </div>
 
               {/* Match Stats */}
