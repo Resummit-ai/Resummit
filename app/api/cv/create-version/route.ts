@@ -10,7 +10,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { resumeId, sourceVersionId } = await req.json();
+    const { resumeId, sourceVersionId, startFromScratch } = await req.json();
 
     if (!resumeId) {
       return NextResponse.json({ error: "Missing resumeId" }, { status: 400 });
@@ -38,6 +38,15 @@ export async function POST(req: Request) {
     }
 
     if (!sourceVersion) {
+      sourceVersion = await prisma.resumeVersion.findFirst({
+        where: {
+          resume: { userId: userId },
+          isMain: true
+        }
+      });
+    }
+
+    if (!sourceVersion) {
       return NextResponse.json({ error: "Source resume version not found" }, { status: 404 });
     }
 
@@ -51,19 +60,19 @@ export async function POST(req: Request) {
 
     const newVersionName = `Tailored Position ${tailoredCount + 1}`;
 
-    // 3. Create a new ResumeVersion copying the source content
+    // 3. Create a new ResumeVersion copying the source content (or blanking fields if scratch)
     const newVersion = await prisma.resumeVersion.create({
       data: {
         resumeId: resumeId,
         versionName: newVersionName,
         isMain: false,
         personalInfo: sourceVersion.personalInfo || {},
-        summary: sourceVersion.summary || "",
-        skills: sourceVersion.skills || { languages: [], frameworks: [], tools: [] },
-        experience: sourceVersion.experience || [],
-        projects: sourceVersion.projects || [],
-        education: sourceVersion.education || [],
-        achievements: sourceVersion.achievements || [],
+        summary: startFromScratch ? "" : (sourceVersion.summary || ""),
+        skills: startFromScratch ? { languages: [], frameworks: [], tools: [] } : (sourceVersion.skills || { languages: [], frameworks: [], tools: [] }),
+        experience: startFromScratch ? [] : (sourceVersion.experience || []),
+        projects: startFromScratch ? [] : (sourceVersion.projects || []),
+        education: startFromScratch ? [] : (sourceVersion.education || []),
+        achievements: startFromScratch ? [] : (sourceVersion.achievements || []),
         atsScore: 0,
         jobTargetId: null
       }

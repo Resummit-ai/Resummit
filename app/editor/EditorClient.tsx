@@ -393,6 +393,11 @@ export function EditorClient({
   const [showVersionsSidebar, setShowVersionsSidebar] = useState(true);
   const [mode, setMode] = useState<"non-specialized" | "specialized">("non-specialized");
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [showTailorModal, setShowTailorModal] = useState(false);
+  const [tailorJobTitle, setTailorJobTitle] = useState("");
+  const [tailorJdText, setTailorJdText] = useState("");
+  const [tailorBaseOption, setTailorBaseOption] = useState<"clone" | "scratch">("clone");
+  const [isCreatingTailoredVersion, setIsCreatingTailoredVersion] = useState(false);
   // Map ResumeVersion fields to local state
   const [personalInfo, setPersonalInfo] = useState<any>(
     typeof initialData.personalInfo === 'string' 
@@ -1051,6 +1056,90 @@ export function EditorClient({
     } catch (error) {
       console.error("Initiating version failed", error);
       alert("An error occurred while creating a new version.");
+    }
+  };
+
+  const handleTailorNewJobSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsCreatingTailoredVersion(true);
+
+    try {
+      // 1. Create a new version
+      const createRes = await fetch("/api/cv/create-version", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          resumeId, 
+          sourceVersionId: currentVersionId,
+          startFromScratch: tailorBaseOption === "scratch"
+        })
+      });
+      const createResult = await createRes.json();
+      if (!createResult.success) {
+        alert("Failed to create version: " + (createResult.error || "Unknown error"));
+        setIsCreatingTailoredVersion(false);
+        return;
+      }
+
+      const newVersionId = createResult.versionId;
+
+      // 2. If JD is provided, run tailoring
+      if (tailorJdText.trim()) {
+        const tailorRes = await fetch("/api/cv/tailor", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            resumeId,
+            versionId: newVersionId,
+            jobTitle: tailorJobTitle,
+            jobDescription: tailorJdText
+          })
+        });
+        const tailorResult = await tailorRes.json();
+        if (tailorResult.success) {
+          const d = tailorResult.data;
+          setCurrentVersionId(newVersionId);
+          setActiveJobTarget(tailorResult.jobTarget);
+          setPersonalInfo(d.personalInfo);
+          setSummary(d.summary);
+          setSkills(d.skills);
+          setExperience(d.experience);
+          setProjects(d.projects);
+          setEducation(d.education);
+          
+          const newVerItem = {
+            id: newVersionId,
+            versionName: d.versionName,
+            isMain: d.isMain,
+            createdAt: d.createdAt,
+            atsScore: d.atsScore,
+            jobTarget: tailorResult.jobTarget
+          };
+          setVersionsList(prev => [newVerItem, ...prev]);
+
+          // Update URL query parameters and switch tab
+          if (typeof window !== "undefined") {
+            const url = new URL(window.location.href);
+            url.searchParams.set("versionId", newVersionId);
+            url.searchParams.set("tab", "tailor");
+            window.history.pushState({}, "", url.toString());
+          }
+          setActiveTab("tailor");
+          alert("Resume successfully created and tailored!");
+        } else {
+          alert("Created version, but tailoring failed: " + (tailorResult.error || "AI error"));
+          window.location.href = `/editor?versionId=${newVersionId}&tab=tailor`;
+        }
+      } else {
+        // No JD: go straight to profile editing
+        window.location.href = `/editor?versionId=${newVersionId}&tab=profile`;
+      }
+      setShowTailorModal(false);
+    } catch (error) {
+      console.error("Tailor new job failed", error);
+      alert("An error occurred during version creation.");
+    } finally {
+      setIsCreatingTailoredVersion(false);
     }
   };
 
@@ -2087,7 +2176,12 @@ export function EditorClient({
                   Reset to Main Profile
                 </button>
                 <button
-                  onClick={handleCreateNewVersion}
+                  onClick={() => {
+                    setTailorJobTitle("");
+                    setTailorJdText("");
+                    setTailorBaseOption("clone");
+                    setShowTailorModal(true);
+                  }}
                   className="px-4 py-2.5 bg-blue-600/10 hover:bg-blue-600/20 border border-blue-500/20 text-blue-400 font-bold text-xs rounded-xl transition-all active:scale-[0.98] cursor-pointer"
                 >
                   Tailor for a New Job
@@ -2455,7 +2549,12 @@ export function EditorClient({
           {/* Sidebar Top: New Tailoring Run Button */}
           <div className="p-4 border-b border-[var(--sclade-popover-border)]">
             <button
-              onClick={handleCreateNewVersion}
+              onClick={() => {
+                setTailorJobTitle("");
+                setTailorJdText("");
+                setTailorBaseOption("clone");
+                setShowTailorModal(true);
+              }}
               className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-lg shadow-blue-600/10 text-xs cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
@@ -2575,63 +2674,130 @@ export function EditorClient({
       )}
 
       {/* Specialized Coming Soon Modal */}
-      {showUpgradeModal && (
+      {/* Premium Tailor for New Job Modal */}
+      {showTailorModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-xl animate-fade-in">
-          <div className="w-[440px] bg-[var(--sclade-popover-bg)] border border-[var(--sclade-popover-border)] p-8 rounded-[2.5rem] relative overflow-hidden shadow-[0_0_50px_rgba(37,99,235,0.15)] transition-all duration-300">
+          <div className="w-[480px] bg-[var(--sclade-popover-bg)] border border-[var(--sclade-popover-border)] p-8 rounded-[2.5rem] relative overflow-hidden shadow-[0_0_50px_rgba(37,99,235,0.15)] transition-all duration-300">
             <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 blur-[100px] pointer-events-none" />
             
             <button 
-              onClick={() => setShowUpgradeModal(false)}
+              onClick={() => setShowTailorModal(false)}
               className="absolute top-6 right-6 p-2 text-[var(--sclade-text-muted)] hover:text-[var(--sclade-text-primary)] rounded-full hover:bg-white/5 transition-all"
             >
               <X className="w-4 h-4" />
             </button>
-            
-            <div className="flex flex-col items-center text-center mt-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-3xl flex items-center justify-center shadow-[0_0_30px_rgba(37,99,235,0.3)] mb-6 relative group">
-                <span className="absolute inset-0 rounded-3xl bg-blue-500 animate-ping opacity-25" />
-                <Sparkles className="w-6 h-6 text-white stroke-[2.5]" />
+
+            <form onSubmit={handleTailorNewJobSubmit} className="space-y-6">
+              <div>
+                <h3 className="font-extrabold text-xl tracking-tight text-[var(--sclade-text-primary)] font-outfit mb-1 flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-blue-500 stroke-[2.5]" />
+                  Tailor for New Job
+                </h3>
+                <p className="text-[var(--sclade-text-muted)] text-[11px] font-medium leading-normal">
+                  Create a new tailored version of your resume optimized for a specific role.
+                </p>
               </div>
-              
-              <h3 className="font-extrabold text-xl tracking-tight uppercase text-[var(--sclade-text-primary)] font-outfit mb-3">
-                Specialized Tuning Coming Soon
-              </h3>
-              
-              <p className="text-[var(--sclade-text-secondary)] text-xs leading-relaxed max-w-sm mb-8">
-                We are currently training our specialized AI models to compile role-specific resume hierarchies with absolute high-signal metrics. Stay tuned!
-              </p>
-              
-              <div className="w-full space-y-4 mb-8 text-left bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] p-5 rounded-2xl">
-                <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0 mt-0.5">
-                    <Sparkles className="w-3 h-3 text-blue-400" />
-                  </div>
-                  <div>
-                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-[var(--sclade-text-primary)]">Role-Specific Tuning</h4>
-                    <p className="text-[9px] text-[var(--sclade-text-muted)] mt-1 leading-normal">Tailor experience, skills, and bullets for Frontend, Backend, ML, or Mobile domains.</p>
+
+              <div className="space-y-4">
+                {/* Job Title */}
+                <div>
+                  <SectionLabel>Target Job Title</SectionLabel>
+                  <input
+                    type="text"
+                    required
+                    value={tailorJobTitle}
+                    onChange={(e) => setTailorJobTitle(e.target.value)}
+                    placeholder="e.g. Senior Frontend Engineer"
+                    className="w-full bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] text-[var(--sclade-text-primary)] placeholder:text-[var(--sclade-text-muted)] rounded-2xl px-5 py-4 text-xs outline-none focus:border-blue-500/40 transition-all font-medium"
+                  />
+                </div>
+
+                {/* Job Description */}
+                <div>
+                  <SectionLabel>Job Description (Optional)</SectionLabel>
+                  <textarea
+                    value={tailorJdText}
+                    onChange={(e) => setTailorJdText(e.target.value)}
+                    placeholder="Paste the job description here. Our AI will automatically rewrite and align your bullets to match keywords and missing skills..."
+                    rows={5}
+                    className="w-full bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] text-[var(--sclade-text-primary)] placeholder:text-[var(--sclade-text-muted)] rounded-2xl px-5 py-4 text-xs outline-none focus:border-blue-500/40 transition-all font-medium resize-none leading-relaxed"
+                  />
+                </div>
+
+                {/* Method Options */}
+                <div>
+                  <SectionLabel>Base Content Option</SectionLabel>
+                  <div className="grid grid-cols-1 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setTailorBaseOption("clone")}
+                      className={`w-full text-left p-4 rounded-2xl border transition-all ${
+                        tailorBaseOption === "clone"
+                          ? "bg-blue-500/10 border-blue-500/30 text-white"
+                          : "bg-transparent border-[var(--sclade-input-border)] text-[var(--sclade-text-secondary)] hover:bg-white/[0.02]"
+                      }`}
+                    >
+                      <div className="text-xs font-bold flex items-center gap-2">
+                        <div className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center shrink-0 ${tailorBaseOption === "clone" ? "border-blue-500 bg-blue-500" : "border-neutral-600"}`}>
+                          {tailorBaseOption === "clone" && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                        </div>
+                        Use Current CV as Base (Recommended)
+                      </div>
+                      <p className="text-[10px] text-[var(--sclade-text-muted)] mt-1 ml-5.5 leading-normal">
+                        Pre-fills the new version with your current experiences and projects, then refines them with AI.
+                      </p>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setTailorBaseOption("scratch")}
+                      className={`w-full text-left p-4 rounded-2xl border transition-all ${
+                        tailorBaseOption === "scratch"
+                          ? "bg-blue-500/10 border-blue-500/30 text-white"
+                          : "bg-transparent border-[var(--sclade-input-border)] text-[var(--sclade-text-secondary)] hover:bg-white/[0.02]"
+                      }`}
+                    >
+                      <div className="text-xs font-bold flex items-center gap-2">
+                        <div className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center shrink-0 ${tailorBaseOption === "scratch" ? "border-blue-500 bg-blue-500" : "border-neutral-600"}`}>
+                          {tailorBaseOption === "scratch" && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                        </div>
+                        Start from Scratch (Blank Slate)
+                      </div>
+                      <p className="text-[10px] text-[var(--sclade-text-muted)] mt-1 ml-5.5 leading-normal">
+                        Creates an empty resume version (keeps contact info). Useful when writing a customized CV from a blank canvas.
+                      </p>
+                    </button>
                   </div>
                 </div>
-                
-                <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0 mt-0.5">
-                    <Cpu className="w-3 h-3 text-blue-400" />
-                  </div>
-                  <div>
-                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-white">Recruiter Calibration</h4>
-                    <p className="text-[9px] text-neutral-500 mt-1 leading-normal">Verify stack confidence ratios and score compatibility against specific hiring target profiles.</p>
-                  </div>
-                </div>
               </div>
-              
-              <div className="w-full">
-                <button 
-                  onClick={() => setShowUpgradeModal(false)}
-                  className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-lg shadow-blue-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+
+              <div className="flex gap-4 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowTailorModal(false)}
+                  className="flex-1 py-4 border border-[var(--sclade-popover-border)] bg-[var(--sclade-btn-secondary-bg)] hover:bg-neutral-800 text-[var(--sclade-text-secondary)] font-bold text-xs uppercase tracking-widest rounded-2xl transition-all"
                 >
-                  Stay Tuned
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isCreatingTailoredVersion}
+                  className="flex-1 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-lg shadow-blue-500/20 disabled:opacity-50 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  {isCreatingTailoredVersion ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Optimizing...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4" />
+                      {tailorJdText.trim() ? "Optimize & Create" : "Create Version"}
+                    </>
+                  )}
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       )}

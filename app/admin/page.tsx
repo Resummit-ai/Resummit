@@ -18,14 +18,198 @@ export default function AdminDashboard() {
   const [users, setUsers] = useState<UserItem[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   // Email Form State
-  const [subject, setSubject] = useState("New update from Resummit 🚀");
+  const [subject, setSubject] = useState("Your Workspace Just Got Better 🚀");
   const [htmlContent, setHtmlContent] = useState(
-    `<h1>Hey there!</h1>\n<p>We've just rolled out some exciting updates to Resummit...</p>`
+    `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Workspace Just Got Better</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+  
+  <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f8fafc; padding: 50px 10px;">
+    <tr>
+      <td align="center">
+        <!-- Main Email Container -->
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 580px; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 24px; overflow: hidden; box-shadow: 0 15px 35px rgba(15, 23, 42, 0.04);">
+          
+          <!-- HERO SECTION -->
+          <tr>
+            <td style="padding: 70px 40px; text-align: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #312e81 100%);">
+              
+              <!-- Logo Header -->
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" style="margin: 0 auto 30px auto;">
+                <tr>
+                  <td style="vertical-align: middle;">
+                    <!-- SVG Logo matching dark theme contrast -->
+                    <svg width="34" height="34" viewBox="0 0 32 32" fill="none" style="display: block;">
+                      <!-- Document Body (Deep Navy Fill, Blue Outline) -->
+                      <path d="M7 6C7 4.34315 8.34315 3 10 3H19L25 9V26C25 27.6569 23.6569 29 22 29H10C8.34315 29 7 27.6569 7 26V6Z" fill="#172554" stroke="#60a5fa" stroke-width="1.5" />
+                      <!-- Document Fold -->
+                      <path d="M19 3V9H25L19 3Z" fill="#1d4ed8" />
+                      <!-- Document Text Lines (White) -->
+                      <path d="M11 13H17M11 17H21M11 21H18" stroke="#ffffff" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                  </td>
+                  <td style="vertical-align: middle; padding-left: 12px;">
+                    <span style="font-size: 22px; font-weight: 900; letter-spacing: .08em; color: #ffffff;">
+                      RESUMMIT<span style="font-size: 10px; font-weight: 900; background: linear-gradient(135deg, #3b82f6, #6366f1); color: #ffffff; padding: 2px 6px; border-radius: 4px; margin-left: 6px; vertical-align: middle; display: inline-block;">AI</span>
+                    </span>
+                  </td>
+                </tr>
+              </table>
+
+              <h1 style="margin: 0 0 18px 0; font-size: 38px; font-weight: 900; line-height: 1.15; letter-spacing: -0.04em; color: #ffffff;">
+                Your Workspace<br>Just Got Better.
+              </h1>
+
+              <p style="margin: 0 auto; max-width: 470px; color: #cbd5e1; font-size: 16px; line-height: 28px; font-weight: 500;">
+                Manage multiple resumes, optimize versions independently, and track ATS insights from a single streamlined workspace.
+              </p>
+
+            </td>
+          </tr>
+
+          <!-- CONTENT SECTION -->
+          <tr>
+            <td style="padding: 50px 40px 40px 40px;">
+
+              <!-- INTRO -->
+              <p style="margin: 0 0 34px 0; font-size: 15px; line-height: 26px; color: #64748b; text-align: center; font-weight: 500;">
+                We've rolled out a major workspace update designed to make resume tailoring faster, cleaner, and easier to manage.
+              </p>
+
+              <!-- SCREENSHOT PLACEHOLDER (Interactive Workspace CSS Mockup) -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 36px; border-radius: 22px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 20px 50px rgba(15,23,42,.08);">
+                <tr>
+                  <td style="padding: 22px; background: linear-gradient(180deg, #f8fafc, #ffffff);">
+                    
+                    <div style="font-size: 11px; font-weight: 800; color: #94a3b8; margin-bottom: 16px; letter-spacing: 0.1em; text-transform: uppercase;">
+                      NEW WORKSPACE
+                    </div>
+
+                    <!-- CSS 3-Pane Layout Simulator -->
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #ffffff; border-radius: 12px; border: 1px solid #c7d2fe; overflow: hidden;">
+                      <tr>
+                        <!-- Left Sidebar (Editor Tabs) -->
+                        <td width="30%" style="background-color: #f1f5f9; padding: 16px 12px; border-right: 1px solid #e2e8f0; vertical-align: top;">
+                          <div style="width: 14px; height: 14px; background-color: #2563eb; border-radius: 4px; margin-bottom: 16px;"></div>
+                          <div style="height: 6px; background-color: #cbd5e1; border-radius: 3px; width: 75%; margin-bottom: 10px;"></div>
+                          <div style="height: 6px; background-color: #e2e8f0; border-radius: 3px; width: 90%; margin-bottom: 10px;"></div>
+                          <div style="height: 6px; background-color: #e2e8f0; border-radius: 3px; width: 55%; margin-bottom: 10px;"></div>
+                        </td>
+                        <!-- Middle Section (Resume Page Preview) -->
+                        <td width="45%" style="background-color: #ffffff; padding: 20px 16px; vertical-align: top; text-align: left;">
+                          <div style="height: 10px; background-color: #0f172a; border-radius: 3px; width: 65%; margin-bottom: 8px;"></div>
+                          <div style="height: 6px; background-color: #64748b; border-radius: 2px; width: 45%; margin-bottom: 16px;"></div>
+                          <div style="height: 1px; background-color: #f1f5f9; margin-bottom: 16px;"></div>
+                          <div style="height: 4px; background-color: #e2e8f0; border-radius: 2px; width: 100%; margin-bottom: 8px;"></div>
+                          <div style="height: 4px; background-color: #e2e8f0; border-radius: 2px; width: 90%; margin-bottom: 8px;"></div>
+                          <div style="height: 4px; background-color: #e2e8f0; border-radius: 2px; width: 100%; margin-bottom: 8px;"></div>
+                        </td>
+                        <!-- Right Sidebar (Versions Panel) -->
+                        <td width="25%" style="background-color: #f8fafc; padding: 16px 12px; border-left: 1px solid #e2e8f0; vertical-align: top; text-align: left;">
+                          <div style="height: 6px; background-color: #94a3b8; border-radius: 3px; width: 85%; margin-bottom: 14px;"></div>
+                          <!-- Versions list mockup -->
+                          <div style="padding: 6px; background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; margin-bottom: 6px;">
+                            <div style="height: 4px; background-color: #2563eb; border-radius: 2px; width: 80%;"></div>
+                          </div>
+                          <div style="padding: 6px; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 6px;">
+                            <div style="height: 4px; background-color: #64748b; border-radius: 2px; width: 70%;"></div>
+                          </div>
+                          <div style="padding: 6px; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px;">
+                            <div style="height: 4px; background-color: #64748b; border-radius: 2px; width: 60%;"></div>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+
+                  </td>
+                </tr>
+              </table>
+
+              <!-- FEATURE 1 -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 16px; border-radius: 18px; border: 1px solid #e0e7ff; background: linear-gradient(135deg, rgba(255,255,255,.95), rgba(248,250,252,1)); box-shadow: 0 10px 30px rgba(99,102,241,.08);">
+                <tr>
+                  <td style="padding: 24px;">
+                    <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 8px;">
+                      🗂 Multiple Targeted CV Drafts
+                    </div>
+                    <div style="font-size: 13.5px; line-height: 22px; color: #64748b; font-weight: 500;">
+                      Targeting Frontend, Backend, or Lead roles? Clone your profile to create separate tailored versions in one click, keeping all draft templates saved under one workspace.
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- FEATURE 2 -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 16px; border-radius: 18px; border: 1px solid #e0e7ff; background: linear-gradient(135deg, rgba(255,255,255,.95), rgba(248,250,252,1)); box-shadow: 0 10px 30px rgba(99,102,241,.08);">
+                <tr>
+                  <td style="padding: 24px;">
+                    <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 8px;">
+                      ⚡ In-Place Job Match Optimization
+                    </div>
+                    <div style="font-size: 13.5px; line-height: 22px; color: #64748b; font-weight: 500;">
+                      Match your resume to any job description on the fly. Run the AI optimizer directly on an existing version to update it in-place, without creating duplicates.
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- FEATURE 3 -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 40px; border-radius: 18px; border: 1px solid #e0e7ff; background: linear-gradient(135deg, rgba(255,255,255,.95), rgba(248,250,252,1)); box-shadow: 0 10px 30px rgba(99,102,241,.08);">
+                <tr>
+                  <td style="padding: 24px;">
+                    <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 8px;">
+                      📊 Real-Time ATS & Keyword Insights
+                    </div>
+                    <div style="font-size: 13.5px; line-height: 22px; color: #64748b; font-weight: 500;">
+                      Get instant visual feedback on missing tech skills, matched keywords, and overall ATS strength score calculations inside every active version.
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- CTA -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 10px;">
+                <tr>
+                  <td align="center">
+                    <a href="https://resummit.vercel.app/editor" style="display: inline-block; padding: 18px 42px; border-radius: 12px; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: #ffffff; font-size: 14.5px; font-weight: 800; text-decoration: none; box-shadow: 0 15px 30px rgba(99,102,241,.3);">
+                      Tailor Your Resume Now →
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+          
+          <!-- FOOTER -->
+          <tr>
+            <td style="padding: 30px; text-align: center; border-top: 1px solid #e2e8f0; background-color: #fafafa;">
+              <p style="margin: 0 0 8px 0; font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: #94a3b8;">
+                TAILOR ONCE. IMPROVE FOREVER.
+              </p>
+              <p style="margin: 0; font-size: 12px; color: #64748b; font-weight: 500;">
+                Sent with ♥ from <a href="https://resummit.vercel.app" style="color: #475569; text-decoration: none; font-weight: 600;">Resummit</a>
+              </p>
+            </td>
+          </tr>
+          
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>`
   );
   const [sending, setSending] = useState(false);
-  const [sendResult, setSendResult] = useState<{ sent: number; failed: number; error?: string } | null>(null);
+  const [sendResult, setSendResult] = useState<{ sent: number; failed: number; error?: string; results?: any[] } | null>(null);
   const [previewMode, setPreviewMode] = useState(false);
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
 
@@ -70,7 +254,7 @@ export default function AdminDashboard() {
 
       const data = await res.json();
       if (res.ok) {
-        setSendResult({ sent: data.sent, failed: data.failed });
+        setSendResult({ sent: data.sent, failed: data.failed, results: data.results });
       } else {
         setSendResult({ sent: 0, failed: selectedUserIds.length, error: data.error || "Failed to send emails" });
       }
@@ -124,7 +308,7 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-[var(--sclade-bg)] text-[var(--sclade-text-primary)] font-outfit p-8 md:p-16">
       <div className="max-w-7xl mx-auto space-y-12">
-        
+
         {/* Header */}
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-[var(--sclade-card-border)]">
           <div>
@@ -155,7 +339,7 @@ export default function AdminDashboard() {
               <Users className="w-6 h-6" />
             </div>
           </div>
-          
+
           <div className="glass-panel p-6 rounded-3xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] flex items-center justify-between">
             <div>
               <span className="text-[10px] font-black text-neutral-500 uppercase tracking-wider block">Mailing Service</span>
@@ -169,7 +353,7 @@ export default function AdminDashboard() {
 
         {/* Content Columns */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          
+
           {/* Email Composer (Left Column) */}
           <div className="lg:col-span-7 space-y-6">
             <div className="glass-panel p-8 rounded-[2rem] bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)]">
@@ -209,7 +393,7 @@ export default function AdminDashboard() {
                   </div>
 
                   {previewMode ? (
-                    <div 
+                    <div
                       className="w-full min-h-[300px] p-6 bg-white text-black rounded-xl border border-black/5 overflow-y-auto"
                       dangerouslySetInnerHTML={{ __html: htmlContent }}
                     />
@@ -223,14 +407,11 @@ export default function AdminDashboard() {
                       className="w-full px-4 py-4 bg-black/5 dark:bg-white/[0.02] border border-black/5 dark:border-white/5 rounded-xl text-sm font-mono outline-none focus:border-blue-500/50 transition-all leading-relaxed"
                     />
                   )}
-                </div>
-
-                {sendResult && (
-                  <div className={`p-4 rounded-xl border ${
-                    sendResult.error 
-                      ? "bg-red-500/5 border-red-500/10 text-red-400" 
-                      : "bg-emerald-500/5 border-emerald-500/10 text-emerald-400"
-                  }`}>
+                  {sendResult && (
+                  <div className={`p-4 mt-6 rounded-xl border ${sendResult.error
+                    ? "bg-red-500/5 border-red-500/10 text-red-400"
+                    : "bg-emerald-500/5 border-emerald-500/10 text-emerald-400"
+                    }`}>
                     <div className="flex items-start gap-3">
                       {sendResult.error ? (
                         <AlertCircle className="w-5 h-5 mt-0.5" />
@@ -239,19 +420,30 @@ export default function AdminDashboard() {
                       )}
                       <div>
                         <span className="text-xs font-bold block">
-                          {sendResult.error ? "Failed to dispatch emails" : "Broadcast Dispatched successfully"}
+                          {sendResult.error ? "Failed to dispatch emails" : "Broadcast Dispatched"}
                         </span>
                         {sendResult.error ? (
                           <p className="text-[10px] opacity-80 mt-1 font-semibold">{sendResult.error}</p>
                         ) : (
-                          <p className="text-[10px] opacity-80 mt-1 font-semibold">
-                            Sent to {sendResult.sent} users. Failures: {sendResult.failed}.
-                          </p>
+                          <div>
+                            <p className="text-[10px] opacity-80 mt-1 font-semibold">
+                              Sent to {sendResult.sent} users. Failures: {sendResult.failed}.
+                            </p>
+                            {sendResult.failed > 0 && sendResult.results && (
+                              <div className="mt-3 text-[10px] space-y-1 bg-red-500/10 p-2.5 rounded-lg border border-red-500/20 max-h-32 overflow-y-auto">
+                                <span className="font-bold block text-red-400">SMTP Error Log:</span>
+                                {Array.from(new Set(sendResult.results.filter(r => !r.success).map(r => r.error))).map((err, i) => (
+                                  <p key={i} className="font-mono text-red-300 break-all">{err || "Unknown error"}</p>
+                                ))}
+                              </div>
+                            )}
+                          </div>
                         )}
                       </div>
                     </div>
                   </div>
                 )}
+                </div>
 
                 <button
                   type="submit"
@@ -325,11 +517,10 @@ export default function AdminDashboard() {
                   filteredUsers.map((u) => (
                     <div
                       key={u.id}
-                      className={`p-4 rounded-2xl bg-black/[0.02] dark:bg-white/[0.01] border transition-all flex justify-between items-center ${
-                        selectedUserIds.includes(u.id)
-                          ? "border-blue-500/30 bg-blue-500/[0.01]"
-                          : "border-black/5 dark:border-white/5"
-                      }`}
+                      className={`p-4 rounded-2xl bg-black/[0.02] dark:bg-white/[0.01] border transition-all flex justify-between items-center ${selectedUserIds.includes(u.id)
+                        ? "border-blue-500/30 bg-blue-500/[0.01]"
+                        : "border-black/5 dark:border-white/5"
+                        }`}
                     >
                       <div className="flex items-center gap-3 flex-1 min-w-0">
                         <input
