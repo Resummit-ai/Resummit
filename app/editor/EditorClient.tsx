@@ -2265,9 +2265,9 @@ export function EditorClient({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
               {/* Score Indicator */}
-              <div className="md:col-span-4 flex flex-col items-center justify-center p-6 bg-white/[0.02] border border-white/5 rounded-3xl">
+              <div className="md:col-span-4 flex flex-col items-center justify-center p-6 bg-white/[0.02] border border-white/5 rounded-3xl md:sticky md:top-6 h-fit">
                 <div className="relative w-28 h-28 flex items-center justify-center">
                   <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                     <circle
@@ -2299,16 +2299,16 @@ export function EditorClient({
               <div className="md:col-span-8 space-y-6">
                 <div>
                   <h4 className="text-[10px] font-black uppercase tracking-widest text-emerald-400 mb-2 flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                     Matched Keywords ({matchedKeywords.length})
                   </h4>
                   {matchedKeywords.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-2.5">
+                    <div className="grid grid-cols-1 gap-2.5 max-h-[250px] overflow-y-auto custom-scrollbar pr-2.5 pb-1">
                       {matchedKeywords.map((kw, i) => {
                         const parsed = parseSkillEvidence(kw);
                         return (
                           <div key={i} className="w-full p-3 bg-emerald-500/5 border border-emerald-500/10 dark:border-emerald-500/5 rounded-xl flex flex-col gap-1 text-left">
-                            <span className="text-[11px] font-extrabold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 leading-none">
+                            <span className="text-[11px] font-extrabold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 leading-none font-outfit">
                               ✓ {parsed.title}
                             </span>
                             {parsed.detail && (
@@ -2327,11 +2327,11 @@ export function EditorClient({
 
                 <div>
                   <h4 className="text-[10px] font-black uppercase tracking-widest text-amber-500 mb-2 flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
                     Missing Skills ({missingSkills.length})
                   </h4>
                   {missingSkills.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-2.5">
+                    <div className="grid grid-cols-1 gap-2.5 max-h-[350px] overflow-y-auto custom-scrollbar pr-2.5 pb-1">
                       {missingSkills.map((sk, i) => {
                         const parsed = parseSkillEvidence(sk);
                         return (
@@ -2901,16 +2901,17 @@ export function EditorClient({
       <style jsx global>{`
         .custom-scrollbar::-webkit-scrollbar {
           width: 4px;
+          height: 4px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
           background: transparent;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(255,255,255,0.05);
+          background: rgba(128, 128, 128, 0.25);
           border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(255,255,255,0.1);
+          background: rgba(128, 128, 128, 0.45);
         }
       `}</style>
     </div>
