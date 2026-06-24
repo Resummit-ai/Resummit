@@ -351,6 +351,17 @@ function ATSPanel({ data, onClose }: { data: any; onClose: () => void }) {
 // Main EditorClient
 // ─────────────────────────────────────────────
 
+function parseSkillEvidence(str: string) {
+  const match = str.match(/^([^(]+)\((.+)\)$/);
+  if (match) {
+    return {
+      title: match[1].trim(),
+      detail: match[2].trim()
+    };
+  }
+  return { title: str, detail: "" };
+}
+
 function ensureArray<T>(val: any): T[] {
   if (Array.isArray(val)) return val;
   if (typeof val === 'string') {
@@ -449,6 +460,9 @@ export function EditorClient({
     if (!isResizing.current) return;
     const newWidth = Math.max(380, Math.min(800, e.clientX));
     setSidebarWidth(newWidth);
+    if (newWidth > 480) {
+      setShowVersionsSidebar(show => show ? false : show);
+    }
   }, []);
 
   const stopResizing = useCallback(() => {
@@ -2289,12 +2303,22 @@ export function EditorClient({
                     Matched Keywords ({matchedKeywords.length})
                   </h4>
                   {matchedKeywords.length > 0 ? (
-                    <div className="flex flex-wrap gap-1.5">
-                      {matchedKeywords.map((kw, i) => (
-                        <span key={i} className="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-lg text-[10px] font-bold">
-                          ✓ {kw}
-                        </span>
-                      ))}
+                    <div className="grid grid-cols-1 gap-2.5">
+                      {matchedKeywords.map((kw, i) => {
+                        const parsed = parseSkillEvidence(kw);
+                        return (
+                          <div key={i} className="w-full p-3 bg-emerald-500/5 border border-emerald-500/10 dark:border-emerald-500/5 rounded-xl flex flex-col gap-1 text-left">
+                            <span className="text-[11px] font-extrabold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 leading-none">
+                              ✓ {parsed.title}
+                            </span>
+                            {parsed.detail && (
+                              <span className="text-[9.5px] text-[var(--sclade-text-secondary)] leading-normal font-medium">
+                                {parsed.detail}
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   ) : (
                     <p className="text-xs text-neutral-500">No matched keywords found.</p>
@@ -2307,12 +2331,22 @@ export function EditorClient({
                     Missing Skills ({missingSkills.length})
                   </h4>
                   {missingSkills.length > 0 ? (
-                    <div className="flex flex-wrap gap-1.5">
-                      {missingSkills.map((sk, i) => (
-                        <span key={i} className="px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-lg text-[10px] font-bold">
-                          ⚠ {sk}
-                        </span>
-                      ))}
+                    <div className="grid grid-cols-1 gap-2.5">
+                      {missingSkills.map((sk, i) => {
+                        const parsed = parseSkillEvidence(sk);
+                        return (
+                          <div key={i} className="w-full p-3 bg-amber-500/5 border border-amber-500/10 dark:border-amber-500/5 rounded-xl flex flex-col gap-1 text-left">
+                            <span className="text-[11px] font-extrabold text-amber-600 dark:text-amber-500 flex items-center gap-1.5 leading-none">
+                              ⚠ {parsed.title}
+                            </span>
+                            {parsed.detail && (
+                              <span className="text-[9.5px] text-[var(--sclade-text-secondary)] leading-normal font-medium">
+                                {parsed.detail}
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   ) : (
                     <p className="text-xs text-neutral-500">Zero missing skills! Perfect stack alignment.</p>

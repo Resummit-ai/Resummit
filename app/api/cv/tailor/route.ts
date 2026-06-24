@@ -270,6 +270,23 @@ export async function POST(req: Request) {
 
   } catch (error: any) {
     console.error("Tailor Error:", error);
-    return NextResponse.json({ error: error.message || "Failed to tailor resume" }, { status: 500 });
+    const msg = error.message || "";
+    if (msg.includes("AI_DAILY_LIMIT_EXCEEDED") || msg.includes("ai_daily_limit_exceeded")) {
+      return NextResponse.json({ 
+        error: "Daily Limit Reached: You have exceeded your daily AI optimization limit. Please try again tomorrow." 
+      }, { status: 429 });
+    }
+    if (
+      msg.includes("AI_QUOTA_EXCEEDED") || 
+      msg.includes("quota") || 
+      msg.includes("429") || 
+      msg.includes("RESOURCE_EXHAUSTED") ||
+      msg.includes("limit")
+    ) {
+      return NextResponse.json({ 
+        error: "AI service limit reached: The server is experiencing high demand. Please wait a minute and try again." 
+      }, { status: 429 });
+    }
+    return NextResponse.json({ error: "Failed to optimize resume. Please check your network and try again." }, { status: 500 });
   }
 }
