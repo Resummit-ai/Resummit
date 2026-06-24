@@ -11,7 +11,12 @@ export const metadata: Metadata = {
   description: "Craft, tailor, and refine your software engineer resume with the Resummit OS Editor by Adel Muhammed. Real engineering work, single-page hard limit safeguards, and real-time ATS optimization.",
 };
 
-export default async function EditorPage() {
+export default async function EditorPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ versionId?: string; tab?: string }>;
+}) {
+  const { versionId, tab } = await searchParams;
   const session = await auth();
 
   if (!session?.user?.id) {
@@ -28,6 +33,7 @@ export default async function EditorPage() {
       where: { email: session.user.email }
     });
   }
+
 
   if (!dbUser) {
     // If we still can't find the user, their session is completely invalid
@@ -135,8 +141,27 @@ export default async function EditorPage() {
     });
   }
 
-  const mainVersion = resume.versions[0];
-  if (!mainVersion) {
+  // Determine which version of the resume to load
+  let activeVersion = resume.versions[0];
+  let jobTarget = null;
+
+  if (versionId) {
+    const specificVersion = await prisma.resumeVersion.findFirst({
+      where: { 
+        id: versionId,
+        resume: { userId: userId }
+      },
+      include: {
+        jobTarget: true
+      }
+    });
+    if (specificVersion) {
+      activeVersion = specificVersion;
+      jobTarget = (specificVersion as any).jobTarget;
+    }
+  }
+
+  if (!activeVersion) {
     redirect("/dashboard");
   }
 
@@ -166,17 +191,42 @@ export default async function EditorPage() {
     orderBy: { priority: "desc" }
   });
 
+  // Fetch all versions of this resume for the version history sidebar
+  const allVersions = await prisma.resumeVersion.findMany({
+    where: { resumeId: resume.id },
+    select: {
+      id: true,
+      versionName: true,
+      isMain: true,
+      createdAt: true,
+      atsScore: true,
+      jobTarget: {
+        select: {
+          title: true,
+          matchScore: true,
+        }
+      }
+    },
+    orderBy: [
+      { isMain: "desc" },
+      { createdAt: "desc" }
+    ]
+  });
+
   const accessToken = (session as any)?.accessToken;
 
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-neutral-950">
       <EditorClient 
         resumeId={resume.id}
-        versionId={mainVersion.id}
-        initialData={mainVersion} 
+        versionId={activeVersion.id}
+        initialData={activeVersion} 
         signals={signals}
         accessToken={accessToken}
         initialSuggestions={suggestions as any[]}
+        initialJobTarget={jobTarget}
+        initialVersionsList={allVersions}
+        initialTab={(tab as any) || "profile"}
       />
     </div>
   );

@@ -31,20 +31,25 @@ The workspace is split into an editable dashboard on the left—complete with in
 * **Auto-Generated Summaries**: Generates high-density, professional 2-sentence resume summaries based strictly on active skill categories and projects, avoiding generic buzzwords and adjectives.
 * **High-Impact Bullet Refinement**: Rewrites experience and project highlight bullets using action-focused, past-tense verbs under a strict 18-word threshold.
 
-### 3. ATS Scoring & Quality Auditing
+### 3. AI Auto-Tailoring & Match Analysis
+* **Job-Specific Bullet Customization**: Automatically drafts custom experience bullets and project highlights aligned with target job keywords and technical requirements.
+* **Strict Format Guards**: Restricts all AI edits to experience/project bullet arrays, keeping company name, titles, periods, and project configurations unaltered while ensuring a strict 18-word limit and past-tense action verbs.
+* **Interactive Match Dashboard**: Evaluates resume versions against target JDs, rendering circular match strength score indicators, matching keywords, missing skills, and quick reset operations directly in the editor.
+
+### 4. ATS Scoring & Quality Auditing
 * **Real-time Evaluation**: Evaluates resume versions against targeted job roles, generating a score breakdown across *Skills density*, *Project depth*, and *Outcome/Impact*.
 * **Weak Signal Alerts**: Automatically scans for and flags structural errors like `SHORT_SUMMARY`, `REPETITIVE_VERBS` (starting bullets with the same verb), `LOW_SKILL_DENSITY`, or `NO_IMPACT_BULLETS` (bullets without logical or metric outcomes).
 * **Actionable Improvements**: Suggests specific "Quick Fixes" and improvements directly within a premium modal audit.
 
-### 4. Interactive Project Discoveries
+### 5. Interactive Project Discoveries
 * **New Project Detection**: Identifies repositories in your GitHub account that aren't yet on your resume and serves them up in a dedicated review feed.
 * **Single-Click Import**: Seamlessly imports selected repositories, auto-extracting technical descriptions and achievements parsed from repository READMEs.
 
-### 5. Smart Skills Validation
+### 6. Smart Skills Validation
 * **Verified vs. Unverified Status**: Cross-references listed resume skills against code structures in your active GitHub repositories to mark technologies as "Verified" or "Unverified."
 * **Double-Categorization De-duplication**: Cleanses, categories, and normalizes skill listings across programming languages, libraries/frameworks, and development tools to ensure a cohesive technical grid.
 
-### 6. Premium WYSIWYG & PDF Rendering
+### 7. Premium WYSIWYG & PDF Rendering
 * **Experience Date Picker**: A custom-built date range picker that handles "Present" options, parses bounds dynamically, and validates inputs on-the-fly.
 * **Split-screen Resizing**: Features a drag-and-resize sidebar separator allowing the user to customize their editor workspace layout from 380px to 800px wide.
 * **Debounced Auto-Save**: Automatically saves workspace adjustments to the database with a 2-second debounce, backed by a `beforeunload` safe-check guard to ensure changes are never lost.

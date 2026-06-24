@@ -39,12 +39,12 @@ const EXPERIENCE_LEVELS = [
 ];
 
 export function Onboarding() {
-  const [step, setStep] = useState<Step>("synthesis");
+  const [step, setStep] = useState<Step>("setup");
   const [github, setGithub] = useState("");
   const [linkedin, setLinkedin] = useState("");
   const [role, setRole] = useState("Software Engineer");
   const [exp, setExp] = useState("MID");
-  const [isSynthesizing, setIsSynthesizing] = useState(true);
+  const [isSynthesizing, setIsSynthesizing] = useState(false);
   const [synthesisLogs, setSynthesisLogs] = useState<string[]>([]);
   const [hasTriggered, setHasTriggered] = useState(false);
   const router = useRouter();
@@ -55,7 +55,6 @@ export function Onboarding() {
       setHasTriggered(true);
       const resolvedGithub = (session.user as any).githubUsername || "";
       setGithub(resolvedGithub);
-      startSynthesis(resolvedGithub, "Software Engineer", "MID");
     }
   }, [session, hasTriggered]);
 
@@ -114,12 +113,10 @@ export function Onboarding() {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-neutral-950 flex items-center justify-center overflow-hidden font-outfit">
-      {/* Background Ambience */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-500/5 blur-[120px] rounded-full" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-violet-500/5 blur-[120px] rounded-full" />
-      </div>
+    <div className="fixed inset-0 z-[100] dark-page bg-neutral-950 flex items-center justify-center overflow-y-auto py-12 font-outfit select-none">
+      {/* Background Glow */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-500/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] bg-sky-500/10 blur-[100px] rounded-full pointer-events-none" />
 
       <AnimatePresence mode="wait">
         {step === "setup" && (
@@ -128,17 +125,31 @@ export function Onboarding() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            className="w-full max-w-4xl px-6 my-8"
+            className="w-full max-w-4xl px-6 my-auto z-10"
           >
             {/* Header */}
-            <div className="text-center mb-10">
-              <div className="w-16 h-16 bg-blue-600/10 border border-blue-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl shadow-blue-500/5">
-                <Rocket className="text-blue-500 w-8 h-8 animate-pulse" />
+            <div className="text-center mb-10 animate-fade-in">
+              {/* Resummit Brand Logo & Wordmark */}
+              <div className="flex justify-center mb-8 animate-fade-in">
+                <div className="logo scale-95 select-none">
+                  <svg viewBox="0 0 32 32" className="logo-icon-svg !w-8 !h-8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7 6C7 4.34315 8.34315 3 10 3H19L25 9V26C25 27.6569 23.6569 29 22 29H10C8.34315 29 7 27.6569 7 26V6Z" className="logo-doc-body" />
+                    <path d="M19 3V9H25L19 3Z" className="logo-doc-fold" />
+                    <path d="M11 13H17M11 17H21M11 21H18M11 25H20" className="logo-doc-lines" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M20 8.5L25 3.5" className="logo-flag-pole" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M25 3.5L27 6.5L23.5 5.5Z" className="logo-flag-banner" />
+                  </svg>
+                  <div className="logo-text-group">
+                    <div className="logo-wordmark !text-lg text-white font-bold">RESUMMIT</div>
+                    <div className="logo-tagline !text-[0.52rem] text-neutral-500">YOUR COMMITS. YOUR CAREER.</div>
+                  </div>
+                </div>
               </div>
-              <h1 className="text-4xl font-extrabold tracking-tight mb-2 bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400">
+
+              <h1 className="text-4xl font-extrabold tracking-tight mb-2 text-white">
                 Setup your Resummit Profile
               </h1>
-              <p className="text-neutral-500 text-sm">
+              <p className="text-neutral-400 text-sm font-light">
                 We've connected your account. Fill in your professional details to initiate analysis.
               </p>
             </div>
@@ -146,7 +157,7 @@ export function Onboarding() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
               {/* Left Column: Identity Info */}
               <div className="lg:col-span-5 space-y-6">
-                <div className="bg-neutral-900/30 border border-white/5 rounded-3xl p-6 backdrop-blur-md">
+                <div className="bg-neutral-900/40 border border-white/5 rounded-3xl p-6 backdrop-blur-md shadow-md">
                   <h3 className="text-sm font-bold text-white mb-6 flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-ping" />
                     Identity Sources
@@ -191,7 +202,7 @@ export function Onboarding() {
 
               {/* Right Column: Focus Areas */}
               <div className="lg:col-span-7 space-y-6">
-                <div className="bg-neutral-900/30 border border-white/5 rounded-3xl p-6 backdrop-blur-md">
+                <div className="bg-neutral-900/40 border border-white/5 rounded-3xl p-6 backdrop-blur-md shadow-md">
                   <h3 className="text-sm font-bold text-white mb-6 flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
                     Career Specialization
@@ -207,14 +218,14 @@ export function Onboarding() {
                             key={d.id}
                             type="button"
                             onClick={() => setRole(d.label)}
-                            className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between h-[100px] ${
+                            className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between h-[100px] cursor-pointer ${
                               role === d.label 
-                                ? "bg-blue-500/10 border-blue-500 shadow-lg shadow-blue-500/5" 
-                                : "bg-neutral-950 border-white/5 hover:border-white/10"
+                                ? "bg-blue-500/10 border-blue-500/50 shadow-lg shadow-blue-500/5 text-blue-400 font-bold" 
+                                : "bg-neutral-950 border border-white/5 text-neutral-400 hover:border-white/10 hover:text-white"
                             }`}
                           >
-                            <d.icon className={`w-5 h-5 ${d.color}`} />
-                            <span className="text-xs font-bold block mt-2 text-white">{d.label}</span>
+                            <d.icon className={`w-5 h-5 ${role === d.label ? "text-blue-450" : d.color}`} />
+                            <span className={`text-xs font-bold block mt-2 ${role === d.label ? "text-blue-400" : "text-white"}`}>{d.label}</span>
                           </button>
                         ))}
                       </div>
@@ -229,14 +240,14 @@ export function Onboarding() {
                             key={level.id}
                             type="button"
                             onClick={() => setExp(level.id)}
-                            className={`p-3.5 rounded-2xl border text-left transition-all ${
+                            className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer ${
                               exp === level.id 
-                                ? "bg-blue-500/10 border-blue-500 shadow-lg shadow-blue-500/5" 
-                                : "bg-neutral-950 border-white/5 hover:border-white/10"
+                                ? "bg-blue-500/10 border-blue-500/50 shadow-lg shadow-blue-500/5 text-blue-400 font-bold" 
+                                : "bg-neutral-950 border border-white/5 text-neutral-400 hover:border-white/10 hover:text-white"
                             }`}
                           >
-                            <span className="text-xs font-bold block mb-1 text-white">{level.label}</span>
-                            <span className="text-[9px] text-neutral-500 uppercase tracking-widest">{level.desc}</span>
+                            <span className={`text-xs font-bold block mb-1 ${exp === level.id ? "text-blue-400" : "text-white"}`}>{level.label}</span>
+                            <span className={`text-[9px] uppercase tracking-widest ${exp === level.id ? "text-blue-500/70" : "text-neutral-500"}`}>{level.desc}</span>
                           </button>
                         ))}
                       </div>
@@ -252,10 +263,10 @@ export function Onboarding() {
                 type="button"
                 disabled={!github || !role || !exp}
                 onClick={() => startSynthesis()}
-                className="group w-full max-w-md py-5 bg-white text-black hover:bg-neutral-200 disabled:opacity-50 disabled:hover:bg-white rounded-2xl font-bold text-base transition-all shadow-xl shadow-white/5 active:scale-[0.98] inline-flex items-center justify-center gap-3"
+                className="group w-full max-w-md py-5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white disabled:opacity-50 disabled:from-neutral-700 disabled:to-neutral-800 disabled:text-neutral-500 rounded-2xl font-bold text-base transition-all shadow-xl shadow-blue-500/10 active:scale-[0.98] inline-flex items-center justify-center gap-3 border border-blue-400/20 cursor-pointer"
               >
                 Analyze and Generate Resume
-                <Zap className="w-4 h-4 text-black shrink-0" />
+                <Zap className="w-4 h-4 text-white shrink-0 group-hover:scale-110 transition-transform" />
               </button>
             </div>
           </motion.div>
@@ -266,33 +277,35 @@ export function Onboarding() {
             key="synthesis"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-full max-w-xl px-6 text-center"
+            className="w-full max-w-xl px-6 text-center z-10"
           >
-            <div className="relative mb-12">
-              <div className="absolute inset-0 bg-blue-500/20 blur-[60px] rounded-full animate-pulse" />
-              <div className="relative w-32 h-32 bg-neutral-900 border border-blue-500/30 rounded-[2.5rem] flex items-center justify-center mx-auto shadow-2xl">
-                 <Loader2 className="w-12 h-12 text-blue-500 animate-spin" />
+            <div className="bg-neutral-900/50 border border-white/5 rounded-[2.5rem] p-10 shadow-xl backdrop-blur-md">
+              <div className="relative mb-12">
+                <div className="absolute inset-0 bg-blue-500/20 blur-[60px] rounded-full animate-pulse" />
+                <div className="relative w-32 h-32 bg-neutral-950 border border-white/10 rounded-[2.5rem] flex items-center justify-center mx-auto shadow-2xl">
+                   <Loader2 className="w-12 h-12 text-blue-500 animate-spin" />
+                </div>
               </div>
-            </div>
 
-            <h2 className="text-3xl font-bold mb-8 font-outfit">Synthesizing Profile</h2>
-            
-            <div className="space-y-4 max-w-md mx-auto h-[240px] flex flex-col justify-end overflow-hidden">
-               <AnimatePresence initial={false}>
-                  {synthesisLogs.map((log, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="flex items-center gap-3 text-left"
-                    >
-                      <CheckCircle2 className={`w-4 h-4 shrink-0 ${i === synthesisLogs.length - 1 ? 'text-blue-500' : 'text-emerald-500'}`} />
-                      <span className={`text-sm font-medium ${i === synthesisLogs.length - 1 ? 'text-white' : 'text-neutral-500'}`}>
-                        {log}
-                      </span>
-                    </motion.div>
-                  ))}
-               </AnimatePresence>
+              <h2 className="text-3xl font-bold mb-8 text-white">Synthesizing Profile</h2>
+              
+              <div className="space-y-4 max-w-md mx-auto h-[240px] flex flex-col justify-end overflow-hidden border-t border-white/5 pt-6">
+                 <AnimatePresence initial={false}>
+                    {synthesisLogs.map((log, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex items-center gap-3 text-left"
+                      >
+                        <CheckCircle2 className={`w-4 h-4 shrink-0 ${i === synthesisLogs.length - 1 ? 'text-blue-500' : 'text-emerald-500'}`} />
+                        <span className={`text-sm font-medium ${i === synthesisLogs.length - 1 ? 'text-white' : 'text-neutral-550'}`}>
+                          {log}
+                        </span>
+                      </motion.div>
+                    ))}
+                 </AnimatePresence>
+              </div>
             </div>
           </motion.div>
         )}

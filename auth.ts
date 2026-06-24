@@ -4,7 +4,7 @@ import { prisma } from "@/lib/server/prisma";
 import { encryptToken } from "@/lib/server/crypto";
 import { logger } from "@/lib/server/logger";
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+const nextAuthResult = NextAuth({
   ...authConfig,
   callbacks: {
     async signIn({ user, account, profile }) {
@@ -101,3 +101,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   // Duplicate token writes in events were removed to prevent N+1 DB calls.
   events: {},
 });
+
+export const handlers = nextAuthResult.handlers;
+export const signIn = nextAuthResult.signIn;
+export const signOut = nextAuthResult.signOut;
+export const auth = nextAuthResult.auth;
+

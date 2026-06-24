@@ -54,4 +54,4 @@ export interface ProjectData {
 
 export type SaveStatus = "idle" | "saving" | "saved" | "error";
 
-export type EditorTab = "profile" | "skills" | "experience" | "projects" | "education";
+export type EditorTab = "profile" | "skills" | "experience" | "projects" | "education" | "tailor";

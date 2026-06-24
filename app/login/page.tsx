@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { signIn } from "@/auth";
-import { GitBranch, Sparkles } from "lucide-react";
+import { GitBranch } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Sign In to Resummit — Access Your Engineering Dashboard",
@@ -82,6 +82,7 @@ export default function LoginPage() {
               Continue with Google
             </button>
           </form>
+
         </div>
 
         <p className="mt-8 text-neutral-500 text-sm">

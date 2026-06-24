@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { Download, GripVertical, Plus, Trash2, RotateCcw, Link as LinkIcon, CheckCircle2, Activity, Eye, Sparkles, Target, X, Loader2, User, Briefcase, Code2, GraduationCap, Zap, AlertTriangle, ChevronDown, ChevronUp, Save, Wifi, WifiOff, ArrowUp, ArrowDown, ExternalLink, Rocket, Cpu, Code, Terminal, GitBranch, Lock, Sun, Moon, RefreshCw } from "lucide-react";
+import { Download, GripVertical, Plus, Trash2, RotateCcw, Link as LinkIcon, CheckCircle2, Activity, Eye, Sparkles, Target, X, Loader2, User, Briefcase, Code2, GraduationCap, Zap, AlertTriangle, ChevronDown, ChevronUp, Save, Wifi, WifiOff, ArrowUp, ArrowDown, ExternalLink, Rocket, Cpu, Code, Terminal, GitBranch, Lock, Sun, Moon, RefreshCw, History, FileText } from "lucide-react";
 import type { CVData, ProjectData, CVSkills, CVExperience, CVEducation, SaveStatus, EditorTab } from "@/lib/types";
 import { ResumePreview } from "@/components/editor/ResumePreview";
 import { normalizeAndDedupeSkills } from "@/lib/skills-data";
@@ -372,7 +372,10 @@ export function EditorClient({
   initialData,
   signals,
   accessToken,
-  initialSuggestions = []
+  initialSuggestions = [],
+  initialJobTarget = null,
+  initialVersionsList = [],
+  initialTab = "profile"
 }: {
   resumeId: string;
   versionId: string;
@@ -380,7 +383,14 @@ export function EditorClient({
   signals: any;
   accessToken?: string;
   initialSuggestions?: any[];
+  initialJobTarget?: any;
+  initialVersionsList?: any[];
+  initialTab?: EditorTab;
 }) {
+  const [currentVersionId, setCurrentVersionId] = useState<string>(versionId);
+  const [activeJobTarget, setActiveJobTarget] = useState<any>(initialJobTarget);
+  const [versionsList, setVersionsList] = useState<any[]>(initialVersionsList);
+  const [showVersionsSidebar, setShowVersionsSidebar] = useState(true);
   const [mode, setMode] = useState<"non-specialized" | "specialized">("non-specialized");
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   // Map ResumeVersion fields to local state
@@ -414,7 +424,7 @@ export function EditorClient({
   // and fetching from /api/projects would corrupt specialized versions with 'Main' data.
 
 
-  const [activeTab, setActiveTab] = useState<EditorTab>("profile");
+  const [activeTab, setActiveTab] = useState<EditorTab>(initialTab);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
   const [atsData, setAtsData] = useState<any>(null);
   const [atsError, setAtsError] = useState<string | null>(null);
@@ -426,6 +436,7 @@ export function EditorClient({
   const [jobTitle, setJobTitle] = useState("");
   const [theme, setTheme] = useState("dark");
   const [sidebarWidth, setSidebarWidth] = useState(420);
+  const [windowWidth, setWindowWidth] = useState(1200);
   const [isDragging, setIsDragging] = useState(false);
   const isResizing = useRef(false);
 
@@ -468,6 +479,21 @@ export function EditorClient({
   }, []);
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      setWindowWidth(window.innerWidth);
+      const isMobile = window.innerWidth < 768;
+      if (isMobile) {
+        setShowVersionsSidebar(false);
+      }
+      const handleResize = () => {
+        setWindowWidth(window.innerWidth);
+      };
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }
+  }, []);
+
+  useEffect(() => {
     if (theme === "light") {
       document.documentElement.classList.remove("dark");
       document.documentElement.classList.add("light");
@@ -478,6 +504,11 @@ export function EditorClient({
       localStorage.setItem("sclade-theme", "dark");
     }
   }, [theme]);
+
+  const isMobile = windowWidth < 768;
+  const effectiveSidebarWidth = isMobile ? windowWidth : sidebarWidth;
+  const isCompact = effectiveSidebarWidth < 460;
+  const isCurrentVersionMain = versionsList.find(v => v.id === currentVersionId)?.isMain ?? initialData.isMain;
 
   // Derived CV object for preview and PDF
   const cv: CVData = {
@@ -537,7 +568,7 @@ export function EditorClient({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
-          versionId, 
+          versionId: currentVersionId, 
           data: {
             personalInfo,
             summary,
@@ -562,7 +593,7 @@ export function EditorClient({
     } catch {
       setSaveStatus("error");
     }
-  }, [versionId, personalInfo, summary, skills, experience, projects, education, achievements, atsData, isSyncing]);
+  }, [currentVersionId, personalInfo, summary, skills, experience, projects, education, achievements, atsData, isSyncing]);
 
 
 
@@ -604,7 +635,7 @@ export function EditorClient({
     setIsScoring(true);
     setAtsError(null);
     try {
-      const r = await fetch(`/api/cv/ats-score?versionId=${versionId}`);
+      const r = await fetch(`/api/cv/ats-score?versionId=${currentVersionId}`);
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const d = await r.json();
       if (d.error) {
@@ -620,7 +651,7 @@ export function EditorClient({
     } finally {
       setIsScoring(false);
     }
-  }, [versionId]);
+  }, [currentVersionId]);
 
   // ── Load ATS score on mount ──
   useEffect(() => {
@@ -956,19 +987,45 @@ export function EditorClient({
         body: JSON.stringify({ 
           resumeId, 
           jobDescription: jdText,
-          jobTitle 
+          jobTitle,
+          versionId: currentVersionId
         }),
       });
       const result = await res.json();
       if (result.success) {
         const d = result.data;
+        setCurrentVersionId(result.versionId);
+        setActiveJobTarget(result.jobTarget);
         setPersonalInfo(d.personalInfo);
         setSummary(d.summary);
         setSkills(d.skills);
         setExperience(d.experience);
         setProjects(d.projects);
         setEducation(d.education);
-        setActiveTab("profile");
+        
+        const newVerItem = {
+          id: result.versionId,
+          versionName: d.versionName,
+          isMain: d.isMain,
+          createdAt: d.createdAt,
+          atsScore: d.atsScore,
+          jobTarget: result.jobTarget
+        };
+        setVersionsList(prev => {
+          const exists = prev.some(v => v.id === result.versionId);
+          if (exists) {
+            return prev.map(v => v.id === result.versionId ? newVerItem : v);
+          }
+          return [newVerItem, ...prev];
+        });
+
+        // Update URL query parameters dynamically without full reload
+        if (typeof window !== "undefined") {
+          const url = new URL(window.location.href);
+          url.searchParams.set("versionId", result.versionId);
+          window.history.pushState({}, "", url.toString());
+        }
+
         alert("Resume successfully tailored for " + (jobTitle || "the position") + "!");
       }
     } catch (error) {
@@ -978,28 +1035,61 @@ export function EditorClient({
     }
   };
 
+  const handleCreateNewVersion = async () => {
+    try {
+      const res = await fetch("/api/cv/create-version", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ resumeId, sourceVersionId: currentVersionId })
+      });
+      const result = await res.json();
+      if (result.success) {
+        window.location.href = `/editor?versionId=${result.versionId}&tab=${activeTab}`;
+      } else {
+        alert("Failed to initiate a new tailored version: " + (result.error || "Unknown error"));
+      }
+    } catch (error) {
+      console.error("Initiating version failed", error);
+      alert("An error occurred while creating a new version.");
+    }
+  };
+
+  const handleResetToMain = () => {
+    setCurrentVersionId(versionId);
+    setActiveJobTarget(null);
+    setPersonalInfo(typeof initialData.personalInfo === 'string' ? JSON.parse(initialData.personalInfo) : (initialData.personalInfo || {}));
+    setSummary(initialData.summary || "");
+    setSkills(typeof initialData.skills === 'string' ? JSON.parse(initialData.skills) : (initialData.skills || { languages: [], frameworks: [], tools: [] }));
+    setExperience(ensureArray(initialData.experience));
+    setProjects(ensureArray(initialData.projects));
+    setEducation(ensureArray(initialData.education));
+    setAchievements(ensureArray(initialData.achievements || [""]));
+    setJdText("");
+    setJobTitle("");
+  };
+
   // ── Save status UI / Global Save Button ──
   const SaveIndicator = () => {
     const hasUnsavedChanges = !!saveTimer.current;
     
-    let btnText = "Saved ✓";
+    let btnText = isCompact ? "Saved" : "Saved ✓";
     let btnStyle = "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 cursor-default";
     let Icon = CheckCircle2;
     
     if (saveStatus === "saving") {
-      btnText = "Saving...";
+      btnText = isCompact ? "Saving" : "Saving...";
       btnStyle = "text-blue-600 dark:text-blue-400 bg-blue-500/10 border border-blue-500/20 cursor-not-allowed";
       Icon = Loader2;
     } else if (saveStatus === "error") {
-      btnText = "Sync Error";
+      btnText = isCompact ? "Error" : "Sync Error";
       btnStyle = "text-red-600 dark:text-red-400 bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 cursor-pointer animate-pulse";
       Icon = AlertTriangle;
     } else if (hasUnsavedChanges) {
-      btnText = "Save changes";
+      btnText = isCompact ? "Save" : "Save changes";
       btnStyle = "text-amber-600 dark:text-amber-400 bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 cursor-pointer shadow-[0_0_15px_rgba(245,158,11,0.15)]";
       Icon = Save;
     } else if (saveStatus === "idle") {
-      btnText = "Save Resume";
+      btnText = isCompact ? "Save" : "Save Resume";
       btnStyle = "text-neutral-600 dark:text-neutral-400 bg-neutral-500/10 border border-neutral-500/20 hover:bg-neutral-500/20 cursor-pointer";
       Icon = Save;
     }
@@ -1017,7 +1107,7 @@ export function EditorClient({
       <button
         onClick={handleManualSave}
         disabled={saveStatus === "saving"}
-        className={`flex items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.1em] px-3 py-1.5 rounded-xl transition-all active:scale-95 ${btnStyle}`}
+        className={`flex items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.1em] ${isCompact ? "px-2 py-1.5" : "px-3 py-1.5"} rounded-xl transition-all active:scale-95 ${btnStyle}`}
       >
         {Icon === Loader2 ? <Icon className="w-3 h-3 animate-spin" /> : <Icon className="w-3 h-3" />}
         {btnText}
@@ -1971,63 +2061,179 @@ export function EditorClient({
   // ─────────────────────────────────────────────
   // Tab: Tailor
   // ─────────────────────────────────────────────
-  const renderTailor = () => (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="bg-blue-500/[0.04] border border-blue-500/10 dark:border-blue-500/5 rounded-[2rem] p-8 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 blur-3xl pointer-events-none" />
-        <h3 className="text-xl font-bold text-blue-900 dark:text-white mb-2 font-outfit">Job Description Specializer</h3>
-        <p className="text-sm text-blue-700/70 dark:text-blue-200/60 leading-relaxed mb-6 font-medium">
-          Paste the job description below. Our AI will align your summary, skills, and projects to match the recruiter's specific requirements.
-        </p>
+  const renderTailor = () => {
+    if (activeJobTarget) {
+      const matchScore = activeJobTarget.matchScore || 0;
+      const matchedKeywords = ensureArray<string>(activeJobTarget.keywords);
+      const missingSkills = ensureArray<string>(activeJobTarget.missingSkills);
 
-        <div className="space-y-5">
-          <div>
-            <SectionLabel>Target Job Title</SectionLabel>
-            <input 
-              value={jobTitle}
-              onChange={(e) => setJobTitle(e.target.value)}
-              placeholder="e.g. Senior Frontend Engineer"
-              className="w-full bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] text-[var(--sclade-text-primary)] placeholder:text-[var(--sclade-text-muted)] rounded-2xl px-5 py-4 text-sm outline-none focus:border-blue-500/40 transition-all font-medium"
-            />
+      return (
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="glass-panel p-8 rounded-[2.5rem] bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 blur-3xl pointer-events-none" />
+            
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-6 border-b border-white/5 mb-6">
+              <div>
+                <span className="px-2 py-0.5 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded text-[9px] font-bold uppercase tracking-widest">Active Tailored Version</span>
+                <h3 className="text-xl font-bold mt-1 text-[var(--sclade-text-primary)] font-outfit">{activeJobTarget.title || "Tailored Position"}</h3>
+                <p className="text-xs text-[var(--sclade-text-secondary)] mt-1">This resume version is optimized specifically for this role.</p>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={handleResetToMain}
+                  className="px-4 py-2.5 bg-neutral-500/10 hover:bg-neutral-500/20 border border-neutral-500/20 text-neutral-400 font-bold text-xs rounded-xl transition-all active:scale-[0.98] cursor-pointer"
+                >
+                  Reset to Main Profile
+                </button>
+                <button
+                  onClick={handleCreateNewVersion}
+                  className="px-4 py-2.5 bg-blue-600/10 hover:bg-blue-600/20 border border-blue-500/20 text-blue-400 font-bold text-xs rounded-xl transition-all active:scale-[0.98] cursor-pointer"
+                >
+                  Tailor for a New Job
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+              {/* Score Indicator */}
+              <div className="md:col-span-4 flex flex-col items-center justify-center p-6 bg-white/[0.02] border border-white/5 rounded-3xl">
+                <div className="relative w-28 h-28 flex items-center justify-center">
+                  <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="40"
+                      className="stroke-neutral-800"
+                      strokeWidth="8"
+                      fill="transparent"
+                    />
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="40"
+                      className="stroke-blue-500 transition-all duration-1000"
+                      strokeWidth="8"
+                      fill="transparent"
+                      strokeDasharray="251.2"
+                      strokeDashoffset={251.2 - (251.2 * matchScore) / 100}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <span className="absolute text-2xl font-black font-outfit">{matchScore}%</span>
+                </div>
+                <h4 className="text-[10px] font-black uppercase tracking-widest text-neutral-500 mt-4">Match Strength</h4>
+              </div>
+
+              {/* Match Stats */}
+              <div className="md:col-span-8 space-y-6">
+                <div>
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-emerald-400 mb-2 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                    Matched Keywords ({matchedKeywords.length})
+                  </h4>
+                  {matchedKeywords.length > 0 ? (
+                    <div className="flex flex-wrap gap-1.5">
+                      {matchedKeywords.map((kw, i) => (
+                        <span key={i} className="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-lg text-[10px] font-bold">
+                          ✓ {kw}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-neutral-500">No matched keywords found.</p>
+                  )}
+                </div>
+
+                <div>
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-amber-500 mb-2 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                    Missing Skills ({missingSkills.length})
+                  </h4>
+                  {missingSkills.length > 0 ? (
+                    <div className="flex flex-wrap gap-1.5">
+                      {missingSkills.map((sk, i) => (
+                        <span key={i} className="px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-lg text-[10px] font-bold">
+                          ⚠ {sk}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-neutral-500">Zero missing skills! Perfect stack alignment.</p>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
-          <div>
-            <SectionLabel>Full Job Description</SectionLabel>
-            <textarea 
-              value={jdText}
-              onChange={(e) => setJdText(e.target.value)}
-              placeholder="Paste the JD here..."
-              rows={10}
-              className="w-full bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] text-[var(--sclade-text-primary)] placeholder:text-[var(--sclade-text-muted)] rounded-2xl px-5 py-4 text-sm outline-none focus:border-blue-500/40 transition-all resize-none font-medium"
-            />
+
+          <div className="p-6 bg-blue-500/5 border border-blue-500/10 rounded-[1.5rem]">
+            <h4 className="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-2">Automated CV Alignment Status</h4>
+            <p className="text-xs text-[var(--sclade-text-secondary)] leading-relaxed">
+              Experience bullets and project descriptions have been re-phrased to emphasize your matching credentials. The resume profile and skills grid are fully synchronized with the target requirements.
+            </p>
           </div>
-          
-          <button
-            onClick={handleTailorResume}
-            disabled={isTailoring || !jdText}
-            className="w-full py-5 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-bold rounded-2xl flex items-center justify-center gap-3 transition-all shadow-xl shadow-blue-600/20 active:scale-[0.98]"
-          >
-            {isTailoring ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
-            ) : (
-              <Sparkles className="w-5 h-5" />
-            )}
-            {isTailoring ? "Orchestrating Tailored Version..." : "Generate Optimized Version"}
-          </button>
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="bg-blue-500/[0.04] border border-blue-500/10 dark:border-blue-500/5 rounded-[2rem] p-8 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 blur-3xl pointer-events-none" />
+          <h3 className="text-xl font-bold text-blue-900 dark:text-white mb-2 font-outfit">Job Description Specializer</h3>
+          <p className="text-sm text-blue-700/70 dark:text-blue-200/60 leading-relaxed mb-6 font-medium">
+            Paste the job description below. Our AI will align your summary, skills, and projects to match the recruiter's specific requirements.
+          </p>
+
+          <div className="space-y-5">
+            <div>
+              <SectionLabel>Target Job Title</SectionLabel>
+              <input 
+                value={jobTitle}
+                onChange={(e) => setJobTitle(e.target.value)}
+                placeholder="e.g. Senior Frontend Engineer"
+                className="w-full bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] text-[var(--sclade-text-primary)] placeholder:text-[var(--sclade-text-muted)] rounded-2xl px-5 py-4 text-sm outline-none focus:border-blue-500/40 transition-all font-medium"
+              />
+            </div>
+            <div>
+              <SectionLabel>Full Job Description</SectionLabel>
+              <textarea 
+                value={jdText}
+                onChange={(e) => setJdText(e.target.value)}
+                placeholder="Paste the JD here..."
+                rows={10}
+                className="w-full bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] text-[var(--sclade-text-primary)] placeholder:text-[var(--sclade-text-muted)] rounded-2xl px-5 py-4 text-sm outline-none focus:border-blue-500/40 transition-all resize-none font-medium"
+              />
+            </div>
+            
+            <button
+              onClick={handleTailorResume}
+              disabled={isTailoring || !jdText}
+              className="w-full py-5 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-bold rounded-2xl flex items-center justify-center gap-3 transition-all shadow-xl shadow-blue-600/20 active:scale-[0.98] cursor-pointer"
+            >
+              {isTailoring ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <Sparkles className="w-5 h-5" />
+              )}
+              {isTailoring ? "Orchestrating Tailored Version..." : "Generate Optimized Version"}
+            </button>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-2 gap-4">
+           <div className="p-6 bg-white/5 border border-white/5 rounded-[1.5rem]">
+              <h4 className="text-[10px] font-black uppercase tracking-widest text-neutral-500 mb-2">Benefit 01</h4>
+              <p className="text-xs text-neutral-400 leading-relaxed">Keywords are automatically injected into your skills and summary to pass ATS filters.</p>
+           </div>
+           <div className="p-6 bg-white/5 border border-white/5 rounded-[1.5rem]">
+              <h4 className="text-[10px] font-black uppercase tracking-widest text-neutral-500 mb-2">Benefit 02</h4>
+              <p className="text-xs text-neutral-400 leading-relaxed">Your professional summary is rewritten to solve the specific pain points mentioned in the JD.</p>
+           </div>
         </div>
       </div>
-      
-      <div className="grid grid-cols-2 gap-4">
-         <div className="p-6 bg-white/5 border border-white/5 rounded-[1.5rem]">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-neutral-500 mb-2">Benefit 01</h4>
-            <p className="text-xs text-neutral-400 leading-relaxed">Keywords are automatically injected into your skills and summary to pass ATS filters.</p>
-         </div>
-         <div className="p-6 bg-white/5 border border-white/5 rounded-[1.5rem]">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-neutral-500 mb-2">Benefit 02</h4>
-            <p className="text-xs text-neutral-400 leading-relaxed">Your professional summary is rewritten to solve the specific pain points mentioned in the JD.</p>
-         </div>
-      </div>
-    </div>
-  );
+    );
+  };
 
   const tabs = [
     { id: "profile", label: "Profile", icon: <User className="w-4 h-4" /> },
@@ -2047,6 +2253,8 @@ export function EditorClient({
       {isDragging && (
         <div className="fixed inset-0 z-50 cursor-col-resize select-none" />
       )}
+
+
 
       {/* ── Left Sidebar Header ── */}
       <div 
@@ -2068,12 +2276,20 @@ export function EditorClient({
           }`} />
         </div>
         {/* Superior Header */}
-        <header className="px-6 py-5 flex items-center justify-between border-b border-[var(--sclade-popover-border)] relative bg-[var(--sclade-popover-bg)] transition-colors duration-200">
+        <header className={`py-5 flex items-center justify-between border-b border-[var(--sclade-popover-border)] relative bg-[var(--sclade-popover-bg)] transition-all duration-200 ${isCompact ? "px-3" : "px-6"}`}>
           <div className="absolute inset-0 bg-blue-600/5 blur-[80px] pointer-events-none" />
-          <div className="flex items-center gap-3.5 relative">
+          <div className={`flex items-center relative transition-all duration-200 ${isCompact ? "gap-2" : "gap-3.5"}`}>
+            {/* Versions Sidebar Toggle Button */}
+            <button
+              onClick={() => setShowVersionsSidebar(prev => !prev)}
+              className="flex items-center justify-center w-8 h-8 rounded-xl bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-popover-border)] text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-[var(--sclade-input-bg)] active:scale-95 transition-all cursor-pointer"
+              title={showVersionsSidebar ? "Hide Versions History" : "Show Versions History"}
+            >
+              <History className={`w-3.5 h-3.5 transition-transform duration-300 ${showVersionsSidebar ? "text-blue-500 scale-105" : ""}`} />
+            </button>
             <Link
               href="/dashboard"
-              className="logo scale-[0.8] origin-left cursor-pointer hover:opacity-90 transition-opacity"
+              className={`logo origin-left cursor-pointer hover:opacity-90 transition-all duration-200 ${isCompact ? "scale-[0.7] !gap-1.5" : "scale-[0.8] !gap-3"}`}
             >
               <svg viewBox="0 0 32 32" className="logo-icon-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M7 6C7 4.34315 8.34315 3 10 3H19L25 9V26C25 27.6569 23.6569 29 22 29H10C8.34315 29 7 27.6569 7 26V6Z" className="logo-doc-body" />
@@ -2089,11 +2305,11 @@ export function EditorClient({
                     AI
                   </span>
                 </div>
-                <div className="logo-tagline font-mono">YOUR COMMITS. YOUR CAREER.</div>
+                <div className={`logo-tagline font-mono ${isCompact ? "hidden" : "block"}`}>YOUR COMMITS. YOUR CAREER.</div>
               </div>
             </Link>
           </div>
-          <div className="flex items-center gap-2.5 relative">
+          <div className={`flex items-center relative transition-all duration-200 ${isCompact ? "gap-1.5" : "gap-2.5"}`}>
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="flex items-center justify-center w-8 h-8 rounded-xl bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-popover-border)] text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-[var(--sclade-input-bg)] active:scale-95 transition-all cursor-pointer"
@@ -2186,7 +2402,7 @@ export function EditorClient({
         </div>
 
         <div className="flex bg-[var(--sclade-nav-bg)] px-2 py-2 gap-1 border-b border-[var(--sclade-popover-border)] transition-colors duration-200">
-          {tabs.filter(t => t.id !== "tailor").map((tab) => (
+          {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as EditorTab)}
@@ -2209,6 +2425,7 @@ export function EditorClient({
           {activeTab === "experience" && renderExperience()}
           {activeTab === "projects" && renderProjects()}
           {activeTab === "education" && renderEducation()}
+          {activeTab === "tailor" && renderTailor()}
         </div>
       </div>
 
@@ -2224,6 +2441,133 @@ export function EditorClient({
           />
         </div>
       </div>
+
+      {/* ── ChatGPT-Style Version History Sidebar (Right side aligned with border-l) ── */}
+      {showVersionsSidebar && (
+        <>
+          {/* Mobile Backdrop Overlay */}
+          <div 
+            onClick={() => setShowVersionsSidebar(false)}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden animate-fade-in"
+          />
+          {/* Sidebar Drawer Container */}
+          <div className="fixed right-0 top-0 bottom-0 w-[260px] md:relative md:w-[230px] md:right-auto md:top-auto md:bottom-auto h-full flex-shrink-0 flex flex-col border-l border-[var(--sclade-popover-border)] bg-[var(--sclade-popover-bg)] backdrop-blur-md z-50 md:z-30 transition-all duration-300 shadow-2xl md:shadow-none animate-in slide-in-from-right duration-200">
+          {/* Sidebar Top: New Tailoring Run Button */}
+          <div className="p-4 border-b border-[var(--sclade-popover-border)]">
+            <button
+              onClick={handleCreateNewVersion}
+              className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-lg shadow-blue-600/10 text-xs cursor-pointer"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              Tailor for New Job
+            </button>
+          </div>
+
+          {/* Versions List */}
+          <div className="flex-1 overflow-y-auto p-3 space-y-2 custom-scrollbar">
+            <div className="text-[9px] font-black uppercase tracking-[0.15em] text-[var(--sclade-text-muted)] px-2.5 mb-2">
+              Resume Versions
+            </div>
+
+            {/* Master Resume (Main) */}
+            <button
+              onClick={() => {
+                window.location.href = `/editor?tab=${activeTab}`;
+              }}
+              className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all text-left border ${
+                isCurrentVersionMain
+                  ? "bg-blue-500/10 border-blue-500/30 text-blue-600 dark:text-blue-400 font-bold shadow-md"
+                  : "border-transparent text-[var(--sclade-text-secondary)] hover:bg-[var(--sclade-input-bg)] hover:text-[var(--sclade-text-primary)] hover:border-[var(--sclade-input-border)]"
+              }`}
+            >
+              <FileText className="w-4 h-4 text-blue-500 shrink-0" />
+              <div className="flex-1 min-w-0">
+                <div className="text-xs truncate">Master Resume</div>
+                <div className="text-[9px] text-[var(--sclade-text-muted)] mt-0.5 uppercase tracking-wider">Primary Profile</div>
+              </div>
+            </button>
+
+            {/* Divider */}
+            {versionsList.filter((v: any) => !v.isMain).length > 0 && (
+              <div className="h-px bg-[var(--sclade-popover-border)] my-3 animate-pulse" />
+            )}
+
+            {/* Tailored Resumes */}
+            {versionsList.filter((v: any) => !v.isMain).map((version: any) => {
+              const isSelected = currentVersionId === version.id;
+              const title = version.jobTarget?.title || version.versionName?.replace("Tailored: ", "") || "Tailored Position";
+              const score = version.jobTarget?.matchScore || version.atsScore || 0;
+              
+              return (
+                <div key={version.id} className="relative group/item">
+                  <button
+                    onClick={() => {
+                      window.location.href = `/editor?versionId=${version.id}&tab=${activeTab}`;
+                    }}
+                    className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all text-left pr-10 border ${
+                      isSelected
+                        ? "bg-blue-500/10 border-blue-500/30 text-blue-600 dark:text-blue-400 font-bold shadow-md"
+                        : "border-transparent text-[var(--sclade-text-secondary)] hover:bg-[var(--sclade-input-bg)] hover:text-[var(--sclade-text-primary)] hover:border-[var(--sclade-input-border)]"
+                    }`}
+                  >
+                    <Sparkles className="w-4 h-4 text-blue-500 shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs truncate font-medium">{title}</div>
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        <span className={`text-[9px] font-black uppercase ${score >= 70 ? "text-emerald-500" : "text-amber-500"}`}>
+                          {score}% Match
+                        </span>
+                        <span className="text-[8px] text-[var(--sclade-text-muted)]">•</span>
+                        <span className="text-[8.5px] text-[var(--sclade-text-muted)]">
+                          {new Date(version.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+                        </span>
+                      </div>
+                    </div>
+                  </button>
+                  
+                  {/* Delete Version Button */}
+                  <button
+                    onClick={async (e) => {
+                      e.stopPropagation();
+                      if (confirm(`Are you sure you want to delete the tailored version for "${title}"?`)) {
+                        try {
+                          const res = await fetch(`/api/cv/delete-version?versionId=${version.id}`, {
+                            method: "DELETE"
+                          });
+                          if (res.ok) {
+                            setVersionsList(prev => prev.filter((v: any) => v.id !== version.id));
+                            if (isSelected) {
+                              window.location.href = "/editor";
+                            }
+                          } else {
+                            alert("Failed to delete version");
+                          }
+                        } catch {
+                          alert("Error deleting version");
+                        }
+                      }
+                    }}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-[var(--sclade-text-muted)] hover:text-red-500 opacity-0 group-hover/item:opacity-100 transition-opacity hover:bg-red-500/5 rounded-lg z-10 cursor-pointer"
+                    title="Delete this tailored version"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              );
+            })}
+
+            {versionsList.filter((v: any) => !v.isMain).length === 0 && (
+              <div className="text-center py-8 px-4 border border-dashed border-[var(--sclade-popover-border)] rounded-2xl bg-[var(--sclade-input-bg)]/30">
+                <Sparkles className="w-6 h-6 text-[var(--sclade-text-muted)] mx-auto mb-2 opacity-50" />
+                <p className="text-[10px] text-[var(--sclade-text-muted)] leading-normal font-medium">
+                  No tailored resumes yet. Paste a job description to optimize your CV.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+        </>
+      )}
 
       {/* Audit Modal Reveal */}
       {atsPanelOpen && atsData && (

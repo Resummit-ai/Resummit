@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { PostHogProvider, PageViewTracker } from "@/components/providers/posthog-provider";
 import { Analytics } from "@vercel/analytics/next";
@@ -73,9 +74,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteNameStructuredData) }} />
-        <script dangerouslySetInnerHTML={{
-          __html: `try{const t=localStorage.getItem('sclade-theme');if(t==='light'){document.documentElement.classList.add('light');document.documentElement.classList.remove('dark')}else{document.documentElement.classList.add('dark');document.documentElement.classList.remove('light')}}catch(_){}`
-        }} />
+        <Script id="theme-loader" strategy="beforeInteractive">
+          {`try{const t=localStorage.getItem('sclade-theme');if(t==='light'){document.documentElement.classList.add('light');document.documentElement.classList.remove('dark')}else{document.documentElement.classList.add('dark');document.documentElement.classList.remove('light')}}catch(_){}`}
+        </Script>
       </head>
       <body className="font-sans min-h-full bg-[var(--sclade-bg)] text-[var(--sclade-text-primary)] flex flex-col transition-colors duration-200">
         <PostHogProvider>

@@ -30,7 +30,7 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  const dbUser = await prisma.user.findUnique({
+  let dbUser = await prisma.user.findUnique({
     where: { id: userId },
     include: {
       suggestions: {
@@ -48,6 +48,8 @@ export default async function DashboardPage() {
       githubData: true,
     }
   });
+
+
 
   if (!dbUser) {
     redirect("/login");
