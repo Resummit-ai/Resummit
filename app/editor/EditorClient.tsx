@@ -1040,6 +1040,56 @@ export function EditorClient({
     }
   };
 
+  const handleReanalyze = async () => {
+    if (!activeJobTarget || !activeJobTarget.description) return;
+    setIsTailoring(true);
+    try {
+      const res = await fetch("/api/cv/tailor", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          resumeId, 
+          jobDescription: activeJobTarget.description,
+          jobTitle: activeJobTarget.title || "",
+          versionId: currentVersionId
+        }),
+      });
+      const result = await res.json();
+      if (result.success) {
+        const d = result.data;
+        setCurrentVersionId(result.versionId);
+        setActiveJobTarget(result.jobTarget);
+        setPersonalInfo(d.personalInfo);
+        setSummary(d.summary);
+        setSkills(d.skills);
+        setExperience(d.experience);
+        setProjects(d.projects);
+        setEducation(d.education);
+        
+        const newVerItem = {
+          id: result.versionId,
+          versionName: d.versionName,
+          isMain: d.isMain,
+          createdAt: d.createdAt,
+          atsScore: d.atsScore,
+          jobTarget: result.jobTarget
+        };
+        setVersionsList(prev => {
+          return prev.map(v => v.id === result.versionId ? newVerItem : v);
+        });
+
+        alert("Resume successfully re-analyzed and matched!");
+      } else {
+        alert("Failed to re-analyze: " + (result.error || "Unknown error"));
+      }
+    } catch (error) {
+      console.error("Re-analysis failed", error);
+      alert("Error re-analyzing resume.");
+    } finally {
+      setIsTailoring(false);
+    }
+  };
+
   const handleCreateNewVersion = async () => {
     try {
       const res = await fetch("/api/cv/create-version", {
@@ -2174,6 +2224,18 @@ export function EditorClient({
                   className="px-4 py-2.5 bg-neutral-500/10 hover:bg-neutral-500/20 border border-neutral-500/20 text-neutral-400 font-bold text-xs rounded-xl transition-all active:scale-[0.98] cursor-pointer"
                 >
                   Reset to Main Profile
+                </button>
+                <button
+                  onClick={handleReanalyze}
+                  disabled={isTailoring}
+                  className="px-4 py-2.5 bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-500/20 text-indigo-400 font-bold text-xs rounded-xl transition-all active:scale-[0.98] disabled:opacity-50 cursor-pointer flex items-center gap-2 font-outfit"
+                >
+                  {isTailoring ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <RefreshCw className="w-3.5 h-3.5" />
+                  )}
+                  {isTailoring ? "Analyzing..." : "Analyze Again"}
                 </button>
                 <button
                   onClick={() => {
