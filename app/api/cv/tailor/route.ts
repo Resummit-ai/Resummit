@@ -73,6 +73,29 @@ export async function POST(req: Request) {
     const education = ensureArray(activeVersionToTailor.education);
     const achievements = ensureArray(activeVersionToTailor.achievements);
 
+    // Fetch GitHub repositories for context
+    const githubData = await prisma.gitHubData.findUnique({
+      where: { userId }
+    });
+    
+    let repos: any[] = [];
+    if (githubData && githubData.repositories) {
+      repos = Array.isArray(githubData.repositories) 
+        ? githubData.repositories 
+        : typeof githubData.repositories === "string"
+        ? JSON.parse(githubData.repositories)
+        : [];
+    }
+
+    const reposSummary = repos.slice(0, 10).map(r => ({
+      name: r.name,
+      description: r.description || '',
+      language: r.language || 'Unknown',
+      topics: r.topics || [],
+      stars: r.stargazers_count || 0,
+      readme: r.readme ? r.readme.slice(0, 500) : '',
+    }));
+
     // 2. Use AI to tailor the content
     const prompt = `
       You are an elite career coach and ATS optimization expert.
@@ -87,6 +110,9 @@ export async function POST(req: Request) {
       - Skills: ${JSON.stringify(skills)}
       - Experience: ${JSON.stringify(experience)}
       - Projects: ${JSON.stringify(projects)}
+
+      USER'S GITHUB REPOSITORIES (use these to verify skills and extract projects if the resume projects are empty):
+      ${JSON.stringify(reposSummary, null, 2)}
       
       TASK:
       1. Analyze the Job Description for keywords, required skills, and core responsibilities.
@@ -102,12 +128,25 @@ export async function POST(req: Request) {
          - Prioritize integrating keywords and matching skills naturally.
       5. Suggest minor tweaks to project highlights/bullets using the same constraints.
          CRITICAL RULES FOR PROJECTS:
-         - You MUST return the exact same number of project items in the exact same order as the input.
-         - Do NOT invent, add, or delete any projects. Keep original values for "id", "title", "description", "techStack", and "included".
-         - Only refine the "highlights" text array.
-         - Each highlight bullet MUST start with a strong past-tense action verb.
-         - EVERY highlight bullet MUST be STRICTLY under 18 words (do NOT exceed 18 words per bullet point).
+         - If the input 'projects' array already contains project items:
+           - You MUST return the exact same number of project items in the exact same order as the input.
+           - Do NOT invent, add, or delete any projects. Keep original values for "id", "title", "description", "techStack", and "included".
+           - Only refine the "highlights" text array.
+           - Each highlight bullet MUST start with a strong past-tense action verb and be STRICTLY under 18 words.
+         - If the input 'projects' array is EMPTY (0 items) AND the USER'S GITHUB REPOSITORIES list is NOT empty:
+           - You MUST select the most relevant projects (up to 3 total) from the USER'S GITHUB REPOSITORIES list that best align with the Job Description.
+           - For each selected project, generate a new project item object:
+             - "id": a unique string (e.g. "git-" followed by the repo name).
+             - "title": the repository name.
+             - "description": a concise, tailored technical summary of the project.
+             - "techStack": a list of relevant technologies used in that repository (e.g. ["React", "TypeScript"]).
+             - "highlights": 2 tailored bullet points (each starting with a past-tense action verb, and under 18 words) describing key achievements/features of the project.
+             - "included": true.
+         - If both input 'projects' and USER'S GITHUB REPOSITORIES are empty, return an empty array for 'projects'.
       6. Identify matching keywords and missing skills.
+         CRITICAL RULES FOR MISSING SKILLS:
+         - A technology/skill required in the JOB DESCRIPTION is considered "missing" ONLY IF it is not present in the USER'S CURRENT RESUME DATA (specifically 'skills') AND NOT present/demonstrated in any of the USER'S GITHUB REPOSITORIES (as a primary language, topic, description keyword, or readme text).
+         - If the skill IS present in either the resume skills OR any of their GitHub repositories, do NOT list it in 'missingSkills'. Instead, if it is demonstrated in their GitHub repositories but not currently listed in the resume skills, you should actively suggest/add it to the tailored 'skills' object.
       7. Calculate an overall ATS match score (out of 100).
       
       OUTPUT:
@@ -125,10 +164,10 @@ export async function POST(req: Request) {
         ],
         "projects": [
           {
-            "id": "project id (keep original)",
-            "title": "project title (keep original)",
-            "description": "project description (keep original or slightly adjust)",
-            "techStack": ["tech stack (keep original or adjust order)"],
+            "id": "project id (keep original or generate new for added github projects)",
+            "title": "project title (keep original or set to repository name)",
+            "description": "project description (keep original or create tailored description based on README)",
+            "techStack": ["tech stack"],
             "highlights": ["highlight 1 (under 18 words)", "highlight 2 (under 18 words)"],
             "included": true
           }
