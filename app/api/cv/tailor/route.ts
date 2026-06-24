@@ -87,7 +87,7 @@ export async function POST(req: Request) {
         : [];
     }
 
-    const reposSummary = repos.slice(0, 10).map(r => ({
+    const reposSummary = repos.map(r => ({
       name: r.name,
       description: r.description || '',
       language: r.language || 'Unknown',
@@ -144,9 +144,11 @@ export async function POST(req: Request) {
              - "included": true.
          - If both input 'projects' and USER'S GITHUB REPOSITORIES are empty, return an empty array for 'projects'.
       6. Identify matching keywords and missing skills.
-         CRITICAL RULES FOR MISSING SKILLS:
+         CRITICAL RULES FOR KEYWORDS & MISSING SKILLS:
+         - For each matched keyword/skill in the "keywords" array, explain which repository or resume section demonstrated it. Use this format: "React (Demonstrated in [repo-name] repository)" or "Docker (Listed on Resume)".
          - A technology/skill required in the JOB DESCRIPTION is considered "missing" ONLY IF it is not present in the USER'S CURRENT RESUME DATA (specifically 'skills') AND NOT present/demonstrated in any of the USER'S GITHUB REPOSITORIES (as a primary language, topic, description keyword, or readme text).
-         - If the skill IS present in either the resume skills OR any of their GitHub repositories, do NOT list it in 'missingSkills'. Instead, if it is demonstrated in their GitHub repositories but not currently listed in the resume skills, you should actively suggest/add it to the tailored 'skills' object.
+         - For each missing skill in the "missingSkills" array, provide details of why it is missing and what it was required for. Use this format: "[Skill Name] (Required for [feature/role in JD], no evidence found in your resume or GitHub repositories)".
+         - If a required skill IS present in either the resume skills OR any of their GitHub repositories, do NOT list it in 'missingSkills'. Instead, if it is demonstrated in their GitHub repositories but not currently listed in the resume skills, you should actively suggest/add it to the tailored 'skills' object.
       7. Calculate an overall ATS match score (out of 100).
       
       OUTPUT:
