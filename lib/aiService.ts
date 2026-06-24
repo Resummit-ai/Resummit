@@ -8,7 +8,7 @@ import { Redis } from '@upstash/redis'
 
 const OLLAMA_URL = process.env.OLLAMA_URL || 'http://localhost:11434'
 const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'llama3.2'
-const GEMINI_MODEL = 'gemini-2.0-flash' // gemini-1.5-flash deprecated from v1beta API
+const GEMINI_MODEL = 'gemini-2.5-flash' // gemini-1.5-flash deprecated from v1beta API
 
 /** Daily AI call limit per user (free tier) */
 const DAILY_AI_LIMIT = parseInt(process.env.AI_DAILY_LIMIT_PER_USER || '10', 10);

@@ -2733,7 +2733,7 @@ export function EditorClient({
                       onClick={() => setTailorBaseOption("clone")}
                       className={`w-full text-left p-4 rounded-2xl border transition-all ${
                         tailorBaseOption === "clone"
-                          ? "bg-blue-500/10 border-blue-500/30 text-white"
+                          ? "bg-blue-500/10 border-blue-500/30 text-[var(--sclade-text-primary)]"
                           : "bg-transparent border-[var(--sclade-input-border)] text-[var(--sclade-text-secondary)] hover:bg-white/[0.02]"
                       }`}
                     >
@@ -2753,7 +2753,7 @@ export function EditorClient({
                       onClick={() => setTailorBaseOption("scratch")}
                       className={`w-full text-left p-4 rounded-2xl border transition-all ${
                         tailorBaseOption === "scratch"
-                          ? "bg-blue-500/10 border-blue-500/30 text-white"
+                          ? "bg-blue-500/10 border-blue-500/30 text-[var(--sclade-text-primary)]"
                           : "bg-transparent border-[var(--sclade-input-border)] text-[var(--sclade-text-secondary)] hover:bg-white/[0.02]"
                       }`}
                     >
