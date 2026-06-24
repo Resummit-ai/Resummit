@@ -2218,17 +2218,17 @@ export function EditorClient({
                 <p className="text-xs text-[var(--sclade-text-secondary)] mt-1">This resume version is optimized specifically for this role.</p>
               </div>
 
-              <div className="flex items-center gap-4">
+              <div className="flex flex-wrap items-center gap-3 w-full md:w-auto justify-start md:justify-end">
                 <button
                   onClick={handleResetToMain}
-                  className="px-4 py-2.5 bg-neutral-500/10 hover:bg-neutral-500/20 border border-neutral-500/20 text-neutral-400 font-bold text-xs rounded-xl transition-all active:scale-[0.98] cursor-pointer"
+                  className="px-4 py-2.5 bg-neutral-500/10 hover:bg-neutral-500/20 border border-neutral-500/20 text-neutral-400 font-bold text-xs rounded-xl transition-all active:scale-[0.98] cursor-pointer whitespace-nowrap flex-1 sm:flex-initial text-center justify-center"
                 >
                   Reset to Main Profile
                 </button>
                 <button
                   onClick={handleReanalyze}
                   disabled={isTailoring}
-                  className="px-4 py-2.5 bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-500/20 text-indigo-400 font-bold text-xs rounded-xl transition-all active:scale-[0.98] disabled:opacity-50 cursor-pointer flex items-center gap-2 font-outfit"
+                  className="px-4 py-2.5 bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-500/20 text-indigo-400 font-bold text-xs rounded-xl transition-all active:scale-[0.98] disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2 font-outfit whitespace-nowrap flex-1 sm:flex-initial text-center"
                 >
                   {isTailoring ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -2244,7 +2244,7 @@ export function EditorClient({
                     setTailorBaseOption("clone");
                     setShowTailorModal(true);
                   }}
-                  className="px-4 py-2.5 bg-blue-600/10 hover:bg-blue-600/20 border border-blue-500/20 text-blue-400 font-bold text-xs rounded-xl transition-all active:scale-[0.98] cursor-pointer"
+                  className="px-4 py-2.5 bg-blue-600/10 hover:bg-blue-600/20 border border-blue-500/20 text-blue-400 font-bold text-xs rounded-xl transition-all active:scale-[0.98] cursor-pointer whitespace-nowrap flex-1 sm:flex-initial text-center justify-center"
                 >
                   Tailor for a New Job
                 </button>
