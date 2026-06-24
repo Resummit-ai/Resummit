@@ -35,6 +35,9 @@ The workspace is split into an editable dashboard on the left—complete with in
 * **Job-Specific Bullet Customization**: Automatically drafts custom experience bullets and project highlights aligned with target job keywords and technical requirements.
 * **Strict Format Guards**: Restricts all AI edits to experience/project bullet arrays, keeping company name, titles, periods, and project configurations unaltered while ensuring a strict 18-word limit and past-tense action verbs.
 * **Interactive Match Dashboard**: Evaluates resume versions against target JDs, rendering circular match strength score indicators, matching keywords, missing skills, and quick reset operations directly in the editor.
+* **ChatGPT-Style Version Control**: Create separate tailored versions for different job descriptions. Clicking "Tailor for New Job" clones the active CV into a new draft and updates URL query parameters without breaking user focus or resetting active tabs.
+* **In-place Matching Updates**: Tailor the same version multiple times to update its specific content and keyword reports in-place, preventing layout duplication.
+* **Preserve Navigation State**: Switch between resume versions seamlessly while keeping your current editor tab selection (e.g. Profile or Skills) active.
 
 ### 4. ATS Scoring & Quality Auditing
 * **Real-time Evaluation**: Evaluates resume versions against targeted job roles, generating a score breakdown across *Skills density*, *Project depth*, and *Outcome/Impact*.
@@ -52,6 +55,8 @@ The workspace is split into an editable dashboard on the left—complete with in
 ### 7. Premium WYSIWYG & PDF Rendering
 * **Experience Date Picker**: A custom-built date range picker that handles "Present" options, parses bounds dynamically, and validates inputs on-the-fly.
 * **Split-screen Resizing**: Features a drag-and-resize sidebar separator allowing the user to customize their editor workspace layout from 380px to 800px wide.
+* **Dynamic Header Responsiveness**: Responsive left sidebar header that scales elements (gaps, padding, logo size, save button labels) dynamically as the user resizes the separator handle or views the editor on mobile screens, avoiding overflows.
+* **Collapsible Versions History Sidebar**: A beautiful right-hand versions drawer that renders inline on desktop and acts as a slide-out drawer with a backdrop blur overlay on mobile, collapsing automatically to preserve screen space.
 * **Debounced Auto-Save**: Automatically saves workspace adjustments to the database with a 2-second debounce, backed by a `beforeunload` safe-check guard to ensure changes are never lost.
 * **Export-Ready PDFs**: Uses `@react-pdf/renderer` to compile perfect, single-page, ATS-scannable resume sheets with the click of a button.
 
