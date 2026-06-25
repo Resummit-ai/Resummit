@@ -344,6 +344,7 @@ export function AITextTransform({
                 whiteSpace: "pre-wrap",
                 wordBreak: "break-word",
                 lineHeight: "inherit",
+                clipPath: isAccepting ? undefined : "inset(0 0 0 0)",
               }}
             >
               {oldText}
@@ -357,9 +358,12 @@ export function AITextTransform({
                 whiteSpace: "pre-wrap",
                 wordBreak: "break-word",
                 lineHeight: "inherit",
+                clipPath: isAccepting ? undefined : "inset(0 0 0 0)",
+                filter: isAccepting ? undefined : "none",
+                opacity: isAccepting ? undefined : 1,
               }}
             >
-              {suggestion}
+              {suggestion || text}
             </span>
           </span>
         ) : (
