@@ -457,33 +457,159 @@ export interface StrengthScore {
   quickFixes: string[]
 }
 
+export function calculateHeuristicScore(
+  cvText: string,
+  targetRole: string
+): StrengthScore {
+  const lowercaseText = cvText.toLowerCase();
+
+  // 1. Skill Score Heuristic
+  const skillsLineMatches = cvText.match(/(?:Languages|Frameworks|Tools):\s*([^\n]+)/gi);
+  let skillsList: string[] = [];
+  if (skillsLineMatches) {
+    for (const match of skillsLineMatches) {
+      const parts = match.replace(/(?:Languages|Frameworks|Tools):\s*/i, '').split(',');
+      for (const p of parts) {
+        const trimmed = p.trim();
+        if (trimmed && trimmed.toLowerCase() !== 'unspecified' && trimmed.toLowerCase() !== 'none') {
+          skillsList.push(trimmed.toLowerCase());
+        }
+      }
+    }
+  }
+  skillsList = Array.from(new Set(skillsList));
+
+  // Fallback keyword scanning if parsing didn't find many skills
+  if (skillsList.length < 3) {
+    const commonTech = [
+      'javascript', 'typescript', 'python', 'java', 'c++', 'c#', 'ruby', 'go', 'rust', 'swift', 'kotlin', 'php', 'sql',
+      'react', 'next.js', 'nextjs', 'vue', 'angular', 'svelte', 'nuxt', 'node', 'express', 'django', 'flask', 'rails',
+      'spring', 'laravel', 'postgres', 'postgresql', 'mysql', 'mongodb', 'redis', 'elasticsearch', 'sqlite',
+      'docker', 'kubernetes', 'aws', 'gcp', 'azure', 'git', 'github', 'ci/cd', 'terraform', 'graphql', 'rest',
+      'html', 'css', 'tailwind', 'bootstrap', 'sass', 'webpack', 'vite', 'jest', 'cypress', 'testing', 'graphql', 'apollo', 'prisma', 'firebase', 'supabase', 'oauth', 'jwt', 'rabbitmq', 'kafka', 'nginx', 'jenkins', 'circleci', 'heroku', 'vercel', 'netlify'
+    ];
+    for (const tech of commonTech) {
+      if (lowercaseText.includes(tech) && !skillsList.includes(tech)) {
+        skillsList.push(tech);
+      }
+    }
+  }
+  const matchedTechCount = skillsList.length;
+  const skillsScore = Math.min(100, Math.max(30, matchedTechCount * 8 + 20));
+
+  // 2. Projects & Experience Score Heuristic
+  const bullets = cvText.split('\n')
+    .map(line => line.trim())
+    .filter(line => line.startsWith('-') || line.startsWith('•'))
+    .map(line => line.substring(1).trim());
+  
+  const projectsScore = Math.min(100, Math.max(30, bullets.length * 6 + 30));
+
+  // 3. Impact Score Heuristic
+  let impactBullets = 0;
+  for (const bullet of bullets) {
+    if (/\b(?:\d+(?:\.\d+)?%|\$\d+(?:\.\d+)?(?:k|m|b)?|\d+\s*(?:x|ms|s|gb|tb|percent|users|customers|clients|requests|seconds|hours|days|weeks|months|years|developers|employees|contributors))\b/i.test(bullet) || /\b\d{2,}\b/.test(bullet)) {
+      impactBullets++;
+    }
+  }
+  const impactRatio = bullets.length > 0 ? impactBullets / bullets.length : 0;
+  const impactScore = Math.min(100, Math.max(30, Math.round(impactRatio * 60 + 40)));
+
+  // Calculate Overall Score
+  const overallScore = Math.round((skillsScore * 0.3) + (projectsScore * 0.3) + (impactScore * 0.4));
+
+  // Analyze Weak Signals
+  const weakSignals: string[] = [];
+  const topIssues: string[] = [];
+  const quickFixes: string[] = [];
+
+  // Summary Check
+  const summaryMatch = cvText.match(/Summary:\s*([^\n]+)/i);
+  const summaryText = summaryMatch ? summaryMatch[1].trim() : "";
+  const isFallbackSummary = summaryText.toLowerCase().includes("no summary provided");
+  const summaryLength = isFallbackSummary ? 0 : summaryText.length;
+  if (summaryLength < 80) {
+    weakSignals.push("SHORT_SUMMARY");
+    topIssues.push("Summary is too short or generic");
+    quickFixes.push("Expand your summary to 2-3 sentences highlighting your target domain.");
+  }
+
+  // Skills Check
+  if (matchedTechCount < 6) {
+    weakSignals.push("LOW_SKILL_DENSITY");
+    topIssues.push("Fewer than 6 technical skills identified");
+    quickFixes.push("List specific languages, frameworks, and database tools you used in your projects.");
+  }
+
+  // Impact Check
+  if (impactBullets === 0) {
+    weakSignals.push("NO_IMPACT_BULLETS");
+    topIssues.push("No measurable business or technical outcomes in experience bullet points");
+    quickFixes.push("Add percentages, time savings, or scale metrics (e.g., 'reduced latency by 30%') to your achievements.");
+  }
+
+  // Repetitive action verbs check
+  const verbs = bullets.map(b => b.split(/\s+/)[0].toLowerCase()).filter(v => v.length > 2);
+  const verbCounts: Record<string, number> = {};
+  let hasRepetitiveVerbs = false;
+  for (const verb of verbs) {
+    verbCounts[verb] = (verbCounts[verb] || 0) + 1;
+    if (verbCounts[verb] > 2) {
+      hasRepetitiveVerbs = true;
+    }
+  }
+  if (hasRepetitiveVerbs) {
+    weakSignals.push("REPETITIVE_VERBS");
+    topIssues.push("Repetitive action verbs detected at start of bullets");
+    quickFixes.push("Vary your action verbs (e.g. use 'Engineered', 'Optimized', 'orchestrated' instead of repeating 'Led').");
+  }
+
+  if (topIssues.length === 0 && overallScore < 85) {
+    topIssues.push("Resume is well structured but lacks advanced metrics");
+    quickFixes.push("Quantify your project achievements further to push your score past 85.");
+  }
+
+  return {
+    score: overallScore,
+    breakdown: {
+      skills: skillsScore,
+      projects: projectsScore,
+      impact: impactScore,
+      overall: overallScore
+    },
+    weakSignals,
+    topIssues: topIssues.length > 0 ? topIssues : ["AI evaluation temporarily offline; displaying structural estimation."],
+    quickFixes: quickFixes.length > 0 ? quickFixes : ["No urgent changes needed, resume structure is robust."]
+  };
+}
+
 export async function calculateATSScore(
   cvText: string,
   targetRole: string
 ): Promise<StrengthScore> {
   const prompt = `Score this resume for a ${targetRole} role.
   
-Return ONLY valid JSON:
-{
-  "score": <integer 0-100>,
-  "breakdown": {
-    "skills": <integer 0-100 based on density of ${targetRole} terms>,
-    "projects": <integer 0-100 based on technical depth>,
-    "impact": <integer 0-100 based on presence of outcomes/results>
-  },
-  "weakSignals": ["list flags from: SHORT_SUMMARY, REPETITIVE_VERBS, LOW_SKILL_DENSITY, NO_IMPACT_BULLETS"],
-  "topIssues": ["issue 1", "issue 2"],
-  "quickFixes": ["fix 1", "fix 2"]
-}
-
-Rules for Weak Signals:
-- SHORT_SUMMARY: if summary text is under 80 characters.
-- REPETITIVE_VERBS: if the same action verb starts more than 2 bullets.
-- LOW_SKILL_DENSITY: if fewer than 6 technical skills are listed.
-- NO_IMPACT_BULLETS: if zero bullets state an outcome or effect.
-
-Resume:
-${cvText.slice(0, 3000)}`
+  Return ONLY valid JSON:
+  {
+    "score": <integer 0-100>,
+    "breakdown": {
+      "skills": <integer 0-100 based on density of ${targetRole} terms>,
+      "projects": <integer 0-100 based on technical depth>,
+      "impact": <integer 0-100 based on presence of outcomes/results>
+    },
+    "weakSignals": ["list flags from: SHORT_SUMMARY, REPETITIVE_VERBS, LOW_SKILL_DENSITY, NO_IMPACT_BULLETS"],
+    "topIssues": ["issue 1", "issue 2"],
+    "quickFixes": ["fix 1", "fix 2"]
+  }
+  
+  Rules for Weak Signals:
+  - SHORT_SUMMARY: if summary text is under 80 characters.
+  - REPETITIVE_VERBS: if the same action verb starts more than 2 bullets.
+  - LOW_SKILL_DENSITY: if fewer than 6 technical skills are listed.
+  - NO_IMPACT_BULLETS: if zero bullets state an outcome or effect.
+  
+  Resume:
+  ${cvText.slice(0, 3000)}`
 
   try {
     const raw = await callAI(prompt);
@@ -501,14 +627,8 @@ ${cvText.slice(0, 3000)}`
       quickFixes: parsed.quickFixes || [],
     };
   } catch (error: any) {
-    console.warn("[AI] ATS calculation failed, returning deterministic fallback score:", error);
-    return {
-      score: 75,
-      breakdown: { skills: 70, projects: 75, impact: 80, overall: 75 },
-      weakSignals: [],
-      topIssues: ['AI evaluation temporarily offline; displaying active estimation.'],
-      quickFixes: ['Connect more GitHub projects and enrich bullet details.']
-    };
+    console.warn("[AI] ATS calculation failed, returning dynamic heuristic fallback score:", error);
+    return calculateHeuristicScore(cvText, targetRole);
   }
 }
 
