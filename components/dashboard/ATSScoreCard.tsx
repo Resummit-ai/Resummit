@@ -16,6 +16,8 @@ interface ATSResult {
 interface ATSScoreCardProps {
   storedScore: number;      // Score from DB (shown instantly)
   versionId?: string;       // Resume version to score
+  resumeName?: string;
+  versionName?: string;
 }
 
 const SIGNAL_LABELS: Record<string, string> = {
@@ -51,7 +53,7 @@ function ScoreRing({ score, size = 80 }: { score: number; size?: number }) {
   );
 }
 
-export function ATSScoreCard({ storedScore, versionId }: ATSScoreCardProps) {
+export function ATSScoreCard({ storedScore, versionId, resumeName, versionName }: ATSScoreCardProps) {
   const [result, setResult]     = useState<ATSResult | null>(null);
   const [loading, setLoading]   = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
@@ -100,12 +102,19 @@ export function ATSScoreCard({ storedScore, versionId }: ATSScoreCardProps) {
 
       <div className="relative z-10">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2">
-            <Target className="w-3.5 h-3.5 text-blue-500" />
-            <h3 className="text-[10px] font-black text-[var(--sclade-text-secondary)] uppercase tracking-[0.2em]">
-              Resume ATS Score
-            </h3>
+        <div className="flex items-center justify-between mb-6 gap-4">
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-2">
+              <Target className="w-3.5 h-3.5 text-blue-500" />
+              <h3 className="text-[10px] font-black text-[var(--sclade-text-secondary)] uppercase tracking-[0.2em]">
+                Resume ATS Score
+              </h3>
+            </div>
+            {resumeName && (
+              <span className="px-2.5 py-0.5 bg-blue-500/10 text-blue-500 dark:text-blue-400 border border-blue-500/20 rounded-lg text-[9px] font-bold uppercase tracking-widest max-w-[200px] truncate" title={`${resumeName}${versionName ? ` (${versionName})` : ''}`}>
+                {resumeName}{versionName ? ` (${versionName})` : ''}
+              </span>
+            )}
           </div>
           <button
             onClick={fetchScore}

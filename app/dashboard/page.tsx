@@ -130,6 +130,8 @@ export default async function DashboardPage() {
                <ATSScoreCard
                  storedScore={mainVersion?.atsScore ?? 0}
                  versionId={mainVersion?.id}
+                 resumeName={mainResume?.name}
+                 versionName={mainVersion?.versionName}
                />
 
                {/* Engineering DNA Core */}
