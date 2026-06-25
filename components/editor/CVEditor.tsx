@@ -50,7 +50,9 @@ export function CVEditor({
       
       const [newResult] = await res.json();
       if (newResult && Array.isArray(newResult.bullets)) {
-        setPendingSuggestions(prev => ({ ...prev, [projectId]: newResult.bullets }));
+        setProjects(prev => prev.map(p => 
+          p.id === projectId ? { ...p, bullets: newResult.bullets } : p
+        ));
       }
     } catch (err) {
       alert("Failed to regenerate bullets. Please try again.");
