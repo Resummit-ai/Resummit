@@ -232,3 +232,56 @@ body {
   color: #525252 !important;
 }
 
+/* Siri/Apple Intelligence AI Generating Glow Line Animation */
+@keyframes ai-glow-bar {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes ai-pulse-subtle {
+  0%, 100% {
+    background-color: rgba(59, 130, 246, 0.015);
+  }
+  50% {
+    background-color: rgba(139, 92, 246, 0.04);
+  }
+}
+
+.ai-generating-container {
+  animation: ai-pulse-subtle 2.5s infinite ease-in-out;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.ai-generating-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #10b981, #3b82f6);
+  background-size: 200% 200%;
+  animation: ai-glow-bar 2s infinite linear;
+  box-shadow: 0 0 8px rgba(139, 92, 246, 0.6), 0 0 16px rgba(236, 72, 153, 0.4);
+  z-index: 50;
+  pointer-events: none;
+}
+
+@media print {
+  .ai-generating-line {
+    display: none !important;
+  }
+  .ai-generating-container {
+    animation: none !important;
+    background-color: transparent !important;
+  }
+}
+
+

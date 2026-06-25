@@ -164,6 +164,9 @@ export function CVEditor({
               highlights: p.bullets,
               included: true
             }))}
+            generatingStates={{
+              projectIndex: isRegenerating ? projects.findIndex(p => p.id === isRegenerating) : null
+            }}
           />
         </div>
       </div>

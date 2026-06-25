@@ -8,6 +8,14 @@ interface ResumePreviewProps {
   projects?: ProjectData[];
   template?: "minimal" | "formal";
   mode?: "non-specialized" | "specialized";
+  generatingStates?: {
+    summary?: boolean;
+    skills?: boolean;
+    experienceIndex?: number | null;
+    projectIndex?: number | null;
+    rewritingBullet?: string | null;
+    isTailoring?: boolean;
+  };
 }
 
 export function ResumePreview({
@@ -15,11 +23,12 @@ export function ResumePreview({
   projects = [],
   template = "formal",
   mode = "non-specialized",
+  generatingStates,
 }: ResumePreviewProps) {
   if (template === "minimal") {
-    return <MinimalTemplate data={data} projects={projects} />;
+    return <MinimalTemplate data={data} projects={projects} generatingStates={generatingStates} />;
   }
-  return <FormalTemplate data={data} projects={projects} mode={mode} />;
+  return <FormalTemplate data={data} projects={projects} mode={mode} generatingStates={generatingStates} />;
 }
 
 function parseAchievementString(str: string) {
@@ -107,10 +116,12 @@ function FormalTemplate({
   data,
   projects,
   mode,
+  generatingStates,
 }: {
   data: CVData;
   projects: ProjectData[];
   mode: "non-specialized" | "specialized";
+  generatingStates?: ResumePreviewProps["generatingStates"];
 }) {
   const displaySkills = normalizeAndDedupeSkills(data.skills);
 
@@ -336,49 +347,55 @@ function FormalTemplate({
 
       {/* Professional Summary */}
       {displaySummary && (
-        <Section 
-          title={mode === "specialized" ? "Technical Summary" : "Professional Summary"}
-          marginSection={marginSection}
-          fontSizeSecTitle={fontSizeSecTitle}
-          sectionTitlePaddingTop={sectionTitlePaddingTop}
-          sectionTitleMarginBottom={sectionTitleMarginBottom}
-        >
-          <p style={{ fontSize: fontSizeSummary, lineHeight: lineHeightSummary, color: "#2d3748" }}>
-            {displaySummary}
-          </p>
-        </Section>
+        <div className={`relative ${generatingStates?.summary || generatingStates?.isTailoring ? 'ai-generating-container' : ''}`}>
+          {(generatingStates?.summary || generatingStates?.isTailoring) && <div className="ai-generating-line no-print" />}
+          <Section 
+            title={mode === "specialized" ? "Technical Summary" : "Professional Summary"}
+            marginSection={marginSection}
+            fontSizeSecTitle={fontSizeSecTitle}
+            sectionTitlePaddingTop={sectionTitlePaddingTop}
+            sectionTitleMarginBottom={sectionTitleMarginBottom}
+          >
+            <p style={{ fontSize: fontSizeSummary, lineHeight: lineHeightSummary, color: "#2d3748" }}>
+              {displaySummary}
+            </p>
+          </Section>
+        </div>
       )}
 
       {/* Expert-Level Skills */}
       {((displaySkills.languages || []).length > 0 || (displaySkills.frameworks || []).length > 0 || (displaySkills.tools || []).length > 0) && (
-        <Section 
-          title={mode === "specialized" ? "Technical Skills" : "Expert-Level Skills"}
-          marginSection={marginSection}
-          fontSizeSecTitle={fontSizeSecTitle}
-          sectionTitlePaddingTop={sectionTitlePaddingTop}
-          sectionTitleMarginBottom={sectionTitleMarginBottom}
-        >
-          <div style={{ fontSize: fontSizeBody, lineHeight: lineHeightSkills }}>
-            {(displaySkills.languages || []).length > 0 && (
-              <div style={{ display: "flex", flexDirection: "row", marginBottom: skillLineMarginBottom }}>
-                <span style={{ fontWeight: "bold", color: "#1a202c", marginRight: "4px" }}>Languages:</span>
-                <span style={{ color: "#2d3748" }}>{displaySkills.languages.join(", ")}</span>
-              </div>
-            )}
-            {(displaySkills.frameworks || []).length > 0 && (
-              <div style={{ display: "flex", flexDirection: "row", marginBottom: skillLineMarginBottom }}>
-                <span style={{ fontWeight: "bold", color: "#1a202c", marginRight: "4px" }}>Frameworks:</span>
-                <span style={{ color: "#2d3748" }}>{displaySkills.frameworks.join(", ")}</span>
-              </div>
-            )}
-            {(displaySkills.tools || []).length > 0 && (
-              <div style={{ display: "flex", flexDirection: "row", marginBottom: skillLineMarginBottom }}>
-                <span style={{ fontWeight: "bold", color: "#1a202c", marginRight: "4px" }}>Tools &amp; Cloud:</span>
-                <span style={{ color: "#2d3748" }}>{displaySkills.tools.join(", ")}</span>
-              </div>
-            )}
-          </div>
-        </Section>
+        <div className={`relative ${generatingStates?.skills || generatingStates?.isTailoring ? 'ai-generating-container' : ''}`}>
+          {(generatingStates?.skills || generatingStates?.isTailoring) && <div className="ai-generating-line no-print" />}
+          <Section 
+            title={mode === "specialized" ? "Technical Skills" : "Expert-Level Skills"}
+            marginSection={marginSection}
+            fontSizeSecTitle={fontSizeSecTitle}
+            sectionTitlePaddingTop={sectionTitlePaddingTop}
+            sectionTitleMarginBottom={sectionTitleMarginBottom}
+          >
+            <div style={{ fontSize: fontSizeBody, lineHeight: lineHeightSkills }}>
+              {(displaySkills.languages || []).length > 0 && (
+                <div style={{ display: "flex", flexDirection: "row", marginBottom: skillLineMarginBottom }}>
+                  <span style={{ fontWeight: "bold", color: "#1a202c", marginRight: "4px" }}>Languages:</span>
+                  <span style={{ color: "#2d3748" }}>{displaySkills.languages.join(", ")}</span>
+                </div>
+              )}
+              {(displaySkills.frameworks || []).length > 0 && (
+                <div style={{ display: "flex", flexDirection: "row", marginBottom: skillLineMarginBottom }}>
+                  <span style={{ fontWeight: "bold", color: "#1a202c", marginRight: "4px" }}>Frameworks:</span>
+                  <span style={{ color: "#2d3748" }}>{displaySkills.frameworks.join(", ")}</span>
+                </div>
+              )}
+              {(displaySkills.tools || []).length > 0 && (
+                <div style={{ display: "flex", flexDirection: "row", marginBottom: skillLineMarginBottom }}>
+                  <span style={{ fontWeight: "bold", color: "#1a202c", marginRight: "4px" }}>Tools &amp; Cloud:</span>
+                  <span style={{ color: "#2d3748" }}>{displaySkills.tools.join(", ")}</span>
+                </div>
+              )}
+            </div>
+          </Section>
+        </div>
       )}
 
       {/* Professional Experience */}
@@ -391,51 +408,55 @@ function FormalTemplate({
           sectionTitleMarginBottom={sectionTitleMarginBottom}
         >
           <div style={{ display: "flex", flexDirection: "column", gap: entryGap }}>
-            {cleanExperience.map((exp, idx) => (
-              <div key={idx}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "baseline",
-                  }}
-                >
-                  <span style={{ fontSize: fontSizeEntryHeader, fontWeight: "bold", color: "#1a202c" }}>
-                    {exp.title}
-                  </span>
-                  <span style={{ fontSize: fontSizePeriod, fontWeight: "bold", color: "#1a202c", whiteSpace: "nowrap", marginLeft: "8px" }}>
-                    {exp.period}
-                  </span>
-                </div>
-                <div style={{ fontSize: fontSizeSub, color: "#4a5568", marginBottom: score > 35 ? "1px" : "3px" }}>
-                  {exp.company}
-                </div>
-                {exp.bullets.length > 0 && (
-                  <ul
+            {cleanExperience.map((exp, idx) => {
+              const isGenerating = generatingStates?.experienceIndex === idx || generatingStates?.isTailoring;
+              return (
+                <div key={idx} className={`relative ${isGenerating ? 'ai-generating-container' : ''}`}>
+                  {isGenerating && <div className="ai-generating-line no-print" />}
+                  <div
                     style={{
-                      margin: "2px 0 0 14px",
-                      padding: 0,
-                      listStyleType: "disc",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "baseline",
                     }}
                   >
-                    {exp.bullets.map((bullet, bIdx) => (
-                      <li
-                        key={bIdx}
-                        style={{
-                          fontSize: fontSizeBody,
-                          lineHeight: lineHeightBody,
-                          color: "#2d3748",
-                          marginBottom: bulletMarginBottom,
-                          wordBreak: "break-word",
-                        }}
-                      >
-                        {bullet}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            ))}
+                    <span style={{ fontSize: fontSizeEntryHeader, fontWeight: "bold", color: "#1a202c" }}>
+                      {exp.title}
+                    </span>
+                    <span style={{ fontSize: fontSizePeriod, fontWeight: "bold", color: "#1a202c", whiteSpace: "nowrap", marginLeft: "8px" }}>
+                      {exp.period}
+                    </span>
+                  </div>
+                  <div style={{ fontSize: fontSizeSub, color: "#4a5568", marginBottom: score > 35 ? "1px" : "3px" }}>
+                    {exp.company}
+                  </div>
+                  {exp.bullets.length > 0 && (
+                    <ul
+                      style={{
+                        margin: "2px 0 0 14px",
+                        padding: 0,
+                        listStyleType: "disc",
+                      }}
+                    >
+                      {exp.bullets.map((bullet, bIdx) => (
+                        <li
+                          key={bIdx}
+                          style={{
+                            fontSize: fontSizeBody,
+                            lineHeight: lineHeightBody,
+                            color: "#2d3748",
+                            marginBottom: bulletMarginBottom,
+                            wordBreak: "break-word",
+                          }}
+                        >
+                          {bullet}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </Section>
       )}
@@ -450,185 +471,200 @@ function FormalTemplate({
           sectionTitleMarginBottom={sectionTitleMarginBottom}
         >
           <div style={{ display: "flex", flexDirection: "column", gap: entryGap }}>
-            {includedProjects.map((project, idx) => (
-              <div key={idx}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "baseline",
-                  }}
-                >
-                  {project.githubUrl || project.liveUrl ? (
-                    <a
-                      href={project.githubUrl || project.liveUrl || "#"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ fontSize: fontSizeEntryHeader, fontWeight: "bold", textDecoration: "underline", color: "#1a202c" }}
-                      className="hover:text-blue-600 transition-colors"
-                    >
-                      {project.title || "Untitled Project"}
-                    </a>
-                  ) : (
-                    <span style={{ fontSize: fontSizeEntryHeader, fontWeight: "bold", color: "#1a202c" }}>
-                      {project.title || "Untitled Project"}
-                    </span>
-                  )}
-                  <span
-                    style={{
-                      fontSize: score > 48 ? "7.5pt" : "8pt",
-                      fontStyle: "italic",
-                      color: "#4a5568",
-                      whiteSpace: "nowrap",
-                      marginLeft: "8px",
-                    }}
-                  >
-                    {Array.isArray(project.techStack)
-                      ? project.techStack.slice(0, 4).join(", ")
-                      : typeof project.techStack === "string"
-                      ? project.techStack
-                      : ""}
-                  </span>
-                </div>
-                {project.description && (
+            {includedProjects.map((project, idx) => {
+              const isGenerating = generatingStates?.projectIndex === idx || generatingStates?.isTailoring;
+              return (
+                <div key={idx} className={`relative ${isGenerating ? 'ai-generating-container' : ''}`}>
+                  {isGenerating && <div className="ai-generating-line no-print" />}
                   <div
                     style={{
-                      fontSize: fontSizeBody,
-                      color: "#2d3748",
-                      marginBottom: score > 35 ? "1px" : "3px",
-                      marginTop: "2px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "baseline",
                     }}
                   >
-                    {project.description}
-                  </div>
-                )}
-                {project.highlights.length > 0 && (
-                  <ul
-                    style={{
-                      margin: "2px 0 0 14px",
-                      padding: 0,
-                      listStyleType: "disc",
-                    }}
-                  >
-                    {project.highlights.map((bullet, bIdx) => (
-                      <li
-                        key={bIdx}
-                        style={{
-                          fontSize: fontSizeBody,
-                          lineHeight: lineHeightBody,
-                          color: "#2d3748",
-                          marginBottom: bulletMarginBottom,
-                          wordBreak: "break-word",
-                        }}
+                    {project.githubUrl || project.liveUrl ? (
+                      <a
+                        href={project.githubUrl || project.liveUrl || "#"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ fontSize: fontSizeEntryHeader, fontWeight: "bold", textDecoration: "underline", color: "#1a202c" }}
+                        className="hover:text-blue-600 transition-colors"
                       >
-                        {bullet}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            ))}
+                        {project.title || "Untitled Project"}
+                      </a>
+                    ) : (
+                      <span style={{ fontSize: fontSizeEntryHeader, fontWeight: "bold", color: "#1a202c" }}>
+                        {project.title || "Untitled Project"}
+                      </span>
+                    )}
+                    <span
+                      style={{
+                        fontSize: score > 48 ? "7.5pt" : "8pt",
+                        fontStyle: "italic",
+                        color: "#4a5568",
+                        whiteSpace: "nowrap",
+                        marginLeft: "8px",
+                      }}
+                    >
+                      {Array.isArray(project.techStack)
+                        ? project.techStack.slice(0, 4).join(", ")
+                        : typeof project.techStack === "string"
+                        ? project.techStack
+                        : ""}
+                    </span>
+                  </div>
+                  {project.description && (
+                    <div
+                      style={{
+                        fontSize: fontSizeBody,
+                        color: "#2d3748",
+                        marginBottom: score > 35 ? "1px" : "3px",
+                        marginTop: "2px",
+                      }}
+                    >
+                      {project.description}
+                    </div>
+                  )}
+                  {project.highlights.length > 0 && (
+                    <ul
+                      style={{
+                        margin: "2px 0 0 14px",
+                        padding: 0,
+                        listStyleType: "disc",
+                      }}
+                    >
+                      {project.highlights.map((bullet, bIdx) => {
+                        const isBulletRewriting = generatingStates?.rewritingBullet === `${idx}-${bIdx}`;
+                        return (
+                          <li
+                            key={bIdx}
+                            className={`relative ${isBulletRewriting ? 'ai-generating-container' : ''}`}
+                            style={{
+                              fontSize: fontSizeBody,
+                              lineHeight: lineHeightBody,
+                              color: "#2d3748",
+                              marginBottom: bulletMarginBottom,
+                              wordBreak: "break-word",
+                            }}
+                          >
+                            {isBulletRewriting && <div className="ai-generating-line no-print" />}
+                            {bullet}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </Section>
       )}
 
       {/* Education */}
       {data.education.length > 0 && (
-        <Section 
-          title="Education"
-          marginSection={marginSection}
-          fontSizeSecTitle={fontSizeSecTitle}
-          sectionTitlePaddingTop={sectionTitlePaddingTop}
-          sectionTitleMarginBottom={sectionTitleMarginBottom}
-        >
-          <div style={{ display: "flex", flexDirection: "column", gap: entryGap }}>
-            {data.education.map((edu, idx) => (
-              <div key={idx}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "baseline",
-                  }}
-                >
-                  <span style={{ fontSize: fontSizeEntryHeader, fontWeight: "bold", color: "#1a202c" }}>
-                    {edu.degree}
-                  </span>
-                  <span style={{ fontSize: fontSizePeriod, fontWeight: "bold", color: "#1a202c" }}>
-                    {edu.current 
-                      ? (edu.year && edu.year.toLowerCase().includes("expected")
-                        ? edu.year
-                        : `Expected ${edu.year || "Present"}`)
-                      : edu.year}
-                  </span>
-                </div>
-                <div style={{ fontSize: fontSizeSub, color: "#4a5568" }}>
-                  {edu.school}
-                  {edu.gpa && (
-                    ` • ${
-                      (edu as any).gpaType === "percentage"
-                        ? `Percentage: ${edu.gpa}${edu.gpa.includes('%') ? '' : '%'}`
-                        : (edu as any).gpaType === "cgpa"
-                          ? `CGPA: ${edu.gpa}`
-                          : `GPA: ${edu.gpa}`
-                    }`
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </Section>
-      )}
-
-      {/* Achievements */}
-      {data.achievements &&
-        data.achievements.some((a) => a.trim()) && (
+        <div className={`relative ${generatingStates?.isTailoring ? 'ai-generating-container' : ''}`}>
+          {generatingStates?.isTailoring && <div className="ai-generating-line no-print" />}
           <Section 
-            title="Achievements &amp; Certifications"
+            title="Education"
             marginSection={marginSection}
             fontSizeSecTitle={fontSizeSecTitle}
             sectionTitlePaddingTop={sectionTitlePaddingTop}
             sectionTitleMarginBottom={sectionTitleMarginBottom}
           >
-            <div style={{ display: "flex", flexDirection: "column", gap: bulletMarginBottom }}>
-              {data.achievements
-                .filter((a) => a.trim())
-                .slice(0, 4)
-                .map((ach, idx) => {
-                  const { title, date, url } = parseAchievementString(ach);
-                  const href = url ? (url.startsWith("http") ? url : `https://${url}`) : null;
-                  return (
-                    <div key={idx} style={{ display: "flex", alignItems: "baseline" }}>
-                      <span style={{ fontSize: fontSizeBody, marginRight: "6px", color: "#2d3748" }}>•</span>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flex: 1 }}>
-                        <span style={{ fontSize: fontSizeBody, color: "#2d3748" }}>
-                          {title}
-                          {href && (
-                            <>
-                              {" "}
-                              <a
-                                href={href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{ textDecoration: "underline", color: "#1a0dab", fontWeight: "bold" }}
-                                className="hover:text-blue-600 transition-colors"
-                              >
-                                [Link]
-                              </a>
-                            </>
-                          )}
-                        </span>
-                        {date && (
-                          <span style={{ fontSize: fontSizeBody, fontWeight: "bold", color: "#1a202c", whiteSpace: "nowrap", marginLeft: "10px" }}>
-                            {date}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
+            <div style={{ display: "flex", flexDirection: "column", gap: entryGap }}>
+              {data.education.map((edu, idx) => (
+                <div key={idx}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "baseline",
+                    }}
+                  >
+                    <span style={{ fontSize: fontSizeEntryHeader, fontWeight: "bold", color: "#1a202c" }}>
+                      {edu.degree}
+                    </span>
+                    <span style={{ fontSize: fontSizePeriod, fontWeight: "bold", color: "#1a202c" }}>
+                      {edu.current 
+                        ? (edu.year && edu.year.toLowerCase().includes("expected")
+                          ? edu.year
+                          : `Expected ${edu.year || "Present"}`)
+                        : edu.year}
+                    </span>
+                  </div>
+                  <div style={{ fontSize: fontSizeSub, color: "#4a5568" }}>
+                    {edu.school}
+                    {edu.gpa && (
+                      ` • ${
+                        (edu as any).gpaType === "percentage"
+                          ? `Percentage: ${edu.gpa}${edu.gpa.includes('%') ? '' : '%'}`
+                          : (edu as any).gpaType === "cgpa"
+                            ? `CGPA: ${edu.gpa}`
+                            : `GPA: ${edu.gpa}`
+                      }`
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           </Section>
+        </div>
+      )}
+
+      {/* Achievements */}
+      {data.achievements &&
+        data.achievements.some((a) => a.trim()) && (
+          <div className={`relative ${generatingStates?.isTailoring ? 'ai-generating-container' : ''}`}>
+            {generatingStates?.isTailoring && <div className="ai-generating-line no-print" />}
+            <Section 
+              title="Achievements &amp; Certifications"
+              marginSection={marginSection}
+              fontSizeSecTitle={fontSizeSecTitle}
+              sectionTitlePaddingTop={sectionTitlePaddingTop}
+              sectionTitleMarginBottom={sectionTitleMarginBottom}
+            >
+              <div style={{ display: "flex", flexDirection: "column", gap: bulletMarginBottom }}>
+                {data.achievements
+                  .filter((a) => a.trim())
+                  .slice(0, 4)
+                  .map((ach, idx) => {
+                    const { title, date, url } = parseAchievementString(ach);
+                    const href = url ? (url.startsWith("http") ? url : `https://${url}`) : null;
+                    return (
+                      <div key={idx} style={{ display: "flex", alignItems: "baseline" }}>
+                        <span style={{ fontSize: fontSizeBody, marginRight: "6px", color: "#2d3748" }}>•</span>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flex: 1 }}>
+                          <span style={{ fontSize: fontSizeBody, color: "#2d3748" }}>
+                            {title}
+                            {href && (
+                              <>
+                                {" "}
+                                <a
+                                  href={href}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{ textDecoration: "underline", color: "#1a0dab", fontWeight: "bold" }}
+                                  className="hover:text-blue-600 transition-colors"
+                                >
+                                  [Link]
+                                </a>
+                              </>
+                            )}
+                          </span>
+                          {date && (
+                            <span style={{ fontSize: fontSizeBody, fontWeight: "bold", color: "#1a202c", whiteSpace: "nowrap", marginLeft: "10px" }}>
+                              {date}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            </Section>
+          </div>
         )}
     </div>
   );
@@ -673,9 +709,11 @@ function Section({
 function MinimalTemplate({
   data,
   projects,
+  generatingStates,
 }: {
   data: CVData;
   projects: ProjectData[];
+  generatingStates?: ResumePreviewProps["generatingStates"];
 }) {
   return (
     <div
@@ -693,35 +731,41 @@ function MinimalTemplate({
         </div>
       </header>
 
-      <section className="mb-8">
+      <section className={`relative mb-8 ${generatingStates?.experienceIndex !== null || generatingStates?.isTailoring ? 'ai-generating-container' : ''}`}>
+        {(generatingStates?.experienceIndex !== null || generatingStates?.isTailoring) && <div className="ai-generating-line no-print" />}
         <h2 className="text-xl font-bold border-b border-black mb-4 pb-1 uppercase tracking-wider">
           Experience
         </h2>
         <div className="space-y-6">
-          {data.experience.map((exp, idx) => (
-            <div key={idx}>
-              <div className="flex justify-between items-baseline mb-1">
-                <h3 className="text-lg font-bold">{exp.title}</h3>
-                <span className="text-sm font-semibold italic text-neutral-600">
-                  {exp.period}
-                </span>
+          {data.experience.map((exp, idx) => {
+            const isGenerating = generatingStates?.experienceIndex === idx || generatingStates?.isTailoring;
+            return (
+              <div key={idx} className={`relative ${isGenerating ? 'ai-generating-container' : ''}`}>
+                {isGenerating && <div className="ai-generating-line no-print" />}
+                <div className="flex justify-between items-baseline mb-1">
+                  <h3 className="text-lg font-bold">{exp.title}</h3>
+                  <span className="text-sm font-semibold italic text-neutral-600">
+                    {exp.period}
+                  </span>
+                </div>
+                <ul className="list-disc pl-5 space-y-1">
+                  {(exp.bullets || []).map((bullet, bIdx) => (
+                    <li
+                      key={bIdx}
+                      className="text-[11pt] leading-relaxed text-gray-800"
+                    >
+                      {bullet}
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <ul className="list-disc pl-5 space-y-1">
-                {(exp.bullets || []).map((bullet, bIdx) => (
-                  <li
-                    key={bIdx}
-                    className="text-[11pt] leading-relaxed text-gray-800"
-                  >
-                    {bullet}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
-      <section>
+      <section className={`relative ${generatingStates?.skills || generatingStates?.isTailoring ? 'ai-generating-container' : ''}`}>
+        {(generatingStates?.skills || generatingStates?.isTailoring) && <div className="ai-generating-line no-print" />}
         <h2 className="text-xl font-bold border-b border-black mb-4 pb-1 uppercase tracking-wider">
           Skills
         </h2>

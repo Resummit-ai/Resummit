@@ -2642,6 +2642,14 @@ export function EditorClient({
             projects={projects} 
             template="formal"
             mode={mode}
+            generatingStates={{
+              summary: regeneratingSummary,
+              skills: suggestingSkills,
+              experienceIndex: generatingExpBullets,
+              projectIndex: generatingProjectFromReadme,
+              rewritingBullet: rewritingBullet,
+              isTailoring: isTailoring,
+            }}
           />
         </div>
       </div>
