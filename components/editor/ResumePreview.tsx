@@ -2,6 +2,7 @@
 
 import { CVData, CVExperience, CVEducation, CVSkills, ProjectData } from "@/lib/types";
 import { normalizeAndDedupeSkills, formatLinkedIn, formatGitHub } from "@/lib/skills-data";
+import { AITextTransform } from "./AITextTransform";
 
 interface ResumePreviewProps {
   data: CVData;
@@ -357,10 +358,12 @@ function FormalTemplate({
             sectionTitleMarginBottom={sectionTitleMarginBottom}
           >
             <p 
-              className={generatingStates?.summary || generatingStates?.isTailoring ? 'ai-generating-text' : ''}
               style={{ fontSize: fontSizeSummary, lineHeight: lineHeightSummary, color: "#2d3748" }}
             >
-              {displaySummary}
+              <AITextTransform 
+                text={displaySummary} 
+                isGenerating={generatingStates?.summary || generatingStates?.isTailoring} 
+              />
             </p>
           </Section>
         </div>
@@ -379,30 +382,36 @@ function FormalTemplate({
           >
             <div style={{ fontSize: fontSizeBody, lineHeight: lineHeightSkills }}>
               {(displaySkills.languages || []).length > 0 && (
-                <div 
-                  className={generatingStates?.skills || generatingStates?.isTailoring ? 'ai-generating-text' : ''}
-                  style={{ display: "flex", flexDirection: "row", marginBottom: skillLineMarginBottom }}
-                >
+                <div style={{ display: "flex", flexDirection: "row", marginBottom: skillLineMarginBottom }}>
                   <span style={{ fontWeight: "bold", color: "#1a202c", marginRight: "4px" }}>Languages:</span>
-                  <span style={{ color: "#2d3748" }}>{displaySkills.languages.join(", ")}</span>
+                  <span style={{ color: "#2d3748" }}>
+                    <AITextTransform 
+                      text={displaySkills.languages.join(", ")} 
+                      isGenerating={generatingStates?.skills || generatingStates?.isTailoring} 
+                    />
+                  </span>
                 </div>
               )}
               {(displaySkills.frameworks || []).length > 0 && (
-                <div 
-                  className={generatingStates?.skills || generatingStates?.isTailoring ? 'ai-generating-text' : ''}
-                  style={{ display: "flex", flexDirection: "row", marginBottom: skillLineMarginBottom }}
-                >
+                <div style={{ display: "flex", flexDirection: "row", marginBottom: skillLineMarginBottom }}>
                   <span style={{ fontWeight: "bold", color: "#1a202c", marginRight: "4px" }}>Frameworks:</span>
-                  <span style={{ color: "#2d3748" }}>{displaySkills.frameworks.join(", ")}</span>
+                  <span style={{ color: "#2d3748" }}>
+                    <AITextTransform 
+                      text={displaySkills.frameworks.join(", ")} 
+                      isGenerating={generatingStates?.skills || generatingStates?.isTailoring} 
+                    />
+                  </span>
                 </div>
               )}
               {(displaySkills.tools || []).length > 0 && (
-                <div 
-                  className={generatingStates?.skills || generatingStates?.isTailoring ? 'ai-generating-text' : ''}
-                  style={{ display: "flex", flexDirection: "row", marginBottom: skillLineMarginBottom }}
-                >
+                <div style={{ display: "flex", flexDirection: "row", marginBottom: skillLineMarginBottom }}>
                   <span style={{ fontWeight: "bold", color: "#1a202c", marginRight: "4px" }}>Tools &amp; Cloud:</span>
-                  <span style={{ color: "#2d3748" }}>{displaySkills.tools.join(", ")}</span>
+                  <span style={{ color: "#2d3748" }}>
+                    <AITextTransform 
+                      text={displaySkills.tools.join(", ")} 
+                      isGenerating={generatingStates?.skills || generatingStates?.isTailoring} 
+                    />
+                  </span>
                 </div>
               )}
             </div>
@@ -433,23 +442,20 @@ function FormalTemplate({
                     }}
                   >
                     <span 
-                      className={isGenerating ? 'ai-generating-text' : ''}
                       style={{ fontSize: fontSizeEntryHeader, fontWeight: "bold", color: "#1a202c" }}
                     >
-                      {exp.title}
+                      <AITextTransform text={exp.title} isGenerating={isGenerating} />
                     </span>
                     <span 
-                      className={isGenerating ? 'ai-generating-text' : ''}
                       style={{ fontSize: fontSizePeriod, fontWeight: "bold", color: "#1a202c", whiteSpace: "nowrap", marginLeft: "8px" }}
                     >
-                      {exp.period}
+                      <AITextTransform text={exp.period} isGenerating={isGenerating} />
                     </span>
                   </div>
                   <div 
-                    className={isGenerating ? 'ai-generating-text' : ''}
                     style={{ fontSize: fontSizeSub, color: "#4a5568", marginBottom: score > 35 ? "1px" : "3px" }}
                   >
-                    {exp.company}
+                    <AITextTransform text={exp.company} isGenerating={isGenerating} />
                   </div>
                   {exp.bullets.length > 0 && (
                     <ul
@@ -462,7 +468,6 @@ function FormalTemplate({
                       {exp.bullets.map((bullet, bIdx) => (
                         <li
                           key={bIdx}
-                          className={isGenerating ? 'ai-generating-text' : ''}
                           style={{
                             fontSize: fontSizeBody,
                             lineHeight: lineHeightBody,
@@ -471,7 +476,7 @@ function FormalTemplate({
                             wordBreak: "break-word",
                           }}
                         >
-                          {bullet}
+                          <AITextTransform text={bullet} isGenerating={isGenerating} />
                         </li>
                       ))}
                     </ul>
@@ -511,20 +516,18 @@ function FormalTemplate({
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{ fontSize: fontSizeEntryHeader, fontWeight: "bold", textDecoration: "underline", color: "#1a202c" }}
-                        className={`hover:text-blue-600 transition-colors ${isGenerating ? 'ai-generating-text' : ''}`}
+                        className="hover:text-blue-600 transition-colors"
                       >
-                        {project.title || "Untitled Project"}
+                        <AITextTransform text={project.title || "Untitled Project"} isGenerating={isGenerating} />
                       </a>
                     ) : (
                       <span 
-                        className={isGenerating ? 'ai-generating-text' : ''}
                         style={{ fontSize: fontSizeEntryHeader, fontWeight: "bold", color: "#1a202c" }}
                       >
-                        {project.title || "Untitled Project"}
+                        <AITextTransform text={project.title || "Untitled Project"} isGenerating={isGenerating} />
                       </span>
                     )}
                     <span
-                      className={isGenerating ? 'ai-generating-text' : ''}
                       style={{
                         fontSize: score > 48 ? "7.5pt" : "8pt",
                         fontStyle: "italic",
@@ -533,16 +536,18 @@ function FormalTemplate({
                         marginLeft: "8px",
                       }}
                     >
-                      {Array.isArray(project.techStack)
-                        ? project.techStack.slice(0, 4).join(", ")
-                        : typeof project.techStack === "string"
-                        ? project.techStack
-                        : ""}
+                      <AITextTransform 
+                        text={Array.isArray(project.techStack)
+                          ? project.techStack.slice(0, 4).join(", ")
+                          : typeof project.techStack === "string"
+                          ? project.techStack
+                          : ""} 
+                        isGenerating={isGenerating} 
+                      />
                     </span>
                   </div>
                   {project.description && (
                     <div
-                      className={isGenerating ? 'ai-generating-text' : ''}
                       style={{
                         fontSize: fontSizeBody,
                         color: "#2d3748",
@@ -550,7 +555,7 @@ function FormalTemplate({
                         marginTop: "2px",
                       }}
                     >
-                      {project.description}
+                      <AITextTransform text={project.description} isGenerating={isGenerating} />
                     </div>
                   )}
                   {project.highlights.length > 0 && (
@@ -566,7 +571,6 @@ function FormalTemplate({
                         return (
                           <li
                             key={bIdx}
-                            className={`relative overflow-hidden ${isGenerating || isBulletRewriting ? 'ai-generating-text' : ''} ${isBulletRewriting ? 'ai-generating-container' : ''}`}
                             style={{
                               fontSize: fontSizeBody,
                               lineHeight: lineHeightBody,
@@ -575,8 +579,7 @@ function FormalTemplate({
                               wordBreak: "break-word",
                             }}
                           >
-                            {isBulletRewriting && <div className="ai-generating-overlay no-print" />}
-                            {bullet}
+                            <AITextTransform text={bullet} isGenerating={isGenerating || isBulletRewriting} />
                           </li>
                         );
                       })}
@@ -611,35 +614,40 @@ function FormalTemplate({
                     }}
                   >
                     <span 
-                      className={generatingStates?.isTailoring ? 'ai-generating-text' : ''}
                       style={{ fontSize: fontSizeEntryHeader, fontWeight: "bold", color: "#1a202c" }}
                     >
-                      {edu.degree}
+                      <AITextTransform text={edu.degree} isGenerating={generatingStates?.isTailoring} />
                     </span>
                     <span 
-                      className={generatingStates?.isTailoring ? 'ai-generating-text' : ''}
                       style={{ fontSize: fontSizePeriod, fontWeight: "bold", color: "#1a202c" }}
                     >
-                      {edu.current 
-                        ? (edu.year && edu.year.toLowerCase().includes("expected")
-                          ? edu.year
-                          : `Expected ${edu.year || "Present"}`)
-                        : edu.year}
+                      <AITextTransform 
+                        text={edu.current 
+                          ? (edu.year && edu.year.toLowerCase().includes("expected")
+                            ? edu.year
+                            : `Expected ${edu.year || "Present"}`)
+                          : edu.year} 
+                        isGenerating={generatingStates?.isTailoring} 
+                      />
                     </span>
                   </div>
                   <div 
-                    className={generatingStates?.isTailoring ? 'ai-generating-text' : ''}
                     style={{ fontSize: fontSizeSub, color: "#4a5568" }}
                   >
-                    {edu.school}
+                    <AITextTransform text={edu.school} isGenerating={generatingStates?.isTailoring} />
                     {edu.gpa && (
-                      ` • ${
-                        (edu as any).gpaType === "percentage"
-                          ? `Percentage: ${edu.gpa}${edu.gpa.includes('%') ? '' : '%'}`
-                          : (edu as any).gpaType === "cgpa"
-                            ? `CGPA: ${edu.gpa}`
-                            : `GPA: ${edu.gpa}`
-                      }`
+                      <>
+                        {" • "}
+                        <AITextTransform 
+                          text={(edu as any).gpaType === "percentage"
+                            ? `Percentage: ${edu.gpa}${edu.gpa.includes('%') ? '' : '%'}`
+                            : (edu as any).gpaType === "cgpa"
+                              ? `CGPA: ${edu.gpa}`
+                              : `GPA: ${edu.gpa}`
+                          } 
+                          isGenerating={generatingStates?.isTailoring} 
+                        />
+                      </>
                     )}
                   </div>
                 </div>
@@ -671,17 +679,15 @@ function FormalTemplate({
                     return (
                       <div key={idx} style={{ display: "flex", alignItems: "baseline" }}>
                         <span 
-                          className={generatingStates?.isTailoring ? 'ai-generating-text' : ''}
                           style={{ fontSize: fontSizeBody, marginRight: "6px", color: "#2d3748" }}
                         >
                           •
                         </span>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flex: 1 }}>
                           <span 
-                            className={generatingStates?.isTailoring ? 'ai-generating-text' : ''}
                             style={{ fontSize: fontSizeBody, color: "#2d3748" }}
                           >
-                            {title}
+                            <AITextTransform text={title} isGenerating={generatingStates?.isTailoring} />
                             {href && (
                               <>
                                 {" "}
@@ -699,10 +705,9 @@ function FormalTemplate({
                           </span>
                           {date && (
                             <span 
-                              className={generatingStates?.isTailoring ? 'ai-generating-text' : ''}
                               style={{ fontSize: fontSizeBody, fontWeight: "bold", color: "#1a202c", whiteSpace: "nowrap", marginLeft: "10px" }}
                             >
-                              {date}
+                              <AITextTransform text={date} isGenerating={generatingStates?.isTailoring} />
                             </span>
                           )}
                         </div>
