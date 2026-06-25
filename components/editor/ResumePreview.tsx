@@ -387,7 +387,7 @@ function FormalTemplate({
       </header>
 
       {/* Professional Summary */}
-      {displaySummary && (
+      {(displaySummary || suggestions?.summary || generatingStates?.summary || generatingStates?.isTailoring) && (
         <div className={`relative overflow-hidden ${generatingStates?.summary || generatingStates?.isTailoring ? 'ai-generating-container' : ''}`}>
           {(generatingStates?.summary || generatingStates?.isTailoring) && <div className="ai-generating-overlay no-print" />}
           <Section 

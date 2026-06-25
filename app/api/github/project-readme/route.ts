@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { prisma, resolveUserId } from "@/lib/server/prisma";
 import { fetchRepoReadme } from "@/lib/github";
 import { callAI, safeParseJSON } from "@/lib/aiService";
+import { decryptToken } from "@/lib/server/crypto";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
@@ -28,10 +29,11 @@ export async function POST(req: Request) {
       where: { userId }
     });
 
-    const token = (session.user as any).accessToken || githubData?.accessToken;
-    if (!token) {
+    const rawToken = (session.user as any).accessToken || githubData?.accessToken;
+    if (!rawToken) {
       return NextResponse.json({ error: "GitHub account not connected" }, { status: 400 });
     }
+    const token = decryptToken(rawToken);
 
     // Attempt to discover repository owner login from the stored list
     let ownerLogin = "";

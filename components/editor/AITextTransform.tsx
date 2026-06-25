@@ -87,6 +87,8 @@ export function AITextTransform({
   const [isAccepting, setIsAccepting] = useState(false);
   const [success, setSuccess] = useState(false);
   const prevSuggestionRef = useRef<string | undefined>(undefined);
+  const wasGeneratingRef = useRef(isGenerating);
+  const lastTextRef = useRef(text);
 
   const containerRef = useRef<HTMLSpanElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -97,23 +99,45 @@ export function AITextTransform({
     // If in the middle of accepting, ignore prop changes until finished
     if (isAccepting) return;
 
+    // Case 1: AI finished generating and text changed directly (direct update)
+    if (wasGeneratingRef.current && !isGenerating && text !== lastTextRef.current && !suggestion) {
+      setOldText(lastTextRef.current);
+      setDisplayState("animating");
+      const timer = setTimeout(() => {
+        setDisplayState("idle");
+      }, 1500);
+      lastTextRef.current = text;
+      wasGeneratingRef.current = isGenerating;
+      return () => clearTimeout(timer);
+    }
+
+    // Case 2: A new suggestion arrived (suggestion flow)
     if (suggestion && suggestion !== prevSuggestionRef.current) {
       setOldText(text);
       setDisplayState("animating");
-
       const timer = setTimeout(() => {
         setDisplayState("pending");
-      }, 1500); // matches the full animation timeline
-
+      }, 1500);
       prevSuggestionRef.current = suggestion;
+      wasGeneratingRef.current = isGenerating;
+      lastTextRef.current = text;
       return () => clearTimeout(timer);
-    } else if (!suggestion && prevSuggestionRef.current) {
+    } 
+    
+    // Case 3: Suggestion cleared
+    if (!suggestion && prevSuggestionRef.current) {
       setDisplayState("idle");
       setIsAccepting(false);
       setSuccess(false);
       prevSuggestionRef.current = undefined;
     }
-  }, [suggestion, text, isAccepting]);
+
+    // Keep refs up-to-date
+    wasGeneratingRef.current = isGenerating;
+    if (!isGenerating) {
+      lastTextRef.current = text;
+    }
+  }, [suggestion, text, isGenerating, isAccepting]);
 
   // Canvas particle dissolve sweep loop
   useEffect(() => {

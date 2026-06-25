@@ -5,6 +5,7 @@ import { suggestSkillsFromGitHub } from "@/lib/aiService";
 import { extractDeterministicSkills, fetchUserRepos, discoverSkillsFromGitHubCodebases } from "@/lib/github";
 import { SKILL_CATEGORIES } from "@/lib/skills-data";
 import { runSmartSync } from "@/lib/suggestionEngine";
+import { decryptToken } from "@/lib/server/crypto";
 import { z } from "zod";
 
 export const runtime = "nodejs";
@@ -32,7 +33,8 @@ export async function POST(req: Request) {
       select: { repositories: true, accessToken: true }
     });
 
-    const token = (session?.user as any)?.accessToken || githubData?.accessToken;
+    const rawToken = (session?.user as any)?.accessToken || githubData?.accessToken;
+    const token = rawToken ? decryptToken(rawToken) : null;
     let repos: any[] = [];
     
     if (token) {

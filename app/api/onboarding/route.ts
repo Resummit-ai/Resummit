@@ -3,6 +3,7 @@ import { prisma, resolveUserId } from "@/lib/server/prisma";
 import { NextResponse } from "next/server";
 import { generateCVFromRepos } from "@/lib/aiService";
 import { generateEngineeringSignals } from "@/lib/server/githubIntelligence";
+import { encryptToken } from "@/lib/server/crypto";
 import axios from "axios";
 
 export const runtime = "nodejs";
@@ -102,6 +103,9 @@ export async function POST(req: Request) {
     // 3. Generate Signals & Intelligence
     const signals = await generateEngineeringSignals(repos, role);
 
+    const rawToken = (session?.user as any)?.accessToken;
+    const encryptedToken = rawToken ? encryptToken(rawToken) : null;
+
     // 4. Save repositories to GitHubData
     await prisma.gitHubData.upsert({
       where: { userId: user.id },
@@ -109,13 +113,13 @@ export async function POST(req: Request) {
         userId: user.id,
         repositories: repos,
         signals: signals as any,
-        accessToken: (session?.user as any)?.accessToken || null,
+        accessToken: encryptedToken,
         lastSyncedAt: new Date(),
       },
       update: {
         repositories: repos,
         signals: signals as any,
-        accessToken: (session?.user as any)?.accessToken || null,
+        accessToken: encryptedToken,
         lastSyncedAt: new Date(),
       }
     });

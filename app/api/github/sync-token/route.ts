@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { prisma, resolveUserId } from "@/lib/server/prisma";
+import { encryptToken } from "@/lib/server/crypto";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -19,12 +20,14 @@ export async function POST(req: Request) {
 
     console.log("[GITHUB] sync-token: syncing token for resolved userId:", userId);
 
+    const encryptedToken = accessToken ? encryptToken(accessToken) : null;
+
     await prisma.gitHubData.upsert({
       where: { userId },
-      update: { accessToken },
+      update: { accessToken: encryptedToken },
       create: {
         userId,
-        accessToken,
+        accessToken: encryptedToken,
         repositories: [],
         signals: {},
       }
