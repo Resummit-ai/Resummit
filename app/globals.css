@@ -254,6 +254,24 @@ body {
   }
 }
 
+@keyframes text-shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+@keyframes ai-shimmer-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 .ai-generating-container {
   animation: ai-pulse-subtle 2.5s infinite ease-in-out;
   transition: all 0.3s ease;
@@ -274,13 +292,62 @@ body {
   pointer-events: none;
 }
 
+.ai-generating-text {
+  background: linear-gradient(90deg, #1d4ed8, #6d28d9, #be185d, #047857, #1d4ed8);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent !important;
+  animation: text-shimmer 3s linear infinite;
+  display: inline;
+  text-shadow: 0 0 12px rgba(109, 40, 217, 0.08);
+}
+
+.dark .ai-generating-text {
+  background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6, #34d399, #60a5fa);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent !important;
+  text-shadow: 0 0 12px rgba(167, 139, 250, 0.2);
+}
+
+.ai-generating-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(59, 130, 246, 0.08) 25%,
+    rgba(139, 92, 246, 0.12) 50%,
+    rgba(236, 72, 153, 0.08) 75%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: translateX(-100%);
+  animation: ai-shimmer-sweep 2.5s infinite ease-in-out;
+  pointer-events: none;
+  z-index: 40;
+}
+
 @media print {
-  .ai-generating-line {
+  .ai-generating-line,
+  .ai-generating-overlay {
     display: none !important;
   }
   .ai-generating-container {
     animation: none !important;
     background-color: transparent !important;
+  }
+  .ai-generating-text {
+    background: none !important;
+    -webkit-background-clip: border-box !important;
+    -webkit-text-fill-color: initial !important;
+    background-clip: border-box !important;
+    color: inherit !important;
+    animation: none !important;
+    text-shadow: none !important;
   }
 }
 

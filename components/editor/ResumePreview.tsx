@@ -347,8 +347,8 @@ function FormalTemplate({
 
       {/* Professional Summary */}
       {displaySummary && (
-        <div className={`relative ${generatingStates?.summary || generatingStates?.isTailoring ? 'ai-generating-container' : ''}`}>
-          {(generatingStates?.summary || generatingStates?.isTailoring) && <div className="ai-generating-line no-print" />}
+        <div className={`relative overflow-hidden ${generatingStates?.summary || generatingStates?.isTailoring ? 'ai-generating-container' : ''}`}>
+          {(generatingStates?.summary || generatingStates?.isTailoring) && <div className="ai-generating-overlay no-print" />}
           <Section 
             title={mode === "specialized" ? "Technical Summary" : "Professional Summary"}
             marginSection={marginSection}
@@ -356,7 +356,10 @@ function FormalTemplate({
             sectionTitlePaddingTop={sectionTitlePaddingTop}
             sectionTitleMarginBottom={sectionTitleMarginBottom}
           >
-            <p style={{ fontSize: fontSizeSummary, lineHeight: lineHeightSummary, color: "#2d3748" }}>
+            <p 
+              className={generatingStates?.summary || generatingStates?.isTailoring ? 'ai-generating-text' : ''}
+              style={{ fontSize: fontSizeSummary, lineHeight: lineHeightSummary, color: "#2d3748" }}
+            >
               {displaySummary}
             </p>
           </Section>
@@ -365,8 +368,8 @@ function FormalTemplate({
 
       {/* Expert-Level Skills */}
       {((displaySkills.languages || []).length > 0 || (displaySkills.frameworks || []).length > 0 || (displaySkills.tools || []).length > 0) && (
-        <div className={`relative ${generatingStates?.skills || generatingStates?.isTailoring ? 'ai-generating-container' : ''}`}>
-          {(generatingStates?.skills || generatingStates?.isTailoring) && <div className="ai-generating-line no-print" />}
+        <div className={`relative overflow-hidden ${generatingStates?.skills || generatingStates?.isTailoring ? 'ai-generating-container' : ''}`}>
+          {(generatingStates?.skills || generatingStates?.isTailoring) && <div className="ai-generating-overlay no-print" />}
           <Section 
             title={mode === "specialized" ? "Technical Skills" : "Expert-Level Skills"}
             marginSection={marginSection}
@@ -376,19 +379,28 @@ function FormalTemplate({
           >
             <div style={{ fontSize: fontSizeBody, lineHeight: lineHeightSkills }}>
               {(displaySkills.languages || []).length > 0 && (
-                <div style={{ display: "flex", flexDirection: "row", marginBottom: skillLineMarginBottom }}>
+                <div 
+                  className={generatingStates?.skills || generatingStates?.isTailoring ? 'ai-generating-text' : ''}
+                  style={{ display: "flex", flexDirection: "row", marginBottom: skillLineMarginBottom }}
+                >
                   <span style={{ fontWeight: "bold", color: "#1a202c", marginRight: "4px" }}>Languages:</span>
                   <span style={{ color: "#2d3748" }}>{displaySkills.languages.join(", ")}</span>
                 </div>
               )}
               {(displaySkills.frameworks || []).length > 0 && (
-                <div style={{ display: "flex", flexDirection: "row", marginBottom: skillLineMarginBottom }}>
+                <div 
+                  className={generatingStates?.skills || generatingStates?.isTailoring ? 'ai-generating-text' : ''}
+                  style={{ display: "flex", flexDirection: "row", marginBottom: skillLineMarginBottom }}
+                >
                   <span style={{ fontWeight: "bold", color: "#1a202c", marginRight: "4px" }}>Frameworks:</span>
                   <span style={{ color: "#2d3748" }}>{displaySkills.frameworks.join(", ")}</span>
                 </div>
               )}
               {(displaySkills.tools || []).length > 0 && (
-                <div style={{ display: "flex", flexDirection: "row", marginBottom: skillLineMarginBottom }}>
+                <div 
+                  className={generatingStates?.skills || generatingStates?.isTailoring ? 'ai-generating-text' : ''}
+                  style={{ display: "flex", flexDirection: "row", marginBottom: skillLineMarginBottom }}
+                >
                   <span style={{ fontWeight: "bold", color: "#1a202c", marginRight: "4px" }}>Tools &amp; Cloud:</span>
                   <span style={{ color: "#2d3748" }}>{displaySkills.tools.join(", ")}</span>
                 </div>
@@ -411,8 +423,8 @@ function FormalTemplate({
             {cleanExperience.map((exp, idx) => {
               const isGenerating = generatingStates?.experienceIndex === idx || generatingStates?.isTailoring;
               return (
-                <div key={idx} className={`relative ${isGenerating ? 'ai-generating-container' : ''}`}>
-                  {isGenerating && <div className="ai-generating-line no-print" />}
+                <div key={idx} className={`relative overflow-hidden ${isGenerating ? 'ai-generating-container' : ''}`}>
+                  {isGenerating && <div className="ai-generating-overlay no-print" />}
                   <div
                     style={{
                       display: "flex",
@@ -420,14 +432,23 @@ function FormalTemplate({
                       alignItems: "baseline",
                     }}
                   >
-                    <span style={{ fontSize: fontSizeEntryHeader, fontWeight: "bold", color: "#1a202c" }}>
+                    <span 
+                      className={isGenerating ? 'ai-generating-text' : ''}
+                      style={{ fontSize: fontSizeEntryHeader, fontWeight: "bold", color: "#1a202c" }}
+                    >
                       {exp.title}
                     </span>
-                    <span style={{ fontSize: fontSizePeriod, fontWeight: "bold", color: "#1a202c", whiteSpace: "nowrap", marginLeft: "8px" }}>
+                    <span 
+                      className={isGenerating ? 'ai-generating-text' : ''}
+                      style={{ fontSize: fontSizePeriod, fontWeight: "bold", color: "#1a202c", whiteSpace: "nowrap", marginLeft: "8px" }}
+                    >
                       {exp.period}
                     </span>
                   </div>
-                  <div style={{ fontSize: fontSizeSub, color: "#4a5568", marginBottom: score > 35 ? "1px" : "3px" }}>
+                  <div 
+                    className={isGenerating ? 'ai-generating-text' : ''}
+                    style={{ fontSize: fontSizeSub, color: "#4a5568", marginBottom: score > 35 ? "1px" : "3px" }}
+                  >
                     {exp.company}
                   </div>
                   {exp.bullets.length > 0 && (
@@ -441,6 +462,7 @@ function FormalTemplate({
                       {exp.bullets.map((bullet, bIdx) => (
                         <li
                           key={bIdx}
+                          className={isGenerating ? 'ai-generating-text' : ''}
                           style={{
                             fontSize: fontSizeBody,
                             lineHeight: lineHeightBody,
@@ -474,8 +496,8 @@ function FormalTemplate({
             {includedProjects.map((project, idx) => {
               const isGenerating = generatingStates?.projectIndex === idx || generatingStates?.isTailoring;
               return (
-                <div key={idx} className={`relative ${isGenerating ? 'ai-generating-container' : ''}`}>
-                  {isGenerating && <div className="ai-generating-line no-print" />}
+                <div key={idx} className={`relative overflow-hidden ${isGenerating ? 'ai-generating-container' : ''}`}>
+                  {isGenerating && <div className="ai-generating-overlay no-print" />}
                   <div
                     style={{
                       display: "flex",
@@ -489,16 +511,20 @@ function FormalTemplate({
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{ fontSize: fontSizeEntryHeader, fontWeight: "bold", textDecoration: "underline", color: "#1a202c" }}
-                        className="hover:text-blue-600 transition-colors"
+                        className={`hover:text-blue-600 transition-colors ${isGenerating ? 'ai-generating-text' : ''}`}
                       >
                         {project.title || "Untitled Project"}
                       </a>
                     ) : (
-                      <span style={{ fontSize: fontSizeEntryHeader, fontWeight: "bold", color: "#1a202c" }}>
+                      <span 
+                        className={isGenerating ? 'ai-generating-text' : ''}
+                        style={{ fontSize: fontSizeEntryHeader, fontWeight: "bold", color: "#1a202c" }}
+                      >
                         {project.title || "Untitled Project"}
                       </span>
                     )}
                     <span
+                      className={isGenerating ? 'ai-generating-text' : ''}
                       style={{
                         fontSize: score > 48 ? "7.5pt" : "8pt",
                         fontStyle: "italic",
@@ -516,6 +542,7 @@ function FormalTemplate({
                   </div>
                   {project.description && (
                     <div
+                      className={isGenerating ? 'ai-generating-text' : ''}
                       style={{
                         fontSize: fontSizeBody,
                         color: "#2d3748",
@@ -539,7 +566,7 @@ function FormalTemplate({
                         return (
                           <li
                             key={bIdx}
-                            className={`relative ${isBulletRewriting ? 'ai-generating-container' : ''}`}
+                            className={`relative overflow-hidden ${isGenerating || isBulletRewriting ? 'ai-generating-text' : ''} ${isBulletRewriting ? 'ai-generating-container' : ''}`}
                             style={{
                               fontSize: fontSizeBody,
                               lineHeight: lineHeightBody,
@@ -548,7 +575,7 @@ function FormalTemplate({
                               wordBreak: "break-word",
                             }}
                           >
-                            {isBulletRewriting && <div className="ai-generating-line no-print" />}
+                            {isBulletRewriting && <div className="ai-generating-overlay no-print" />}
                             {bullet}
                           </li>
                         );
@@ -564,8 +591,8 @@ function FormalTemplate({
 
       {/* Education */}
       {data.education.length > 0 && (
-        <div className={`relative ${generatingStates?.isTailoring ? 'ai-generating-container' : ''}`}>
-          {generatingStates?.isTailoring && <div className="ai-generating-line no-print" />}
+        <div className={`relative overflow-hidden ${generatingStates?.isTailoring ? 'ai-generating-container' : ''}`}>
+          {generatingStates?.isTailoring && <div className="ai-generating-overlay no-print" />}
           <Section 
             title="Education"
             marginSection={marginSection}
@@ -583,10 +610,16 @@ function FormalTemplate({
                       alignItems: "baseline",
                     }}
                   >
-                    <span style={{ fontSize: fontSizeEntryHeader, fontWeight: "bold", color: "#1a202c" }}>
+                    <span 
+                      className={generatingStates?.isTailoring ? 'ai-generating-text' : ''}
+                      style={{ fontSize: fontSizeEntryHeader, fontWeight: "bold", color: "#1a202c" }}
+                    >
                       {edu.degree}
                     </span>
-                    <span style={{ fontSize: fontSizePeriod, fontWeight: "bold", color: "#1a202c" }}>
+                    <span 
+                      className={generatingStates?.isTailoring ? 'ai-generating-text' : ''}
+                      style={{ fontSize: fontSizePeriod, fontWeight: "bold", color: "#1a202c" }}
+                    >
                       {edu.current 
                         ? (edu.year && edu.year.toLowerCase().includes("expected")
                           ? edu.year
@@ -594,7 +627,10 @@ function FormalTemplate({
                         : edu.year}
                     </span>
                   </div>
-                  <div style={{ fontSize: fontSizeSub, color: "#4a5568" }}>
+                  <div 
+                    className={generatingStates?.isTailoring ? 'ai-generating-text' : ''}
+                    style={{ fontSize: fontSizeSub, color: "#4a5568" }}
+                  >
                     {edu.school}
                     {edu.gpa && (
                       ` • ${
@@ -616,8 +652,8 @@ function FormalTemplate({
       {/* Achievements */}
       {data.achievements &&
         data.achievements.some((a) => a.trim()) && (
-          <div className={`relative ${generatingStates?.isTailoring ? 'ai-generating-container' : ''}`}>
-            {generatingStates?.isTailoring && <div className="ai-generating-line no-print" />}
+          <div className={`relative overflow-hidden ${generatingStates?.isTailoring ? 'ai-generating-container' : ''}`}>
+            {generatingStates?.isTailoring && <div className="ai-generating-overlay no-print" />}
             <Section 
               title="Achievements &amp; Certifications"
               marginSection={marginSection}
@@ -634,9 +670,17 @@ function FormalTemplate({
                     const href = url ? (url.startsWith("http") ? url : `https://${url}`) : null;
                     return (
                       <div key={idx} style={{ display: "flex", alignItems: "baseline" }}>
-                        <span style={{ fontSize: fontSizeBody, marginRight: "6px", color: "#2d3748" }}>•</span>
+                        <span 
+                          className={generatingStates?.isTailoring ? 'ai-generating-text' : ''}
+                          style={{ fontSize: fontSizeBody, marginRight: "6px", color: "#2d3748" }}
+                        >
+                          •
+                        </span>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flex: 1 }}>
-                          <span style={{ fontSize: fontSizeBody, color: "#2d3748" }}>
+                          <span 
+                            className={generatingStates?.isTailoring ? 'ai-generating-text' : ''}
+                            style={{ fontSize: fontSizeBody, color: "#2d3748" }}
+                          >
                             {title}
                             {href && (
                               <>
@@ -654,7 +698,10 @@ function FormalTemplate({
                             )}
                           </span>
                           {date && (
-                            <span style={{ fontSize: fontSizeBody, fontWeight: "bold", color: "#1a202c", whiteSpace: "nowrap", marginLeft: "10px" }}>
+                            <span 
+                              className={generatingStates?.isTailoring ? 'ai-generating-text' : ''}
+                              style={{ fontSize: fontSizeBody, fontWeight: "bold", color: "#1a202c", whiteSpace: "nowrap", marginLeft: "10px" }}
+                            >
                               {date}
                             </span>
                           )}
@@ -731,8 +778,8 @@ function MinimalTemplate({
         </div>
       </header>
 
-      <section className={`relative mb-8 ${generatingStates?.experienceIndex !== null || generatingStates?.isTailoring ? 'ai-generating-container' : ''}`}>
-        {(generatingStates?.experienceIndex !== null || generatingStates?.isTailoring) && <div className="ai-generating-line no-print" />}
+      <section className={`relative overflow-hidden mb-8 ${generatingStates?.experienceIndex !== null || generatingStates?.isTailoring ? 'ai-generating-container' : ''}`}>
+        {(generatingStates?.experienceIndex !== null || generatingStates?.isTailoring) && <div className="ai-generating-overlay no-print" />}
         <h2 className="text-xl font-bold border-b border-black mb-4 pb-1 uppercase tracking-wider">
           Experience
         </h2>
@@ -740,11 +787,17 @@ function MinimalTemplate({
           {data.experience.map((exp, idx) => {
             const isGenerating = generatingStates?.experienceIndex === idx || generatingStates?.isTailoring;
             return (
-              <div key={idx} className={`relative ${isGenerating ? 'ai-generating-container' : ''}`}>
-                {isGenerating && <div className="ai-generating-line no-print" />}
+              <div key={idx} className={`relative overflow-hidden ${isGenerating ? 'ai-generating-container' : ''}`}>
+                {isGenerating && <div className="ai-generating-overlay no-print" />}
                 <div className="flex justify-between items-baseline mb-1">
-                  <h3 className="text-lg font-bold">{exp.title}</h3>
-                  <span className="text-sm font-semibold italic text-neutral-600">
+                  <h3 
+                    className={`text-lg font-bold ${isGenerating ? 'ai-generating-text' : ''}`}
+                  >
+                    {exp.title}
+                  </h3>
+                  <span 
+                    className={`text-sm font-semibold italic text-neutral-600 ${isGenerating ? 'ai-generating-text' : ''}`}
+                  >
                     {exp.period}
                   </span>
                 </div>
@@ -752,7 +805,7 @@ function MinimalTemplate({
                   {(exp.bullets || []).map((bullet, bIdx) => (
                     <li
                       key={bIdx}
-                      className="text-[11pt] leading-relaxed text-gray-800"
+                      className={`text-[11pt] leading-relaxed text-gray-800 ${isGenerating ? 'ai-generating-text' : ''}`}
                     >
                       {bullet}
                     </li>
@@ -764,13 +817,13 @@ function MinimalTemplate({
         </div>
       </section>
 
-      <section className={`relative ${generatingStates?.skills || generatingStates?.isTailoring ? 'ai-generating-container' : ''}`}>
-        {(generatingStates?.skills || generatingStates?.isTailoring) && <div className="ai-generating-line no-print" />}
+      <section className={`relative overflow-hidden ${generatingStates?.skills || generatingStates?.isTailoring ? 'ai-generating-container' : ''}`}>
+        {(generatingStates?.skills || generatingStates?.isTailoring) && <div className="ai-generating-overlay no-print" />}
         <h2 className="text-xl font-bold border-b border-black mb-4 pb-1 uppercase tracking-wider">
           Skills
         </h2>
         <div className="text-[11pt] leading-relaxed">
-          <p>
+          <p className={generatingStates?.skills || generatingStates?.isTailoring ? 'ai-generating-text' : ''}>
             <span className="font-bold">Technical:</span>{" "}
             {(data.skills?.languages || []).join(", ")},{" "}
             {(data.skills?.frameworks || []).join(", ")}
