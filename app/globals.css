@@ -666,28 +666,28 @@ body {
 
 /* Diff Styling */
 .ai-diff-removed {
-  background-color: rgba(239, 68, 68, 0.15);
-  color: #f87171;
+  background-color: rgba(239, 68, 68, 0.08);
+  color: #c53030;
   text-decoration: line-through;
   padding: 1px 3px;
   border-radius: 4px;
 }
 
-.light .ai-diff-removed {
-  background-color: rgba(239, 68, 68, 0.08);
-  color: #dc2626;
+.dark .ai-diff-removed {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #f87171;
 }
 
 .ai-diff-added {
-  background-color: rgba(16, 185, 129, 0.15);
-  color: #34d399;
+  background-color: rgba(16, 185, 129, 0.08);
+  color: #2f855a;
   padding: 1px 3px;
   border-radius: 4px;
 }
 
-.light .ai-diff-added {
-  background-color: rgba(16, 185, 129, 0.08);
-  color: #059669;
+.dark .ai-diff-added {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #34d399;
 }
 
 /* Success Checkmark Pop */
@@ -730,7 +730,7 @@ body {
 @keyframes ai-merge-added {
   0% {
     background-color: rgba(16, 185, 129, 0.15);
-    color: #34d399;
+    color: inherit;
   }
   100% {
     background-color: transparent;
@@ -745,4 +745,94 @@ body {
 
 .ai-accepting .ai-diff-added {
   animation: ai-merge-added 0.8s forwards cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* CV Floating Suggestion Toolbar */
+.ai-cv-floating-toolbar {
+  position: absolute;
+  top: -34px;
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: rgba(15, 23, 42, 0.96);
+  border: 1px solid rgba(79, 140, 255, 0.35);
+  padding: 4px 6px 4px 10px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 10px 25px -8px rgba(0, 0, 0, 0.3), 0 0 12px rgba(79, 140, 255, 0.1);
+  z-index: 100;
+  animation: ai-bar-slide-in 0.3s forwards cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: auto;
+  white-space: nowrap;
+}
+
+.ai-cv-toolbar-chip {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ai-cv-btn-accept {
+  width: 18px;
+  height: 18px;
+  background: #10b981;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.ai-cv-btn-accept:hover {
+  background: #059669;
+  transform: scale(1.1);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+}
+
+.ai-cv-btn-discard {
+  width: 18px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.ai-cv-btn-discard:hover {
+  background: #ef4444;
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+}
+
+.ai-cv-toolbar-success {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #34d399;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-right: 6px;
+}
+
+@media print {
+  .ai-cv-floating-toolbar {
+    display: none !important;
+  }
 }

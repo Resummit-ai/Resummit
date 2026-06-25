@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Copy, Eye, FileText, Printer, RotateCcw, Save, Trash2 } from "lucide-react";
 import { ResumePreview } from "./ResumePreview";
 import { ProjectData } from "@/lib/types";
-import { AISuggestionPanel } from "./AISuggestionPanel";
 
 interface Project {
   id: string;
@@ -25,7 +24,6 @@ export function CVEditor({
   const [projects, setProjects] = useState<Project[]>(initialProjects);
   const [isSaving, setIsSaving] = useState(false);
   const [isRegenerating, setIsRegenerating] = useState<string | null>(null);
-  const [pendingSuggestions, setPendingSuggestions] = useState<Record<string, string[] | null>>({});
 
   const handleUpdateBullet = (projectId: string, index: number, value: string) => {
     setProjects(prev => prev.map(p => {
@@ -127,25 +125,7 @@ export function CVEditor({
                       rows={2}
                     />
                   </div>
-                ))}
               </div>
-              {pendingSuggestions[project.id] && (
-                <AISuggestionPanel
-                  originalText={project.bullets.join("\n")}
-                  suggestedText={pendingSuggestions[project.id]!.join("\n")}
-                  onAccept={() => {
-                    setProjects(prev => prev.map(p => 
-                      p.id === project.id ? { ...p, bullets: pendingSuggestions[project.id]! } : p
-                    ));
-                    setPendingSuggestions(prev => ({ ...prev, [project.id]: null }));
-                  }}
-                  onReject={() => {
-                    setPendingSuggestions(prev => ({ ...prev, [project.id]: null }));
-                  }}
-                  onRegenerate={() => handleRegenerate(project.id)}
-                  isRegenerating={isRegenerating === project.id}
-                />
-              )}
             </div>
           ))}
         </div>
