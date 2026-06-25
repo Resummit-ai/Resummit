@@ -6,6 +6,7 @@ import { Download, GripVertical, Plus, Trash2, RotateCcw, Link as LinkIcon, Chec
 import type { CVData, ProjectData, CVSkills, CVExperience, CVEducation, SaveStatus, EditorTab } from "@/lib/types";
 import { ResumePreview } from "@/components/editor/ResumePreview";
 import { normalizeAndDedupeSkills } from "@/lib/skills-data";
+import { AISuggestionPanel } from "@/components/editor/AISuggestionPanel";
 
 // ─────────────────────────────────────────────
 // Sub-components
@@ -551,6 +552,11 @@ export function EditorClient({
   const [suggestingSkills, setSuggestingSkills] = useState(false);
   const [rewritingBullet, setRewritingBullet] = useState<string | null>(null); // "projIdx-bulletIdx"
 
+  // Pending AI suggestions states
+  const [pendingSummarySuggestion, setPendingSummarySuggestion] = useState<string | null>(null);
+  const [pendingExpSuggestions, setPendingExpSuggestions] = useState<Record<number, string[] | null>>({});
+  const [pendingProjectSuggestions, setPendingProjectSuggestions] = useState<Record<number, { description: string; highlights: string[] } | null>>({});
+
   // Expanded card tracking
   const [expandedProject, setExpandedProject] = useState<number | null>(0);
   const [expandedExperience, setExpandedExperience] = useState<number | null>(0);
@@ -800,13 +806,7 @@ export function EditorClient({
       });
       const d = await res.json();
       if (d.bullets && Array.isArray(d.bullets)) {
-        const nu = [...experience];
-        // Replace only placeholder bullets, keep user-written ones
-        const existingMeaningful = nu[i].bullets.filter(
-          b => b.trim() && b !== "Achieved X by implementing Y resulting in Z% growth."
-        );
-        nu[i] = { ...nu[i], bullets: [...existingMeaningful, ...d.bullets] };
-        setExperience(nu);
+        setPendingExpSuggestions(prev => ({ ...prev, [i]: d.bullets }));
       }
     } catch {
       /* silent */
@@ -830,13 +830,13 @@ export function EditorClient({
       });
       const d = await res.json();
       if (d.success) {
-        const nu = [...projects];
-        nu[idx] = {
-          ...nu[idx],
-          description: d.description,
-          highlights: d.highlights || [],
-        };
-        setProjects(nu);
+        setPendingProjectSuggestions(prev => ({
+          ...prev,
+          [idx]: {
+            description: d.description,
+            highlights: d.highlights || [],
+          }
+        }));
       }
     } catch (e) {
       console.error(e);
@@ -893,7 +893,7 @@ export function EditorClient({
         }),
       });
       const d = await res.json();
-      if (d.summary) setSummary(d.summary);
+      if (d.summary) setPendingSummarySuggestion(d.summary);
     } catch {
       /* silent */
     } finally {
@@ -1356,6 +1356,21 @@ export function EditorClient({
           multiline
           rows={5}
         />
+        {pendingSummarySuggestion && (
+          <AISuggestionPanel
+            originalText={cv.summary}
+            suggestedText={pendingSummarySuggestion}
+            onAccept={() => {
+              setSummary(pendingSummarySuggestion);
+              setPendingSummarySuggestion(null);
+            }}
+            onReject={() => {
+              setPendingSummarySuggestion(null);
+            }}
+            onRegenerate={handleRegenerateSummary}
+            isRegenerating={regeneratingSummary}
+          />
+        )}
         <div className="mt-3 flex items-start gap-2 px-3 py-2 bg-amber-500/10 dark:bg-yellow-500/5 border border-amber-500/20 dark:border-yellow-500/10 rounded-xl">
            <Zap className="w-3 h-3 text-amber-600 dark:text-yellow-500 mt-0.5 shrink-0" />
            <p className="text-[10px] text-amber-800/80 dark:text-yellow-200/60 leading-relaxed font-medium">Recruiters scan this for 7 seconds. Aim for exactly two high-density sentences.</p>
@@ -1965,6 +1980,30 @@ export function EditorClient({
                     </div>
                   ))}
                 </div>
+                {pendingExpSuggestions[i] && (
+                  <AISuggestionPanel
+                    originalText={exp.bullets.join("\n")}
+                    suggestedText={[
+                      ...exp.bullets.filter(b => b.trim() && b !== "Achieved X by implementing Y resulting in Z% growth."),
+                      ...pendingExpSuggestions[i]!
+                    ].join("\n")}
+                    onAccept={() => {
+                      const existingMeaningful = exp.bullets.filter(
+                        b => b.trim() && b !== "Achieved X by implementing Y resulting in Z% growth."
+                      );
+                      const suggestedFull = [...existingMeaningful, ...pendingExpSuggestions[i]!];
+                      const nu = [...experience];
+                      nu[i] = { ...nu[i], bullets: suggestedFull };
+                      setExperience(nu);
+                      setPendingExpSuggestions(prev => ({ ...prev, [i]: null }));
+                    }}
+                    onReject={() => {
+                      setPendingExpSuggestions(prev => ({ ...prev, [i]: null }));
+                    }}
+                    onRegenerate={() => handleGenerateExpBullets(i)}
+                    isRegenerating={generatingExpBullets === i}
+                  />
+                )}
               </div>
             </div>
           )}
@@ -2165,6 +2204,30 @@ export function EditorClient({
                       </div>
                     ))}
                   </div>
+                  {pendingProjectSuggestions[pIdx] && (
+                    <AISuggestionPanel
+                      originalText={[p.description || "", ...(p.highlights || [])].join("\n\n")}
+                      suggestedText={[
+                        pendingProjectSuggestions[pIdx]!.description,
+                        ...(pendingProjectSuggestions[pIdx]!.highlights || [])
+                      ].join("\n\n")}
+                      onAccept={() => {
+                        const nu = [...projects];
+                        nu[pIdx] = {
+                          ...nu[pIdx],
+                          description: pendingProjectSuggestions[pIdx]!.description,
+                          highlights: pendingProjectSuggestions[pIdx]!.highlights,
+                        };
+                        setProjects(nu);
+                        setPendingProjectSuggestions(prev => ({ ...prev, [pIdx]: null }));
+                      }}
+                      onReject={() => {
+                        setPendingProjectSuggestions(prev => ({ ...prev, [pIdx]: null }));
+                      }}
+                      onRegenerate={() => handleGenerateProjectFromReadme(pIdx)}
+                      isRegenerating={generatingProjectFromReadme === pIdx}
+                    />
+                  )}
                 </div>
               </div>
             )}
@@ -2649,6 +2712,35 @@ export function EditorClient({
               projectIndex: generatingProjectFromReadme,
               rewritingBullet: rewritingBullet,
               isTailoring: isTailoring,
+            }}
+            onRevertField={(field, value, index, bulletIndex) => {
+              if (field === "summary") {
+                setSummary(value);
+              } else if (field === "skills") {
+                setSkills(value);
+              } else if (field === "experience") {
+                const nu = [...experience];
+                nu[index!] = value;
+                setExperience(nu);
+              } else if (field === "projects") {
+                const nu = [...projects];
+                nu[index!] = value;
+                setProjects(nu);
+              } else if (field === "project-bullet") {
+                const nu = [...projects];
+                const highlights = [...nu[index!].highlights];
+                highlights[bulletIndex!] = value;
+                nu[index!] = { ...nu[index!], highlights };
+                setProjects(nu);
+              } else if (field === "education") {
+                const nu = [...education];
+                nu[index!] = value;
+                setEducation(nu);
+              } else if (field === "achievements") {
+                const nu = [...achievements];
+                nu[index!] = value;
+                setAchievements(nu);
+              }
             }}
           />
         </div>

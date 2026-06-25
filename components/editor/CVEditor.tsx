@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Copy, Eye, FileText, Printer, RotateCcw, Save, Trash2 } from "lucide-react";
 import { ResumePreview } from "./ResumePreview";
 import { ProjectData } from "@/lib/types";
+import { AISuggestionPanel } from "./AISuggestionPanel";
 
 interface Project {
   id: string;
@@ -24,6 +25,7 @@ export function CVEditor({
   const [projects, setProjects] = useState<Project[]>(initialProjects);
   const [isSaving, setIsSaving] = useState(false);
   const [isRegenerating, setIsRegenerating] = useState<string | null>(null);
+  const [pendingSuggestions, setPendingSuggestions] = useState<Record<string, string[] | null>>({});
 
   const handleUpdateBullet = (projectId: string, index: number, value: string) => {
     setProjects(prev => prev.map(p => {
@@ -49,9 +51,9 @@ export function CVEditor({
       });
       
       const [newResult] = await res.json();
-      setProjects(prev => prev.map(p => 
-        p.id === projectId ? { ...p, bullets: newResult.bullets } : p
-      ));
+      if (newResult && Array.isArray(newResult.bullets)) {
+        setPendingSuggestions(prev => ({ ...prev, [projectId]: newResult.bullets }));
+      }
     } catch (err) {
       alert("Failed to regenerate bullets. Please try again.");
     } finally {
@@ -127,6 +129,23 @@ export function CVEditor({
                   </div>
                 ))}
               </div>
+              {pendingSuggestions[project.id] && (
+                <AISuggestionPanel
+                  originalText={project.bullets.join("\n")}
+                  suggestedText={pendingSuggestions[project.id]!.join("\n")}
+                  onAccept={() => {
+                    setProjects(prev => prev.map(p => 
+                      p.id === project.id ? { ...p, bullets: pendingSuggestions[project.id]! } : p
+                    ));
+                    setPendingSuggestions(prev => ({ ...prev, [project.id]: null }));
+                  }}
+                  onReject={() => {
+                    setPendingSuggestions(prev => ({ ...prev, [project.id]: null }));
+                  }}
+                  onRegenerate={() => handleRegenerate(project.id)}
+                  isRegenerating={isRegenerating === project.id}
+                />
+              )}
             </div>
           ))}
         </div>
@@ -166,6 +185,27 @@ export function CVEditor({
             }))}
             generatingStates={{
               projectIndex: isRegenerating ? projects.findIndex(p => p.id === isRegenerating) : null
+            }}
+            onRevertField={(field, value, index, bulletIndex) => {
+              if (field === "projects") {
+                const nu = [...projects];
+                nu[index!] = {
+                  ...nu[index!],
+                  name: value.title ?? nu[index!].name,
+                  description: value.description ?? nu[index!].description,
+                  techStack: Array.isArray(value.techStack)
+                    ? value.techStack.join(", ")
+                    : (typeof value.techStack === "string" ? value.techStack : nu[index!].techStack),
+                  bullets: value.highlights ?? nu[index!].bullets
+                };
+                setProjects(nu);
+              } else if (field === "project-bullet") {
+                const nu = [...projects];
+                const newBullets = [...nu[index!].bullets];
+                newBullets[bulletIndex!] = value;
+                nu[index!] = { ...nu[index!], bullets: newBullets };
+                setProjects(nu);
+              }
             }}
           />
         </div>

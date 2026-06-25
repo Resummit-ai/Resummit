@@ -17,6 +17,7 @@ interface ResumePreviewProps {
     rewritingBullet?: string | null;
     isTailoring?: boolean;
   };
+  onRevertField?: (field: string, value: any, index?: number, bulletIndex?: number) => void;
 }
 
 export function ResumePreview({
@@ -25,11 +26,12 @@ export function ResumePreview({
   template = "formal",
   mode = "non-specialized",
   generatingStates,
+  onRevertField,
 }: ResumePreviewProps) {
   if (template === "minimal") {
-    return <MinimalTemplate data={data} projects={projects} generatingStates={generatingStates} />;
+    return <MinimalTemplate data={data} projects={projects} generatingStates={generatingStates} onRevertField={onRevertField} />;
   }
-  return <FormalTemplate data={data} projects={projects} mode={mode} generatingStates={generatingStates} />;
+  return <FormalTemplate data={data} projects={projects} mode={mode} generatingStates={generatingStates} onRevertField={onRevertField} />;
 }
 
 function parseAchievementString(str: string) {
@@ -118,11 +120,13 @@ function FormalTemplate({
   projects,
   mode,
   generatingStates,
+  onRevertField,
 }: {
   data: CVData;
   projects: ProjectData[];
   mode: "non-specialized" | "specialized";
   generatingStates?: ResumePreviewProps["generatingStates"];
+  onRevertField?: ResumePreviewProps["onRevertField"];
 }) {
   const displaySkills = normalizeAndDedupeSkills(data.skills);
 
@@ -363,6 +367,7 @@ function FormalTemplate({
               <AITextTransform 
                 text={displaySummary} 
                 isGenerating={generatingStates?.summary || generatingStates?.isTailoring} 
+                onRevert={(oldText) => onRevertField?.("summary", oldText)}
               />
             </p>
           </Section>
@@ -388,6 +393,7 @@ function FormalTemplate({
                     <AITextTransform 
                       text={displaySkills.languages.join(", ")} 
                       isGenerating={generatingStates?.skills || generatingStates?.isTailoring} 
+                      onRevert={(oldVal) => onRevertField?.("skills", { ...data.skills, languages: oldVal.split(",").map((s: string) => s.trim()) })}
                     />
                   </span>
                 </div>
@@ -399,6 +405,7 @@ function FormalTemplate({
                     <AITextTransform 
                       text={displaySkills.frameworks.join(", ")} 
                       isGenerating={generatingStates?.skills || generatingStates?.isTailoring} 
+                      onRevert={(oldVal) => onRevertField?.("skills", { ...data.skills, frameworks: oldVal.split(",").map((s: string) => s.trim()) })}
                     />
                   </span>
                 </div>
@@ -410,6 +417,7 @@ function FormalTemplate({
                     <AITextTransform 
                       text={displaySkills.tools.join(", ")} 
                       isGenerating={generatingStates?.skills || generatingStates?.isTailoring} 
+                      onRevert={(oldVal) => onRevertField?.("skills", { ...data.skills, tools: oldVal.split(",").map((s: string) => s.trim()) })}
                     />
                   </span>
                 </div>
@@ -444,18 +452,30 @@ function FormalTemplate({
                     <span 
                       style={{ fontSize: fontSizeEntryHeader, fontWeight: "bold", color: "#1a202c" }}
                     >
-                      <AITextTransform text={exp.title} isGenerating={isGenerating} />
+                      <AITextTransform 
+                        text={exp.title} 
+                        isGenerating={isGenerating} 
+                        onRevert={(oldVal) => onRevertField?.("experience", { ...exp, title: oldVal }, idx)}
+                      />
                     </span>
                     <span 
                       style={{ fontSize: fontSizePeriod, fontWeight: "bold", color: "#1a202c", whiteSpace: "nowrap", marginLeft: "8px" }}
                     >
-                      <AITextTransform text={exp.period} isGenerating={isGenerating} />
+                      <AITextTransform 
+                        text={exp.period} 
+                        isGenerating={isGenerating} 
+                        onRevert={(oldVal) => onRevertField?.("experience", { ...exp, period: oldVal }, idx)}
+                      />
                     </span>
                   </div>
                   <div 
                     style={{ fontSize: fontSizeSub, color: "#4a5568", marginBottom: score > 35 ? "1px" : "3px" }}
                   >
-                    <AITextTransform text={exp.company} isGenerating={isGenerating} />
+                    <AITextTransform 
+                      text={exp.company} 
+                      isGenerating={isGenerating} 
+                      onRevert={(oldVal) => onRevertField?.("experience", { ...exp, company: oldVal }, idx)}
+                    />
                   </div>
                   {exp.bullets.length > 0 && (
                     <ul
@@ -476,7 +496,15 @@ function FormalTemplate({
                             wordBreak: "break-word",
                           }}
                         >
-                          <AITextTransform text={bullet} isGenerating={isGenerating} />
+                          <AITextTransform 
+                            text={bullet} 
+                            isGenerating={isGenerating} 
+                            onRevert={(oldBullet) => {
+                              const nuBullets = [...exp.bullets];
+                              nuBullets[bIdx] = oldBullet;
+                              onRevertField?.("experience", { ...exp, bullets: nuBullets }, idx);
+                            }}
+                          />
                         </li>
                       ))}
                     </ul>
@@ -518,13 +546,21 @@ function FormalTemplate({
                         style={{ fontSize: fontSizeEntryHeader, fontWeight: "bold", textDecoration: "underline", color: "#1a202c" }}
                         className="hover:text-blue-600 transition-colors"
                       >
-                        <AITextTransform text={project.title || "Untitled Project"} isGenerating={isGenerating} />
+                        <AITextTransform 
+                          text={project.title || "Untitled Project"} 
+                          isGenerating={isGenerating} 
+                          onRevert={(oldTitle) => onRevertField?.("projects", { ...project, title: oldTitle }, idx)}
+                        />
                       </a>
                     ) : (
                       <span 
                         style={{ fontSize: fontSizeEntryHeader, fontWeight: "bold", color: "#1a202c" }}
                       >
-                        <AITextTransform text={project.title || "Untitled Project"} isGenerating={isGenerating} />
+                        <AITextTransform 
+                          text={project.title || "Untitled Project"} 
+                          isGenerating={isGenerating} 
+                          onRevert={(oldTitle) => onRevertField?.("projects", { ...project, title: oldTitle }, idx)}
+                        />
                       </span>
                     )}
                     <span
@@ -543,6 +579,7 @@ function FormalTemplate({
                           ? project.techStack
                           : ""} 
                         isGenerating={isGenerating} 
+                        onRevert={(oldStack) => onRevertField?.("projects", { ...project, techStack: oldStack.split(",").map((s: string) => s.trim()) }, idx)}
                       />
                     </span>
                   </div>
@@ -555,7 +592,11 @@ function FormalTemplate({
                         marginTop: "2px",
                       }}
                     >
-                      <AITextTransform text={project.description} isGenerating={isGenerating} />
+                      <AITextTransform 
+                        text={project.description} 
+                        isGenerating={isGenerating} 
+                        onRevert={(oldDesc) => onRevertField?.("projects", { ...project, description: oldDesc }, idx)}
+                      />
                     </div>
                   )}
                   {project.highlights.length > 0 && (
@@ -579,7 +620,15 @@ function FormalTemplate({
                               wordBreak: "break-word",
                             }}
                           >
-                            <AITextTransform text={bullet} isGenerating={isGenerating || isBulletRewriting} />
+                            <AITextTransform 
+                              text={bullet} 
+                              isGenerating={isGenerating || isBulletRewriting} 
+                              onRevert={(oldBullet) => {
+                                const nuHighlights = [...project.highlights];
+                                nuHighlights[bIdx] = oldBullet;
+                                onRevertField?.("project-bullet", oldBullet, idx, bIdx);
+                              }}
+                            />
                           </li>
                         );
                       })}
@@ -616,7 +665,11 @@ function FormalTemplate({
                     <span 
                       style={{ fontSize: fontSizeEntryHeader, fontWeight: "bold", color: "#1a202c" }}
                     >
-                      <AITextTransform text={edu.degree} isGenerating={generatingStates?.isTailoring} />
+                      <AITextTransform 
+                        text={edu.degree} 
+                        isGenerating={generatingStates?.isTailoring} 
+                        onRevert={(oldVal) => onRevertField?.("education", { ...edu, degree: oldVal }, idx)}
+                      />
                     </span>
                     <span 
                       style={{ fontSize: fontSizePeriod, fontWeight: "bold", color: "#1a202c" }}
@@ -628,13 +681,18 @@ function FormalTemplate({
                             : `Expected ${edu.year || "Present"}`)
                           : edu.year} 
                         isGenerating={generatingStates?.isTailoring} 
+                        onRevert={(oldVal) => onRevertField?.("education", { ...edu, year: oldVal.replace(/^Expected\s+/i, "") }, idx)}
                       />
                     </span>
                   </div>
                   <div 
                     style={{ fontSize: fontSizeSub, color: "#4a5568" }}
                   >
-                    <AITextTransform text={edu.school} isGenerating={generatingStates?.isTailoring} />
+                    <AITextTransform 
+                      text={edu.school} 
+                      isGenerating={generatingStates?.isTailoring} 
+                      onRevert={(oldVal) => onRevertField?.("education", { ...edu, school: oldVal }, idx)}
+                    />
                     {edu.gpa && (
                       <>
                         {" • "}
@@ -646,6 +704,10 @@ function FormalTemplate({
                               : `GPA: ${edu.gpa}`
                           } 
                           isGenerating={generatingStates?.isTailoring} 
+                          onRevert={(oldVal) => {
+                             const cleanGpa = oldVal.replace(/^(GPA|CGPA|Percentage):\s*/i, "").replace(/%$/, "");
+                             onRevertField?.("education", { ...edu, gpa: cleanGpa }, idx);
+                           }}
                         />
                       </>
                     )}
@@ -687,7 +749,18 @@ function FormalTemplate({
                           <span 
                             style={{ fontSize: fontSizeBody, color: "#2d3748" }}
                           >
-                            <AITextTransform text={title} isGenerating={generatingStates?.isTailoring} />
+                            <AITextTransform 
+                              text={title} 
+                              isGenerating={generatingStates?.isTailoring} 
+                              onRevert={(oldTitle) => {
+                                const updatedObj = {
+                                  title: oldTitle,
+                                  date: date || "",
+                                  url: url || "",
+                                };
+                                onRevertField?.("achievements", JSON.stringify(updatedObj), idx);
+                              }}
+                            />
                             {href && (
                               <>
                                 {" "}
@@ -707,7 +780,18 @@ function FormalTemplate({
                             <span 
                               style={{ fontSize: fontSizeBody, fontWeight: "bold", color: "#1a202c", whiteSpace: "nowrap", marginLeft: "10px" }}
                             >
-                              <AITextTransform text={date} isGenerating={generatingStates?.isTailoring} />
+                              <AITextTransform 
+                                text={date} 
+                                isGenerating={generatingStates?.isTailoring} 
+                                onRevert={(oldDate) => {
+                                  const updatedObj = {
+                                    title: title || "",
+                                    date: oldDate,
+                                    url: url || "",
+                                  };
+                                  onRevertField?.("achievements", JSON.stringify(updatedObj), idx);
+                                }}
+                              />
                             </span>
                           )}
                         </div>
@@ -762,10 +846,12 @@ function MinimalTemplate({
   data,
   projects,
   generatingStates,
+  onRevertField,
 }: {
   data: CVData;
   projects: ProjectData[];
   generatingStates?: ResumePreviewProps["generatingStates"];
+  onRevertField?: ResumePreviewProps["onRevertField"];
 }) {
   return (
     <div
@@ -796,23 +882,39 @@ function MinimalTemplate({
                 {isGenerating && <div className="ai-generating-overlay no-print" />}
                 <div className="flex justify-between items-baseline mb-1">
                   <h3 
-                    className={`text-lg font-bold ${isGenerating ? 'ai-generating-text' : ''}`}
+                    className="text-lg font-bold"
                   >
-                    {exp.title}
+                    <AITextTransform 
+                      text={exp.title} 
+                      isGenerating={isGenerating} 
+                      onRevert={(oldVal) => onRevertField?.("experience", { ...exp, title: oldVal }, idx)}
+                    />
                   </h3>
                   <span 
-                    className={`text-sm font-semibold italic text-neutral-600 ${isGenerating ? 'ai-generating-text' : ''}`}
+                    className="text-sm font-semibold italic text-neutral-600"
                   >
-                    {exp.period}
+                    <AITextTransform 
+                      text={exp.period} 
+                      isGenerating={isGenerating} 
+                      onRevert={(oldVal) => onRevertField?.("experience", { ...exp, period: oldVal }, idx)}
+                    />
                   </span>
                 </div>
                 <ul className="list-disc pl-5 space-y-1">
                   {(exp.bullets || []).map((bullet, bIdx) => (
                     <li
                       key={bIdx}
-                      className={`text-[11pt] leading-relaxed text-gray-800 ${isGenerating ? 'ai-generating-text' : ''}`}
+                      className="text-[11pt] leading-relaxed text-gray-800"
                     >
-                      {bullet}
+                      <AITextTransform 
+                        text={bullet} 
+                        isGenerating={isGenerating} 
+                        onRevert={(oldBullet) => {
+                          const nuBullets = [...exp.bullets];
+                          nuBullets[bIdx] = oldBullet;
+                          onRevertField?.("experience", { ...exp, bullets: nuBullets }, idx);
+                        }}
+                      />
                     </li>
                   ))}
                 </ul>
@@ -828,10 +930,19 @@ function MinimalTemplate({
           Skills
         </h2>
         <div className="text-[11pt] leading-relaxed">
-          <p className={generatingStates?.skills || generatingStates?.isTailoring ? 'ai-generating-text' : ''}>
+          <p>
             <span className="font-bold">Technical:</span>{" "}
-            {(data.skills?.languages || []).join(", ")},{" "}
-            {(data.skills?.frameworks || []).join(", ")}
+            <AITextTransform 
+              text={(data.skills?.languages || []).join(", ")} 
+              isGenerating={generatingStates?.skills || generatingStates?.isTailoring} 
+              onRevert={(oldVal) => onRevertField?.("skills", { ...data.skills, languages: oldVal.split(",").map((s: string) => s.trim()) })}
+            />
+            {", "}
+            <AITextTransform 
+              text={(data.skills?.frameworks || []).join(", ")} 
+              isGenerating={generatingStates?.skills || generatingStates?.isTailoring} 
+              onRevert={(oldVal) => onRevertField?.("skills", { ...data.skills, frameworks: oldVal.split(",").map((s: string) => s.trim()) })}
+            />
           </p>
         </div>
       </section>

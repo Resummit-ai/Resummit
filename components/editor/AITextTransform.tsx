@@ -7,6 +7,7 @@ interface AITextTransformProps {
   isGenerating?: boolean;
   className?: string;
   style?: React.CSSProperties;
+  onRevert?: (oldValue: any) => void;
 }
 
 export function AITextTransform({
@@ -14,25 +15,44 @@ export function AITextTransform({
   isGenerating = false,
   className = "",
   style,
+  onRevert,
 }: AITextTransformProps) {
   const prevTextRef = useRef(text);
-  const [displayState, setDisplayState] = useState<"idle" | "animating">("idle");
-  const [oldText, setOldText] = useState(text);
+  const [displayState, setDisplayState] = useState<"idle" | "animating" | "pending">("idle");
+  const [oldText, setOldText] = useState<any>(text);
 
   useEffect(() => {
-    // Only trigger animation if text changed and it's not the initial mount
-    if (prevTextRef.current !== text) {
+    // Only trigger animation if text changed, it's not the initial mount, and not already pending
+    if (prevTextRef.current !== text && displayState !== "pending") {
       setOldText(prevTextRef.current);
       setDisplayState("animating");
       
       const timer = setTimeout(() => {
-        setDisplayState("idle");
+        setDisplayState("pending");
       }, 1500); // matches the full animation timeline
       
       prevTextRef.current = text;
       return () => clearTimeout(timer);
+    } else if (prevTextRef.current !== text && displayState === "pending") {
+      // Sync ref if text updates while we are already in pending state
+      prevTextRef.current = text;
     }
-  }, [text]);
+  }, [text, displayState]);
+
+  const handleAccept = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setDisplayState("idle");
+  };
+
+  const handleDiscard = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (onRevert) {
+      onRevert(oldText);
+    }
+    setDisplayState("idle");
+  };
 
   if (displayState === "animating") {
     return (
@@ -69,6 +89,36 @@ export function AITextTransform({
           <svg className="w-4 h-4 text-cyan-300" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0V6H3a1 1 0 110-2h1V3a1 1 0 011-1zm8 10a1 1 0 011-1h1v-1a1 1 0 112 0v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1h-1a1 1 0 01-1-1zM4 12a1 1 0 011-1h1v-1a1 1 0 112 0v1h1a1 1 0 110 2H9v1a1 1 0 11-2 0v-1H5a1 1 0 01-1-1z" clipRule="evenodd" />
           </svg>
+        </span>
+      </span>
+    );
+  }
+
+  if (displayState === "pending") {
+    return (
+      <span className={`relative inline-block ${className}`} style={{ ...style }}>
+        {text}
+
+        {/* Floating AI Actions Toolbar */}
+        <span className="ai-actions-floating-bar no-print">
+          <button 
+            onClick={handleAccept}
+            className="ai-action-btn-accept cursor-pointer"
+          >
+            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            Keep
+          </button>
+          <button 
+            onClick={handleDiscard}
+            className="ai-action-btn-discard cursor-pointer"
+          >
+            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            Revert
+          </button>
         </span>
       </span>
     );
