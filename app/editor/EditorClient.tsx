@@ -892,7 +892,7 @@ export function EditorClient({
         }),
       });
       const d = await res.json();
-      if (d.summary) setPendingSummarySuggestion(d.summary);
+      if (d.summary) setSummary(d.summary);
     } catch {
       /* silent */
     } finally {
