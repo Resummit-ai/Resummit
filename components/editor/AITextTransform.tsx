@@ -63,42 +63,52 @@ function diffWords(oldStr: string, newStr: string): DiffPart[] {
 
 interface AITextTransformProps {
   text: string;
+  suggestion?: string;
   isGenerating?: boolean;
   className?: string;
   style?: React.CSSProperties;
+  onAccept?: (val: string) => void;
+  onDiscard?: () => void;
   onRevert?: (oldValue: any) => void;
 }
 
 export function AITextTransform({
   text,
+  suggestion,
   isGenerating = false,
   className = "",
   style,
+  onAccept,
+  onDiscard,
   onRevert,
 }: AITextTransformProps) {
-  const prevTextRef = useRef(text);
   const [displayState, setDisplayState] = useState<"idle" | "animating" | "pending">("idle");
   const [oldText, setOldText] = useState<any>(text);
   const [isAccepting, setIsAccepting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const prevSuggestionRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
-    // Only trigger animation if text changed, it's not the initial mount, and not already pending
-    if (prevTextRef.current !== text && displayState !== "pending") {
-      setOldText(prevTextRef.current);
+    // If in the middle of accepting, ignore prop changes until finished
+    if (isAccepting) return;
+
+    if (suggestion && suggestion !== prevSuggestionRef.current) {
+      setOldText(text);
       setDisplayState("animating");
       
       const timer = setTimeout(() => {
         setDisplayState("pending");
       }, 1500); // matches the full animation timeline
       
-      prevTextRef.current = text;
+      prevSuggestionRef.current = suggestion;
       return () => clearTimeout(timer);
-    } else if (prevTextRef.current !== text && displayState === "pending") {
-      // Sync ref if text updates while we are already in pending state
-      prevTextRef.current = text;
+    } else if (!suggestion && prevSuggestionRef.current) {
+      setDisplayState("idle");
+      setIsAccepting(false);
+      setSuccess(false);
+      prevSuggestionRef.current = undefined;
     }
-  }, [text, displayState]);
+  }, [suggestion, text, isAccepting]);
 
   const handleAcceptClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -107,24 +117,31 @@ export function AITextTransform({
     // Wait for the particles dissolve animation to run on CV (800ms)
     setTimeout(() => {
       setSuccess(true);
+      if (onAccept && suggestion) {
+        onAccept(suggestion);
+      }
     }, 800);
     // Hide panel and restore clean state after success checkmark plays
     setTimeout(() => {
       setDisplayState("idle");
       setIsAccepting(false);
       setSuccess(false);
+      prevSuggestionRef.current = undefined;
     }, 2000);
   };
 
   const handleDiscardClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    if (onRevert) {
+    if (onDiscard) {
+      onDiscard();
+    } else if (onRevert) {
       onRevert(oldText);
     }
     setDisplayState("idle");
     setIsAccepting(false);
     setSuccess(false);
+    prevSuggestionRef.current = undefined;
   };
 
   if (displayState === "animating") {
@@ -137,7 +154,7 @@ export function AITextTransform({
         
         {/* New Text (Fades in via left-to-right sweeping mask) */}
         <span className="ai-animating-text-new inline">
-          {text}
+          {suggestion}
         </span>
 
         {/* Sweep Glow Line */}
@@ -168,7 +185,7 @@ export function AITextTransform({
   }
 
   if (displayState === "pending") {
-    const diffParts = diffWords(oldText, text);
+    const diffParts = diffWords(oldText, suggestion || "");
     return (
       <span className={`relative inline-block ${className} ${isAccepting ? "ai-accepting" : ""}`} style={{ ...style }}>
         {/* Render word-by-word diff inline on the CV */}

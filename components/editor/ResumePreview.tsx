@@ -17,6 +17,12 @@ interface ResumePreviewProps {
     rewritingBullet?: string | null;
     isTailoring?: boolean;
   };
+  suggestions?: {
+    summary?: string | null;
+    projectBullets?: Record<string, string>;
+  };
+  onAcceptSuggestion?: (field: string, value: any, index?: number, bulletIndex?: number) => void;
+  onDiscardSuggestion?: (field: string, index?: number, bulletIndex?: number) => void;
   onRevertField?: (field: string, value: any, index?: number, bulletIndex?: number) => void;
 }
 
@@ -26,12 +32,36 @@ export function ResumePreview({
   template = "formal",
   mode = "non-specialized",
   generatingStates,
+  suggestions,
+  onAcceptSuggestion,
+  onDiscardSuggestion,
   onRevertField,
 }: ResumePreviewProps) {
   if (template === "minimal") {
-    return <MinimalTemplate data={data} projects={projects} generatingStates={generatingStates} onRevertField={onRevertField} />;
+    return (
+      <MinimalTemplate 
+        data={data} 
+        projects={projects} 
+        generatingStates={generatingStates} 
+        suggestions={suggestions}
+        onAcceptSuggestion={onAcceptSuggestion}
+        onDiscardSuggestion={onDiscardSuggestion}
+        onRevertField={onRevertField} 
+      />
+    );
   }
-  return <FormalTemplate data={data} projects={projects} mode={mode} generatingStates={generatingStates} onRevertField={onRevertField} />;
+  return (
+    <FormalTemplate 
+      data={data} 
+      projects={projects} 
+      mode={mode} 
+      generatingStates={generatingStates} 
+      suggestions={suggestions}
+      onAcceptSuggestion={onAcceptSuggestion}
+      onDiscardSuggestion={onDiscardSuggestion}
+      onRevertField={onRevertField} 
+    />
+  );
 }
 
 function parseAchievementString(str: string) {
@@ -120,12 +150,18 @@ function FormalTemplate({
   projects,
   mode,
   generatingStates,
+  suggestions,
+  onAcceptSuggestion,
+  onDiscardSuggestion,
   onRevertField,
 }: {
   data: CVData;
   projects: ProjectData[];
   mode: "non-specialized" | "specialized";
   generatingStates?: ResumePreviewProps["generatingStates"];
+  suggestions?: ResumePreviewProps["suggestions"];
+  onAcceptSuggestion?: ResumePreviewProps["onAcceptSuggestion"];
+  onDiscardSuggestion?: ResumePreviewProps["onDiscardSuggestion"];
   onRevertField?: ResumePreviewProps["onRevertField"];
 }) {
   const displaySkills = normalizeAndDedupeSkills(data.skills);
@@ -366,7 +402,10 @@ function FormalTemplate({
             >
               <AITextTransform 
                 text={displaySummary} 
+                suggestion={suggestions?.summary || undefined}
                 isGenerating={generatingStates?.summary || generatingStates?.isTailoring} 
+                onAccept={(val) => onAcceptSuggestion?.("summary", val)}
+                onDiscard={() => onDiscardSuggestion?.("summary")}
                 onRevert={(oldText) => onRevertField?.("summary", oldText)}
               />
             </p>
@@ -609,6 +648,8 @@ function FormalTemplate({
                     >
                       {project.highlights.map((bullet, bIdx) => {
                         const isBulletRewriting = generatingStates?.rewritingBullet === `${idx}-${bIdx}`;
+                        const bulletKey = `${project.id}-${bIdx}`;
+                        const bulletSuggestion = suggestions?.projectBullets?.[bulletKey];
                         return (
                           <li
                             key={bIdx}
@@ -622,7 +663,10 @@ function FormalTemplate({
                           >
                             <AITextTransform 
                               text={bullet} 
+                              suggestion={bulletSuggestion}
                               isGenerating={isGenerating || isBulletRewriting} 
+                              onAccept={(val) => onAcceptSuggestion?.("project-bullet", val, idx, bIdx)}
+                              onDiscard={() => onDiscardSuggestion?.("project-bullet", idx, bIdx)}
                               onRevert={(oldBullet) => {
                                 const nuHighlights = [...project.highlights];
                                 nuHighlights[bIdx] = oldBullet;
@@ -846,11 +890,17 @@ function MinimalTemplate({
   data,
   projects,
   generatingStates,
+  suggestions,
+  onAcceptSuggestion,
+  onDiscardSuggestion,
   onRevertField,
 }: {
   data: CVData;
   projects: ProjectData[];
   generatingStates?: ResumePreviewProps["generatingStates"];
+  suggestions?: ResumePreviewProps["suggestions"];
+  onAcceptSuggestion?: ResumePreviewProps["onAcceptSuggestion"];
+  onDiscardSuggestion?: ResumePreviewProps["onDiscardSuggestion"];
   onRevertField?: ResumePreviewProps["onRevertField"];
 }) {
   return (

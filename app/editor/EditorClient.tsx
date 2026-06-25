@@ -377,6 +377,27 @@ function ensureArray<T>(val: any): T[] {
 
 import { SmartUpdateCenter } from "@/components/dashboard/SmartUpdateCenter";
 
+async function fetchWithRetry(url: string, options?: RequestInit, retries = 2, delay = 1000): Promise<Response> {
+  try {
+    const res = await fetch(url, options);
+    if (!res.ok) {
+      if ([429, 502, 503, 504].includes(res.status) && retries > 0) {
+        console.warn(`Fetch failed with status ${res.status}. Retrying in ${delay}ms...`);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        return fetchWithRetry(url, options, retries - 1, delay * 2);
+      }
+    }
+    return res;
+  } catch (error) {
+    if (retries > 0) {
+      console.warn(`Fetch error: ${error}. Retrying in ${delay}ms...`);
+      await new Promise((resolve) => setTimeout(resolve, delay));
+      return fetchWithRetry(url, options, retries - 1, delay * 2);
+    }
+    throw error;
+  }
+}
+
 export function EditorClient({
   resumeId,
   versionId,
@@ -550,6 +571,8 @@ export function EditorClient({
   const [regeneratingSummary, setRegeneratingSummary] = useState(false);
   const [suggestingSkills, setSuggestingSkills] = useState(false);
   const [rewritingBullet, setRewritingBullet] = useState<string | null>(null); // "projIdx-bulletIdx"
+  const [suggestedSummary, setSuggestedSummary] = useState<string | null>(null);
+  const [suggestedProjectBullets, setSuggestedProjectBullets] = useState<Record<string, string>>({});
 
   // Expanded card tracking
   const [expandedProject, setExpandedProject] = useState<number | null>(0);
@@ -625,6 +648,19 @@ export function EditorClient({
 
     if (isSyncing) return; // PAUSE auto-save during sync
     
+    // Also pause during active AI generations
+    if (
+      regeneratingSummary ||
+      suggestingSkills ||
+      generatingExpBullets !== null ||
+      generatingProjectFromReadme !== null ||
+      rewritingBullet !== null ||
+      isTailoring ||
+      isCreatingTailoredVersion
+    ) {
+      return;
+    }
+    
     setSaveStatus("idle");
     if (saveTimer.current) clearTimeout(saveTimer.current);
     
@@ -636,7 +672,9 @@ export function EditorClient({
     return () => { 
       if (saveTimer.current) clearTimeout(saveTimer.current); 
     };
-  }, [personalInfo, summary, skills, experience, projects, education, achievements, isSyncing, saveCV]);
+  }, [personalInfo, summary, skills, experience, projects, education, achievements, isSyncing, 
+      regeneratingSummary, suggestingSkills, generatingExpBullets, generatingProjectFromReadme, 
+      rewritingBullet, isTailoring, isCreatingTailoredVersion, saveCV]);
 
   // ── beforeunload guard: save immediately if dirty on tab close ──
   useEffect(() => {
@@ -782,13 +820,48 @@ export function EditorClient({
 
   const updateProjectHighlight = updateProjectBullet; // alias kept for compatibility
 
+  const handleAcceptSuggestion = (field: string, value: any, index?: number, bulletIndex?: number) => {
+    if (field === "summary") {
+      setSummary(value);
+      setSuggestedSummary(null);
+    } else if (field === "project-bullet") {
+      const nu = [...projects];
+      const highlights = [...(nu[index!].highlights || [])];
+      highlights[bulletIndex!] = value;
+      nu[index!] = { ...nu[index!], highlights };
+      setProjects(nu);
+      
+      const projectId = projects[index!].id;
+      const bulletKey = `${projectId}-${bulletIndex}`;
+      setSuggestedProjectBullets(prev => {
+        const copy = { ...prev };
+        delete copy[bulletKey];
+        return copy;
+      });
+    }
+  };
+
+  const handleDiscardSuggestion = (field: string, index?: number, bulletIndex?: number) => {
+    if (field === "summary") {
+      setSuggestedSummary(null);
+    } else if (field === "project-bullet") {
+      const projectId = projects[index!].id;
+      const bulletKey = `${projectId}-${bulletIndex}`;
+      setSuggestedProjectBullets(prev => {
+        const copy = { ...prev };
+        delete copy[bulletKey];
+        return copy;
+      });
+    }
+  };
+
   // ── AI Experience Bullet Generation ──
   const handleGenerateExpBullets = async (i: number) => {
     const exp = experience[i];
     if (!exp.company && !exp.title) return;
     setGeneratingExpBullets(i);
     try {
-      const res = await fetch("/api/cv/generate-experience", {
+      const res = await fetchWithRetry("/api/cv/generate-experience", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -798,6 +871,10 @@ export function EditorClient({
           context: expContext[i] || "",
         }),
       });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `Server error: ${res.status}`);
+      }
       const d = await res.json();
       if (d.bullets && Array.isArray(d.bullets)) {
         const nu = [...experience];
@@ -807,8 +884,9 @@ export function EditorClient({
         nu[i] = { ...nu[i], bullets: [...existingMeaningful, ...d.bullets] };
         setExperience(nu);
       }
-    } catch {
-      /* silent */
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || "Failed to generate experience bullets. Please try again.");
     } finally {
       setGeneratingExpBullets(null);
     }
@@ -819,7 +897,7 @@ export function EditorClient({
     if (!p.title) return;
     setGeneratingProjectFromReadme(idx);
     try {
-      const res = await fetch("/api/github/project-readme", {
+      const res = await fetchWithRetry("/api/github/project-readme", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -827,6 +905,10 @@ export function EditorClient({
           techStack: p.techStack || [],
         }),
       });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `Server error: ${res.status}`);
+      }
       const d = await res.json();
       if (d.success) {
         const nu = [...projects];
@@ -836,9 +918,12 @@ export function EditorClient({
           highlights: d.highlights || [],
         };
         setProjects(nu);
+      } else {
+        throw new Error(d.error || "Failed to sync project from README.");
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
+      alert(e.message || "Failed to sync project details. Please try again.");
     } finally {
       setGeneratingProjectFromReadme(null);
     }
@@ -881,7 +966,7 @@ export function EditorClient({
   const handleRegenerateSummary = async () => {
     setRegeneratingSummary(true);
     try {
-      const res = await fetch("/api/cv/regenerate-summary", {
+      const res = await fetchWithRetry("/api/cv/regenerate-summary", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -891,10 +976,19 @@ export function EditorClient({
           targetRole: personalInfo.targetRole,
         }),
       });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `Server error: ${res.status}`);
+      }
       const d = await res.json();
-      if (d.summary) setSummary(d.summary);
-    } catch {
-      /* silent */
+      if (d.summary) {
+        setSuggestedSummary(d.summary);
+      } else {
+        throw new Error("No summary returned from the AI service.");
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || "Failed to improve summary. Please try again.");
     } finally {
       setRegeneratingSummary(false);
     }
@@ -903,7 +997,7 @@ export function EditorClient({
   const handleSuggestSkills = async () => {
     setSuggestingSkills(true);
     try {
-      const res = await fetch("/api/cv/suggest-skills", {
+      const res = await fetchWithRetry("/api/cv/suggest-skills", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -915,6 +1009,10 @@ export function EditorClient({
           ],
         }),
       });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `Server error: ${res.status}`);
+      }
       const d = await res.json();
       if (d.skills) {
         const s = d.skills;
@@ -936,8 +1034,9 @@ export function EditorClient({
           tools: mergeUnique(skills.tools || [], s.tools || []),
         });
       }
-    } catch {
-      /* silent */
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || "Failed to suggest skills. Please try again.");
     } finally {
       setSuggestingSkills(false);
     }
@@ -952,7 +1051,7 @@ export function EditorClient({
     setRewritingBullet(key);
     try {
       const p = projects[pIdx];
-      const res = await fetch("/api/cv/regenerate-bullet", {
+      const res = await fetchWithRetry("/api/cv/regenerate-bullet", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -962,10 +1061,20 @@ export function EditorClient({
           targetRole: cv.targetRole,
         }),
       });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `Server error: ${res.status}`);
+      }
       const d = await res.json();
-      if (d.bullet) updateProjectBullet(pIdx, bIdx, d.bullet);
-    } catch {
-      /* silent */
+      if (d.bullet) {
+        const projectId = projects[pIdx].id;
+        setSuggestedProjectBullets(prev => ({ ...prev, [`${projectId}-${bIdx}`]: d.bullet }));
+      } else {
+        throw new Error("No rewritten bullet returned from the AI service.");
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || "Failed to optimize bullet. Please try again.");
     } finally {
       setRewritingBullet(null);
     }
@@ -999,7 +1108,7 @@ export function EditorClient({
     if (!jdText) return;
     setIsTailoring(true);
     try {
-      const res = await fetch("/api/cv/tailor", {
+      const res = await fetchWithRetry("/api/cv/tailor", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
@@ -1045,9 +1154,12 @@ export function EditorClient({
         }
 
         alert("Resume successfully tailored for " + (jobTitle || "the position") + "!");
+      } else {
+        throw new Error(result.error || "Failed to tailor resume.");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Tailoring failed", error);
+      alert(error.message || "An error occurred during resume tailoring.");
     } finally {
       setIsTailoring(false);
     }
@@ -1057,7 +1169,7 @@ export function EditorClient({
     if (!activeJobTarget || !activeJobTarget.description) return;
     setIsTailoring(true);
     try {
-      const res = await fetch("/api/cv/tailor", {
+      const res = await fetchWithRetry("/api/cv/tailor", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
@@ -1095,9 +1207,9 @@ export function EditorClient({
       } else {
         alert("Failed to re-analyze: " + (result.error || "Unknown error"));
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Re-analysis failed", error);
-      alert("Error re-analyzing resume.");
+      alert("Error re-analyzing resume: " + (error.message || "Unknown error"));
     } finally {
       setIsTailoring(false);
     }
@@ -1128,7 +1240,7 @@ export function EditorClient({
 
     try {
       // 1. Create a new version
-      const createRes = await fetch("/api/cv/create-version", {
+      const createRes = await fetchWithRetry("/api/cv/create-version", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
@@ -1148,7 +1260,7 @@ export function EditorClient({
 
       // 2. If JD is provided, run tailoring
       if (tailorJdText.trim()) {
-        const tailorRes = await fetch("/api/cv/tailor", {
+        const tailorRes = await fetchWithRetry("/api/cv/tailor", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -2649,6 +2761,12 @@ export function EditorClient({
               rewritingBullet: rewritingBullet,
               isTailoring: isTailoring,
             }}
+            suggestions={{
+              summary: suggestedSummary,
+              projectBullets: suggestedProjectBullets,
+            }}
+            onAcceptSuggestion={handleAcceptSuggestion}
+            onDiscardSuggestion={handleDiscardSuggestion}
             onRevertField={(field, value, index, bulletIndex) => {
               if (field === "summary") {
                 setSummary(value);
