@@ -127,6 +127,7 @@ export function CVEditor({
                       rows={2}
                     />
                   </div>
+                ))}
               </div>
             </div>
           ))}
