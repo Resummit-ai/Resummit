@@ -739,12 +739,11 @@ body {
 }
 
 .ai-accepting .ai-diff-removed {
-  animation: ai-dissolve-particles 0.8s forwards cubic-bezier(0.25, 1, 0.5, 1);
   display: inline-block;
 }
 
 .ai-accepting .ai-diff-added {
-  animation: ai-merge-added 0.8s forwards cubic-bezier(0.25, 1, 0.5, 1);
+  display: inline-block;
 }
 
 /* CV Floating Suggestion Toolbar */
