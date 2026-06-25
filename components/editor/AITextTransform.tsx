@@ -82,14 +82,16 @@ export function AITextTransform({
   onDiscard,
   onRevert,
 }: AITextTransformProps) {
-  const containerRef = useRef<HTMLSpanElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [displayState, setDisplayState] = useState<"idle" | "animating" | "pending">("idle");
-  const [oldText, setOldText] = useState<any>(text);
+  const [oldText, setOldText] = useState<string>(text);
   const [isAccepting, setIsAccepting] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [showCanvas, setShowCanvas] = useState(false);
   const prevSuggestionRef = useRef<string | undefined>(undefined);
+
+  const containerRef = useRef<HTMLSpanElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const oldTextRef = useRef<HTMLSpanElement>(null);
+  const newTextRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     // If in the middle of accepting, ignore prop changes until finished
@@ -98,11 +100,11 @@ export function AITextTransform({
     if (suggestion && suggestion !== prevSuggestionRef.current) {
       setOldText(text);
       setDisplayState("animating");
-      
+
       const timer = setTimeout(() => {
         setDisplayState("pending");
       }, 1500); // matches the full animation timeline
-      
+
       prevSuggestionRef.current = suggestion;
       return () => clearTimeout(timer);
     } else if (!suggestion && prevSuggestionRef.current) {
@@ -113,201 +115,152 @@ export function AITextTransform({
     }
   }, [suggestion, text, isAccepting]);
 
+  // Canvas particle dissolve sweep loop
   useEffect(() => {
-    if (!showCanvas) return;
-    const canvas = canvasRef.current;
+    if (!isAccepting) return;
+
     const container = containerRef.current;
-    if (!canvas || !container) return;
+    const canvas = canvasRef.current;
+    if (!container || !canvas) return;
 
-    const parentRect = container.getBoundingClientRect();
-    const W = parentRect.width;
-    const H = parentRect.height;
+    const rect = container.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
 
-    // Set canvas dimensions with DPR scaling
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = W * dpr;
-    canvas.height = H * dpr;
-    canvas.style.width = `${W}px`;
-    canvas.style.height = `${H}px`;
+    // Set canvas dimensions
+    canvas.width = width;
+    canvas.height = height;
+
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    ctx.scale(dpr, dpr);
 
-    // Bounding boxes of removed and added elements
-    const removedElements = container.querySelectorAll(".ai-diff-removed") as NodeListOf<HTMLElement>;
-    const addedElements = container.querySelectorAll(".ai-diff-added") as NodeListOf<HTMLElement>;
-
-    const removedBounds = Array.from(removedElements).map(el => {
-      const rect = el.getBoundingClientRect();
-      return {
-        element: el,
-        left: rect.left - parentRect.left,
-        right: rect.right - parentRect.left,
-        top: rect.top - parentRect.top,
-        bottom: rect.bottom - parentRect.top,
-        width: rect.width,
-        height: rect.height
-      };
-    });
-
-    const addedBounds = Array.from(addedElements).map(el => {
-      const rect = el.getBoundingClientRect();
-      return {
-        element: el,
-        left: rect.left - parentRect.left,
-        right: rect.right - parentRect.left,
-        top: rect.top - parentRect.top,
-        bottom: rect.bottom - parentRect.top,
-        width: rect.width,
-        height: rect.height
-      };
-    });
-
-    // Make sure elements have display: inline-block for clipping
-    removedBounds.forEach(b => {
-      b.element.style.display = "inline-block";
-      b.element.style.transition = "none";
-    });
-    addedBounds.forEach(b => {
-      b.element.style.display = "inline-block";
-      b.element.style.transition = "none";
-    });
+    let animationFrameId: number;
+    const start = performance.now();
+    const duration = 1000; // 1 second sweep duration
 
     interface Particle {
       x: number;
       y: number;
       vx: number;
       vy: number;
-      color: string;
       size: number;
+      color: string;
       alpha: number;
-      life: number;
-      maxLife: number;
+      decay: number;
     }
 
-    let particles: Particle[] = [];
-    const startTime = performance.now();
-    let animId: number;
+    const particles: Particle[] = [];
+    const colors = ["#2563EB", "#22D3EE", "#38BDF8"];
 
-    const loop = (now: number) => {
-      const elapsed = now - startTime;
-      const progress = Math.min(1, elapsed / 1000); // 1000ms duration
-      const waveX = progress * (W + 60) - 30; // Sweep wave from left to right
+    const animate = (now: number) => {
+      const elapsed = now - start;
+      const progress = Math.min(1, elapsed / duration);
+
+      const sweepX = progress * width;
+
+      // Update DOM styles directly for maximum performance (60fps)
+      if (oldTextRef.current) {
+        oldTextRef.current.style.clipPath = `inset(0 0 0 ${sweepX}px)`;
+      }
+      if (newTextRef.current) {
+        newTextRef.current.style.clipPath = `inset(0 ${width - sweepX}px 0 0)`;
+        const blurVal = Math.max(0, (1 - progress) * 4);
+        newTextRef.current.style.filter = `blur(${blurVal}px)`;
+        newTextRef.current.style.opacity = `${Math.min(1, progress * 1.5)}`;
+      }
 
       // Clear canvas
-      ctx.clearRect(0, 0, W, H);
+      ctx.clearRect(0, 0, width, height);
 
-      // Draw subtle energy wave
-      const grad = ctx.createLinearGradient(waveX - 25, 0, waveX + 25, 0);
-      grad.addColorStop(0, "rgba(37, 99, 235, 0)");
-      grad.addColorStop(0.3, "rgba(37, 99, 235, 0.3)");
-      grad.addColorStop(0.5, "rgba(34, 211, 238, 0.8)");
-      grad.addColorStop(0.7, "rgba(37, 99, 235, 0.3)");
-      grad.addColorStop(1, "rgba(37, 99, 235, 0)");
-      ctx.fillStyle = grad;
-      ctx.fillRect(waveX - 25, 0, 50, H);
+      // Spawn particles along the sweep line if sweep is active
+      if (progress < 1) {
+        // Spawn particles based on container height to ensure density
+        const spawnCount = Math.max(3, Math.floor(height / 10));
+        for (let i = 0; i < spawnCount; i++) {
+          particles.push({
+            x: sweepX,
+            y: Math.random() * height,
+            vx: 0.8 + Math.random() * 2.2, // horizontal velocity following the wave
+            vy: -1.0 + Math.random() * 2.0, // slight vertical float
+            size: 1.0 + Math.random() * 2.5,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            alpha: 1.0,
+            decay: 0.015 + Math.random() * 0.025,
+          });
+        }
+      }
 
       // Update and draw particles
-      particles.forEach(p => {
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
         p.x += p.vx;
         p.y += p.vy;
-        p.life -= 16.67;
-        p.alpha = Math.max(0, p.life / p.maxLife);
+        p.alpha -= p.decay;
 
-        ctx.fillStyle = p.color;
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+
+        ctx.save();
         ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.shadowBlur = 6;
         ctx.shadowColor = p.color;
-        ctx.shadowBlur = 4;
-        ctx.fillRect(p.x, p.y, p.size, p.size);
-      });
-      particles = particles.filter(p => p.life > 0);
-      ctx.globalAlpha = 1;
-      ctx.shadowBlur = 0;
 
-      // Clip removed elements and spawn particles at wave front
-      removedBounds.forEach(b => {
-        if (waveX >= b.left && waveX <= b.right + 30) {
-          const clipLeft = Math.max(0, waveX - b.left);
-          b.element.style.clipPath = `inset(0 0 0 ${clipLeft}px)`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
 
-          // Spawn a burst of particles at the slice line
-          const spawnCount = 2;
-          for (let k = 0; k < spawnCount; k++) {
-            const py = b.top + Math.random() * b.height;
-            particles.push({
-              x: waveX,
-              y: py,
-              vx: 1.2 + Math.random() * 1.8, // drift right
-              vy: -0.4 - Math.random() * 1.2, // float up slightly
-              color: Math.random() > 0.5 ? "#2563EB" : "#22D3EE",
-              size: 1.5 + Math.random() * 1.5,
-              alpha: 1,
-              life: 300 + Math.random() * 300,
-              maxLife: 300 + Math.random() * 300
-            });
-          }
-        } else if (waveX > b.right + 30) {
-          b.element.style.clipPath = `inset(0 0 0 100%)`;
-        }
-      });
-
-      // Reveal added elements
-      addedBounds.forEach(b => {
-        if (waveX >= b.left) {
-          const clipRight = Math.max(0, b.right - waveX);
-          b.element.style.clipPath = `inset(0 ${clipRight}px 0 0)`;
-          b.element.style.opacity = "1";
-
-          const dist = waveX - b.left;
-          const blurVal = Math.max(0, 5 - dist / 15);
-          b.element.style.filter = blurVal > 0.1 ? `blur(${blurVal}px)` : "none";
-        } else {
-          b.element.style.clipPath = `inset(0 100% 0 0)`;
-          b.element.style.opacity = "0";
-          b.element.style.filter = "blur(5px)";
-        }
-      });
-
+      // Draw the energy sweep line
       if (progress < 1) {
-        animId = requestAnimationFrame(loop);
-      } else {
-        // Cleanup styles when animation finishes
-        removedBounds.forEach(b => {
-          b.element.style.clipPath = "";
-        });
-        addedBounds.forEach(b => {
-          b.element.style.clipPath = "";
-          b.element.style.opacity = "";
-          b.element.style.filter = "";
-        });
-        setShowCanvas(false);
+        ctx.save();
+        const grad = ctx.createLinearGradient(sweepX - 8, 0, sweepX + 8, 0);
+        grad.addColorStop(0, "rgba(37, 99, 235, 0)");
+        grad.addColorStop(0.3, "rgba(34, 211, 238, 0.8)");
+        grad.addColorStop(0.5, "rgba(255, 255, 255, 0.95)");
+        grad.addColorStop(0.7, "rgba(37, 99, 235, 0.8)");
+        grad.addColorStop(1, "rgba(34, 211, 238, 0)");
+
+        ctx.fillStyle = grad;
+        ctx.fillRect(sweepX - 8, 0, 16, height);
+        ctx.restore();
+      }
+
+      if (progress < 1 || particles.length > 0) {
+        animationFrameId = requestAnimationFrame(animate);
       }
     };
 
-    animId = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(animId);
-  }, [showCanvas]);
+    animationFrameId = requestAnimationFrame(animate);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [isAccepting]);
 
   const handleAcceptClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
     setIsAccepting(true);
-    setShowCanvas(true);
-    
-    // Wait for the particles dissolve animation to run on CV (1000ms)
+
+    // After 1000ms sweep completes, update parent document value & show success checkmark
     setTimeout(() => {
       setSuccess(true);
       if (onAccept && suggestion) {
         onAccept(suggestion);
       }
     }, 1000);
-    // Hide panel and restore clean state after success checkmark plays
+
+    // Close state and show normal view after 2500ms
     setTimeout(() => {
       setDisplayState("idle");
       setIsAccepting(false);
       setSuccess(false);
       prevSuggestionRef.current = undefined;
-    }, 3000);
+    }, 2500);
   };
 
   const handleDiscardClick = (e: React.MouseEvent) => {
@@ -331,7 +284,7 @@ export function AITextTransform({
         <span className="ai-animating-text-old inline">
           {oldText}
         </span>
-        
+
         {/* New Text (Fades in via left-to-right sweeping mask) */}
         <span className="ai-animating-text-new inline">
           {suggestion}
@@ -342,7 +295,7 @@ export function AITextTransform({
 
         {/* Status Chip */}
         <span className="ai-status-chip no-print">
-          <svg className="w-3 h-3 text-cyan-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="w-3.5 h-3.5 text-cyan-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
           </svg>
           Improved by AI
@@ -367,44 +320,72 @@ export function AITextTransform({
   if (displayState === "pending") {
     const diffParts = diffWords(oldText, suggestion || "");
     return (
-      <span 
+      <span
         ref={containerRef}
-        className={`relative inline-block ${className} ${isAccepting ? "ai-accepting" : ""}`} 
+        className={`relative inline-block ${className} ${isAccepting ? "ai-accepting" : ""}`}
         style={{ ...style }}
       >
-        {/* Canvas overlay for particle dissolve wave */}
-        {showCanvas && (
-          <canvas 
-            ref={canvasRef} 
-            className="absolute inset-0 pointer-events-none z-10 no-print" 
-          />
+        {isAccepting ? (
+          <span className="relative inline-block w-full">
+            {/* The canvas overlay */}
+            <canvas
+              ref={canvasRef}
+              className="absolute inset-0 pointer-events-none z-50"
+              style={{ mixBlendMode: "screen" }}
+            />
+
+            {/* Old Text (absolute, clips out) */}
+            <span
+              ref={oldTextRef}
+              className="absolute top-0 left-0 w-full pointer-events-none select-none"
+              style={{
+                color: "#2563EB",
+                textShadow: "0 0 8px rgba(37,99,235,0.6)",
+                whiteSpace: "pre-wrap",
+                wordBreak: "break-word",
+                lineHeight: "inherit",
+              }}
+            >
+              {oldText}
+            </span>
+
+            {/* New Text (relative, clips in) */}
+            <span
+              ref={newTextRef}
+              className="inline-block w-full"
+              style={{
+                whiteSpace: "pre-wrap",
+                wordBreak: "break-word",
+                lineHeight: "inherit",
+              }}
+            >
+              {suggestion}
+            </span>
+          </span>
+        ) : (
+          /* Render suggestion text, showing added parts in soft green, hiding removed parts */
+          <span className="ai-diff-container">
+            {diffParts.map((part, index) => {
+              if (part.type === "added") {
+                return (
+                  <span key={index} className="ai-diff-added font-semibold">
+                    {part.text}
+                  </span>
+                );
+              }
+              if (part.type === "removed") {
+                // Hiding removed words in the pending view to avoid red crosses
+                return null;
+              }
+              return <span key={index}>{part.text}</span>;
+            })}
+          </span>
         )}
-        
-        {/* Render word-by-word diff inline on the CV */}
-        <span className="ai-diff-container">
-          {diffParts.map((part, index) => {
-            if (part.type === "added") {
-              return (
-                <span key={index} className="ai-diff-added font-semibold">
-                  {part.text}
-                </span>
-              );
-            }
-            if (part.type === "removed") {
-              return (
-                <span key={index} className="ai-diff-removed font-medium">
-                  {part.text}
-                </span>
-              );
-            }
-            return <span key={index}>{part.text}</span>;
-          })}
-        </span>
 
         {/* Floating CV Action Toolbar directly on top of the text */}
         <span className="ai-cv-floating-toolbar no-print">
           {success ? (
-            <span className="ai-cv-toolbar-success flex items-center gap-1.5 px-3 py-1 bg-slate-900 border border-emerald-500/30 rounded-full text-xs font-semibold text-emerald-400">
+            <span className="ai-cv-toolbar-success">
               <svg className="w-3.5 h-3.5 text-emerald-400 ai-success-checkmark-pop" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
@@ -418,7 +399,7 @@ export function AITextTransform({
                 </svg>
                 Suggested by Resummit AI
               </span>
-              <button 
+              <button
                 onClick={handleAcceptClick}
                 className="ai-cv-btn-accept cursor-pointer"
                 title="Accept Changes"
@@ -427,7 +408,7 @@ export function AITextTransform({
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
               </button>
-              <button 
+              <button
                 onClick={handleDiscardClick}
                 className="ai-cv-btn-discard cursor-pointer"
                 title="Keep Original"

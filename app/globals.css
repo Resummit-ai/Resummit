@@ -2,21 +2,33 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-:root, .light {
-  --sclade-bg: #f1f5f9; /* Slate 100 - modern cool background separating sheet/editor */
-  --sclade-text-primary: #0f172a; /* Slate 900 */
-  --sclade-text-secondary: #475569; /* Slate 600 */
-  --sclade-text-muted: #94a3b8; /* Slate 400 */
-  --sclade-card-bg: #f8fafc; /* Slate 50 - distinct card panels inside sidebar */
-  --sclade-card-border: #e2e8f0; /* Slate 200 - clean and visible card bounds */
+:root,
+.light {
+  --sclade-bg: #f1f5f9;
+  /* Slate 100 - modern cool background separating sheet/editor */
+  --sclade-text-primary: #0f172a;
+  /* Slate 900 */
+  --sclade-text-secondary: #475569;
+  /* Slate 600 */
+  --sclade-text-muted: #94a3b8;
+  /* Slate 400 */
+  --sclade-card-bg: #f8fafc;
+  /* Slate 50 - distinct card panels inside sidebar */
+  --sclade-card-border: #e2e8f0;
+  /* Slate 200 - clean and visible card bounds */
   --sclade-nav-bg: rgba(255, 255, 255, 0.85);
   --sclade-glass-tint: rgba(37, 99, 235, 0.02);
-  --sclade-input-bg: #ffffff; /* pure white input boxes */
-  --sclade-input-border: #cbd5e1; /* Slate 300 - clear input focus/outlines */
-  --sclade-btn-secondary-bg: #f1f5f9; /* Slate 100 */
+  --sclade-input-bg: #ffffff;
+  /* pure white input boxes */
+  --sclade-input-border: #cbd5e1;
+  /* Slate 300 - clear input focus/outlines */
+  --sclade-btn-secondary-bg: #f1f5f9;
+  /* Slate 100 */
   --sclade-btn-secondary-text: #0f172a;
-  --sclade-popover-bg: #ffffff; /* pure white sidebar container */
-  --sclade-popover-border: #e2e8f0; /* Slate 200 border */
+  --sclade-popover-bg: #ffffff;
+  /* pure white sidebar container */
+  --sclade-popover-border: #e2e8f0;
+  /* Slate 200 border */
 }
 
 .dark {
@@ -53,7 +65,7 @@ body {
     margin: 20mm;
     size: A4;
   }
-  
+
   body {
     background: white !important;
     color: black !important;
@@ -66,7 +78,7 @@ body {
   .print-only {
     display: block !important;
   }
-  
+
   /* Reset background for print */
   * {
     -webkit-print-color-adjust: exact;
@@ -77,14 +89,18 @@ body {
 /* Premium Light Theme 3D Card Overrides */
 .light .glass-panel,
 .light .bg-\[var\(--sclade-card-bg\)\] {
-  background-color: rgba(115, 115, 115, 0.03) !important; /* Neutral 500 at 3% */
-  border-color: rgba(115, 115, 115, 0.1) !important; /* Neutral 500 at 10% */
+  background-color: rgba(115, 115, 115, 0.03) !important;
+  /* Neutral 500 at 3% */
+  border-color: rgba(115, 115, 115, 0.1) !important;
+  /* Neutral 500 at 10% */
   box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.01), 0 4px 12px -2px rgba(0, 0, 0, 0.01), inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
 }
 
 .light .bg-\[var\(--sclade-input-bg\)\] {
-  background-color: rgba(115, 115, 115, 0.02) !important; /* Neutral 500 at 2% */
-  border-color: rgba(115, 115, 115, 0.08) !important; /* Neutral 500 at 8% */
+  background-color: rgba(115, 115, 115, 0.02) !important;
+  /* Neutral 500 at 2% */
+  border-color: rgba(115, 115, 115, 0.08) !important;
+  /* Neutral 500 at 8% */
 }
 
 /* Make inner cards and inputs pop inside the light theme popovers/drawer */
@@ -105,7 +121,8 @@ body {
 
 .light .hover\:bg-white\/10:hover,
 .light .hover\:bg-white\/5:hover {
-  background-color: #cbd5e1 !important; /* Visible Slate hover */
+  background-color: #cbd5e1 !important;
+  /* Visible Slate hover */
 }
 
 .light .bg-white\/\[0\.01\],
@@ -128,7 +145,8 @@ body {
 }
 
 /* Custom Global Logo & Branding Colors */
-:root, .light {
+:root,
+.light {
   --logo-doc-body: #dbeafe;
   --logo-doc-fold: #bfdbfe;
   --logo-doc-lines: #93c5fd;
@@ -139,7 +157,8 @@ body {
 }
 
 .dark {
-  --logo-doc-body: #172554; /* slate/blue dark */
+  --logo-doc-body: #172554;
+  /* slate/blue dark */
   --logo-doc-fold: #1d4ed8;
   --logo-doc-lines: #3b82f6;
   --logo-flag-pole: #60a5fa;
@@ -190,23 +209,27 @@ body {
 
 .logo-doc-body {
   fill: var(--logo-doc-body);
-  transition: fill 0.35s cubic-bezier(.22,.61,.36,1);
+  transition: fill 0.35s cubic-bezier(.22, .61, .36, 1);
 }
+
 .logo-doc-fold {
   fill: var(--logo-doc-fold);
-  transition: fill 0.35s cubic-bezier(.22,.61,.36,1);
+  transition: fill 0.35s cubic-bezier(.22, .61, .36, 1);
 }
+
 .logo-doc-lines {
   stroke: var(--logo-doc-lines);
-  transition: stroke 0.35s cubic-bezier(.22,.61,.36,1);
+  transition: stroke 0.35s cubic-bezier(.22, .61, .36, 1);
 }
+
 .logo-flag-pole {
   stroke: var(--logo-flag-pole);
-  transition: stroke 0.35s cubic-bezier(.22,.61,.36,1);
+  transition: stroke 0.35s cubic-bezier(.22, .61, .36, 1);
 }
+
 .logo-flag-banner {
   fill: var(--logo-flag-banner);
-  transition: fill 0.35s cubic-bezier(.22,.61,.36,1);
+  transition: fill 0.35s cubic-bezier(.22, .61, .36, 1);
 }
 
 /* Force dark-theme values and high contrast on hardcoded dark pages */
@@ -237,18 +260,23 @@ body {
   0% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }
 }
 
 @keyframes ai-pulse-subtle {
-  0%, 100% {
+
+  0%,
+  100% {
     background-color: rgba(59, 130, 246, 0.015);
   }
+
   50% {
     background-color: rgba(139, 92, 246, 0.04);
   }
@@ -258,6 +286,7 @@ body {
   0% {
     background-position: 0% 50%;
   }
+
   100% {
     background-position: 200% 50%;
   }
@@ -267,6 +296,7 @@ body {
   0% {
     transform: translateX(-100%);
   }
+
   100% {
     transform: translateX(100%);
   }
@@ -317,14 +347,12 @@ body {
 .ai-generating-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(79, 140, 255, 0) 0%,
-    rgba(79, 140, 255, 0.08) 25%,
-    rgba(167, 139, 250, 0.12) 50%,
-    rgba(6, 182, 212, 0.08) 75%,
-    rgba(79, 140, 255, 0) 100%
-  );
+  background: linear-gradient(90deg,
+      rgba(79, 140, 255, 0) 0%,
+      rgba(79, 140, 255, 0.08) 25%,
+      rgba(167, 139, 250, 0.12) 50%,
+      rgba(6, 182, 212, 0.08) 75%,
+      rgba(79, 140, 255, 0) 100%);
   transform: translateX(-100%);
   animation: ai-shimmer-sweep 2.5s infinite ease-in-out;
   pointer-events: none;
@@ -332,14 +360,17 @@ body {
 }
 
 @media print {
+
   .ai-generating-line,
   .ai-generating-overlay {
     display: none !important;
   }
+
   .ai-generating-container {
     animation: none !important;
     background-color: transparent !important;
   }
+
   .ai-generating-text {
     background: none !important;
     -webkit-background-clip: border-box !important;
@@ -349,9 +380,11 @@ body {
     animation: none !important;
     text-shadow: none !important;
   }
+
   .ai-animating-text-old {
     display: none !important;
   }
+
   .ai-animating-text-new {
     mask-image: none !important;
     -webkit-mask-image: none !important;
@@ -396,9 +429,11 @@ body {
     opacity: 1;
     background-color: rgba(79, 140, 255, 0.15);
   }
+
   10% {
     background-color: rgba(79, 140, 255, 0.15);
   }
+
   100% {
     -webkit-mask-position: 0% 0;
     mask-position: 0% 0;
@@ -413,9 +448,11 @@ body {
     mask-position: 100% 0;
     background-color: rgba(79, 140, 255, 0.15);
   }
+
   10% {
     background-color: rgba(79, 140, 255, 0.15);
   }
+
   100% {
     -webkit-mask-position: 0% 0;
     mask-position: 0% 0;
@@ -440,12 +477,15 @@ body {
     left: 0%;
     opacity: 0;
   }
+
   10% {
     opacity: 1;
   }
+
   90% {
     opacity: 1;
   }
+
   100% {
     left: 100%;
     opacity: 0;
@@ -479,14 +519,17 @@ body {
     opacity: 0;
     transform: translateY(4px) scale(0.95);
   }
+
   10% {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+
   80% {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+
   100% {
     opacity: 0;
     transform: translateY(-4px) scale(0.95);
@@ -508,19 +551,40 @@ body {
     transform: translateY(0) scale(1);
     opacity: 0;
   }
+
   20% {
     opacity: 0.8;
   }
+
   100% {
     transform: translateY(-20px) scale(0.5);
     opacity: 0;
   }
 }
 
-.ai-particle-1 { left: 20%; top: 60%; animation: ai-particle-float 0.8s 0.2s forwards ease-out; }
-.ai-particle-2 { left: 40%; top: 30%; animation: ai-particle-float 0.8s 0.4s forwards ease-out; }
-.ai-particle-3 { left: 60%; top: 70%; animation: ai-particle-float 0.8s 0.6s forwards ease-out; }
-.ai-particle-4 { left: 80%; top: 40%; animation: ai-particle-float 0.8s 0.8s forwards ease-out; }
+.ai-particle-1 {
+  left: 20%;
+  top: 60%;
+  animation: ai-particle-float 0.8s 0.2s forwards ease-out;
+}
+
+.ai-particle-2 {
+  left: 40%;
+  top: 30%;
+  animation: ai-particle-float 0.8s 0.4s forwards ease-out;
+}
+
+.ai-particle-3 {
+  left: 60%;
+  top: 70%;
+  animation: ai-particle-float 0.8s 0.6s forwards ease-out;
+}
+
+.ai-particle-4 {
+  left: 80%;
+  top: 40%;
+  animation: ai-particle-float 0.8s 0.8s forwards ease-out;
+}
 
 .ai-sparkle {
   position: absolute;
@@ -537,11 +601,13 @@ body {
     transform: translateY(-50%) scale(0) rotate(0deg);
     opacity: 0;
   }
+
   40% {
     transform: translateY(-50%) scale(1.3) rotate(90deg);
     opacity: 1;
     filter: drop-shadow(0 0 8px #06b6d4);
   }
+
   100% {
     transform: translateY(-50%) scale(0.8) rotate(180deg);
     opacity: 0;
@@ -572,6 +638,7 @@ body {
     opacity: 0;
     transform: translateX(-50%) translateY(12px);
   }
+
   100% {
     opacity: 1;
     transform: translateX(-50%) translateY(4px);
@@ -648,6 +715,7 @@ body {
     opacity: 0;
     transform: translateY(10px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -700,9 +768,11 @@ body {
     transform: scale(0.6);
     opacity: 0;
   }
+
   50% {
     transform: scale(1.2);
   }
+
   100% {
     transform: scale(1);
     opacity: 1;
@@ -716,9 +786,11 @@ body {
     transform: translateY(0) scale(1);
     filter: blur(0);
   }
+
   30% {
     text-shadow: 0 0 6px #ef4444, -2px -2px 8px #ef4444, 2px 2px 8px #ef4444;
   }
+
   100% {
     opacity: 0;
     transform: translateY(-12px) scale(0.9);
@@ -732,6 +804,7 @@ body {
     background-color: rgba(16, 185, 129, 0.15);
     color: inherit;
   }
+
   100% {
     background-color: transparent;
     color: inherit;
@@ -739,11 +812,12 @@ body {
 }
 
 .ai-accepting .ai-diff-removed {
+  animation: ai-dissolve-particles 0.8s forwards cubic-bezier(0.25, 1, 0.5, 1);
   display: inline-block;
 }
 
 .ai-accepting .ai-diff-added {
-  display: inline-block;
+  animation: ai-merge-added 0.8s forwards cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* CV Floating Suggestion Toolbar */
