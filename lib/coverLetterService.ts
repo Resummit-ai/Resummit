@@ -44,7 +44,7 @@ function getGeminiKey(): string | undefined {
 
 export async function generateCoverLetter(input: CoverLetterInput): Promise<CoverLetterOutput> {
   const startTime = Date.now()
-  logger.info('[CoverLetter] Starting AI cover letter generation for target role:', input.jobTitle)
+  console.log('[CoverLetter] Starting AI cover letter generation for target role:', input.jobTitle)
 
   const prompt = `You are an expert executive resume writer and career coach.
 Generate a highly targeted, compelling cover letter for a candidate applying to a job.
@@ -89,7 +89,12 @@ REQUIREMENTS:
       const res = await model.generateContent(prompt)
       const text = res.response.text()
       const parsed = JSON.parse(text) as CoverLetterOutput
-      logger.info(`[CoverLetter] Successfully generated cover letter in ${Date.now() - startTime}ms`)
+      logger.ai({
+        userId: 'system',
+        feature: 'cover-letter',
+        model: 'gemini-2.5-flash',
+        durationMs: Date.now() - startTime
+      })
       return parsed
     }
 
@@ -107,10 +112,10 @@ REQUIREMENTS:
       keywordsMatched: input.skills?.languages || ['TypeScript', 'React']
     }
 
-    logger.warn('[CoverLetter] GEMINI_API_KEY missing, returned structured fallback cover letter')
+    console.log('[CoverLetter] GEMINI_API_KEY missing, returned structured fallback cover letter')
     return fallback
   } catch (error) {
-    logger.error('[CoverLetter] Error during AI cover letter generation:', error)
+    logger.error('cover-letter.generation_failed', error)
     throw new Error('Failed to generate AI cover letter')
   }
 }
