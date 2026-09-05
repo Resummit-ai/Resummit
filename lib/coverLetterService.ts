@@ -38,13 +38,12 @@ export interface CoverLetterOutput {
   keywordsMatched: string[]
 }
 
-function getGeminiKey(): string | undefined {
-  return process.env.GEMINI_API_KEY
-}
+const BRANCHDECK_PROXY_URL = process.env.BRANCHDECK_PROXY_URL || 'http://127.0.0.1:8000/api/proxy/ai-generate'
+const INTEGRATION_ID = 'integ-resummit-004'
 
 export async function generateCoverLetter(input: CoverLetterInput): Promise<CoverLetterOutput> {
   const startTime = Date.now()
-  console.log('[CoverLetter] Starting AI cover letter generation for target role:', input.jobTitle)
+  console.log('[CoverLetter] Routing AI cover letter request through Branchdeck Proxy for target role:', input.jobTitle)
 
   const prompt = `You are an expert executive resume writer and career coach.
 Generate a highly targeted, compelling cover letter for a candidate applying to a job.
@@ -77,45 +76,53 @@ REQUIREMENTS:
 }`
 
   try {
-    const key = getGeminiKey()
-    if (key && key.length > 10) {
-      const { GoogleGenerativeAI } = await import('@google/generative-ai')
-      const genAI = new GoogleGenerativeAI(key)
-      const model = genAI.getGenerativeModel({
-        model: 'gemini-2.5-flash',
-        generationConfig: { responseMimeType: 'application/json' }
+    const res = await fetch(BRANCHDECK_PROXY_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        integration_id: INTEGRATION_ID,
+        prompt: prompt,
+        model: 'gemini-2.5-flash'
       })
+    })
 
-      const res = await model.generateContent(prompt)
-      const text = res.response.text()
-      const parsed = JSON.parse(text) as CoverLetterOutput
-      logger.ai({
-        userId: 'system',
-        feature: 'cover-letter',
-        model: 'gemini-2.5-flash',
-        durationMs: Date.now() - startTime
-      })
-      return parsed
+    if (!res.ok) {
+      const errText = await res.text()
+      console.error(`[CoverLetter Proxy Error ${res.status}]:`, errText)
+      throw new Error(`Branchdeck AI Proxy Error (${res.status}): ${errText}`)
     }
 
-    // Fallback template when API key is unconfigured
-    const fallback: CoverLetterOutput = {
-      salutation: `Dear Hiring Team at ${input.companyName || 'Company'},`,
-      openingParagraph: `I am writing to express my strong interest in the ${input.jobTitle} position. With my background in ${input.skills?.frameworks?.slice(0, 3).join(', ') || 'software development'}, I am confident in my ability to make an immediate contribution to your team.`,
-      bodyParagraphs: [
-        `Throughout my career, I have focused on building scalable, reliable applications. My experience aligned directly with the requirements outlined in your job posting.`,
-        `I bring hands-on experience with ${input.skills?.languages?.slice(0, 4).join(', ') || 'modern programming stacks'}, allowing me to quickly integrate with existing technical workflows.`
-      ],
-      closingParagraph: `Thank you for your time and consideration. I welcome the opportunity to discuss how my technical skills and experience align with your goals.`,
-      signOff: `Best regards,\n${input.personalInfo?.fullName || 'Candidate'}`,
-      fullText: `Dear Hiring Team,\n\nI am writing to express my strong interest in the ${input.jobTitle} position...`,
-      keywordsMatched: input.skills?.languages || ['TypeScript', 'React']
+    const proxyData = await res.json()
+    const contentText = proxyData.content || ''
+    
+    let parsed: CoverLetterOutput
+    try {
+      parsed = JSON.parse(contentText) as CoverLetterOutput
+    } catch {
+      // Fallback if raw text returned
+      parsed = {
+        salutation: `Dear Hiring Team at ${input.companyName || 'Company'},`,
+        openingParagraph: contentText.slice(0, 200),
+        bodyParagraphs: [contentText.slice(200, 500)],
+        closingParagraph: "Thank you for your consideration.",
+        signOff: `Best regards,\n${input.personalInfo?.fullName || 'Candidate'}`,
+        fullText: contentText,
+        keywordsMatched: input.skills?.languages || ['TypeScript']
+      }
     }
 
-    console.log('[CoverLetter] GEMINI_API_KEY missing, returned structured fallback cover letter')
-    return fallback
+    logger.ai({
+      userId: 'system',
+      feature: 'cover-letter',
+      model: 'gemini-2.5-flash',
+      durationMs: Date.now() - startTime
+    })
+
+    return parsed
   } catch (error) {
     logger.error('cover-letter.generation_failed', error)
-    throw new Error('Failed to generate AI cover letter')
+    throw error
   }
 }
