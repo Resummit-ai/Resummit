@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { generateCVFromRepos } from "@/lib/aiService";
 import { generateEngineeringSignals } from "@/lib/server/githubIntelligence";
 import { encryptToken } from "@/lib/server/crypto";
+import { logger } from "@/lib/server/logger";
 import axios from "axios";
 
 export const runtime = "nodejs";
@@ -24,7 +25,7 @@ export async function POST(req: Request) {
     const exp = body.exp || "MID";
 
     // 2. Fetch GitHub repos (Initial sync)
-    let repos = [];
+    let repos: any[] = [];
     let username = github;
 
     const accessToken = (session?.user as any)?.accessToken;
@@ -44,7 +45,7 @@ export async function POST(req: Request) {
         });
         repos = reposRes.data;
       } catch (err) {
-        console.error("GitHub API error with token:", err);
+        logger.error("onboarding.github_token_error", err, { userId });
       }
     }
 
@@ -54,40 +55,15 @@ export async function POST(req: Request) {
         const githubRes = await axios.get(`https://api.github.com/users/${username}/repos?sort=updated&per_page=10`);
         repos = githubRes.data;
       } catch (err) {
-        console.error("GitHub API public fallback failed or rate-limited:", err);
+        logger.error("onboarding.github_public_error", err, { username, userId });
       }
     }
 
-    // Bulletproof fallback: If no repos could be retrieved (rate-limit or empty profile), inject high-quality mock data so synthesis succeeds beautifully!
-    if (!repos || repos.length === 0) {
-      console.log("[ONBOARDING] Injecting premium fallback mock repository profile due to rate-limit or empty account.");
-      repos = [
-        {
-          name: "e-commerce-microservices",
-          description: "High-throughput microservices architecture built with NestJS, RabbitMQ, and Redis to process catalog search and cart management.",
-          language: "TypeScript",
-          topics: ["microservices", "nestjs", "rabbitmq", "redis", "typescript"],
-          stargazers_count: 12,
-          readme: "# E-Commerce Microservices\nThis repository houses our core high-performance microservices backend. It leverages RabbitMQ for async message brokers and Redis for distributed caching. Key performance indicators: sub-50ms response times for catalog lookup."
-        },
-        {
-          name: "autonomous-trading-engine",
-          description: "Quantitative analysis and algorithmic trading framework leveraging Python, Pandas, and WebSockets to ingest live ticker data.",
-          language: "Python",
-          topics: ["python", "algorithmic-trading", "websockets", "data-science"],
-          stargazers_count: 8,
-          readme: "# Quantitative Trading System\nA fully automated paper trading bot that interfaces with Binance WebSockets to stream high-frequency order book updates. Uses pandas to calculate exponential moving averages."
-        },
-        {
-          name: "serverless-analytics-dashboard",
-          description: "Real-time client telemetry reporting system deployed via AWS Lambda and React with high ATS readability.",
-          language: "TypeScript",
-          topics: ["react", "aws-lambda", "serverless", "analytics"],
-          stargazers_count: 5,
-          readme: "# Real-time Analytics\nFrontend dashboard built using Vite, TailwindCSS, and Recharts, querying aggregated metrics from AWS Athena via serverless HTTP endpoints."
-        }
-      ];
+    if (!Array.isArray(repos)) {
+      repos = [];
     }
+
+    const needsManualProjects = repos.length === 0;
 
     // 1. Update user profile with exact resolved username
     const user = await prisma.user.update({
@@ -100,8 +76,8 @@ export async function POST(req: Request) {
       }
     });
 
-    // 3. Generate Signals & Intelligence
-    const signals = await generateEngineeringSignals(repos, role);
+    // 3. Generate Signals & Intelligence (only if repos exist)
+    const signals = repos.length > 0 ? await generateEngineeringSignals(repos, role) : null;
 
     const rawToken = (session?.user as any)?.accessToken;
     const encryptedToken = rawToken ? encryptToken(rawToken) : null;
@@ -125,7 +101,9 @@ export async function POST(req: Request) {
     });
 
     // 4. Generate Initial Resume
-    const generated = await generateCVFromRepos(repos, role);
+    const generated = repos.length > 0
+      ? await generateCVFromRepos(repos, role)
+      : { summary: "", skills: { languages: [], frameworks: [], tools: [] }, projects: [], needsReview: true };
 
     // 5. Create Resume and Version
     const primaryLanguage = generated.skills?.languages?.[0] || "TypeScript";
@@ -186,9 +164,9 @@ export async function POST(req: Request) {
       }
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, needsManualProjects });
   } catch (error: any) {
-    console.error("Onboarding Error:", error);
+    logger.error("onboarding.error", error, { userId });
     return NextResponse.json({ error: "Failed to complete onboarding" }, { status: 500 });
   }
 }

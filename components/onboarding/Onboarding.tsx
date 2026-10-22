@@ -46,6 +46,7 @@ export function Onboarding() {
   const [exp, setExp] = useState("MID");
   const [isSynthesizing, setIsSynthesizing] = useState(false);
   const [synthesisLogs, setSynthesisLogs] = useState<string[]>([]);
+  const [needsManualProjects, setNeedsManualProjects] = useState(false);
   const [hasTriggered, setHasTriggered] = useState(false);
   const router = useRouter();
   const { data: session } = useSession();
@@ -99,10 +100,17 @@ export function Onboarding() {
       });
       
       if (!res.ok) throw new Error("Synthesis failed");
+      const data = await res.json().catch(() => ({}));
       
-      // Final log
-      setSynthesisLogs(prev => [...prev, "Identity synthesis complete."]);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      if (data?.needsManualProjects) {
+        setNeedsManualProjects(true);
+        setSynthesisLogs(prev => [...prev, "We couldn't find public repos. Add a project manually, or connect GitHub."]);
+        await new Promise(resolve => setTimeout(resolve, 3000));
+      } else {
+        // Final log
+        setSynthesisLogs(prev => [...prev, "Identity synthesis complete."]);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
       
       router.refresh();
     } catch (err) {
@@ -306,6 +314,12 @@ export function Onboarding() {
                     ))}
                  </AnimatePresence>
               </div>
+
+              {needsManualProjects && (
+                <div className="mt-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs text-center font-medium animate-in fade-in">
+                  We couldn&apos;t find public repos. Add a project manually, or connect GitHub.
+                </div>
+              )}
             </div>
           </motion.div>
         )}
