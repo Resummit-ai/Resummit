@@ -388,23 +388,22 @@ export function DashboardControls({ user }: DashboardControlsProps) {
           onClick={() => {
             setShowUserMenu(!showUserMenu);
             setShowNotifications(false);
+            setShowSettings(false);
           }}
-          className="flex items-center gap-1.5 cursor-pointer focus:outline-none"
+          className="flex items-center justify-center cursor-pointer focus:outline-none hover:opacity-90 transition-opacity"
+          aria-label="User profile menu"
         >
-          <div className="w-8 h-8 rounded-full bg-[#E1E5EB] dark:bg-neutral-800 border border-[var(--sclade-card-border)] flex items-center justify-center text-xs font-bold text-[var(--sclade-text-secondary)] shadow-xs">
-            {initials}
-          </div>
           {user.image ? (
-            <div className="w-8 h-8 rounded-full overflow-hidden border border-[var(--sclade-card-border)]">
+            <div className="w-9 h-9 rounded-full overflow-hidden border border-[var(--sclade-card-border)] shadow-xs">
               <img
                 src={user.image}
-                alt={user.name || ""}
+                alt={user.name || "User profile"}
                 className="w-full h-full object-cover"
               />
             </div>
           ) : (
-            <div className="w-8 h-8 rounded-full overflow-hidden border border-[var(--sclade-card-border)] bg-slate-300 dark:bg-neutral-700 flex items-center justify-center text-[10px] text-slate-600 dark:text-slate-300 font-bold">
-              <User className="w-4 h-4 text-slate-500" />
+            <div className="w-9 h-9 rounded-full bg-[#E1E5EB] dark:bg-neutral-800 border border-[var(--sclade-card-border)] flex items-center justify-center text-xs font-bold text-[var(--sclade-text-secondary)] shadow-xs">
+              {initials}
             </div>
           )}
         </button>

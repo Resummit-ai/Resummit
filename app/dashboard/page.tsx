@@ -5,13 +5,7 @@ import { auth, signOut } from "@/auth";
 import { prisma, resolveUserId } from "@/lib/server/prisma";
 import { redirect } from "next/navigation";
 import {
-  LayoutDashboard,
   FileText,
-  Sparkles,
-  RefreshCw,
-  GitBranch,
-  History,
-  Settings,
   ChevronRight,
   Shield,
   LayoutGrid
@@ -114,108 +108,46 @@ export default async function DashboardPage() {
 
       {/* Top Nav */}
       <nav className="relative z-50 border-b border-[var(--sclade-card-border)] bg-[var(--sclade-nav-bg)] backdrop-blur-xl sticky top-0 transition-colors duration-200 px-6 md:px-8 py-4">
-        <div className="w-full flex items-center justify-between">
-          <Link
-            href="/"
-            className="logo scale-90 origin-left cursor-pointer hover:opacity-90 transition-opacity"
-          >
-            <svg viewBox="0 0 32 32" className="logo-icon-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M7 6C7 4.34315 8.34315 3 10 3H19L25 9V26C25 27.6569 23.6569 29 22 29H10C8.34315 29 7 27.6569 7 26V6Z" className="logo-doc-body" />
-              <path d="M19 3V9H25L19 3Z" className="logo-doc-fold" />
-              <path d="M11 13H17M11 17H21M11 21H18M11 25H20" className="logo-doc-lines" strokeWidth="2" strokeLinecap="round" />
-              <path d="M20 8.5L25 3.5" className="logo-flag-pole" strokeWidth="2" strokeLinecap="round" />
-              <path d="M25 3.5L27 6.5L23.5 5.5Z" className="logo-flag-banner" />
-            </svg>
-            <div className="logo-text-group">
-              <div className="logo-wordmark">RESUMMIT</div>
-              <div className="logo-tagline">YOUR CAREER. YOUR CONTROL.</div>
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-10">
+            <Link
+              href="/"
+              className="logo scale-90 origin-left cursor-pointer hover:opacity-90 transition-opacity"
+            >
+              <svg viewBox="0 0 32 32" className="logo-icon-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7 6C7 4.34315 8.34315 3 10 3H19L25 9V26C25 27.6569 23.6569 29 22 29H10C8.34315 29 7 27.6569 7 26V6Z" className="logo-doc-body" />
+                <path d="M19 3V9H25L19 3Z" className="logo-doc-fold" />
+                <path d="M11 13H17M11 17H21M11 21H18M11 25H20" className="logo-doc-lines" strokeWidth="2" strokeLinecap="round" />
+                <path d="M20 8.5L25 3.5" className="logo-flag-pole" strokeWidth="2" strokeLinecap="round" />
+                <path d="M25 3.5L27 6.5L23.5 5.5Z" className="logo-flag-banner" />
+              </svg>
+              <div className="logo-text-group">
+                <div className="logo-wordmark">RESUMMIT</div>
+                <div className="logo-tagline">YOUR CAREER. YOUR CONTROL.</div>
+              </div>
+            </Link>
+            <div className="hidden md:flex items-center gap-8 text-[11px] font-bold uppercase tracking-widest text-[var(--sclade-text-secondary)]">
+              <Link href="/dashboard" className="text-[var(--sclade-text-primary)] border-b-2 border-blue-500 pb-1 -mb-[18px]">Dashboard</Link>
+              <Link href="/editor" className="hover:text-[var(--sclade-text-primary)] transition-colors">Resume Editor</Link>
+              {isSystemAdmin && (
+                <Link href="/admin" className="hover:text-[var(--sclade-text-primary)] text-blue-500 transition-colors">Admin</Link>
+              )}
             </div>
-          </Link>
+          </div>
           <DashboardControls user={dbUser} />
         </div>
       </nav>
 
-      {/* Main Layout with Sidebar */}
-      <div className="flex min-h-[calc(100vh-73px)]">
-        {/* Left Sidebar */}
-        <aside className="hidden lg:flex flex-col w-60 shrink-0 border-r border-[var(--sclade-card-border)] bg-[var(--sclade-bg)] p-4 space-y-1 select-none">
-          <Link
-            href="/dashboard"
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-[#E7EDFF] text-[#5473D1] font-bold text-xs shadow-xs"
-          >
-            <LayoutDashboard className="w-4 h-4" />
-            <span>Dashboard</span>
-          </Link>
-
-          <Link
-            href="/editor"
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-[var(--sclade-subtle-bg)] font-medium text-xs transition-colors"
-          >
-            <FileText className="w-4 h-4" />
-            <span>Resume editor</span>
-          </Link>
-
-          <Link
-            href="/editor?tab=tailor"
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-[var(--sclade-subtle-bg)] font-medium text-xs transition-colors"
-          >
-            <Sparkles className="w-4 h-4" />
-            <span>Tailor for a job</span>
-          </Link>
-
-          <Link
-            href="#discoveries"
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-[var(--sclade-subtle-bg)] font-medium text-xs transition-colors"
-          >
-            <RefreshCw className="w-4 h-4" />
-            <span>Update center</span>
-          </Link>
-
-          <Link
-            href="/dashboard/syncing"
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-[var(--sclade-subtle-bg)] font-medium text-xs transition-colors"
-          >
-            <GitBranch className="w-4 h-4" />
-            <span>Connections</span>
-          </Link>
-
-          <Link
-            href="/editor?tab=versions"
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-[var(--sclade-subtle-bg)] font-medium text-xs transition-colors"
-          >
-            <History className="w-4 h-4" />
-            <span>Version history</span>
-          </Link>
-
-          <Link
-            href="#settings"
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-[var(--sclade-subtle-bg)] font-medium text-xs transition-colors"
-          >
-            <Settings className="w-4 h-4" />
-            <span>Settings</span>
-          </Link>
-
-          {isSystemAdmin && (
-            <Link
-              href="/admin"
-              className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/20 font-medium text-xs transition-colors mt-2"
-            >
-              <Shield className="w-4 h-4" />
-              <span>Admin Console</span>
-            </Link>
-          )}
-        </aside>
-
-        {/* Main Content */}
-        <main className="flex-1 min-w-0 px-6 py-8 md:px-10 lg:px-12 xl:py-10">
-          <header className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-[var(--sclade-text-primary)]">
-              Welcome back, {dbUser.name?.split(' ')[0] || "Adel"}
-            </h1>
-            <p className="text-[var(--sclade-text-secondary)] mt-1.5 text-base">
-              Orchestrate your professional impact and career logic.
-            </p>
-          </header>
+      {/* Main Content (Centered & Spacious) */}
+      <main className="relative z-10 max-w-7xl mx-auto px-6 py-8 md:px-8 md:py-10 xl:py-12">
+        <header className="mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-[var(--sclade-text-primary)]">
+            Welcome back, {dbUser.name?.split(' ')[0] || "Adel"}
+          </h1>
+          <p className="text-[var(--sclade-text-secondary)] mt-1.5 text-base">
+            Orchestrate your professional impact and career logic.
+          </p>
+        </header>
 
           <SmartUpdateCenter
             initialSuggestions={dbUser.suggestions}
@@ -333,7 +265,6 @@ export default async function DashboardPage() {
             }
           />
         </main>
-      </div>
     </div>
   );
 }
