@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import Link from "next/link";
-import { Download, GripVertical, Plus, Trash2, RotateCcw, Link as LinkIcon, CheckCircle2, Activity, Eye, Sparkles, Target, X, Loader2, User, Briefcase, Code2, GraduationCap, Zap, AlertTriangle, AlertCircle, ChevronDown, ChevronUp, Save, Wifi, WifiOff, ArrowUp, ArrowDown, ExternalLink, Rocket, Cpu, Code, Terminal, GitBranch, Lock, Sun, Moon, RefreshCw, History, FileText, ArrowLeft, ChevronRight, Maximize2, Minimize2 } from "lucide-react";
+import { Download, GripVertical, Plus, Trash2, RotateCcw, Link as LinkIcon, CheckCircle2, Activity, Eye, Sparkles, Target, X, Loader2, User, Briefcase, Code2, GraduationCap, Zap, AlertTriangle, AlertCircle, ChevronDown, ChevronUp, Save, Wifi, WifiOff, ArrowUp, ArrowDown, ExternalLink, Rocket, Cpu, Code, Terminal, GitBranch, Lock, Sun, Moon, RefreshCw, History, FileText, ArrowLeft, ChevronRight, Maximize2, Minimize2, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, ChevronLeft } from "lucide-react";
 import type { CVData, ProjectData, CVSkills, CVExperience, CVEducation, SaveStatus, EditorTab } from "@/lib/types";
 import { ResumePreview } from "@/components/editor/ResumePreview";
 import { normalizeAndDedupeSkills } from "@/lib/skills-data";
@@ -504,41 +504,86 @@ export function EditorClient({
   const [jdText, setJdText] = useState("");
   const [jobTitle, setJobTitle] = useState("");
   const [theme, setTheme] = useState("light");
-  const [sidebarWidth, setSidebarWidth] = useState(420);
+  const [leftWidth, setLeftWidth] = useState(440);
+  const [rightWidth, setRightWidth] = useState(360);
+  const [isLeftCollapsed, setIsLeftCollapsed] = useState(false);
+  const [isRightCollapsed, setIsRightCollapsed] = useState(false);
+  const [isDraggingLeft, setIsDraggingLeft] = useState(false);
+  const [isDraggingRight, setIsDraggingRight] = useState(false);
   const [windowWidth, setWindowWidth] = useState(1200);
-  const [isDragging, setIsDragging] = useState(false);
-  const isResizing = useRef(false);
 
-  const resizeSidebar = useCallback((e: MouseEvent) => {
-    if (!isResizing.current) return;
-    const newWidth = Math.max(380, Math.min(800, e.clientX));
-    setSidebarWidth(newWidth);
-    if (newWidth > 480) {
-      setShowVersionsSidebar(show => show ? false : show);
+  const resizingLeftRef = useRef(false);
+  const resizingRightRef = useRef(false);
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (resizingLeftRef.current) {
+      const newWidth = Math.max(300, Math.min(650, e.clientX));
+      setLeftWidth(newWidth);
+    } else if (resizingRightRef.current) {
+      const newWidth = Math.max(260, Math.min(550, window.innerWidth - e.clientX));
+      setRightWidth(newWidth);
     }
   }, []);
 
-  const stopResizing = useCallback(() => {
-    isResizing.current = false;
-    setIsDragging(false);
-    document.removeEventListener("mousemove", resizeSidebar);
-    document.removeEventListener("mouseup", stopResizing);
-  }, [resizeSidebar]);
+  const stopAllResizing = useCallback(() => {
+    resizingLeftRef.current = false;
+    resizingRightRef.current = false;
+    setIsDraggingLeft(false);
+    setIsDraggingRight(false);
+    document.removeEventListener("mousemove", handleMouseMove);
+    document.removeEventListener("mouseup", stopAllResizing);
+  }, [handleMouseMove]);
 
-  const startResizing = useCallback((e: React.MouseEvent) => {
+  const startLeftResizing = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
-    isResizing.current = true;
-    setIsDragging(true);
-    document.addEventListener("mousemove", resizeSidebar);
-    document.addEventListener("mouseup", stopResizing);
-  }, [resizeSidebar, stopResizing]);
+    resizingLeftRef.current = true;
+    setIsDraggingLeft(true);
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", stopAllResizing);
+  }, [handleMouseMove, stopAllResizing]);
+
+  const startRightResizing = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    resizingRightRef.current = true;
+    setIsDraggingRight(true);
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", stopAllResizing);
+  }, [handleMouseMove, stopAllResizing]);
 
   useEffect(() => {
     return () => {
-      document.removeEventListener("mousemove", resizeSidebar);
-      document.removeEventListener("mouseup", stopResizing);
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", stopAllResizing);
     };
-  }, [resizeSidebar, stopResizing]);
+  }, [handleMouseMove, stopAllResizing]);
+
+  // Center preview responsive auto-fit container observer
+  const previewContainerRef = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState<number>(0);
+  const [zoomOption, setZoomOption] = useState<string>("fit");
+
+  useEffect(() => {
+    if (!previewContainerRef.current) return;
+    const el = previewContainerRef.current;
+    const updateWidth = () => {
+      if (el) {
+        setContainerWidth(el.clientWidth);
+      }
+    };
+    updateWidth();
+    const ro = new ResizeObserver(() => updateWidth());
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [isLeftCollapsed, isRightCollapsed, leftWidth, rightWidth]);
+
+  const previewScale = useMemo(() => {
+    if (zoomOption === "fit") {
+      if (!containerWidth) return 0.85;
+      const available = Math.max(280, containerWidth - 48);
+      return Math.min(1.15, Math.max(0.35, available / 794));
+    }
+    return Number(zoomOption) / 100;
+  }, [zoomOption, containerWidth]);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("sclade-theme");
@@ -577,7 +622,7 @@ export function EditorClient({
   }, [theme]);
 
   const isMobile = windowWidth < 768;
-  const effectiveSidebarWidth = isMobile ? windowWidth : sidebarWidth;
+  const effectiveSidebarWidth = isMobile ? windowWidth : leftWidth;
   const isCompact = effectiveSidebarWidth < 460;
   const isCurrentVersionMain = versionsList.find(v => v.id === currentVersionId)?.isMain ?? initialData.isMain;
 
@@ -2761,129 +2806,172 @@ export function EditorClient({
         </button>
       </div>
 
+      {/* ── Dragging Global Overlay ── */}
+      {(isDraggingLeft || isDraggingRight) && (
+        <div className="fixed inset-0 z-50 cursor-col-resize select-none" />
+      )}
+
       {/* ── Main Three-Panel Workspace ── */}
       <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+        {/* Left Panel Floating Restore Button when minimized */}
+        {isLeftCollapsed && (
+          <button
+            onClick={() => setIsLeftCollapsed(false)}
+            className="fixed left-3 top-20 z-40 p-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-[#DADCE0] dark:border-neutral-800 shadow-md hover:bg-neutral-50 dark:hover:bg-neutral-800 text-[#1A73E8] flex items-center gap-1.5 text-xs font-semibold cursor-pointer animate-in fade-in"
+            title="Open Editor Panel"
+          >
+            <PanelLeftOpen className="w-4 h-4" />
+            <span className="hidden sm:inline">Editor</span>
+          </button>
+        )}
+
         {/* ── Left Editor Panel ── */}
-        <div className={`w-full md:w-[460px] xl:w-[480px] shrink-0 border-r border-[#DADCE0] dark:border-neutral-800 bg-white dark:bg-neutral-900 flex flex-col h-full overflow-hidden z-20 ${
-          mobileTab !== "editor" ? "hidden md:flex" : "flex"
-        }`}>
-          {/* Editor Panel Toolbar */}
-          <div className="px-5 py-3.5 border-b border-[#DADCE0] dark:border-neutral-800 flex items-center justify-between shrink-0">
-            <div className="flex items-center gap-3">
-              <Link
-                href="/dashboard"
-                className="p-1.5 rounded-lg text-neutral-500 hover:text-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                title="Back to Dashboard"
-              >
-                <ArrowLeft className="w-4 h-4" />
-              </Link>
-              <h2 className="text-sm font-bold text-[#202124] dark:text-white font-outfit">
-                Editor
-              </h2>
-              {/* Save status */}
-              <div className="flex items-center gap-1.5 text-xs text-neutral-500">
-                {saveStatus === "saving" ? (
-                  <>
-                    <Loader2 className="w-3 h-3 animate-spin text-[#1A73E8]" />
-                    <span className="text-[#1A73E8] font-medium">Saving...</span>
-                  </>
-                ) : saveStatus === "error" ? (
-                  <>
-                    <span className="w-2 h-2 rounded-full bg-red-500" />
-                    <span className="text-red-500 font-medium">Save failed</span>
-                  </>
-                ) : saveTimer.current ? (
-                  <>
-                    <span className="w-2 h-2 rounded-full bg-amber-500" />
-                    <span className="text-amber-500 font-medium">Unsaved</span>
-                  </>
-                ) : (
-                  <>
-                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                    <span className="text-neutral-500 font-medium">Saved just now</span>
-                  </>
-                )}
+        {!isLeftCollapsed && (
+          <div
+            style={{ width: `${leftWidth}px` }}
+            className={`relative shrink-0 border-r border-[#DADCE0] dark:border-neutral-800 bg-white dark:bg-neutral-900 flex flex-col h-full overflow-hidden z-20 ${
+              mobileTab !== "editor" ? "hidden md:flex" : "flex"
+            }`}
+          >
+            {/* Resize Handle on Right Edge */}
+            <div
+              onMouseDown={startLeftResizing}
+              className="absolute top-0 -right-1.5 w-3 h-full cursor-col-resize z-30 group max-md:hidden hover:bg-blue-500/10 active:bg-blue-500/20"
+              title="Drag to resize editor panel"
+            >
+              <div className={`absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-[2px] rounded-full transition-all duration-150 ${
+                isDraggingLeft 
+                  ? "bg-[#1A73E8] h-20 shadow-[0_0_8px_rgba(26,115,232,0.6)]" 
+                  : "bg-neutral-300 dark:bg-neutral-700 group-hover:bg-[#1A73E8] h-8 group-hover:h-16"
+              }`} />
+            </div>
+
+            {/* Editor Panel Toolbar */}
+            <div className="px-5 py-3.5 border-b border-[#DADCE0] dark:border-neutral-800 flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/dashboard"
+                  className="p-1.5 rounded-lg text-neutral-500 hover:text-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                  title="Back to Dashboard"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                </Link>
+                <h2 className="text-sm font-bold text-[#202124] dark:text-white font-outfit">
+                  Editor
+                </h2>
+                {/* Save status */}
+                <div className="flex items-center gap-1.5 text-xs text-neutral-500">
+                  {saveStatus === "saving" ? (
+                    <>
+                      <Loader2 className="w-3 h-3 animate-spin text-[#1A73E8]" />
+                      <span className="text-[#1A73E8] font-medium">Saving...</span>
+                    </>
+                  ) : saveStatus === "error" ? (
+                    <>
+                      <span className="w-2 h-2 rounded-full bg-red-500" />
+                      <span className="text-red-500 font-medium">Save failed</span>
+                    </>
+                  ) : saveTimer.current ? (
+                    <>
+                      <span className="w-2 h-2 rounded-full bg-amber-500" />
+                      <span className="text-amber-500 font-medium">Unsaved</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                      <span className="text-neutral-500 font-medium">Saved just now</span>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => {
+                    if (confirm("Revert unsaved changes and reload editor?")) {
+                      window.location.reload();
+                    }
+                  }}
+                  className="p-1.5 rounded-lg border border-[#DADCE0] dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-300 transition-all cursor-pointer"
+                  title="Revert / Reload"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                </button>
+
+                <button
+                  onClick={() => setAtsPanelOpen(true)}
+                  className="p-1.5 rounded-lg border border-[#DADCE0] dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-[#1A73E8] transition-all cursor-pointer"
+                  title="ATS Scoring & AI Audit"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                </button>
+
+                <button
+                  onClick={() => {
+                    if (saveTimer.current) {
+                      clearTimeout(saveTimer.current);
+                      saveTimer.current = null;
+                    }
+                    saveCV();
+                  }}
+                  disabled={saveStatus === "saving"}
+                  className="flex items-center gap-1.5 bg-[#1A73E8] hover:bg-[#1557B0] active:scale-95 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-sm transition-all disabled:opacity-50 cursor-pointer"
+                >
+                  {saveStatus === "saving" ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+                  )}
+                  <span>Save</span>
+                </button>
+
+                <button
+                  onClick={() => setIsLeftCollapsed(true)}
+                  className="p-1.5 rounded-lg border border-[#DADCE0] dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-500 hover:text-neutral-800 transition-all cursor-pointer max-md:hidden"
+                  title="Minimize editor panel"
+                >
+                  <PanelLeftClose className="w-3.5 h-3.5" />
+                </button>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => {
-                  if (confirm("Revert unsaved changes and reload editor?")) {
-                    window.location.reload();
-                  }
-                }}
-                className="p-1.5 rounded-lg border border-[#DADCE0] dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-300 transition-all cursor-pointer"
-                title="Revert / Reload"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-              </button>
+            {/* Section Tabs */}
+            <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#DADCE0] dark:border-neutral-800 bg-white dark:bg-neutral-900 overflow-x-auto gap-1 shrink-0 custom-scrollbar">
+              {tabs.map((tab) => {
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id as EditorTab)}
+                    className={`flex flex-col items-center justify-center py-2 px-2.5 min-w-[58px] rounded-xl transition-all cursor-pointer ${
+                      isActive
+                        ? "bg-[#E8F0FE] text-[#1A73E8] font-semibold border border-blue-200/80 shadow-xs"
+                        : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800/60 border border-transparent"
+                    }`}
+                  >
+                    <span className={isActive ? "text-[#1A73E8]" : "text-neutral-500"}>
+                      {tab.icon}
+                    </span>
+                    <span className="text-[11px] mt-1 leading-none">{tab.label}</span>
+                  </button>
+                );
+              })}
+            </div>
 
-              <button
-                onClick={() => setAtsPanelOpen(true)}
-                className="p-1.5 rounded-lg border border-[#DADCE0] dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-[#1A73E8] transition-all cursor-pointer"
-                title="ATS Scoring & AI Audit"
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-              </button>
+            {/* CV Warnings Banner if any */}
+            <CvWarningBanner />
 
-              <button
-                onClick={() => {
-                  if (saveTimer.current) {
-                    clearTimeout(saveTimer.current);
-                    saveTimer.current = null;
-                  }
-                  saveCV();
-                }}
-                disabled={saveStatus === "saving"}
-                className="flex items-center gap-1.5 bg-[#1A73E8] hover:bg-[#1557B0] active:scale-95 text-white text-xs font-semibold px-3.5 py-1.5 rounded-lg shadow-sm transition-all disabled:opacity-50 cursor-pointer"
-              >
-                {saveStatus === "saving" ? (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                ) : (
-                  <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-                )}
-                <span>Save</span>
-              </button>
+            {/* Tab Context Window (Form Content) */}
+            <div className="flex-1 overflow-y-auto p-5 pb-24 custom-scrollbar">
+              {activeTab === "profile" && renderProfile()}
+              {activeTab === "skills" && renderSkills()}
+              {activeTab === "experience" && renderExperience()}
+              {activeTab === "projects" && renderProjects()}
+              {activeTab === "education" && renderEducation()}
+              {activeTab === "tailor" && renderTailor()}
             </div>
           </div>
-
-          {/* Section Tabs */}
-          <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#DADCE0] dark:border-neutral-800 bg-white dark:bg-neutral-900 overflow-x-auto gap-1 shrink-0 custom-scrollbar">
-            {tabs.map((tab) => {
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id as EditorTab)}
-                  className={`flex flex-col items-center justify-center py-2 px-2.5 min-w-[58px] rounded-xl transition-all cursor-pointer ${
-                    isActive
-                      ? "bg-[#E8F0FE] text-[#1A73E8] font-semibold border border-blue-200/80 shadow-xs"
-                      : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800/60 border border-transparent"
-                  }`}
-                >
-                  <span className={isActive ? "text-[#1A73E8]" : "text-neutral-500"}>
-                    {tab.icon}
-                  </span>
-                  <span className="text-[11px] mt-1 leading-none">{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* CV Warnings Banner if any */}
-          <CvWarningBanner />
-
-          {/* Tab Context Window (Form Content) */}
-          <div className="flex-1 overflow-y-auto p-5 pb-24 custom-scrollbar">
-            {activeTab === "profile" && renderProfile()}
-            {activeTab === "skills" && renderSkills()}
-            {activeTab === "experience" && renderExperience()}
-            {activeTab === "projects" && renderProjects()}
-            {activeTab === "education" && renderEducation()}
-            {activeTab === "tailor" && renderTailor()}
-          </div>
-        </div>
+        )}
 
         {/* ── Center Preview Workspace ── */}
         <div className={`flex-1 min-w-0 bg-[#F5F6F8] dark:bg-neutral-950 flex flex-col h-full overflow-hidden relative ${
@@ -2891,25 +2979,38 @@ export function EditorClient({
         }`}>
           {/* Preview Toolbar */}
           <div className="py-2.5 px-6 flex items-center justify-between border-b border-[#DADCE0] dark:border-neutral-800 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md z-10 shrink-0">
-            {/* Page navigation */}
-            <div className="flex items-center gap-2 bg-white dark:bg-neutral-800 px-2 py-1 rounded-lg border border-[#DADCE0] dark:border-neutral-700 text-xs text-neutral-600 dark:text-neutral-300">
-              <button
-                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                disabled={currentPage <= 1}
-                className="p-1 hover:text-neutral-900 dark:hover:text-white disabled:opacity-30 cursor-pointer"
-                title="Previous page"
-              >
-                <ArrowLeft className="w-3.5 h-3.5" />
-              </button>
-              <span className="font-medium px-1 select-none">{currentPage} / {totalPages}</span>
-              <button
-                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                disabled={currentPage >= totalPages}
-                className="p-1 hover:text-neutral-900 dark:hover:text-white disabled:opacity-30 cursor-pointer"
-                title="Next page"
-              >
-                <ChevronRight className="w-3.5 h-3.5" />
-              </button>
+            {/* Left: Page navigation & Left sidebar toggle if collapsed */}
+            <div className="flex items-center gap-2">
+              {isLeftCollapsed && (
+                <button
+                  onClick={() => setIsLeftCollapsed(false)}
+                  className="p-1.5 rounded-lg border border-[#DADCE0] dark:border-neutral-700 bg-white dark:bg-neutral-800 text-[#1A73E8] hover:bg-blue-50 transition-colors text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                  title="Expand Editor Panel"
+                >
+                  <PanelLeftOpen className="w-3.5 h-3.5" />
+                  <span className="text-[11px]">Editor</span>
+                </button>
+              )}
+
+              <div className="flex items-center gap-1 bg-white dark:bg-neutral-800 px-2 py-1 rounded-lg border border-[#DADCE0] dark:border-neutral-700 text-xs text-neutral-600 dark:text-neutral-300">
+                <button
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage <= 1}
+                  className="p-1 hover:text-neutral-900 dark:hover:text-white disabled:opacity-30 cursor-pointer"
+                  title="Previous page"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                </button>
+                <span className="font-medium px-1 select-none">{currentPage} / {totalPages}</span>
+                <button
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage >= totalPages}
+                  className="p-1 hover:text-neutral-900 dark:hover:text-white disabled:opacity-30 cursor-pointer"
+                  title="Next page"
+                >
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
 
             {/* Middle: PDF Export */}
@@ -2924,17 +3025,19 @@ export function EditorClient({
               </button>
             </div>
 
-            {/* Right: Zoom & Fullscreen */}
+            {/* Right: Zoom, Fullscreen & Versions Sidebar Toggle */}
             <div className="flex items-center gap-2">
               <select
-                value={zoom}
-                onChange={(e) => setZoom(Number(e.target.value))}
+                value={zoomOption}
+                onChange={(e) => setZoomOption(e.target.value)}
                 className="bg-white dark:bg-neutral-800 border border-[#DADCE0] dark:border-neutral-700 rounded-lg px-2.5 py-1 text-xs text-neutral-700 dark:text-neutral-200 outline-none cursor-pointer font-medium shadow-xs"
               >
-                <option value={75}>75%</option>
-                <option value={90}>90%</option>
-                <option value={100}>100%</option>
-                <option value={125}>125%</option>
+                <option value="fit">Fit ({Math.round(previewScale * 100)}%)</option>
+                <option value="50">50%</option>
+                <option value="75">75%</option>
+                <option value="90">90%</option>
+                <option value="100">100%</option>
+                <option value="125">125%</option>
               </select>
 
               <button
@@ -2944,16 +3047,42 @@ export function EditorClient({
               >
                 {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
               </button>
+
+              <button
+                onClick={() => setIsRightCollapsed(prev => !prev)}
+                className={`p-1.5 rounded-lg border transition-all cursor-pointer ${
+                  !isRightCollapsed 
+                    ? "bg-blue-50 text-[#1A73E8] border-blue-200 dark:bg-blue-900/30" 
+                    : "bg-white text-neutral-600 border-[#DADCE0] dark:bg-neutral-800 dark:border-neutral-700"
+                }`}
+                title={isRightCollapsed ? "Show Resume Versions" : "Hide Resume Versions"}
+              >
+                <History className="w-3.5 h-3.5" />
+              </button>
             </div>
           </div>
 
-          {/* Centered Document Canvas */}
-          <div className="flex-1 overflow-y-auto p-6 md:p-8 flex justify-center items-start custom-scrollbar">
+          {/* Centered Document Canvas with Auto-fit Responsive Container */}
+          <div
+            ref={previewContainerRef}
+            className="flex-1 overflow-auto p-4 md:p-6 flex flex-col items-center custom-scrollbar"
+          >
             <div
-              style={{ transform: `scale(${zoom / 100})`, transformOrigin: "top center" }}
-              className="transition-transform duration-200"
+              style={{
+                width: `${Math.round(794 * previewScale)}px`,
+                minHeight: `${Math.round(1123 * previewScale)}px`,
+              }}
+              className="shrink-0 relative my-auto md:my-4 transition-[width,min-height] duration-150"
             >
-              <div className="bg-white text-black shadow-lg rounded-sm border border-neutral-200/80">
+              <div
+                style={{
+                  transform: `scale(${previewScale})`,
+                  transformOrigin: "top left",
+                  width: "794px",
+                  minHeight: "1123px",
+                }}
+                className="bg-white text-black shadow-lg rounded-sm border border-neutral-200/80"
+              >
                 <ResumePreview 
                   data={cv} 
                   projects={projects} 
@@ -3008,181 +3137,224 @@ export function EditorClient({
           </div>
         </div>
 
-        {/* ── Right Sidebar: Versions & Tailor ── */}
-        <div className={`w-full md:w-[350px] xl:w-[390px] shrink-0 border-l border-[#DADCE0] dark:border-neutral-800 bg-white dark:bg-neutral-900 flex flex-col h-full overflow-y-auto p-5 space-y-5 custom-scrollbar z-20 ${
-          mobileTab !== "versions" ? "hidden md:flex" : "flex"
-        }`}>
-          {/* Tailor for New Job Button */}
+        {/* Right Sidebar Floating Restore Button when minimized */}
+        {isRightCollapsed && (
           <button
-            onClick={() => {
-              setTailorJobTitle("");
-              setTailorJdText("");
-              setTailorBaseOption("clone");
-              setShowTailorModal(true);
-            }}
-            className="w-full py-3 px-4 bg-[#1A73E8] hover:bg-[#1557B0] text-white font-medium text-sm rounded-xl flex items-center justify-center gap-2 shadow-sm transition-all active:scale-[0.98] cursor-pointer"
+            onClick={() => setIsRightCollapsed(false)}
+            className="fixed right-3 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-neutral-900 hover:bg-neutral-800 text-white shadow-2xl active:scale-95 transition-all flex items-center justify-center cursor-pointer group"
+            title="Open Resume Versions"
           >
-            <Plus className="w-4 h-4 stroke-[2.5]" />
-            <span>Tailor for New Job</span>
+            <History className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
           </button>
+        )}
 
-          {/* Resume Versions Section */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-[#202124] dark:text-neutral-100">
-                Resume Versions
-              </h3>
-              <button 
-                onClick={() => {}} 
-                className="text-xs font-semibold text-[#1A73E8] hover:underline flex items-center gap-1 cursor-pointer"
+        {/* ── Right Sidebar: Versions & Tailor ── */}
+        {!isRightCollapsed && (
+          <div
+            style={{ width: `${rightWidth}px` }}
+            className={`relative shrink-0 border-l border-[#DADCE0] dark:border-neutral-800 bg-white dark:bg-neutral-900 flex flex-col h-full overflow-y-auto p-5 space-y-5 custom-scrollbar z-20 ${
+              mobileTab !== "versions" ? "hidden md:flex" : "flex"
+            }`}
+          >
+            {/* Resize Handle on Left Edge */}
+            <div
+              onMouseDown={startRightResizing}
+              className="absolute top-0 -left-1.5 w-3 h-full cursor-col-resize z-30 group max-md:hidden hover:bg-blue-500/10 active:bg-blue-500/20"
+              title="Drag to resize versions panel"
+            >
+              <div className={`absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-[2px] rounded-full transition-all duration-150 ${
+                isDraggingRight 
+                  ? "bg-[#1A73E8] h-20 shadow-[0_0_8px_rgba(26,115,232,0.6)]" 
+                  : "bg-neutral-300 dark:bg-neutral-700 group-hover:bg-[#1A73E8] h-8 group-hover:h-16"
+              }`} />
+            </div>
+
+            {/* Panel Header with Collapse Button */}
+            <div className="flex items-center justify-between pb-1">
+              <span className="text-[11px] font-black uppercase tracking-wider text-neutral-400">
+                Versions & Tailoring
+              </span>
+              <button
+                onClick={() => setIsRightCollapsed(true)}
+                className="p-1 rounded-lg text-neutral-400 hover:text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+                title="Minimize versions panel"
               >
-                <span>View all</span>
-                <ChevronRight className="w-3.5 h-3.5" />
+                <PanelRightClose className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="space-y-2.5">
-              {/* Master Resume card */}
-              <div
-                onClick={() => {
-                  window.location.href = `/editor?tab=${activeTab}`;
-                }}
-                className={`w-full p-3.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${
-                  isCurrentVersionMain
-                    ? "bg-[#E8F0FE] border-2 border-[#1A73E8] text-[#1A73E8]"
-                    : "bg-white dark:bg-neutral-800 border-[#DADCE0] dark:border-neutral-700 hover:border-neutral-400"
-                }`}
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-                    isCurrentVersionMain ? "bg-white text-[#1A73E8]" : "bg-blue-50 text-[#1A73E8]"
-                  }`}>
-                    <FileText className="w-5 h-5" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="text-xs font-bold text-[#202124] dark:text-neutral-100 truncate">
-                      Master Resume
-                    </div>
-                    <div className="text-[11px] text-neutral-500 truncate">
-                      Primary profile
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  {isCurrentVersionMain && (
-                    <span className="bg-[#1A73E8] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                      Active
-                    </span>
-                  )}
-                  <ChevronRight className={`w-4 h-4 ${isCurrentVersionMain ? "text-[#1A73E8]" : "text-neutral-400"}`} />
-                </div>
+            {/* Tailor for New Job Button */}
+            <button
+              onClick={() => {
+                setTailorJobTitle("");
+                setTailorJdText("");
+                setTailorBaseOption("clone");
+                setShowTailorModal(true);
+              }}
+              className="w-full py-3 px-4 bg-[#1A73E8] hover:bg-[#1557B0] text-white font-medium text-sm rounded-xl flex items-center justify-center gap-2 shadow-sm transition-all active:scale-[0.98] cursor-pointer"
+            >
+              <Plus className="w-4 h-4 stroke-[2.5]" />
+              <span>Tailor for New Job</span>
+            </button>
+
+            {/* Resume Versions Section */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-bold text-[#202124] dark:text-neutral-100">
+                  Resume Versions
+                </h3>
+                <button 
+                  onClick={() => {}} 
+                  className="text-xs font-semibold text-[#1A73E8] hover:underline flex items-center gap-1 cursor-pointer"
+                >
+                  <span>View all</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
               </div>
 
-              {/* Tailored Resumes */}
-              {versionsList.filter((v: any) => !v.isMain).map((version: any) => {
-                const isSelected = currentVersionId === version.id;
-                const title = version.jobTarget?.title || version.versionName?.replace("Tailored: ", "") || "Tailored Position";
-                const score = version.jobTarget?.matchScore || version.atsScore || 0;
-                const dateStr = new Date(version.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" });
-
-                return (
-                  <div key={version.id} className="relative group/item">
-                    <div
-                      onClick={() => {
-                        window.location.href = `/editor?versionId=${version.id}&tab=${activeTab}`;
-                      }}
-                      className={`w-full p-3.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between pr-9 ${
-                        isSelected
-                          ? "bg-[#E8F0FE] border-2 border-[#1A73E8] text-[#1A73E8]"
-                          : "bg-white dark:bg-neutral-800 border-[#DADCE0] dark:border-neutral-700 hover:border-neutral-400"
-                      }`}
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-                          isSelected ? "bg-white text-[#1A73E8]" : "bg-blue-50 text-[#1A73E8]"
-                        }`}>
-                          <FileText className="w-5 h-5" />
-                        </div>
-                        <div className="min-w-0">
-                          <div className="text-xs font-bold text-[#202124] dark:text-neutral-100 truncate">
-                            {title}
-                          </div>
-                          <div className="flex items-center gap-1.5 text-[11px] text-neutral-500 mt-0.5">
-                            <span className="font-semibold text-emerald-600 dark:text-emerald-400">
-                              {score}% match
-                            </span>
-                            <span>·</span>
-                            <span>{dateStr}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <ChevronRight className={`w-4 h-4 shrink-0 ${isSelected ? "text-[#1A73E8]" : "text-neutral-400"}`} />
+              <div className="space-y-2.5">
+                {/* Master Resume card */}
+                <div
+                  onClick={() => {
+                    window.location.href = `/editor?tab=${activeTab}`;
+                  }}
+                  className={`w-full p-3.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${
+                    isCurrentVersionMain
+                      ? "bg-[#E8F0FE] border-2 border-[#1A73E8] text-[#1A73E8]"
+                      : "bg-white dark:bg-neutral-800 border-[#DADCE0] dark:border-neutral-700 hover:border-neutral-400"
+                  }`}
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+                      isCurrentVersionMain ? "bg-white text-[#1A73E8]" : "bg-blue-50 text-[#1A73E8]"
+                    }`}>
+                      <FileText className="w-5 h-5" />
                     </div>
-
-                    {/* Delete Version Button */}
-                    <button
-                      onClick={async (e) => {
-                        e.stopPropagation();
-                        if (confirm(`Are you sure you want to delete the tailored version for "${title}"?`)) {
-                          try {
-                            const res = await fetch(`/api/cv/delete-version?versionId=${version.id}`, {
-                              method: "DELETE"
-                            });
-                            if (res.ok) {
-                              setVersionsList(prev => prev.filter((v: any) => v.id !== version.id));
-                              if (isSelected) {
-                                window.location.href = "/editor";
-                              }
-                            } else {
-                              alert("Failed to delete version");
-                            }
-                          } catch {
-                            alert("Error deleting version");
-                          }
-                        }
-                      }}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1.5 text-neutral-400 hover:text-red-500 opacity-0 group-hover/item:opacity-100 transition-opacity rounded-lg z-10 cursor-pointer"
-                      title="Delete this tailored version"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    <div className="min-w-0">
+                      <div className="text-xs font-bold text-[#202124] dark:text-neutral-100 truncate">
+                        Master Resume
+                      </div>
+                      <div className="text-[11px] text-neutral-500 truncate">
+                        Primary profile
+                      </div>
+                    </div>
                   </div>
-                );
-              })}
-
-              {versionsList.filter((v: any) => !v.isMain).length === 0 && (
-                <div className="text-center py-6 px-4 border border-dashed border-[#DADCE0] dark:border-neutral-800 rounded-xl bg-neutral-50/50 dark:bg-neutral-800/30">
-                  <Sparkles className="w-5 h-5 text-neutral-400 mx-auto mb-2 opacity-50" />
-                  <p className="text-xs text-neutral-500 leading-normal">
-                    No tailored resumes yet. Click Tailor for New Job to optimize your CV.
-                  </p>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {isCurrentVersionMain && (
+                      <span className="bg-[#1A73E8] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                        Active
+                      </span>
+                    )}
+                    <ChevronRight className={`w-4 h-4 ${isCurrentVersionMain ? "text-[#1A73E8]" : "text-neutral-400"}`} />
+                  </div>
                 </div>
-              )}
-            </div>
-          </div>
 
-          {/* Resummit Pro promotional card */}
-          <div className="bg-gradient-to-br from-[#1A73E8] to-[#1557B0] text-white rounded-2xl p-5 shadow-sm space-y-3 relative overflow-hidden mt-auto shrink-0">
-            <div className="flex items-center gap-2">
-              <span className="bg-white/20 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                PRO
-              </span>
-              <span className="text-[11px] text-blue-100 font-medium">Coming Soon</span>
+                {/* Tailored Resumes */}
+                {versionsList.filter((v: any) => !v.isMain).map((version: any) => {
+                  const isSelected = currentVersionId === version.id;
+                  const title = version.jobTarget?.title || version.versionName?.replace("Tailored: ", "") || "Tailored Position";
+                  const score = version.jobTarget?.matchScore || version.atsScore || 0;
+                  const dateStr = new Date(version.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+
+                  return (
+                    <div key={version.id} className="relative group/item">
+                      <div
+                        onClick={() => {
+                          window.location.href = `/editor?versionId=${version.id}&tab=${activeTab}`;
+                        }}
+                        className={`w-full p-3.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between pr-9 ${
+                          isSelected
+                            ? "bg-[#E8F0FE] border-2 border-[#1A73E8] text-[#1A73E8]"
+                            : "bg-white dark:bg-neutral-800 border-[#DADCE0] dark:border-neutral-700 hover:border-neutral-400"
+                        }`}
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+                            isSelected ? "bg-white text-[#1A73E8]" : "bg-blue-50 text-[#1A73E8]"
+                          }`}>
+                            <FileText className="w-5 h-5" />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="text-xs font-bold text-[#202124] dark:text-neutral-100 truncate">
+                              {title}
+                            </div>
+                            <div className="flex items-center gap-1.5 text-[11px] text-neutral-500 mt-0.5">
+                              <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+                                {score}% match
+                              </span>
+                              <span>·</span>
+                              <span>{dateStr}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <ChevronRight className={`w-4 h-4 shrink-0 ${isSelected ? "text-[#1A73E8]" : "text-neutral-400"}`} />
+                      </div>
+
+                      {/* Delete Version Button */}
+                      <button
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          if (confirm(`Are you sure you want to delete the tailored version for "${title}"?`)) {
+                            try {
+                              const res = await fetch(`/api/cv/delete-version?versionId=${version.id}`, {
+                                method: "DELETE"
+                              });
+                              if (res.ok) {
+                                setVersionsList(prev => prev.filter((v: any) => v.id !== version.id));
+                                if (isSelected) {
+                                  window.location.href = "/editor";
+                                }
+                              } else {
+                                alert("Failed to delete version");
+                              }
+                            } catch {
+                              alert("Error deleting version");
+                            }
+                          }
+                        }}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1.5 text-neutral-400 hover:text-red-500 opacity-0 group-hover/item:opacity-100 transition-opacity rounded-lg z-10 cursor-pointer"
+                        title="Delete this tailored version"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  );
+                })}
+
+                {versionsList.filter((v: any) => !v.isMain).length === 0 && (
+                  <div className="text-center py-6 px-4 border border-dashed border-[#DADCE0] dark:border-neutral-800 rounded-xl bg-neutral-50/50 dark:bg-neutral-800/30">
+                    <Sparkles className="w-5 h-5 text-neutral-400 mx-auto mb-2 opacity-50" />
+                    <p className="text-xs text-neutral-500 leading-normal">
+                      No tailored resumes yet. Click Tailor for New Job to optimize your CV.
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
-            <div>
-              <h4 className="text-base font-bold text-white">Resummit Pro</h4>
-              <p className="text-xs text-blue-100/90 leading-relaxed mt-1">
-                Unlock real-time ATS monitoring and multi-version resume management.
-              </p>
+
+            {/* Resummit Pro promotional card */}
+            <div className="bg-gradient-to-br from-[#1A73E8] to-[#1557B0] text-white rounded-2xl p-5 shadow-sm space-y-3 relative overflow-hidden mt-auto shrink-0">
+              <div className="flex items-center gap-2">
+                <span className="bg-white/20 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                  PRO
+                </span>
+                <span className="text-[11px] text-blue-100 font-medium">Coming Soon</span>
+              </div>
+              <div>
+                <h4 className="text-base font-bold text-white">Resummit Pro</h4>
+                <p className="text-xs text-blue-100/90 leading-relaxed mt-1">
+                  Unlock real-time ATS monitoring and multi-version resume management.
+                </p>
+              </div>
+              <button
+                disabled
+                className="w-full py-2 bg-white/15 border border-white/20 text-white font-medium text-xs rounded-xl cursor-default text-center"
+              >
+                Coming Soon
+              </button>
             </div>
-            <button
-              disabled
-              className="w-full py-2 bg-white/15 border border-white/20 text-white font-medium text-xs rounded-xl cursor-default text-center"
-            >
-              Coming Soon
-            </button>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Audit Modal Reveal */}
