@@ -156,7 +156,7 @@ export function LandingClient({
   userName?: string; 
   userEmail?: string; 
 }) {
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [theme, setTheme] = useState<"dark" | "light">("light");
   const [resumeScale, setResumeScale] = useState(1);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -382,8 +382,10 @@ export function LandingClient({
         root.classList.add("dark");
       }
     } else {
-      root.setAttribute("data-theme", "dark");
-      root.classList.add("dark");
+      setTheme("light");
+      root.setAttribute("data-theme", "light");
+      root.classList.remove("dark");
+      root.classList.add("light");
     }
 
     // Scroll reveal observer
@@ -471,33 +473,33 @@ export function LandingClient({
         }
 
         [data-theme="light"] {
-          --bg: #ffffff;
-          --surface: #ffffff;
-          --surface-2: #f1f5f9;
-          --text: #0f172a;
-          --muted: #475569;
-          --border: rgba(15, 23, 42, 0.08);
-          --primary: #2563eb;
-          --shadow: rgba(15, 23, 42, 0.08);
-          --nav: rgba(255, 255, 255, 0.82);
-          --logo-doc-body: #dbeafe;
-          --logo-doc-fold: #bfdbfe;
-          --logo-doc-lines: #93c5fd;
-          --logo-flag-pole: #2563eb;
-          --logo-flag-banner: #2563eb;
-          --logo-text: #0f172a;
-          --logo-tagline: #64748b;
+          --bg: #F5F6F8;
+          --surface: #FFFFFF;
+          --surface-2: #F0F3F8;
+          --text: #20252E;
+          --muted: #626D7C;
+          --border: #E1E5EB;
+          --primary: #5473D1;
+          --shadow: rgba(0, 0, 0, 0.04);
+          --nav: rgba(245, 246, 248, 0.85);
+          --logo-doc-body: #E7EDFF;
+          --logo-doc-fold: #CFD9FF;
+          --logo-doc-lines: #5473D1;
+          --logo-flag-pole: #5473D1;
+          --logo-flag-banner: #5473D1;
+          --logo-text: #20252E;
+          --logo-tagline: #626D7C;
           
           /* Cards Theme variables */
-          --card-bg: rgba(241, 245, 249, 0.6);
-          --card-border: rgba(15, 23, 42, 0.04);
-          --card-hover-bg: #ffffff;
-          --card-hover-border: rgba(37, 99, 235, 0.2);
-          --card-number-color: rgba(15, 23, 42, 0.08);
-          --card-icon-bg: rgba(15, 23, 42, 0.02);
-          --card-icon-border: rgba(15, 23, 42, 0.06);
-          --card-shadow: 0 8px 24px rgba(15, 23, 42, 0.02);
-          --card-hover-shadow: 0 16px 32px rgba(15, 23, 42, 0.06), 0 0 25px rgba(37, 99, 235, 0.03);
+          --card-bg: #FFFFFF;
+          --card-border: #E1E5EB;
+          --card-hover-bg: #FFFFFF;
+          --card-hover-border: #CFD9FF;
+          --card-number-color: rgba(32, 37, 46, 0.08);
+          --card-icon-bg: #F0F3F8;
+          --card-icon-border: #E1E5EB;
+          --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+          --card-hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
         }
 
         .landing-body * {

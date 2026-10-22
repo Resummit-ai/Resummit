@@ -320,51 +320,47 @@ export function SmartUpdateCenter({
 
   if (isCurrentlySyncing && filteredSuggestions.length === 0) {
     return (
-      <div className="bg-black/20 dark:bg-neutral-900/10 border border-neutral-800 rounded-[2.5rem] p-10 md:p-16 text-center relative overflow-hidden shadow-[0_0_50px_rgba(37,99,235,0.02)]">
-        {/* Glow orbs for high-end look */}
-        <div className="absolute -top-32 -left-32 w-64 h-64 bg-blue-500/5 blur-[120px] rounded-full pointer-events-none" />
-        <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-blue-500/5 blur-[120px] rounded-full pointer-events-none" />
-        
+      <div className="bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] rounded-xl p-8 md:p-12 text-center relative overflow-hidden shadow-xs">
         {/* Animated Radar Spinner */}
-        <div className="relative w-20 h-20 mx-auto mb-8 flex items-center justify-center">
-          <div className="absolute inset-0 border-2 border-blue-500/10 rounded-full" />
-          <div className="absolute inset-0 border-2 border-blue-500 rounded-full border-t-transparent animate-spin" />
-          <Zap className="w-8 h-8 text-blue-400 animate-pulse" />
+        <div className="relative w-16 h-16 mx-auto mb-6 flex items-center justify-center">
+          <div className="absolute inset-0 border-2 border-[#5473D1]/20 rounded-full" />
+          <div className="absolute inset-0 border-2 border-[#5473D1] rounded-full border-t-transparent animate-spin" />
+          <Zap className="w-6 h-6 text-[#5473D1] animate-pulse" />
         </div>
 
-        <h3 className="text-lg font-bold text-white mb-2 font-outfit tracking-tight">AI is Synchronizing GitHub Codebases</h3>
-        <p className="text-[12px] text-neutral-400 max-w-sm mx-auto mb-10 leading-relaxed">
-          Harvesting engineering signals, analyzing repository structures, and synthesizing STAR-method suggestions. This takes up to a minute...
+        <h3 className="text-base font-bold text-[var(--sclade-text-primary)] mb-1 tracking-tight">AI is Synchronizing GitHub Codebases</h3>
+        <p className="text-xs text-[var(--sclade-text-secondary)] max-w-sm mx-auto mb-8 leading-relaxed">
+          Harvesting engineering signals, analyzing repository structures, and synthesizing STAR-method suggestions...
         </p>
 
         {/* Dynamic Progress Steps */}
-        <div className="max-w-xs mx-auto text-left space-y-4 border-t border-white/5 pt-8">
+        <div className="max-w-xs mx-auto text-left space-y-3 border-t border-[var(--sclade-card-border)] pt-6">
           <div className="flex items-center gap-3">
-            <div className="w-5 h-5 rounded-full bg-green-500/10 border border-green-500/30 flex items-center justify-center">
-              <span className="text-[10px] text-green-400 font-bold">✓</span>
+            <div className="w-5 h-5 rounded-full bg-[#E4F2E9] border border-[#32704F]/30 flex items-center justify-center">
+              <span className="text-[10px] text-[#32704F] font-bold">✓</span>
             </div>
-            <span className="text-[11px] font-bold text-neutral-300 uppercase tracking-wider">GitHub Connected</span>
+            <span className="text-xs font-semibold text-[var(--sclade-text-primary)] uppercase tracking-wider">GitHub Connected</span>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="w-5 h-5 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center">
-              <Loader2 className="w-3 h-3 text-blue-400 animate-spin" />
+            <div className="w-5 h-5 rounded-full bg-[#E7EDFF] border border-[#CFD9FF] flex items-center justify-center">
+              <Loader2 className="w-3 h-3 text-[#5473D1] animate-spin" />
             </div>
-            <span className="text-[11px] font-bold text-blue-400 uppercase tracking-wider">Analyzing Repositories...</span>
+            <span className="text-xs font-semibold text-[#5473D1] uppercase tracking-wider">Analyzing Repositories...</span>
           </div>
 
           <div className="flex items-center gap-3 opacity-40">
-            <div className="w-5 h-5 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center">
-              <span className="text-[9px] text-neutral-500 font-bold">3</span>
+            <div className="w-5 h-5 rounded-full bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-card-border)] flex items-center justify-center">
+              <span className="text-[10px] text-[var(--sclade-text-muted)] font-bold">3</span>
             </div>
-            <span className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">Extracting Skills</span>
+            <span className="text-xs font-semibold text-[var(--sclade-text-muted)] uppercase tracking-wider">Extracting Skills</span>
           </div>
 
           <div className="flex items-center gap-3 opacity-40">
-            <div className="w-5 h-5 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center">
-              <span className="text-[9px] text-neutral-500 font-bold">4</span>
+            <div className="w-5 h-5 rounded-full bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-card-border)] flex items-center justify-center">
+              <span className="text-[10px] text-[var(--sclade-text-muted)] font-bold">4</span>
             </div>
-            <span className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">Formulating STAR Bullets</span>
+            <span className="text-xs font-semibold text-[var(--sclade-text-muted)] uppercase tracking-wider">Formulating STAR Bullets</span>
           </div>
         </div>
       </div>
@@ -373,9 +369,9 @@ export function SmartUpdateCenter({
 
   if (filteredSuggestions.length === 0 && !isCurrentlySyncing) {
     return (
-      <div className="bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] rounded-2xl p-6 text-center">
-        <RefreshCw className="w-8 h-8 text-[var(--sclade-text-secondary)] mx-auto mb-3" />
-        <p className="text-[11px] text-[var(--sclade-text-secondary)] mb-4 uppercase tracking-wider font-bold">
+      <div className="bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] rounded-xl p-6 text-center shadow-xs">
+        <RefreshCw className="w-6 h-6 text-[#5473D1] mx-auto mb-2" />
+        <p className="text-xs text-[var(--sclade-text-secondary)] mb-3 font-semibold">
           {scanError || (filterType === "skill" 
             ? "Your skills are up to date with your GitHub." 
             : filterType === "project" 
@@ -385,7 +381,7 @@ export function SmartUpdateCenter({
         </p>
         <button
           onClick={handleScan}
-          className="px-4 py-2 bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-card-border)] hover:bg-[var(--sclade-card-bg)] rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all text-[var(--sclade-text-primary)] cursor-pointer"
+          className="px-4 py-2 bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-card-border)] hover:bg-[#E7EDFF] hover:border-[#CFD9FF] hover:text-[#5473D1] rounded-lg text-xs font-bold uppercase tracking-wider transition-all text-[var(--sclade-text-primary)] cursor-pointer shadow-xs"
         >
           {filterType === "skill" ? "Scan Skills" : filterType === "project" ? "Scan Projects" : "Check for updates"}
         </button>
@@ -398,38 +394,39 @@ export function SmartUpdateCenter({
     return (
       <div 
         key={suggestion.id}
-        className="group relative bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] hover:border-blue-500/20 rounded-3xl p-5 transition-all shadow-sm"
+        className="group relative bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] hover:border-[#CFD9FF] rounded-xl p-4 transition-all shadow-xs"
       >
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
-            <h4 className="text-[11px] font-black text-[var(--sclade-text-primary)] uppercase tracking-wider mb-1.5 break-words">
+            <h4 className="text-xs font-bold text-[var(--sclade-text-primary)] uppercase tracking-wider mb-1 break-words">
               {suggestion.title.replace(/_/g, " ")}
             </h4>
-            <p className="text-[10.5pt] text-[var(--sclade-text-secondary)] leading-relaxed font-light line-clamp-2">
+            <p className="text-xs text-[var(--sclade-text-secondary)] leading-relaxed line-clamp-2">
               {suggestion.description}
             </p>
-            <div className="flex items-center gap-2 mt-3.5">
-              <span className="text-[9px] font-black text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full uppercase tracking-wider">
-                {Math.round(suggestion.confidence * 100)}%
+            <div className="flex items-center gap-2 mt-2.5">
+              <span className="text-[10px] font-bold text-[#32704F] bg-[#E4F2E9] border border-[#32704F]/20 px-2 py-0.5 rounded uppercase tracking-wider">
+                {Math.round(suggestion.confidence * 100)}% match
               </span>
               {pushedTime > 0 && (
-                <span className="text-[9px] font-black text-[var(--sclade-text-secondary)] uppercase tracking-wider">
+                <span className="text-[10px] font-medium text-[var(--sclade-text-muted)]">
                   • {formatPushedTime(pushedTime)}
                 </span>
               )}
             </div>
           </div>
           
-          <div className="flex flex-col gap-2 shrink-0">
+          <div className="flex flex-col gap-1.5 shrink-0">
             <button
               onClick={() => setReviewing(suggestion)}
-              className="px-4.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-blue-500/10 active:scale-95"
+              className="px-3.5 py-1.5 bg-[#5473D1] hover:bg-[#4261C0] text-white rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs active:scale-95"
             >
               Review
             </button>
             <button
               onClick={() => handleDiscard(suggestion.id)}
-              className="p-2 text-[var(--sclade-text-muted)] hover:text-red-500 transition-colors cursor-pointer self-center"
+              className="p-1 text-[var(--sclade-text-muted)] hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 rounded transition-colors cursor-pointer self-center"
+              title="Discard"
             >
               <X className="w-4 h-4" />
             </button>
@@ -477,34 +474,34 @@ export function SmartUpdateCenter({
       ) : (
         <>
           {/* Tab Switcher & Rescan Panel */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-black/5 dark:border-white/5 pb-5">
-            <div className="flex items-center gap-1.5 p-1 bg-black/[0.03] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 rounded-2xl self-start">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--sclade-card-border)] pb-4">
+            <div className="flex items-center gap-1 p-1 bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-card-border)] rounded-xl self-start">
               <button
                 onClick={() => setActiveTab("all")}
-                className={`px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                   activeTab === "all"
-                    ? "bg-neutral-950 text-white dark:bg-white dark:text-black shadow-lg"
-                    : "text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)]"
+                    ? "bg-[#5473D1] text-white shadow-xs"
+                    : "text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-[#E7EDFF]/50"
                 }`}
               >
-                All Discoveries ({suggestions.length})
+                All ({suggestions.length})
               </button>
               <button
                 onClick={() => setActiveTab("projects")}
-                className={`px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                   activeTab === "projects"
-                    ? "bg-neutral-950 text-white dark:bg-white dark:text-black shadow-lg"
-                    : "text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)]"
+                    ? "bg-[#5473D1] text-white shadow-xs"
+                    : "text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-[#E7EDFF]/50"
                 }`}
               >
                 Projects ({projectSuggestions.length})
               </button>
               <button
                 onClick={() => setActiveTab("skills")}
-                className={`px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                   activeTab === "skills"
-                    ? "bg-neutral-950 text-white dark:bg-white dark:text-black shadow-lg"
-                    : "text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)]"
+                    ? "bg-[#5473D1] text-white shadow-xs"
+                    : "text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-[#E7EDFF]/50"
                 }`}
               >
                 Skills ({skillSuggestions.length})
@@ -514,7 +511,7 @@ export function SmartUpdateCenter({
             {!isCurrentlySyncing && suggestions.length > 0 && (
               <button
                 onClick={handleScan}
-                className="flex items-center gap-2 px-4 py-2 bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-card-border)] hover:bg-[var(--sclade-card-bg)] rounded-xl text-[10px] font-black uppercase tracking-wider transition-all text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-card-border)] hover:bg-[#E7EDFF] hover:border-[#CFD9FF] hover:text-[#5473D1] rounded-lg text-xs font-semibold transition-all text-[var(--sclade-text-secondary)] cursor-pointer shadow-xs"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 Rescan GitHub
@@ -523,57 +520,57 @@ export function SmartUpdateCenter({
           </div>
 
           {isCurrentlySyncing && (
-            <div className="flex items-center gap-3 p-4 bg-blue-500/10 border border-blue-500/20 rounded-2xl animate-pulse">
-              <Zap className="w-4 h-4 text-blue-400" />
-              <span className="text-[10px] font-bold text-blue-400 uppercase tracking-wider">AI is scanning your GitHub...</span>
+            <div className="flex items-center gap-3 p-4 bg-[#E7EDFF] border border-[#CFD9FF] rounded-xl text-[#5473D1] animate-pulse">
+              <Zap className="w-4 h-4 text-[#5473D1]" />
+              <span className="text-xs font-bold uppercase tracking-wider">AI is scanning your GitHub...</span>
             </div>
           )}
 
           {!isCurrentlySyncing && (
             <>
               {activeTab === "all" ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Projects Section */}
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between border-b border-black/5 dark:border-white/5 pb-3 mb-1">
-                      <h3 className="text-[10px] font-black text-[var(--sclade-text-secondary)] uppercase tracking-[0.2em] flex items-center gap-2">
-                        <Rocket className="w-3.5 h-3.5 text-blue-500" />
-                        Project Suggestions ({projectSuggestions.length})
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between pb-2 border-b border-[var(--sclade-card-border)]">
+                      <h3 className="text-xs font-bold text-[var(--sclade-text-primary)] uppercase tracking-wider flex items-center gap-2">
+                        <Rocket className="w-3.5 h-3.5 text-[#5473D1]" />
+                        Project Discoveries ({projectSuggestions.length})
                       </h3>
                     </div>
 
                     {projectSuggestions.length === 0 ? (
-                      <div className="text-center py-10 bg-black/[0.01] dark:bg-white/[0.01] border border-[var(--sclade-card-border)] rounded-3xl">
-                        <Check className="w-6 h-6 text-emerald-500 mx-auto mb-2" />
-                        <p className="text-[10px] text-[var(--sclade-text-secondary)] uppercase tracking-wider font-bold">
+                      <div className="text-center py-8 bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] rounded-xl shadow-xs">
+                        <Check className="w-5 h-5 text-[#32704F] mx-auto mb-1.5" />
+                        <p className="text-xs text-[var(--sclade-text-secondary)] font-medium">
                           All projects up to date
                         </p>
                       </div>
                     ) : (
-                      <div className="space-y-4">
+                      <div className="space-y-3">
                         {projectSuggestions.map((suggestion) => renderSuggestionCard(suggestion))}
                       </div>
                     )}
                   </div>
 
                   {/* Skills Section */}
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between border-b border-black/5 dark:border-white/5 pb-3 mb-1">
-                      <h3 className="text-[10px] font-black text-[var(--sclade-text-secondary)] uppercase tracking-[0.2em] flex items-center gap-2">
-                        <Zap className="w-3.5 h-3.5 text-amber-500" />
-                        Skill Suggestions ({skillSuggestions.length})
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between pb-2 border-b border-[var(--sclade-card-border)]">
+                      <h3 className="text-xs font-bold text-[var(--sclade-text-primary)] uppercase tracking-wider flex items-center gap-2">
+                        <Zap className="w-3.5 h-3.5 text-[#5473D1]" />
+                        Skill Discoveries ({skillSuggestions.length})
                       </h3>
                     </div>
 
                     {skillSuggestions.length === 0 ? (
-                      <div className="text-center py-10 bg-black/[0.01] dark:bg-white/[0.01] border border-[var(--sclade-card-border)] rounded-3xl">
-                        <Check className="w-6 h-6 text-emerald-500 mx-auto mb-2" />
-                        <p className="text-[10px] text-[var(--sclade-text-secondary)] uppercase tracking-wider font-bold">
+                      <div className="text-center py-8 bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] rounded-xl shadow-xs">
+                        <Check className="w-5 h-5 text-[#32704F] mx-auto mb-1.5" />
+                        <p className="text-xs text-[var(--sclade-text-secondary)] font-medium">
                           All skills up to date
                         </p>
                       </div>
                     ) : (
-                      <div className="space-y-4">
+                      <div className="space-y-3">
                         {skillSuggestions.map((suggestion) => renderSuggestionCard(suggestion))}
                       </div>
                     )}
@@ -581,27 +578,27 @@ export function SmartUpdateCenter({
                 </div>
               ) : activeTab === "projects" ? (
                 projectSuggestions.length === 0 ? (
-                  <div className="text-center py-12 bg-black/[0.01] dark:bg-white/[0.01] border border-[var(--sclade-card-border)] rounded-3xl">
-                    <AlertCircle className="w-8 h-8 text-[var(--sclade-text-secondary)] mx-auto mb-3" />
-                    <p className="text-[10px] text-[var(--sclade-text-secondary)] uppercase tracking-widest font-black">
+                  <div className="text-center py-10 bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] rounded-xl shadow-xs">
+                    <AlertCircle className="w-6 h-6 text-[var(--sclade-text-muted)] mx-auto mb-2" />
+                    <p className="text-xs text-[var(--sclade-text-secondary)] font-semibold">
                       No project discoveries found
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-4 max-w-3xl mx-auto">
+                  <div className="space-y-3 max-w-3xl mx-auto">
                     {projectSuggestions.map((suggestion) => renderSuggestionCard(suggestion))}
                   </div>
                 )
               ) : (
                 skillSuggestions.length === 0 ? (
-                  <div className="text-center py-12 bg-black/[0.01] dark:bg-white/[0.01] border border-[var(--sclade-card-border)] rounded-3xl">
-                    <AlertCircle className="w-8 h-8 text-[var(--sclade-text-secondary)] mx-auto mb-3" />
-                    <p className="text-[10px] text-[var(--sclade-text-secondary)] uppercase tracking-widest font-black">
+                  <div className="text-center py-10 bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] rounded-xl shadow-xs">
+                    <AlertCircle className="w-6 h-6 text-[var(--sclade-text-muted)] mx-auto mb-2" />
+                    <p className="text-xs text-[var(--sclade-text-secondary)] font-semibold">
                       No skill discoveries found
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-4 max-w-3xl mx-auto">
+                  <div className="space-y-3 max-w-3xl mx-auto">
                     {skillSuggestions.map((suggestion) => renderSuggestionCard(suggestion))}
                   </div>
                 )
@@ -613,40 +610,40 @@ export function SmartUpdateCenter({
 
       {/* Review Modal */}
       {reviewing && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm">
-          <div className="bg-[var(--sclade-bg)] border border-[var(--sclade-card-border)] rounded-3xl w-full max-w-xl overflow-hidden shadow-2xl">
-            <div className="p-8">
-              <div className="flex items-center justify-between mb-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+          <div className="bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] rounded-xl w-full max-w-xl overflow-hidden shadow-xl text-[var(--sclade-text-primary)]">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-5 pb-3 border-b border-[var(--sclade-card-border)]">
                 <div>
-                  <h3 className="text-sm font-black text-[var(--sclade-text-primary)] uppercase tracking-[2px] mb-1">Review AI Suggestion</h3>
-                  <p className="text-[10px] text-[var(--sclade-text-secondary)] uppercase tracking-wider">{reviewing.type.replace('_', ' ')}</p>
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--sclade-text-primary)]">Review AI Suggestion</h3>
+                  <p className="text-[11px] text-[var(--sclade-text-secondary)] uppercase tracking-wider mt-0.5">{reviewing.type.replace('_', ' ')}</p>
                 </div>
                 <button 
                   onClick={() => setReviewing(null)}
-                  className="p-2 hover:bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] rounded-full transition-colors"
+                  className="p-1.5 hover:bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-card-border)] rounded-lg transition-colors cursor-pointer"
                 >
-                  <X className="w-5 h-5 text-[var(--sclade-text-secondary)]" />
+                  <X className="w-4 h-4 text-[var(--sclade-text-secondary)]" />
                 </button>
               </div>
 
-              <div className="space-y-6">
-                <div className="p-6 bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] rounded-2xl">
-                  <h5 className="text-[10px] font-bold text-[var(--sclade-text-secondary)] uppercase tracking-widest mb-3">AI Proposed Changes</h5>
+              <div className="space-y-5">
+                <div className="p-4 bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-card-border)] rounded-xl">
+                  <h5 className="text-xs font-bold text-[var(--sclade-text-secondary)] uppercase tracking-wider mb-3">AI Proposed Changes</h5>
                   <div className="text-xs text-[var(--sclade-text-primary)] leading-relaxed">
                     {/* Render specific fields based on type */}
                     {reviewing.type === 'NEW_PROJECT' && (
-                      <div className="space-y-4">
+                      <div className="space-y-3">
                         <div>
-                          <p className="text-[9px] font-bold text-[var(--sclade-text-secondary)] uppercase mb-1">Project Name</p>
-                          <p className="font-bold">{JSON.parse(reviewing.proposedData).title}</p>
+                          <p className="text-[10px] font-bold text-[var(--sclade-text-secondary)] uppercase tracking-wider mb-0.5">Project Name</p>
+                          <p className="font-bold text-sm">{JSON.parse(reviewing.proposedData).title}</p>
                         </div>
                         <div>
-                          <p className="text-[9px] font-bold text-[var(--sclade-text-secondary)] uppercase mb-1">Description</p>
-                          <p>{JSON.parse(reviewing.proposedData).description}</p>
+                          <p className="text-[10px] font-bold text-[var(--sclade-text-secondary)] uppercase tracking-wider mb-0.5">Description</p>
+                          <p className="text-xs text-[var(--sclade-text-secondary)]">{JSON.parse(reviewing.proposedData).description}</p>
                         </div>
                         <div>
-                          <p className="text-[9px] font-bold text-[var(--sclade-text-secondary)] uppercase mb-1">Key Highlights</p>
-                          <ul className="list-disc pl-4 mt-2 space-y-1">
+                          <p className="text-[10px] font-bold text-[var(--sclade-text-secondary)] uppercase tracking-wider mb-0.5">Key Highlights</p>
+                          <ul className="list-disc pl-4 mt-1 space-y-1">
                             {(JSON.parse(reviewing.proposedData).highlights || []).map((h: string, i: number) => (
                               <li key={i}>{h}</li>
                             ))}
@@ -655,15 +652,15 @@ export function SmartUpdateCenter({
                       </div>
                     )}
                     {reviewing.type === 'IMPROVE_PROJECT' && (
-                      <div className="space-y-4">
+                      <div className="space-y-3">
                         <div>
-                          <p className="text-[9px] font-bold text-[var(--sclade-text-secondary)] uppercase mb-1">Project Name</p>
-                          <p className="font-bold">{JSON.parse(reviewing.proposedData).title}</p>
+                          <p className="text-[10px] font-bold text-[var(--sclade-text-secondary)] uppercase tracking-wider mb-0.5">Project Name</p>
+                          <p className="font-bold text-sm">{JSON.parse(reviewing.proposedData).title}</p>
                         </div>
                         {reviewing.currentData && (
-                          <div className="border border-red-500/20 bg-red-500/[0.02] p-4 rounded-xl">
-                            <p className="text-[9px] font-bold text-red-400 uppercase mb-2">Current Project Highlights</p>
-                            <ul className="list-disc pl-4 space-y-1 text-red-500/80">
+                          <div className="border border-red-200 dark:border-red-900/30 bg-red-50 dark:bg-red-950/20 p-3 rounded-lg">
+                            <p className="text-[10px] font-bold text-red-600 dark:text-red-400 uppercase tracking-wider mb-1">Current Highlights</p>
+                            <ul className="list-disc pl-4 space-y-0.5 text-xs text-red-700 dark:text-red-300">
                               {(() => {
                                 try {
                                   const parsed = JSON.parse(reviewing.currentData);
@@ -677,9 +674,9 @@ export function SmartUpdateCenter({
                             </ul>
                           </div>
                         )}
-                        <div className="border border-emerald-500/20 bg-emerald-500/[0.02] p-4 rounded-xl">
-                          <p className="text-[9px] font-bold text-emerald-400 uppercase mb-2">AI Proposed Highlights</p>
-                          <ul className="list-disc pl-4 space-y-1 text-emerald-500/90">
+                        <div className="border border-[#32704F]/20 bg-[#E4F2E9]/60 dark:bg-emerald-950/20 p-3 rounded-lg">
+                          <p className="text-[10px] font-bold text-[#32704F] dark:text-emerald-300 uppercase tracking-wider mb-1">AI Proposed Highlights</p>
+                          <ul className="list-disc pl-4 space-y-0.5 text-xs text-[#32704F] dark:text-emerald-200">
                             {(JSON.parse(reviewing.proposedData).highlights || []).map((h: string, i: number) => (
                               <li key={i}>{h}</li>
                             ))}
@@ -688,14 +685,14 @@ export function SmartUpdateCenter({
                       </div>
                     )}
                     {reviewing.type === 'ADD_SKILL' && (
-                      <div className="space-y-4">
+                      <div className="space-y-3">
                         {Object.entries(JSON.parse(reviewing.proposedData)).map(([cat, skills]: [string, any]) => (
                           Array.isArray(skills) && skills.length > 0 && (
                             <div key={cat}>
-                              <p className="text-[9px] font-bold text-[var(--sclade-text-secondary)] uppercase mb-2">{cat}</p>
-                              <div className="flex flex-wrap gap-2">
+                              <p className="text-[10px] font-bold text-[var(--sclade-text-secondary)] uppercase tracking-wider mb-1.5">{cat}</p>
+                              <div className="flex flex-wrap gap-1.5">
                                 {skills.map((s: string) => (
-                                  <span key={s} className="px-2 py-1 bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] rounded-lg text-[10px] font-bold">{s}</span>
+                                  <span key={s} className="px-2 py-0.5 bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] rounded-md text-xs font-semibold">{s}</span>
                                 ))}
                               </div>
                             </div>
@@ -706,17 +703,17 @@ export function SmartUpdateCenter({
                   </div>
                 </div>
 
-                <div className="flex gap-4">
+                <div className="flex gap-3 pt-2">
                   <button
                     onClick={() => handleApprove(reviewing.id, JSON.parse(reviewing.proposedData))}
-                    className="flex-1 flex items-center justify-center gap-3 py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl text-xs font-black uppercase tracking-[2px] transition-all shadow-xl shadow-emerald-900/20"
+                    className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-[#32704F] hover:bg-[#285a3f] text-white rounded-lg text-xs font-bold uppercase tracking-wider transition-all shadow-xs cursor-pointer"
                   >
                     <Check className="w-4 h-4" />
                     Approve & Sync
                   </button>
                   <button
                     onClick={() => handleDiscard(reviewing.id)}
-                    className="px-8 py-4 bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-card-border)] hover:bg-red-500/10 text-[var(--sclade-text-secondary)] hover:text-red-400 rounded-2xl text-xs font-bold uppercase tracking-[2px] transition-all"
+                    className="px-5 py-2.5 bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-card-border)] hover:bg-red-50 dark:hover:bg-red-950/20 text-[var(--sclade-text-secondary)] hover:text-red-600 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer"
                   >
                     Discard
                   </button>
@@ -726,35 +723,36 @@ export function SmartUpdateCenter({
           </div>
         </div>
       )}
+
       {/* 409 Conflict Modal: Keep Mine vs Replace */}
       {conflictModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm">
-          <div className="bg-[var(--sclade-bg)] border border-[var(--sclade-card-border)] rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
-            <div className="p-8">
-              <div className="flex items-center justify-between mb-6">
+          <div className="bg-[var(--sclade-bg)] border border-[var(--sclade-card-border)] rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-5">
                 <div>
-                  <h3 className="text-base font-bold text-[var(--sclade-text-primary)] mb-1">Confirm Project Replacement</h3>
+                  <h3 className="text-sm font-bold text-[var(--sclade-text-primary)] mb-0.5">Confirm Project Replacement</h3>
                   <p className="text-xs text-[var(--sclade-text-secondary)]">This project already exists in your resume. Review both versions before replacing.</p>
                 </div>
                 <button 
                   onClick={() => setConflictModal(null)}
-                  className="p-2 hover:bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] rounded-full transition-colors text-[var(--sclade-text-secondary)] cursor-pointer"
+                  className="p-1.5 hover:bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] rounded-lg transition-colors text-[var(--sclade-text-secondary)] cursor-pointer"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
 
               {/* Side by side comparison */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 mb-5">
                 {/* Your Version */}
-                <div className="p-5 rounded-2xl bg-amber-500/5 border border-amber-500/20 flex flex-col justify-between">
+                <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 flex flex-col justify-between">
                   <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-amber-500 mb-2 block">Your Version</span>
-                    <h4 className="font-bold text-sm text-[var(--sclade-text-primary)] mb-1">{conflictModal.current?.title || conflictModal.current?.name || "Existing Project"}</h4>
-                    <p className="text-xs text-[var(--sclade-text-secondary)] mb-3">{conflictModal.current?.description || "No description"}</p>
-                    <div className="space-y-1.5">
-                      <p className="text-[9px] font-bold uppercase text-[var(--sclade-text-muted)]">Highlights</p>
-                      <ul className="list-disc pl-4 text-xs space-y-1 text-[var(--sclade-text-secondary)]">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-amber-500 mb-1.5 block">Your Version</span>
+                    <h4 className="font-bold text-xs text-[var(--sclade-text-primary)] mb-1">{conflictModal.current?.title || conflictModal.current?.name || "Existing Project"}</h4>
+                    <p className="text-xs text-[var(--sclade-text-secondary)] mb-2.5 leading-relaxed">{conflictModal.current?.description || "No description"}</p>
+                    <div className="space-y-1">
+                      <p className="text-[9px] font-bold uppercase text-[var(--sclade-text-muted)] tracking-wider">Highlights</p>
+                      <ul className="list-disc pl-3.5 text-xs space-y-0.5 text-[var(--sclade-text-secondary)]">
                         {((conflictModal.current?.highlights || conflictModal.current?.bullets) || []).map((h: string, i: number) => (
                           <li key={i}>{h}</li>
                         ))}
@@ -767,14 +765,14 @@ export function SmartUpdateCenter({
                 </div>
 
                 {/* Suggested Version */}
-                <div className="p-5 rounded-2xl bg-blue-500/5 border border-blue-500/20 flex flex-col justify-between">
+                <div className="p-4 rounded-xl bg-[#5473D1]/5 border border-[#5473D1]/20 flex flex-col justify-between">
                   <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-blue-500 mb-2 block">Suggested Version</span>
-                    <h4 className="font-bold text-sm text-[var(--sclade-text-primary)] mb-1">{conflictModal.proposed?.title || conflictModal.proposed?.name || "Suggested Project"}</h4>
-                    <p className="text-xs text-[var(--sclade-text-secondary)] mb-3">{conflictModal.proposed?.description || "No description"}</p>
-                    <div className="space-y-1.5">
-                      <p className="text-[9px] font-bold uppercase text-[var(--sclade-text-muted)]">Highlights</p>
-                      <ul className="list-disc pl-4 text-xs space-y-1 text-[var(--sclade-text-secondary)]">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#5473D1] mb-1.5 block">Suggested Version</span>
+                    <h4 className="font-bold text-xs text-[var(--sclade-text-primary)] mb-1">{conflictModal.proposed?.title || conflictModal.proposed?.name || "Suggested Project"}</h4>
+                    <p className="text-xs text-[var(--sclade-text-secondary)] mb-2.5 leading-relaxed">{conflictModal.proposed?.description || "No description"}</p>
+                    <div className="space-y-1">
+                      <p className="text-[9px] font-bold uppercase text-[var(--sclade-text-muted)] tracking-wider">Highlights</p>
+                      <ul className="list-disc pl-3.5 text-xs space-y-0.5 text-[var(--sclade-text-secondary)]">
                         {(conflictModal.proposed?.highlights || conflictModal.proposed?.bullets || []).map((h: string, i: number) => (
                           <li key={i}>{h}</li>
                         ))}
@@ -785,13 +783,13 @@ export function SmartUpdateCenter({
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5">
                 <button
                   onClick={() => {
                     handleDiscard(conflictModal.id);
                     setConflictModal(null);
                   }}
-                  className="flex-1 py-3 px-4 bg-[var(--sclade-btn-secondary-bg)] hover:bg-neutral-200 dark:hover:bg-neutral-800 border border-[var(--sclade-card-border)] text-[var(--sclade-text-primary)] rounded-xl text-xs font-bold transition-all text-center cursor-pointer"
+                  className="flex-1 py-2 px-3.5 bg-[var(--sclade-btn-secondary-bg)] hover:bg-[var(--sclade-subtle-bg)] border border-[var(--sclade-card-border)] text-[var(--sclade-text-primary)] rounded-lg text-xs font-bold uppercase tracking-wider transition-all text-center cursor-pointer"
                 >
                   Keep mine
                 </button>
@@ -799,7 +797,7 @@ export function SmartUpdateCenter({
                   onClick={() => {
                     handleApprove(conflictModal.id, conflictModal.proposed, true);
                   }}
-                  className="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold transition-all text-center shadow-md shadow-blue-500/20 cursor-pointer"
+                  className="flex-1 py-2 px-3.5 bg-[#5473D1] hover:bg-[#4261C0] text-white rounded-lg text-xs font-bold uppercase tracking-wider transition-all text-center shadow-xs cursor-pointer"
                 >
                   Replace
                 </button>

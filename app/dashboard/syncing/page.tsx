@@ -51,23 +51,23 @@ export default function SyncingPage() {
   }, [session, router]);
 
   return (
-    <div className="dark-page min-h-screen bg-neutral-950 flex flex-col items-center justify-center p-6 text-center">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-[var(--sclade-bg)] flex flex-col items-center justify-center p-6 text-center font-outfit text-[var(--sclade-text-primary)]">
+      <div className="w-full max-w-md p-8 sm:p-10 rounded-2xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] shadow-sm">
         {/* Animated Progress Ring */}
-        <div className="relative w-32 h-32 mx-auto mb-12">
-          <div className="absolute inset-0 border-4 border-neutral-900 rounded-full" />
-          <div className={`absolute inset-0 border-4 border-blue-500 rounded-full border-t-transparent animate-spin ${step === "COMPLETED" || step === "ERROR" ? "hidden" : ""}`} />
+        <div className="relative w-28 h-28 mx-auto mb-8">
+          <div className="absolute inset-0 border-4 border-[var(--sclade-border)] rounded-full" />
+          <div className={`absolute inset-0 border-4 border-[var(--sclade-primary)] rounded-full border-t-transparent animate-spin ${step === "COMPLETED" || step === "ERROR" ? "hidden" : ""}`} />
           <div className="absolute inset-0 flex items-center justify-center">
-            {step === "FETCHING" && <GitBranch className="w-10 h-10 text-neutral-400" />}
-            {step === "SELECTING" && <Sparkles className="w-10 h-10 text-blue-400" />}
-            {step === "GENERATING" && <Brain className="w-10 h-10 text-sky-400" />}
-            {step === "SAVING" && <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />}
-            {step === "COMPLETED" && <CheckCircle2 className="w-10 h-10 text-green-500" />}
+            {step === "FETCHING" && <GitBranch className="w-8 h-8 text-[var(--sclade-text-muted)]" />}
+            {step === "SELECTING" && <Sparkles className="w-8 h-8 text-[var(--sclade-primary)]" />}
+            {step === "GENERATING" && <Brain className="w-8 h-8 text-[var(--sclade-primary)]" />}
+            {step === "SAVING" && <Loader2 className="w-8 h-8 text-[var(--sclade-primary)] animate-spin" />}
+            {step === "COMPLETED" && <CheckCircle2 className="w-8 h-8 text-[var(--sclade-success-text,#32704F)]" />}
             {step === "ERROR" && <div className="text-red-500 font-bold text-2xl">!</div>}
           </div>
         </div>
 
-        <h2 className="text-2xl font-bold text-white mb-2">
+        <h2 className="text-xl font-bold text-[var(--sclade-text-primary)] mb-2">
           {step === "FETCHING" && "Connecting to GitHub..."}
           {step === "SELECTING" && "Picking your best work..."}
           {step === "GENERATING" && "AI is writing your resume..."}
@@ -76,7 +76,7 @@ export default function SyncingPage() {
           {step === "ERROR" && "Sync Failed"}
         </h2>
 
-        <p className="text-neutral-500">
+        <p className="text-[var(--sclade-text-secondary)] text-sm leading-relaxed">
           {step === "FETCHING" && "Scrubbing repositories for technical data."}
           {step === "SELECTING" && "Analyzing stars and activity metrics."}
           {step === "GENERATING" && "Generating STAR-method bullets for ATS."}
@@ -88,7 +88,7 @@ export default function SyncingPage() {
         {step === "ERROR" && (
           <button
             onClick={() => window.location.reload()}
-            className="mt-8 px-6 py-3 bg-neutral-900 hover:bg-neutral-800 text-white rounded-xl font-medium transition-colors border border-neutral-800"
+            className="mt-6 px-5 py-2.5 bg-[var(--sclade-primary)] hover:bg-[#4261C0] text-white rounded-xl font-bold text-xs uppercase tracking-wider transition-colors shadow-sm cursor-pointer"
           >
             Try Again
           </button>

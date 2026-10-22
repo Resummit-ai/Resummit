@@ -4,48 +4,75 @@
 
 :root,
 .light {
-  --sclade-bg: #f1f5f9;
-  /* Slate 100 - modern cool background separating sheet/editor */
-  --sclade-text-primary: #0f172a;
-  /* Slate 900 */
-  --sclade-text-secondary: #475569;
-  /* Slate 600 */
-  --sclade-text-muted: #94a3b8;
-  /* Slate 400 */
-  --sclade-card-bg: #f8fafc;
-  /* Slate 50 - distinct card panels inside sidebar */
-  --sclade-card-border: #e2e8f0;
-  /* Slate 200 - clean and visible card bounds */
-  --sclade-nav-bg: rgba(255, 255, 255, 0.85);
-  --sclade-glass-tint: rgba(37, 99, 235, 0.02);
-  --sclade-input-bg: #ffffff;
-  /* pure white input boxes */
-  --sclade-input-border: #cbd5e1;
-  /* Slate 300 - clear input focus/outlines */
-  --sclade-btn-secondary-bg: #f1f5f9;
-  /* Slate 100 */
-  --sclade-btn-secondary-text: #0f172a;
-  --sclade-popover-bg: #ffffff;
-  /* pure white sidebar container */
-  --sclade-popover-border: #e2e8f0;
-  /* Slate 200 border */
+  /* Resummit Clarity Design System Tokens */
+  --clarity-bg: #F5F6F8;
+  --clarity-surface: #FFFFFF;
+  --clarity-text-primary: #20252E;
+  --clarity-text-secondary: #626D7C;
+  --clarity-text-muted: #777F8C;
+  --clarity-primary: #5473D1;
+  --clarity-primary-hover: #4261C0;
+  --clarity-primary-selected: #E7EDFF;
+  --clarity-primary-border: #CFD9FF;
+  --clarity-border: #E1E5EB;
+  --clarity-subtle: #F0F3F8;
+  --clarity-success-fg: #32704F;
+  --clarity-success-bg: #E4F2E9;
+  --clarity-warning-fg: #92400E;
+  --clarity-warning-bg: #FEF3C7;
+  --clarity-error-fg: #B91C1C;
+  --clarity-error-bg: #FEE2E2;
+
+  /* App legacy mapped variables mapped to Clarity */
+  --sclade-bg: #F5F6F8;
+  --sclade-text-primary: #20252E;
+  --sclade-text-secondary: #626D7C;
+  --sclade-text-muted: #777F8C;
+  --sclade-card-bg: #FFFFFF;
+  --sclade-card-border: #E1E5EB;
+  --sclade-nav-bg: rgba(255, 255, 255, 0.95);
+  --sclade-glass-tint: rgba(84, 115, 209, 0.02);
+  --sclade-input-bg: #FFFFFF;
+  --sclade-input-border: #E1E5EB;
+  --sclade-btn-secondary-bg: #F0F3F8;
+  --sclade-btn-secondary-text: #20252E;
+  --sclade-popover-bg: #FFFFFF;
+  --sclade-popover-border: #E1E5EB;
 }
 
 .dark {
-  --sclade-bg: #0a0a0a;
-  --sclade-text-primary: #ffffff;
-  --sclade-text-secondary: #a3a3a3;
-  --sclade-text-muted: #525252;
-  --sclade-card-bg: rgba(23, 23, 23, 0.4);
-  --sclade-card-border: rgba(255, 255, 255, 0.05);
-  --sclade-nav-bg: rgba(10, 10, 10, 0.85);
+  --clarity-bg: #0F1115;
+  --clarity-surface: #181B20;
+  --clarity-text-primary: #F3F4F6;
+  --clarity-text-secondary: #9CA3AF;
+  --clarity-text-muted: #6B7280;
+  --clarity-primary: #5473D1;
+  --clarity-primary-hover: #6784DE;
+  --clarity-primary-selected: rgba(84, 115, 209, 0.18);
+  --clarity-primary-border: rgba(84, 115, 209, 0.35);
+  --clarity-border: #282D37;
+  --clarity-subtle: #14171D;
+  --clarity-success-fg: #34D399;
+  --clarity-success-bg: rgba(52, 211, 153, 0.12);
+  --clarity-warning-fg: #FBBF24;
+  --clarity-warning-bg: rgba(251, 191, 36, 0.12);
+  --clarity-error-fg: #F87171;
+  --clarity-error-bg: rgba(248, 113, 113, 0.12);
+
+  --sclade-bg: #0F1115;
+  --sclade-text-primary: #F3F4F6;
+  --sclade-text-secondary: #9CA3AF;
+  --sclade-text-muted: #6B7280;
+  --sclade-card-bg: #181B20;
+  --sclade-card-border: #282D37;
+  --sclade-nav-bg: rgba(15, 17, 21, 0.95);
   --sclade-glass-tint: rgba(255, 255, 255, 0.01);
-  --sclade-input-bg: rgba(255, 255, 255, 0.02);
-  --sclade-input-border: rgba(255, 255, 255, 0.05);
-  --sclade-btn-secondary-bg: #1e1e1e;
-  --sclade-btn-secondary-text: #ffffff;
-  --sclade-popover-bg: rgba(23, 23, 23, 0.95);
-  --sclade-popover-border: rgba(255, 255, 255, 0.08);
+  --sclade-input-bg: #13151A;
+  --sclade-input-border: #282D37;
+  --sclade-btn-secondary-bg: #22262F;
+  --sclade-btn-secondary-text: #F3F4F6;
+  --sclade-popover-bg: #181B20;
+  --sclade-popover-border: #282D37;
 }
 
 body {
@@ -86,26 +113,24 @@ body {
   }
 }
 
-/* Premium Light Theme 3D Card Overrides */
+/* Clarity Light Theme Card & Surface Overrides */
 .light .glass-panel,
 .light .bg-\[var\(--sclade-card-bg\)\] {
-  background-color: rgba(115, 115, 115, 0.03) !important;
-  /* Neutral 500 at 3% */
-  border-color: rgba(115, 115, 115, 0.1) !important;
-  /* Neutral 500 at 10% */
-  box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.01), 0 4px 12px -2px rgba(0, 0, 0, 0.01), inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+  background-color: #FFFFFF !important;
+  border-color: #E1E5EB !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
 }
 
 .light .bg-\[var\(--sclade-input-bg\)\] {
-  background-color: rgba(115, 115, 115, 0.02) !important;
-  /* Neutral 500 at 2% */
-  border-color: rgba(115, 115, 115, 0.08) !important;
-  /* Neutral 500 at 8% */
+  background-color: #FFFFFF !important;
+  border-color: #E1E5EB !important;
 }
 
-/* Make inner cards and inputs pop inside the light theme popovers/drawer */
+/* Popover & Drawer in Clarity Light */
 .light .bg-\[var\(--sclade-popover-bg\)\] {
-  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.06), 0 10px 25px -10px rgba(0, 0, 0, 0.04) !important;
+  background-color: #FFFFFF !important;
+  border-color: #E1E5EB !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 4px 10px -2px rgba(0, 0, 0, 0.03) !important;
 }
 
 /* Dynamic Overrides for Hardcoded Dark Utility Classes in Light Mode */
@@ -121,8 +146,8 @@ body {
 
 .light .hover\:bg-white\/10:hover,
 .light .hover\:bg-white\/5:hover {
-  background-color: #cbd5e1 !important;
-  /* Visible Slate hover */
+  background-color: #E7EDFF !important;
+  color: #5473D1 !important;
 }
 
 .light .bg-white\/\[0\.01\],
@@ -147,13 +172,13 @@ body {
 /* Custom Global Logo & Branding Colors */
 :root,
 .light {
-  --logo-doc-body: #dbeafe;
-  --logo-doc-fold: #bfdbfe;
-  --logo-doc-lines: #93c5fd;
-  --logo-flag-pole: #2563eb;
-  --logo-flag-banner: #2563eb;
-  --logo-text: #0f172a;
-  --logo-tagline: #64748b;
+  --logo-doc-body: #E7EDFF;
+  --logo-doc-fold: #CFD9FF;
+  --logo-doc-lines: #5473D1;
+  --logo-flag-pole: #5473D1;
+  --logo-flag-banner: #5473D1;
+  --logo-text: #20252E;
+  --logo-tagline: #626D7C;
 }
 
 .dark {

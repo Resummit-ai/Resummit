@@ -33,7 +33,7 @@ function InlineEdit({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         rows={rows}
-        className={`w-full bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] rounded-xl px-4 py-3 text-[13px] text-[var(--sclade-text-primary)] placeholder:text-[var(--sclade-text-muted)] outline-none focus:border-blue-500/40 focus:ring-4 focus:ring-blue-500/5 transition-all resize-none leading-relaxed font-medium ${className}`}
+        className={`w-full bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] rounded-lg px-3.5 py-2.5 text-[13px] text-[var(--sclade-text-primary)] placeholder:text-[var(--sclade-text-muted)] outline-none focus:border-[var(--sclade-primary)] focus:ring-2 focus:ring-[var(--sclade-primary)]/10 transition-all resize-none leading-relaxed font-medium ${className}`}
       />
     );
   }
@@ -43,7 +43,7 @@ function InlineEdit({
       value={value || ""}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className={`w-full bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] rounded-xl px-4 py-2.5 text-[13px] text-[var(--sclade-text-primary)] placeholder:text-[var(--sclade-text-muted)] outline-none focus:border-blue-500/40 focus:ring-4 focus:ring-blue-500/5 transition-all font-medium ${className}`}
+      className={`w-full bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] rounded-lg px-3.5 py-2 text-[13px] text-[var(--sclade-text-primary)] placeholder:text-[var(--sclade-text-muted)] outline-none focus:border-[var(--sclade-primary)] focus:ring-2 focus:ring-[var(--sclade-primary)]/10 transition-all font-medium ${className}`}
     />
   );
 }
@@ -78,11 +78,11 @@ function parseAchievementString(str: string) {
 
 function SkillTag({ label, onRemove }: { label: string; onRemove: () => void }) {
   return (
-    <span className="inline-flex items-center gap-1.5 bg-neutral-800/80 border border-white/10 text-neutral-300 px-3 py-1.5 rounded-full text-[11px] font-semibold group hover:border-blue-500/30 transition-all cursor-default">
+    <span className="inline-flex items-center gap-1.5 bg-[var(--sclade-subtle-bg)] border border-[var(--sclade-border)] text-[var(--sclade-text-primary)] px-2.5 py-1 rounded-md text-[12px] font-medium group hover:border-[var(--sclade-primary)] transition-all cursor-default">
       {label}
       <button
         onClick={onRemove}
-        className="text-neutral-600 hover:text-red-400 transition-colors"
+        className="text-[var(--sclade-text-muted)] hover:text-red-500 transition-colors"
       >
         <X className="w-3 h-3" />
       </button>
@@ -92,7 +92,7 @@ function SkillTag({ label, onRemove }: { label: string; onRemove: () => void }) 
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <label className="block text-[9px] font-black uppercase tracking-[0.15em] text-neutral-600 mb-1.5 ml-0.5">
+    <label className="block text-[10px] font-bold uppercase tracking-wider text-[var(--sclade-text-secondary)] mb-1.5 ml-0.5">
       {children}
     </label>
   );
@@ -270,67 +270,64 @@ function ExperienceDatePicker({
 
 function ATSPanel({ data, onClose }: { data: any; onClose: () => void }) {
   return (
-    <div className="fixed inset-0 bg-black/95 backdrop-blur-md flex items-center justify-center p-4 z-50">
-      <div className="bg-neutral-900 border border-white/10 p-12 rounded-[2.5rem] w-full max-w-2xl relative shadow-2xl overflow-hidden ring-1 ring-white/5">
-        <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-600/20 blur-[100px] rounded-full" />
-        <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-violet-600/10 blur-[100px] rounded-full" />
-        
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
+      <div className="bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] p-8 rounded-2xl w-full max-w-xl relative shadow-xl overflow-hidden">
         <button
           onClick={onClose}
-          className="absolute top-8 right-8 text-neutral-500 hover:text-white transition-colors p-2.5 hover:bg-white/5 rounded-full"
+          className="absolute top-6 right-6 text-[var(--sclade-text-muted)] hover:text-[var(--sclade-text-primary)] transition-colors p-2 hover:bg-[var(--sclade-subtle-bg)] rounded-lg"
         >
-          <X className="w-6 h-6" />
+          <X className="w-5 h-5" />
         </button>
 
         <div className="relative">
-          <div className="flex flex-col items-center mb-12">
-            <div className="text-[11px] font-black uppercase tracking-[6px] text-blue-500 mb-6 bg-blue-500/10 px-4 py-1.5 rounded-full">
+          <div className="flex flex-col items-center mb-8">
+            <div className="text-[11px] font-bold uppercase tracking-wider text-[var(--sclade-primary)] mb-4 bg-[var(--sclade-selected-bg)] px-3 py-1 rounded-full border border-[var(--sclade-selected-border)]">
               Intelligence Audit
             </div>
             <div
-              className={`text-[120px] leading-none font-black tracking-tighter font-outfit drop-shadow-[0_10px_40px_rgba(37,99,235,0.2)] ${
-                data.score >= 70 ? "text-white" : data.score >= 50 ? "text-yellow-400" : "text-red-400"
+              className={`text-7xl font-extrabold tracking-tight font-outfit ${
+                data.score >= 70 ? "text-[var(--sclade-success-text,#32704F)]" : data.score >= 50 ? "text-amber-600" : "text-rose-600"
               }`}
             >
               {data.score}
             </div>
-            <div className="h-2 w-72 bg-white/5 rounded-full overflow-hidden mt-8 shadow-inner">
+            <div className="h-2 w-64 bg-[var(--sclade-border)] rounded-full overflow-hidden mt-6">
               <div
-                className={`h-full transition-all duration-1000 ease-out rounded-full shadow-[0_0_20px_rgba(37,99,235,0.5)] ${
-                  data.score >= 70 ? "bg-blue-500" : data.score >= 50 ? "bg-yellow-500" : "bg-red-500"
+                className={`h-full transition-all duration-700 ease-out rounded-full ${
+                  data.score >= 70 ? "bg-[var(--sclade-success-text,#32704F)]" : data.score >= 50 ? "bg-amber-500" : "bg-rose-500"
                 }`}
                 style={{ width: `${data.score}%` }}
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 mb-10">
+          <div className="grid grid-cols-3 gap-3 mb-8">
             {Object.entries(data.breakdown || {})
               .filter(([k]) => k !== "overall")
               .map(([key, val]) => (
                 <div
                   key={key}
-                  className="bg-white/5 p-6 rounded-3xl border border-white/5 flex flex-col items-center group hover:bg-blue-500/5 transition-colors"
+                  className="bg-[var(--sclade-subtle-bg)] p-4 rounded-xl border border-[var(--sclade-border)] flex flex-col items-center"
                 >
-                  <div className="text-[9px] font-bold uppercase tracking-widest text-neutral-500 mb-2 group-hover:text-blue-400">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-[var(--sclade-text-secondary)] mb-1">
                     {key}
                   </div>
-                  <div className="text-2xl font-bold text-white font-outfit">{val as number}%</div>
+                  <div className="text-xl font-bold text-[var(--sclade-text-primary)] font-outfit">{val as number}%</div>
                 </div>
               ))}
           </div>
 
           {data.topIssues?.length > 0 && (
-            <div className="space-y-3">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-500 mb-2 ml-1">
+            <div className="space-y-2.5">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--sclade-text-secondary)] mb-2 ml-0.5">
                 Critical Improvements
               </p>
               {data.topIssues.map((issue: string, i: number) => (
                 <div
                   key={i}
-                  className="flex items-center gap-3 text-sm text-neutral-300 bg-white/5 border border-white/5 rounded-2xl px-5 py-3.5 hover:border-blue-500/20 transition-all"
+                  className="flex items-center gap-2.5 text-xs text-[var(--sclade-text-primary)] bg-[var(--sclade-subtle-bg)] border border-[var(--sclade-border)] rounded-xl px-4 py-3"
                 >
-                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(37,99,235,0.8)]" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-[var(--sclade-primary)] shrink-0" />
                   {issue}
                 </div>
               ))}
@@ -479,7 +476,7 @@ export function EditorClient({
   const [isTailoring, setIsTailoring] = useState(false);
   const [jdText, setJdText] = useState("");
   const [jobTitle, setJobTitle] = useState("");
-  const [theme, setTheme] = useState("dark");
+  const [theme, setTheme] = useState("light");
   const [sidebarWidth, setSidebarWidth] = useState(420);
   const [windowWidth, setWindowWidth] = useState(1200);
   const [isDragging, setIsDragging] = useState(false);
@@ -521,8 +518,7 @@ export function EditorClient({
     if (savedTheme === "light" || savedTheme === "dark") {
       setTheme(savedTheme);
     } else {
-      const isLightSystem = window.matchMedia("(prefers-color-scheme: light)").matches;
-      setTheme(isLightSystem ? "light" : "dark");
+      setTheme("light");
     }
   }, []);
 
@@ -2975,24 +2971,22 @@ export function EditorClient({
       {/* Specialized Coming Soon Modal */}
       {/* Premium Tailor for New Job Modal */}
       {showTailorModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-xl animate-fade-in">
-          <div className="w-[480px] bg-[var(--sclade-popover-bg)] border border-[var(--sclade-popover-border)] p-8 rounded-[2.5rem] relative overflow-hidden shadow-[0_0_50px_rgba(37,99,235,0.15)] transition-all duration-300">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 blur-[100px] pointer-events-none" />
-            
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm animate-fade-in p-4">
+          <div className="w-[500px] max-w-full bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] p-6 rounded-2xl relative overflow-hidden shadow-xl transition-all duration-300">
             <button 
               onClick={() => setShowTailorModal(false)}
-              className="absolute top-6 right-6 p-2 text-[var(--sclade-text-muted)] hover:text-[var(--sclade-text-primary)] rounded-full hover:bg-white/5 transition-all"
+              className="absolute top-5 right-5 p-1.5 text-[var(--sclade-text-muted)] hover:text-[var(--sclade-text-primary)] rounded-lg hover:bg-[var(--sclade-subtle-bg)] transition-all"
             >
               <X className="w-4 h-4" />
             </button>
 
-            <form onSubmit={handleTailorNewJobSubmit} className="space-y-6">
+            <form onSubmit={handleTailorNewJobSubmit} className="space-y-5">
               <div>
                 <h3 className="font-extrabold text-xl tracking-tight text-[var(--sclade-text-primary)] font-outfit mb-1 flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-blue-500 stroke-[2.5]" />
+                  <Sparkles className="w-5 h-5 text-[var(--sclade-primary)] stroke-[2.5]" />
                   Tailor for New Job
                 </h3>
-                <p className="text-[var(--sclade-text-muted)] text-[11px] font-medium leading-normal">
+                <p className="text-[var(--sclade-text-muted)] text-[12px] font-medium leading-normal">
                   Create a new tailored version of your resume optimized for a specific role.
                 </p>
               </div>
@@ -3007,7 +3001,7 @@ export function EditorClient({
                     value={tailorJobTitle}
                     onChange={(e) => setTailorJobTitle(e.target.value)}
                     placeholder="e.g. Senior Frontend Engineer"
-                    className="w-full bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] text-[var(--sclade-text-primary)] placeholder:text-[var(--sclade-text-muted)] rounded-2xl px-5 py-4 text-xs outline-none focus:border-blue-500/40 transition-all font-medium"
+                    className="w-full bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] text-[var(--sclade-text-primary)] placeholder:text-[var(--sclade-text-muted)] rounded-xl px-4 py-2.5 text-xs outline-none focus:border-[var(--sclade-primary)] focus:ring-2 focus:ring-[var(--sclade-primary)]/10 transition-all font-medium"
                   />
                 </div>
 
@@ -3018,31 +3012,31 @@ export function EditorClient({
                     value={tailorJdText}
                     onChange={(e) => setTailorJdText(e.target.value)}
                     placeholder="Paste the job description here. Our AI will automatically rewrite and align your bullets to match keywords and missing skills..."
-                    rows={5}
-                    className="w-full bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] text-[var(--sclade-text-primary)] placeholder:text-[var(--sclade-text-muted)] rounded-2xl px-5 py-4 text-xs outline-none focus:border-blue-500/40 transition-all font-medium resize-none leading-relaxed"
+                    rows={4}
+                    className="w-full bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] text-[var(--sclade-text-primary)] placeholder:text-[var(--sclade-text-muted)] rounded-xl px-4 py-2.5 text-xs outline-none focus:border-[var(--sclade-primary)] focus:ring-2 focus:ring-[var(--sclade-primary)]/10 transition-all font-medium resize-none leading-relaxed"
                   />
                 </div>
 
                 {/* Method Options */}
                 <div>
                   <SectionLabel>Base Content Option</SectionLabel>
-                  <div className="grid grid-cols-1 gap-3">
+                  <div className="grid grid-cols-1 gap-2.5">
                     <button
                       type="button"
                       onClick={() => setTailorBaseOption("clone")}
-                      className={`w-full text-left p-4 rounded-2xl border transition-all ${
+                      className={`w-full text-left p-3.5 rounded-xl border transition-all ${
                         tailorBaseOption === "clone"
-                          ? "bg-blue-500/10 border-blue-500/30 text-[var(--sclade-text-primary)]"
-                          : "bg-transparent border-[var(--sclade-input-border)] text-[var(--sclade-text-secondary)] hover:bg-white/[0.02]"
+                          ? "bg-[var(--sclade-selected-bg)] border-[var(--sclade-selected-border)] text-[var(--sclade-text-primary)]"
+                          : "bg-transparent border-[var(--sclade-input-border)] text-[var(--sclade-text-secondary)] hover:bg-[var(--sclade-subtle-bg)]"
                       }`}
                     >
                       <div className="text-xs font-bold flex items-center gap-2">
-                        <div className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center shrink-0 ${tailorBaseOption === "clone" ? "border-blue-500 bg-blue-500" : "border-neutral-600"}`}>
+                        <div className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center shrink-0 ${tailorBaseOption === "clone" ? "border-[var(--sclade-primary)] bg-[var(--sclade-primary)]" : "border-neutral-400"}`}>
                           {tailorBaseOption === "clone" && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                         </div>
                         Use Current CV as Base (Recommended)
                       </div>
-                      <p className="text-[10px] text-[var(--sclade-text-muted)] mt-1 ml-5.5 leading-normal">
+                      <p className="text-[11px] text-[var(--sclade-text-muted)] mt-1 ml-5.5 leading-normal">
                         Pre-fills the new version with your current experiences and projects, then refines them with AI.
                       </p>
                     </button>
@@ -3050,19 +3044,19 @@ export function EditorClient({
                     <button
                       type="button"
                       onClick={() => setTailorBaseOption("scratch")}
-                      className={`w-full text-left p-4 rounded-2xl border transition-all ${
+                      className={`w-full text-left p-3.5 rounded-xl border transition-all ${
                         tailorBaseOption === "scratch"
-                          ? "bg-blue-500/10 border-blue-500/30 text-[var(--sclade-text-primary)]"
-                          : "bg-transparent border-[var(--sclade-input-border)] text-[var(--sclade-text-secondary)] hover:bg-white/[0.02]"
+                          ? "bg-[var(--sclade-selected-bg)] border-[var(--sclade-selected-border)] text-[var(--sclade-text-primary)]"
+                          : "bg-transparent border-[var(--sclade-input-border)] text-[var(--sclade-text-secondary)] hover:bg-[var(--sclade-subtle-bg)]"
                       }`}
                     >
                       <div className="text-xs font-bold flex items-center gap-2">
-                        <div className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center shrink-0 ${tailorBaseOption === "scratch" ? "border-blue-500 bg-blue-500" : "border-neutral-600"}`}>
+                        <div className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center shrink-0 ${tailorBaseOption === "scratch" ? "border-[var(--sclade-primary)] bg-[var(--sclade-primary)]" : "border-neutral-400"}`}>
                           {tailorBaseOption === "scratch" && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                         </div>
                         Start from Scratch (Blank Slate)
                       </div>
-                      <p className="text-[10px] text-[var(--sclade-text-muted)] mt-1 ml-5.5 leading-normal">
+                      <p className="text-[11px] text-[var(--sclade-text-muted)] mt-1 ml-5.5 leading-normal">
                         Creates an empty resume version (keeps contact info). Useful when writing a customized CV from a blank canvas.
                       </p>
                     </button>
@@ -3070,18 +3064,18 @@ export function EditorClient({
                 </div>
               </div>
 
-              <div className="flex gap-4 pt-2">
+              <div className="flex gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => setShowTailorModal(false)}
-                  className="flex-1 py-4 border border-[var(--sclade-popover-border)] bg-[var(--sclade-btn-secondary-bg)] hover:bg-neutral-800 text-[var(--sclade-text-secondary)] font-bold text-xs uppercase tracking-widest rounded-2xl transition-all"
+                  className="flex-1 py-2.5 border border-[var(--sclade-border)] bg-[var(--sclade-btn-secondary-bg)] hover:bg-[var(--sclade-input-bg)] text-[var(--sclade-text-secondary)] font-bold text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isCreatingTailoredVersion}
-                  className="flex-1 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-lg shadow-blue-500/20 disabled:opacity-50 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="flex-1 py-2.5 bg-[#5473D1] hover:bg-[#4261C0] text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-sm disabled:opacity-50 transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {isCreatingTailoredVersion ? (
                     <>
@@ -3100,7 +3094,7 @@ export function EditorClient({
           </div>
         </div>
       )}
-      
+
       {toast && (
         <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-xl bg-neutral-900 border border-neutral-700 shadow-2xl text-white text-xs font-semibold animate-in slide-in-from-bottom-2">
           <AlertCircle className={`w-4 h-4 ${toast.type === "error" ? "text-red-400" : toast.type === "warning" ? "text-amber-400" : "text-blue-400"}`} />

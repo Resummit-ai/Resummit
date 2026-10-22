@@ -134,15 +134,15 @@ export function AISuggestionPanel({
         <>
           {/* AI Suggestion Header */}
           <div className="flex items-start gap-2 mb-3">
-            <div className="mt-0.5 p-1 bg-blue-500/10 rounded-lg text-blue-400">
+            <div className="mt-0.5 p-1 bg-[var(--sclade-selected-bg)] rounded-lg text-[var(--sclade-primary)]">
               <Sparkles className="w-3.5 h-3.5" />
             </div>
             <div>
-              <span className="text-xs font-bold text-neutral-200 block dark:text-neutral-200 light:text-neutral-800">
+              <span className="text-xs font-bold text-[var(--sclade-text-primary)] block">
                 {statusChipText}
               </span>
               {subtitleText && (
-                <span className="text-[10px] text-neutral-500 block">
+                <span className="text-[10px] text-[var(--sclade-text-muted)] block">
                   {subtitleText}
                 </span>
               )}
@@ -150,7 +150,7 @@ export function AISuggestionPanel({
           </div>
 
           {/* Diff View Area */}
-          <div className="bg-neutral-950/80 rounded-lg p-3.5 mb-4 text-xs leading-relaxed text-neutral-300 border border-white/5 font-sans overflow-x-auto whitespace-pre-wrap">
+          <div className="bg-[var(--sclade-subtle-bg)] rounded-lg p-3.5 mb-4 text-xs leading-relaxed text-[var(--sclade-text-primary)] border border-[var(--sclade-border)] font-sans overflow-x-auto whitespace-pre-wrap">
             {diffParts.map((part, index) => {
               if (part.type === "added") {
                 return (
@@ -171,12 +171,12 @@ export function AISuggestionPanel({
           </div>
 
           {/* Action Toolbar */}
-          <div className="flex items-center justify-between border-t border-white/5 pt-3">
+          <div className="flex items-center justify-between border-t border-[var(--sclade-border)] pt-3">
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={handleAcceptClick}
-                className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-[10px] px-3.5 py-1.5 rounded-lg uppercase tracking-wider shadow-sm transition-all hover:scale-[1.02] cursor-pointer"
+                className="flex items-center gap-1.5 bg-[#5473D1] hover:bg-[#4261C0] text-white font-bold text-[10px] px-3.5 py-1.5 rounded-lg uppercase tracking-wider shadow-sm transition-all hover:scale-[1.02] cursor-pointer"
               >
                 <Check className="w-3 h-3 stroke-[3.5]" />
                 Accept Changes
@@ -184,7 +184,7 @@ export function AISuggestionPanel({
               <button
                 type="button"
                 onClick={handleRejectClick}
-                className="flex items-center gap-1.5 bg-transparent border border-neutral-700 hover:border-neutral-500 text-neutral-400 hover:text-neutral-200 font-bold text-[10px] px-3.5 py-1.5 rounded-lg uppercase tracking-wider transition-all cursor-pointer"
+                className="flex items-center gap-1.5 bg-transparent border border-[var(--sclade-border)] hover:bg-[var(--sclade-subtle-bg)] text-[var(--sclade-text-secondary)] font-bold text-[10px] px-3.5 py-1.5 rounded-lg uppercase tracking-wider transition-all cursor-pointer"
               >
                 <X className="w-3 h-3 stroke-[3]" />
                 Keep Original
@@ -196,7 +196,7 @@ export function AISuggestionPanel({
                 type="button"
                 onClick={onRegenerate}
                 disabled={isRegenerating}
-                className="flex items-center gap-1 hover:text-blue-400 text-neutral-500 text-[10px] font-bold uppercase tracking-wider transition-all disabled:opacity-50 cursor-pointer"
+                className="flex items-center gap-1 hover:text-[var(--sclade-primary)] text-[var(--sclade-text-muted)] text-[10px] font-bold uppercase tracking-wider transition-all disabled:opacity-50 cursor-pointer"
               >
                 <RotateCw className={`w-3.5 h-3.5 ${isRegenerating ? "animate-spin" : ""}`} />
                 Regenerate

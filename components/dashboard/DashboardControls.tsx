@@ -30,7 +30,7 @@ export function DashboardControls({ user }: DashboardControlsProps) {
   const [showSettings, setShowSettings] = useState(false);
   const [aiModel, setAiModel] = useState("gemini");
   const [autoSync, setAutoSync] = useState(true);
-  const [theme, setTheme] = useState("dark");
+  const [theme, setTheme] = useState("light");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -39,23 +39,22 @@ export function DashboardControls({ user }: DashboardControlsProps) {
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("sclade-theme");
-    if (savedTheme === "light" || savedTheme === "dark") {
+    if (savedTheme === "dark" || savedTheme === "light") {
       setTheme(savedTheme);
     } else {
-      const isLightSystem = window.matchMedia("(prefers-color-scheme: light)").matches;
-      setTheme(isLightSystem ? "light" : "dark");
+      setTheme("light");
     }
   }, []);
 
   useEffect(() => {
-    if (theme === "light") {
-      document.documentElement.classList.remove("dark");
-      document.documentElement.classList.add("light");
-      localStorage.setItem("sclade-theme", "light");
-    } else {
+    if (theme === "dark") {
       document.documentElement.classList.remove("light");
       document.documentElement.classList.add("dark");
       localStorage.setItem("sclade-theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      document.documentElement.classList.add("light");
+      localStorage.setItem("sclade-theme", "light");
     }
   }, [theme]);
   const [notifications, setNotifications] = useState<NotificationItem[]>(DEFAULT_NOTIFICATIONS);
@@ -99,14 +98,14 @@ export function DashboardControls({ user }: DashboardControlsProps) {
   };
 
   return (
-    <div className="relative flex items-center gap-4">
+    <div className="relative flex items-center gap-3">
       {/* ── Theme Switcher ── */}
       <button
         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        className="p-2.5 rounded-xl border border-black/5 dark:border-white/5 bg-black/[0.03] dark:bg-neutral-900/40 hover:bg-black/5 dark:hover:bg-neutral-800/80 transition-all text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white cursor-pointer relative"
+        className="p-2 rounded-lg border border-[var(--sclade-card-border)] bg-[var(--sclade-card-bg)] hover:bg-[#E7EDFF] hover:border-[#CFD9FF] hover:text-[#5473D1] transition-all text-[var(--sclade-text-secondary)] cursor-pointer relative"
         title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
       >
-        {theme === "dark" ? <Sun className="w-4.5 h-4.5" /> : <Moon className="w-4.5 h-4.5" />}
+        {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
       </button>
 
       {/* ── Notification Trigger ── */}
@@ -116,13 +115,13 @@ export function DashboardControls({ user }: DashboardControlsProps) {
             setShowNotifications(!showNotifications);
             setShowSettings(false);
           }}
-          className={`p-2.5 rounded-xl border border-black/5 dark:border-white/5 bg-black/[0.03] dark:bg-neutral-900/40 hover:bg-black/5 dark:hover:bg-neutral-800/80 transition-all text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white cursor-pointer relative ${
-            showNotifications ? "text-neutral-900 bg-black/10 dark:text-white dark:bg-neutral-800/80" : ""
+          className={`p-2 rounded-lg border border-[var(--sclade-card-border)] bg-[var(--sclade-card-bg)] hover:bg-[#E7EDFF] hover:border-[#CFD9FF] hover:text-[#5473D1] transition-all text-[var(--sclade-text-secondary)] cursor-pointer relative ${
+            showNotifications ? "bg-[#E7EDFF] text-[#5473D1] border-[#CFD9FF]" : ""
           }`}
         >
-          <Bell className="w-4.5 h-4.5" />
+          <Bell className="w-4 h-4" />
           {unreadCount > 0 && (
-            <span className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center text-[9px] font-black text-white ring-2 ring-[#fbfbf9] dark:ring-neutral-950 animate-pulse">
+            <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#5473D1] rounded-full flex items-center justify-center text-[9px] font-bold text-white ring-2 ring-white dark:ring-neutral-900 animate-pulse">
               {unreadCount}
             </span>
           )}
@@ -143,57 +142,57 @@ export function DashboardControls({ user }: DashboardControlsProps) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                 transition={{ duration: 0.15 }}
-                className="absolute right-0 mt-3 w-80 md:w-96 rounded-3xl bg-[var(--sclade-popover-bg)] border border-[var(--sclade-popover-border)] backdrop-blur-xl shadow-2xl z-50 p-5 overflow-hidden text-[var(--sclade-text-primary)]"
+                className="absolute right-0 mt-2 w-80 md:w-96 rounded-xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] shadow-lg z-50 p-5 overflow-hidden text-[var(--sclade-text-primary)]"
               >
-                <div className="flex items-center justify-between border-b border-black/5 dark:border-white/5 pb-3 mb-4">
-                  <h4 className="text-xs font-black uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                <div className="flex items-center justify-between border-b border-[var(--sclade-card-border)] pb-3 mb-4">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--sclade-text-secondary)]">
                     System Notifications
                   </h4>
                   {unreadCount > 0 && (
                     <button
                       onClick={markAllRead}
-                      className="text-[10px] font-bold text-blue-400 hover:text-blue-300 transition-colors uppercase tracking-wider cursor-pointer"
+                      className="text-[10px] font-bold text-[#5473D1] hover:text-[#4261C0] transition-colors uppercase tracking-wider cursor-pointer"
                     >
                       Mark all read
                     </button>
                   )}
                 </div>
 
-                <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
+                <div className="space-y-2.5 max-h-[300px] overflow-y-auto pr-1">
                   {notifications.length === 0 ? (
-                    <div className="text-center py-8 text-neutral-500 text-[11px] font-medium uppercase tracking-wider">
+                    <div className="text-center py-8 text-[var(--sclade-text-muted)] text-[11px] font-medium uppercase tracking-wider">
                       All caught up!
                     </div>
                   ) : (
                     notifications.map((n) => (
                       <div
                         key={n.id}
-                        className={`p-3 rounded-2xl border transition-all relative group/item ${
+                        className={`p-3 rounded-lg border transition-all relative group/item ${
                           n.read
-                            ? "bg-black/[0.02] dark:bg-neutral-950/20 border-black/5 dark:border-white/5"
-                            : "bg-white/80 dark:bg-white/[0.02] border-black/5 dark:border-blue-500/10 shadow-sm"
+                            ? "bg-[#F0F3F8] dark:bg-neutral-900/40 border-[var(--sclade-card-border)]"
+                            : "bg-[#E7EDFF]/50 border-[#CFD9FF] shadow-xs"
                         }`}
                       >
                         <div className="flex justify-between items-start gap-3">
                           <div className="flex-1">
                             <div className="flex items-center gap-2">
                               {!n.read && (
-                                <span className="w-1.5 h-1.5 bg-blue-500 rounded-full shrink-0" />
+                                <span className="w-1.5 h-1.5 bg-[#5473D1] rounded-full shrink-0" />
                               )}
-                              <span className="text-xs font-bold text-neutral-800 dark:text-neutral-200">
+                              <span className="text-xs font-bold text-[var(--sclade-text-primary)]">
                                 {n.title}
                               </span>
                             </div>
-                            <p className="text-[10.5pt] text-neutral-600 dark:text-neutral-400 font-light mt-1 leading-relaxed">
+                            <p className="text-xs text-[var(--sclade-text-secondary)] mt-1 leading-relaxed">
                               {n.desc}
                             </p>
-                            <span className="text-[9px] font-semibold text-neutral-400 dark:text-neutral-600 block mt-2 uppercase tracking-wide">
+                            <span className="text-[10px] font-medium text-[var(--sclade-text-muted)] block mt-2 uppercase tracking-wide">
                               {n.time}
                             </span>
                           </div>
                           <button
                             onClick={() => clearNotification(n.id)}
-                            className="text-neutral-500 dark:text-neutral-600 hover:text-neutral-900 dark:hover:text-white p-1 hover:bg-black/5 dark:hover:bg-white/5 rounded transition-all cursor-pointer opacity-0 group-hover/item:opacity-100"
+                            className="text-[var(--sclade-text-muted)] hover:text-red-500 p-1 hover:bg-black/5 dark:hover:bg-white/5 rounded transition-all cursor-pointer opacity-0 group-hover/item:opacity-100"
                           >
                             <X className="w-3 h-3" />
                           </button>
@@ -214,11 +213,11 @@ export function DashboardControls({ user }: DashboardControlsProps) {
           setShowSettings(true);
           setShowNotifications(false);
         }}
-        className={`p-2.5 rounded-xl border border-black/5 dark:border-white/5 bg-black/[0.03] dark:bg-neutral-900/40 hover:bg-black/5 dark:hover:bg-neutral-800/80 transition-all text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white cursor-pointer relative ${
-          showSettings ? "text-neutral-900 bg-black/10 dark:text-white dark:bg-neutral-800/80" : ""
+        className={`p-2 rounded-lg border border-[var(--sclade-card-border)] bg-[var(--sclade-card-bg)] hover:bg-[#E7EDFF] hover:border-[#CFD9FF] hover:text-[#5473D1] transition-all text-[var(--sclade-text-secondary)] cursor-pointer relative ${
+          showSettings ? "bg-[#E7EDFF] text-[#5473D1] border-[#CFD9FF]" : ""
         }`}
       >
-        <Settings className="w-4.5 h-4.5" />
+        <Settings className="w-4 h-4" />
       </button>
 
       {/* Settings Side-Drawer */}
@@ -243,57 +242,57 @@ export function DashboardControls({ user }: DashboardControlsProps) {
                 animate={{ x: 0 }}
                 exit={{ x: "100%" }}
                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-[var(--sclade-popover-bg)] border-l border-[var(--sclade-popover-border)] backdrop-blur-2xl shadow-2xl z-[10000] p-8 flex flex-col justify-between text-[var(--sclade-text-primary)]"
+                className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-[var(--sclade-popover-bg)] border-l border-[var(--sclade-popover-border)] shadow-xl z-[10000] p-6 md:p-8 flex flex-col justify-between text-[var(--sclade-text-primary)]"
               >
                 <div>
                 {/* Header */}
-                <div className="flex items-center justify-between border-b border-black/5 dark:border-white/5 pb-5 mb-8">
+                <div className="flex items-center justify-between border-b border-[var(--sclade-card-border)] pb-4 mb-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+                    <div className="w-8 h-8 rounded-lg bg-[#E7EDFF] border border-[#CFD9FF] flex items-center justify-center text-[#5473D1]">
                       <Settings className="w-4 h-4" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-bold uppercase tracking-wider">
-                        Settings OS
+                      <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--sclade-text-primary)]">
+                        Workspace Settings
                       </h3>
-                      <p className="text-[10px] text-neutral-500 dark:text-neutral-400 font-semibold uppercase tracking-widest mt-0.5">
+                      <p className="text-[11px] text-[var(--sclade-text-secondary)] mt-0.5">
                         Configure Resummit Parameters
                       </p>
                     </div>
                   </div>
                   <button
                     onClick={() => setShowSettings(false)}
-                    className="p-2 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-neutral-500 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-white rounded-xl transition-all cursor-pointer"
+                    className="p-1.5 bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-card-border)] hover:bg-[#E7EDFF] hover:border-[#CFD9FF] hover:text-[#5473D1] text-[var(--sclade-text-secondary)] rounded-lg transition-all cursor-pointer"
                   >
                     <X className="w-4 h-4" />
                   </button>
                 </div>
 
                 {/* Form fields */}
-                <div className="space-y-6">
+                <div className="space-y-5">
                   {/* AI Model Calibrator */}
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 dark:text-neutral-400 block">
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-[var(--sclade-text-secondary)] block">
                       AI Generation Model
                     </label>
-                    <div className="grid grid-cols-2 gap-2 p-1 bg-black/[0.03] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 rounded-2xl">
+                    <div className="grid grid-cols-2 gap-2 p-1 bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-card-border)] rounded-xl">
                       <button
                         onClick={() => setAiModel("gemini")}
-                        className={`py-3 px-4 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-2 ${
+                        className={`py-2 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-2 ${
                           aiModel === "gemini"
-                            ? "bg-neutral-950 text-white dark:bg-white dark:text-black shadow-lg"
-                            : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5"
+                            ? "bg-[#5473D1] text-white shadow-xs"
+                            : "text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-white dark:hover:bg-neutral-800"
                         }`}
                       >
                         <Cpu className="w-3.5 h-3.5" />
-                        Gemini Pro
+                        Gemini Flash
                       </button>
                       <button
                         onClick={() => setAiModel("claude")}
-                        className={`py-3 px-4 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-2 ${
+                        className={`py-2 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-2 ${
                           aiModel === "claude"
-                            ? "bg-neutral-950 text-white dark:bg-white dark:text-black shadow-lg"
-                            : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5"
+                            ? "bg-[#5473D1] text-white shadow-xs"
+                            : "text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-white dark:hover:bg-neutral-800"
                         }`}
                       >
                         <Sparkles className="w-3.5 h-3.5" />
@@ -303,23 +302,23 @@ export function DashboardControls({ user }: DashboardControlsProps) {
                   </div>
 
                   {/* Sync Automation */}
-                  <div className="p-5 rounded-3xl bg-black/[0.03] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 flex items-center justify-between">
+                  <div className="p-4 rounded-xl bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-card-border)] flex items-center justify-between">
                     <div>
-                      <span className="text-xs font-bold text-neutral-800 dark:text-neutral-200 block">
+                      <span className="text-xs font-bold text-[var(--sclade-text-primary)] block">
                         Auto-Update Resume
                       </span>
-                      <span className="text-[10px] text-neutral-500 dark:text-neutral-400 font-semibold uppercase tracking-wide mt-1 block">
+                      <span className="text-[11px] text-[var(--sclade-text-secondary)] mt-0.5 block">
                         Trigger updates on GitHub pushes
                       </span>
                     </div>
                     <button
                       onClick={() => setAutoSync(!autoSync)}
                       className={`w-11 h-6 rounded-full transition-all relative p-0.5 cursor-pointer ${
-                        autoSync ? "bg-blue-600" : "bg-neutral-800"
+                        autoSync ? "bg-[#5473D1]" : "bg-[#E1E5EB] dark:bg-neutral-800"
                       }`}
                     >
                       <span
-                        className={`w-5 h-5 bg-white rounded-full block transition-all shadow-md ${
+                        className={`w-5 h-5 bg-white rounded-full block transition-all shadow-xs ${
                           autoSync ? "translate-x-5" : "translate-x-0"
                         }`}
                       />
@@ -327,19 +326,19 @@ export function DashboardControls({ user }: DashboardControlsProps) {
                   </div>
 
                   {/* Account Security */}
-                  <div className="p-5 rounded-3xl bg-black/[0.03] dark:bg-neutral-900/30 border border-black/5 dark:border-white/5 space-y-4">
-                    <div className="flex items-center gap-3 text-xs font-bold text-neutral-700 dark:text-neutral-300">
-                      <Shield className="w-4 h-4 text-emerald-400" />
-                      <span>Security & Database Status</span>
+                  <div className="p-4 rounded-xl bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-card-border)] space-y-3">
+                    <div className="flex items-center gap-2 text-xs font-bold text-[var(--sclade-text-primary)]">
+                      <Shield className="w-4 h-4 text-[#32704F]" />
+                      <span>Security & Integrations</span>
                     </div>
-                    <div className="space-y-2 text-[10px] text-neutral-500 dark:text-neutral-400 font-semibold uppercase tracking-wide">
+                    <div className="space-y-1.5 text-xs text-[var(--sclade-text-secondary)]">
                       <div className="flex justify-between">
                         <span>Database Mode:</span>
-                        <span className="text-neutral-600 dark:text-neutral-400 font-bold">Postgres Integration</span>
+                        <span className="font-semibold text-[var(--sclade-text-primary)]">Postgres Integration</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>API Access Level:</span>
-                        <span className="text-emerald-400">Premium Active</span>
+                        <span>API Status:</span>
+                        <span className="text-[#32704F] font-semibold">Active</span>
                       </div>
                     </div>
                   </div>
@@ -347,17 +346,17 @@ export function DashboardControls({ user }: DashboardControlsProps) {
               </div>
 
               {/* Footer Buttons */}
-              <div className="flex flex-col gap-2.5">
+              <div className="flex flex-col gap-2 pt-6 border-t border-[var(--sclade-card-border)]">
                 <button
                   onClick={() => setShowSettings(false)}
-                  className="w-full py-4.5 bg-neutral-950 text-white dark:bg-white dark:text-black hover:opacity-90 active:scale-98 transition-all font-black text-xs uppercase tracking-widest rounded-2xl flex items-center justify-center gap-2 shadow-xl cursor-pointer"
+                  className="w-full py-2.5 bg-[#5473D1] hover:bg-[#4261C0] active:scale-[0.99] text-white transition-all font-bold text-xs uppercase tracking-wider rounded-lg flex items-center justify-center gap-2 cursor-pointer shadow-xs"
                 >
                   <Check className="w-4 h-4" />
                   Save Parameters
                 </button>
                 <button
                   onClick={() => signOut({ callbackUrl: "/" })}
-                  className="w-full py-3.5 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 hover:border-red-500/30 active:scale-98 transition-all font-bold text-xs uppercase tracking-widest rounded-2xl flex items-center justify-center gap-2 cursor-pointer mt-1"
+                  className="w-full py-2 bg-transparent hover:bg-red-50 dark:hover:bg-red-950/20 text-red-600 border border-red-200 dark:border-red-900/40 active:scale-[0.99] transition-all font-semibold text-xs uppercase tracking-wider rounded-lg flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <LogOut className="w-4 h-4" />
                   Sign Out
@@ -371,17 +370,17 @@ export function DashboardControls({ user }: DashboardControlsProps) {
     )}
 
       {/* ── User Avatar ── */}
-      <div className="h-8 w-[1px] bg-white/10 mx-2" />
-      <div className="flex items-center gap-3 pl-2">
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-neutral-800 to-neutral-900 border border-white/5 flex items-center justify-center overflow-hidden">
+      <div className="h-6 w-[1px] bg-[var(--sclade-card-border)] mx-1" />
+      <div className="flex items-center gap-2">
+        <div className="w-8 h-8 rounded-lg bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-card-border)] flex items-center justify-center overflow-hidden">
           {user.image ? (
             <img
               src={user.image}
               alt={user.name || ""}
-              className="w-full h-full object-cover opacity-80"
+              className="w-full h-full object-cover"
             />
           ) : (
-            <User className="w-5 h-5 text-neutral-400" />
+            <User className="w-4 h-4 text-[var(--sclade-text-secondary)]" />
           )}
         </div>
       </div>

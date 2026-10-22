@@ -306,65 +306,65 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--sclade-bg)] text-[var(--sclade-text-primary)] font-outfit p-8 md:p-16">
-      <div className="max-w-7xl mx-auto space-y-12">
+    <div className="min-h-screen bg-[var(--sclade-bg)] text-[var(--sclade-text-primary)] font-outfit p-6 md:p-12">
+      <div className="max-w-7xl mx-auto space-y-8">
 
         {/* Header */}
-        <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-[var(--sclade-card-border)]">
+        <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-[var(--sclade-border)]">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-500 text-[10px] uppercase font-bold tracking-widest mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--sclade-selected-bg)] border border-[var(--sclade-selected-border)] text-[var(--sclade-primary)] text-[11px] uppercase font-bold tracking-wider mb-3">
               Control Panel
             </div>
-            <h1 className="text-4xl font-bold tracking-tight">Admin Update Center</h1>
-            <p className="text-neutral-500 dark:text-neutral-400 mt-2 font-light">
+            <h1 className="text-3xl font-extrabold tracking-tight text-[var(--sclade-text-primary)]">Admin Update Center</h1>
+            <p className="text-[var(--sclade-text-secondary)] mt-1 font-normal text-sm">
               Broadcast product announcements and manage subscribers.
             </p>
           </div>
           <Link
             href="/dashboard"
-            className="self-start md:self-auto px-5 py-3 border border-[var(--sclade-card-border)] bg-[var(--sclade-btn-secondary-bg)] rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-[var(--sclade-card-bg)] transition-all flex items-center gap-2"
+            className="self-start md:self-auto px-4 py-2.5 border border-[var(--sclade-border)] bg-[var(--sclade-card-bg)] rounded-xl text-xs font-bold uppercase tracking-wider text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-[var(--sclade-subtle-bg)] transition-all flex items-center gap-2"
           >
             ← Back to Dashboard
           </Link>
         </header>
 
         {/* Overview Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="glass-panel p-6 rounded-3xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] flex items-center justify-between">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="p-5 rounded-2xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] flex items-center justify-between shadow-sm">
             <div>
-              <span className="text-[10px] font-black text-neutral-500 uppercase tracking-wider block">Total Registered Users</span>
-              <span className="text-3xl font-bold mt-1 block">{users.length}</span>
+              <span className="text-[11px] font-bold text-[var(--sclade-text-secondary)] uppercase tracking-wider block">Total Registered Users</span>
+              <span className="text-3xl font-extrabold text-[var(--sclade-text-primary)] mt-1 block">{users.length}</span>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
-              <Users className="w-6 h-6" />
+            <div className="w-11 h-11 rounded-xl bg-[var(--sclade-selected-bg)] border border-[var(--sclade-selected-border)] flex items-center justify-center text-[var(--sclade-primary)]">
+              <Users className="w-5 h-5" />
             </div>
           </div>
 
-          <div className="glass-panel p-6 rounded-3xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] flex items-center justify-between">
+          <div className="p-5 rounded-2xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] flex items-center justify-between shadow-sm">
             <div>
-              <span className="text-[10px] font-black text-neutral-500 uppercase tracking-wider block">Mailing Service</span>
-              <span className="text-sm font-bold text-emerald-400 mt-2 block">Resend API Connected</span>
+              <span className="text-[11px] font-bold text-[var(--sclade-text-secondary)] uppercase tracking-wider block">Mailing Service</span>
+              <span className="text-sm font-bold text-[var(--sclade-success-text,#32704F)] mt-2 block">Resend API Connected</span>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-              <CheckCircle className="w-6 h-6" />
+            <div className="w-11 h-11 rounded-xl bg-[var(--sclade-success-bg,#E4F2E9)] border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-[var(--sclade-success-text,#32704F)]">
+              <CheckCircle className="w-5 h-5" />
             </div>
           </div>
         </div>
 
         {/* Content Columns */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
           {/* Email Composer (Left Column) */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="glass-panel p-8 rounded-[2rem] bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)]">
-              <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
-                <Mail className="w-5 h-5 text-blue-400" />
+            <div className="p-6 rounded-2xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] shadow-sm">
+              <h3 className="text-base font-bold mb-5 flex items-center gap-2 text-[var(--sclade-text-primary)]">
+                <Mail className="w-5 h-5 text-[var(--sclade-primary)]" />
                 Compose Announcement
               </h3>
 
-              <form onSubmit={handleSend} className="space-y-6">
+              <form onSubmit={handleSend} className="space-y-5">
                 <div>
-                  <label className="text-[10px] font-black uppercase tracking-wider text-neutral-500 block mb-2">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--sclade-text-secondary)] block mb-1.5">
                     Email Subject
                   </label>
                   <input
@@ -373,19 +373,19 @@ export default function AdminDashboard() {
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
                     placeholder="Enter email subject..."
-                    className="w-full px-4 py-3.5 bg-black/5 dark:bg-white/[0.02] border border-black/5 dark:border-white/5 rounded-xl text-sm outline-none focus:border-blue-500/50 transition-all font-semibold"
+                    className="w-full px-3.5 py-2.5 bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] text-[var(--sclade-text-primary)] rounded-lg text-sm outline-none focus:border-[var(--sclade-primary)] focus:ring-2 focus:ring-[var(--sclade-primary)]/10 transition-all font-medium"
                   />
                 </div>
 
                 <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <label className="text-[10px] font-black uppercase tracking-wider text-neutral-500">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--sclade-text-secondary)]">
                       Email Body (HTML)
                     </label>
                     <button
                       type="button"
                       onClick={() => setPreviewMode(!previewMode)}
-                      className="text-[10px] font-bold uppercase tracking-wider text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1 cursor-pointer"
+                      className="text-[10px] font-bold uppercase tracking-wider text-[var(--sclade-primary)] hover:underline transition-colors flex items-center gap-1 cursor-pointer"
                     >
                       <Eye className="w-3.5 h-3.5" />
                       {previewMode ? "Edit Code" : "Preview Visual"}
@@ -394,7 +394,7 @@ export default function AdminDashboard() {
 
                   {previewMode ? (
                     <div
-                      className="w-full min-h-[300px] p-6 bg-white text-black rounded-xl border border-black/5 overflow-y-auto"
+                      className="w-full min-h-[300px] p-6 bg-white text-black rounded-xl border border-[var(--sclade-border)] overflow-y-auto"
                       dangerouslySetInnerHTML={{ __html: htmlContent }}
                     />
                   ) : (
@@ -404,36 +404,36 @@ export default function AdminDashboard() {
                       onChange={(e) => setHtmlContent(e.target.value)}
                       placeholder="<h1>Hi!</h1>..."
                       rows={12}
-                      className="w-full px-4 py-4 bg-black/5 dark:bg-white/[0.02] border border-black/5 dark:border-white/5 rounded-xl text-sm font-mono outline-none focus:border-blue-500/50 transition-all leading-relaxed"
+                      className="w-full px-3.5 py-3 bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] text-[var(--sclade-text-primary)] rounded-lg text-xs font-mono outline-none focus:border-[var(--sclade-primary)] focus:ring-2 focus:ring-[var(--sclade-primary)]/10 transition-all leading-relaxed"
                     />
                   )}
                   {sendResult && (
-                  <div className={`p-4 mt-6 rounded-xl border ${sendResult.error
-                    ? "bg-red-500/5 border-red-500/10 text-red-400"
-                    : "bg-emerald-500/5 border-emerald-500/10 text-emerald-400"
+                  <div className={`p-4 mt-5 rounded-xl border ${sendResult.error
+                    ? "bg-red-500/5 border-red-500/10 text-red-600"
+                    : "bg-emerald-500/5 border-emerald-500/10 text-emerald-700"
                     }`}>
                     <div className="flex items-start gap-3">
                       {sendResult.error ? (
-                        <AlertCircle className="w-5 h-5 mt-0.5" />
+                        <AlertCircle className="w-5 h-5 mt-0.5 text-red-500" />
                       ) : (
-                        <CheckCircle className="w-5 h-5 mt-0.5" />
+                        <CheckCircle className="w-5 h-5 mt-0.5 text-emerald-600" />
                       )}
                       <div>
                         <span className="text-xs font-bold block">
                           {sendResult.error ? "Failed to dispatch emails" : "Broadcast Dispatched"}
                         </span>
                         {sendResult.error ? (
-                          <p className="text-[10px] opacity-80 mt-1 font-semibold">{sendResult.error}</p>
+                          <p className="text-[11px] opacity-80 mt-1 font-semibold">{sendResult.error}</p>
                         ) : (
                           <div>
-                            <p className="text-[10px] opacity-80 mt-1 font-semibold">
+                            <p className="text-[11px] opacity-80 mt-1 font-semibold">
                               Sent to {sendResult.sent} users. Failures: {sendResult.failed}.
                             </p>
                             {sendResult.failed > 0 && sendResult.results && (
                               <div className="mt-3 text-[10px] space-y-1 bg-red-500/10 p-2.5 rounded-lg border border-red-500/20 max-h-32 overflow-y-auto">
-                                <span className="font-bold block text-red-400">SMTP Error Log:</span>
+                                <span className="font-bold block text-red-600">SMTP Error Log:</span>
                                 {Array.from(new Set(sendResult.results.filter(r => !r.success).map(r => r.error))).map((err, i) => (
-                                  <p key={i} className="font-mono text-red-300 break-all">{err || "Unknown error"}</p>
+                                  <p key={i} className="font-mono text-red-700 break-all">{err || "Unknown error"}</p>
                                 ))}
                               </div>
                             )}
@@ -448,7 +448,7 @@ export default function AdminDashboard() {
                 <button
                   type="submit"
                   disabled={sending || selectedUserIds.length === 0}
-                  className="w-full py-4.5 bg-blue-600 hover:bg-blue-500 disabled:bg-neutral-800 disabled:text-neutral-500 disabled:cursor-not-allowed text-white font-black text-xs uppercase tracking-widest rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-blue-600/10 transition-all cursor-pointer"
+                  className="w-full py-3 bg-[#5473D1] hover:bg-[#4261C0] disabled:bg-neutral-300 dark:disabled:bg-neutral-800 disabled:text-neutral-500 disabled:cursor-not-allowed text-white font-bold text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
                 >
                   {sending ? (
                     <>
@@ -468,26 +468,26 @@ export default function AdminDashboard() {
 
           {/* User Directory (Right Column) */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="glass-panel p-8 rounded-[2rem] bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] flex flex-col max-h-[640px]">
-              <div className="mb-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-bold flex items-center gap-2">
-                    <Users className="w-5 h-5 text-violet-400" />
+            <div className="p-6 rounded-2xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] flex flex-col max-h-[640px] shadow-sm">
+              <div className="mb-5">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-base font-bold flex items-center gap-2 text-[var(--sclade-text-primary)]">
+                    <Users className="w-5 h-5 text-[var(--sclade-primary)]" />
                     User Registry
                   </h3>
                   <div className="flex gap-2">
                     <button
                       type="button"
                       onClick={() => setSelectedUserIds(users.map(u => u.id))}
-                      className="text-[9px] font-black uppercase tracking-wider text-blue-500 hover:text-blue-400 transition-colors cursor-pointer"
+                      className="text-[10px] font-bold uppercase tracking-wider text-[var(--sclade-primary)] hover:underline transition-colors cursor-pointer"
                     >
                       Select All
                     </button>
-                    <span className="text-neutral-600 text-[9px]">|</span>
+                    <span className="text-[var(--sclade-text-muted)] text-[10px]">|</span>
                     <button
                       type="button"
                       onClick={() => setSelectedUserIds([])}
-                      className="text-[9px] font-black uppercase tracking-wider text-neutral-500 hover:text-neutral-400 transition-colors cursor-pointer"
+                      className="text-[10px] font-bold uppercase tracking-wider text-[var(--sclade-text-muted)] hover:text-[var(--sclade-text-primary)] transition-colors cursor-pointer"
                     >
                       Clear
                     </button>
@@ -496,30 +496,30 @@ export default function AdminDashboard() {
 
                 {/* Search Bar */}
                 <div className="relative">
-                  <Search className="w-4 h-4 text-neutral-500 absolute left-4.5 top-1/2 -translate-y-1/2" />
+                  <Search className="w-4 h-4 text-[var(--sclade-text-muted)] absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search by name, email, github..."
-                    className="w-full pl-11 pr-4 py-3 bg-black/5 dark:bg-white/[0.02] border border-black/5 dark:border-white/5 rounded-xl text-xs outline-none focus:border-blue-500/50 transition-all"
+                    className="w-full pl-10 pr-3.5 py-2.5 bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] text-[var(--sclade-text-primary)] placeholder:text-[var(--sclade-text-muted)] rounded-lg text-xs outline-none focus:border-[var(--sclade-primary)] focus:ring-2 focus:ring-[var(--sclade-primary)]/10 transition-all font-medium"
                   />
                 </div>
               </div>
 
               {/* User List Scrollable */}
-              <div className="flex-1 overflow-y-auto space-y-3 pr-1">
+              <div className="flex-1 overflow-y-auto space-y-2.5 pr-1 custom-scrollbar">
                 {filteredUsers.length === 0 ? (
-                  <div className="text-center py-12 text-neutral-500 text-xs font-semibold uppercase tracking-wider">
+                  <div className="text-center py-10 text-[var(--sclade-text-muted)] text-xs font-semibold uppercase tracking-wider">
                     No users found
                   </div>
                 ) : (
                   filteredUsers.map((u) => (
                     <div
                       key={u.id}
-                      className={`p-4 rounded-2xl bg-black/[0.02] dark:bg-white/[0.01] border transition-all flex justify-between items-center ${selectedUserIds.includes(u.id)
-                        ? "border-blue-500/30 bg-blue-500/[0.01]"
-                        : "border-black/5 dark:border-white/5"
+                      className={`p-3.5 rounded-xl border transition-all flex justify-between items-center ${selectedUserIds.includes(u.id)
+                        ? "border-[var(--sclade-selected-border)] bg-[var(--sclade-selected-bg)]"
+                        : "border-[var(--sclade-border)] bg-[var(--sclade-card-bg)] hover:bg-[var(--sclade-subtle-bg)]"
                         }`}
                     >
                       <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -533,24 +533,24 @@ export default function AdminDashboard() {
                                 : [...prev, u.id]
                             );
                           }}
-                          className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                          className="w-4 h-4 rounded border-[var(--sclade-border)] text-[var(--sclade-primary)] focus:ring-[var(--sclade-primary)] cursor-pointer accent-[var(--sclade-primary)]"
                         />
-                        <div className="space-y-1 min-w-0 flex-1">
-                          <span className="text-xs font-bold text-neutral-800 dark:text-neutral-200 block truncate">
+                        <div className="space-y-0.5 min-w-0 flex-1">
+                          <span className="text-xs font-bold text-[var(--sclade-text-primary)] block truncate">
                             {u.name || "Anonymous User"}
                           </span>
-                          <span className="text-[10px] text-neutral-500 dark:text-neutral-400 block truncate font-semibold">
+                          <span className="text-[11px] text-[var(--sclade-text-secondary)] block truncate">
                             {u.email}
                           </span>
                           {u.githubUsername && (
-                            <span className="inline-block px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/5 text-[9px] text-neutral-400 font-bold uppercase tracking-wider">
+                            <span className="inline-block px-1.5 py-0.5 rounded bg-[var(--sclade-subtle-bg)] border border-[var(--sclade-border)] text-[9px] text-[var(--sclade-text-secondary)] font-bold uppercase tracking-wider">
                               github: {u.githubUsername}
                             </span>
                           )}
                         </div>
                       </div>
-                      <div className="text-right flex-shrink-0 ml-4">
-                        <div className="text-[9px] text-neutral-400 dark:text-neutral-600 font-bold uppercase tracking-wide flex items-center gap-1">
+                      <div className="text-right flex-shrink-0 ml-3">
+                        <div className="text-[10px] text-[var(--sclade-text-muted)] font-bold uppercase tracking-wide flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
                           {new Date(u.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
                         </div>

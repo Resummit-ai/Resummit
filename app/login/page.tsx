@@ -9,16 +9,12 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <div className="dark-page min-h-screen bg-neutral-950 flex flex-col items-center justify-center relative overflow-hidden">
-      {/* Background Glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-500/10 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] bg-sky-500/10 blur-[100px] rounded-full pointer-events-none" />
-
-      <div className="relative z-10 w-full max-w-md px-6 text-center">
+    <div className="min-h-screen bg-[var(--sclade-bg)] flex flex-col items-center justify-center relative overflow-hidden text-[var(--sclade-text-primary)] font-outfit px-4">
+      <div className="relative z-10 w-full max-w-md p-8 sm:p-10 rounded-2xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] shadow-sm text-center">
         {/* Logo Icon & Wordmark */}
-        <div className="flex flex-col items-center mb-12 select-none">
-          <div className="logo scale-125">
-            <svg viewBox="0 0 32 32" className="logo-icon-svg !w-12 !h-12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div className="flex flex-col items-center mb-8 select-none">
+          <div className="logo scale-110">
+            <svg viewBox="0 0 32 32" className="logo-icon-svg !w-10 !h-10" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M7 6C7 4.34315 8.34315 3 10 3H19L25 9V26C25 27.6569 23.6569 29 22 29H10C8.34315 29 7 27.6569 7 26V6Z" className="logo-doc-body" />
               <path d="M19 3V9H25L19 3Z" className="logo-doc-fold" />
               <path d="M11 13H17M11 17H21M11 21H18M11 25H20" className="logo-doc-lines" strokeWidth="2" strokeLinecap="round" />
@@ -26,16 +22,16 @@ export default function LoginPage() {
               <path d="M25 3.5L27 6.5L23.5 5.5Z" className="logo-flag-banner" />
             </svg>
             <div className="logo-text-group">
-              <div className="logo-wordmark !text-2xl text-white">RESUMMIT</div>
-              <div className="logo-tagline !text-[0.65rem] text-neutral-500">YOUR COMMITS. YOUR CAREER.</div>
+              <div className="logo-wordmark !text-2xl text-[var(--sclade-text-primary)]">RESUMMIT</div>
+              <div className="logo-tagline !text-[0.65rem] text-[var(--sclade-text-muted)]">YOUR COMMITS. YOUR CAREER.</div>
             </div>
           </div>
         </div>
-        <p className="text-neutral-400 text-lg mb-12">
+        <p className="text-[var(--sclade-text-secondary)] text-sm mb-8 leading-relaxed font-normal">
           Transform your GitHub projects into professional, ATS-optimized resume bullets in seconds.
         </p>
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           <form
             action={async () => {
               "use server";
@@ -44,9 +40,9 @@ export default function LoginPage() {
           >
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-3 bg-[#24292F] hover:bg-[#24292F]/90 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 active:scale-[0.98] shadow-xl"
+              className="w-full flex items-center justify-center gap-2.5 bg-[#24292F] hover:bg-[#1B1F23] text-white font-medium py-3 px-5 rounded-xl transition-all duration-200 active:scale-[0.99] shadow-sm text-sm cursor-pointer"
             >
-              <GitBranch className="w-5 h-5" />
+              <GitBranch className="w-4 h-4" />
               Continue with GitHub
             </button>
           </form>
@@ -59,9 +55,9 @@ export default function LoginPage() {
           >
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-3 bg-white hover:bg-neutral-100 text-neutral-950 font-semibold py-4 px-6 rounded-xl transition-all duration-200 active:scale-[0.98] shadow-xl"
+              className="w-full flex items-center justify-center gap-2.5 bg-[var(--sclade-card-bg)] hover:bg-[var(--sclade-subtle-bg)] text-[var(--sclade-text-primary)] border border-[var(--sclade-border)] font-medium py-3 px-5 rounded-xl transition-all duration-200 active:scale-[0.99] shadow-sm text-sm cursor-pointer"
             >
-              <svg className="w-5 h-5" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" viewBox="0 0 24 24">
                 <path
                   fill="currentColor"
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -85,13 +81,13 @@ export default function LoginPage() {
 
         </div>
 
-        <p className="mt-8 text-neutral-500 text-sm">
+        <p className="mt-6 text-[var(--sclade-text-muted)] text-xs">
           No credit card required. Free early access.
         </p>
       </div>
 
       {/* Subtle Bottom Decoration */}
-      <div className="absolute bottom-8 text-neutral-600 text-[10px] uppercase tracking-[0.2em] font-medium">
+      <div className="mt-8 text-[var(--sclade-text-muted)] text-[11px] uppercase tracking-wider font-semibold">
         Designed for High-Impact Engineers
       </div>
     </div>

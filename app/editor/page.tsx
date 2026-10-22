@@ -216,7 +216,7 @@ export default async function EditorPage({
   const accessToken = (session as any)?.accessToken;
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-neutral-950">
+    <div className="flex flex-col h-screen overflow-hidden bg-[var(--sclade-bg)] text-[var(--sclade-text-primary)]">
       <EditorClient 
         resumeId={resume.id}
         versionId={activeVersion.id}

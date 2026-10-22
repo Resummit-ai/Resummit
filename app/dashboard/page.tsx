@@ -132,17 +132,17 @@ export default async function DashboardPage() {
       </nav>
 
       <main className="relative z-10 w-full px-8 py-8 md:px-16 md:py-12 xl:py-16">
-        <header className="mb-12">
-           <h1 className="text-4xl font-bold tracking-tight flex items-center gap-4">
+        <header className="mb-8">
+           <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-[var(--sclade-text-primary)]">
              Welcome back, {dbUser.name?.split(' ')[0]}
            </h1>
-           <p className="text-[var(--sclade-text-secondary)] mt-2 font-light text-lg">Orchestrate your professional impact and career logic.</p>
+           <p className="text-[var(--sclade-text-secondary)] mt-1.5 text-base">Orchestrate your professional impact and career logic.</p>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
            
            {/* Left/Middle Column - Suggestions & Activity */}
-           <div className="lg:col-span-8 space-y-10">
+           <div className="lg:col-span-8 space-y-8">
               
                {/* Live ATS Score Card */}
                <ATSScoreCard
@@ -155,63 +155,63 @@ export default async function DashboardPage() {
                {/* Engineering DNA Core */}
                {typeof signals?.stackConfidence === "number" ? (
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="glass-panel p-8 rounded-[2.5rem] bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] relative overflow-hidden group transition-colors duration-200">
-                       <div className="flex items-center justify-between mb-8">
+                    <div className="p-6 rounded-xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] relative overflow-hidden transition-all shadow-xs">
+                       <div className="flex items-center justify-between mb-6">
                           <div className="flex items-center gap-2">
-                             <Cpu className="w-4 h-4 text-violet-400" />
-                             <h3 className="text-[10px] font-black text-[var(--sclade-text-secondary)] uppercase tracking-[0.2em]">Engineering DNA</h3>
+                             <Cpu className="w-4 h-4 text-[#5473D1]" />
+                             <h3 className="text-xs font-bold text-[var(--sclade-text-primary)] uppercase tracking-wider">Engineering DNA</h3>
                           </div>
-                          <span className="px-2 py-0.5 bg-violet-500/10 text-violet-400 border border-violet-500/20 rounded text-[9px] font-bold uppercase tracking-widest">Verified</span>
+                          <span className="px-2 py-0.5 bg-[#E7EDFF] text-[#5473D1] border border-[#CFD9FF] rounded text-[10px] font-bold uppercase tracking-wider">Verified</span>
                        </div>
                        
-                       <div className="space-y-6">
+                       <div className="space-y-5">
                           <div>
-                             <div className="flex justify-between text-[11px] font-bold uppercase tracking-wider mb-2 text-[var(--sclade-text-secondary)]">
+                             <div className="flex justify-between text-xs font-semibold uppercase tracking-wider mb-2 text-[var(--sclade-text-secondary)]">
                                 <span>Stack Confidence</span>
-                                <span>{signals.stackConfidence}%</span>
+                                <span className="text-[var(--sclade-text-primary)] font-bold">{signals.stackConfidence}%</span>
                              </div>
-                             <div className="w-full h-1.5 bg-black/5 dark:bg-white/5 rounded-full overflow-hidden">
+                             <div className="w-full h-1.5 bg-[#F0F3F8] dark:bg-white/5 rounded-full overflow-hidden">
                                 <div 
-                                  className="h-full bg-violet-500 rounded-full transition-all duration-1000" 
+                                  className="h-full bg-[#5473D1] rounded-full transition-all duration-1000" 
                                   style={{ width: `${Math.min(100, Math.max(0, signals.stackConfidence))}%` }} 
                                 />
                              </div>
                           </div>
 
                           <div className="flex flex-wrap gap-2">
-                             {(signals.topSkills || []).slice(0, 5).map((s, i) => (
-                               <span key={i} className="px-3 py-1.5 bg-black/[0.03] dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-xl text-[10px] font-bold text-neutral-700 dark:text-neutral-300">
-                                 {s.name}
+                             {(signals.topSkills || []).slice(0, 5).map((s: any, i: number) => (
+                               <span key={i} className="px-2.5 py-1 bg-[#F0F3F8] dark:bg-neutral-800 border border-[var(--sclade-card-border)] rounded-lg text-xs font-medium text-[var(--sclade-text-primary)]">
+                                 {s.name || s}
                                </span>
                              ))}
                           </div>
                        </div>
                     </div>
 
-                    <div className="glass-panel p-8 rounded-[2.5rem] bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] relative overflow-hidden group transition-colors duration-200">
-                       <div className="flex items-center justify-between mb-8">
+                    <div className="p-6 rounded-xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] relative overflow-hidden transition-all shadow-xs">
+                       <div className="flex items-center justify-between mb-6">
                           <div className="flex items-center gap-2">
-                             <Activity className="w-4 h-4 text-emerald-400" />
-                             <h3 className="text-[10px] font-black text-[var(--sclade-text-secondary)] uppercase tracking-[0.2em]">Recruiter Perspective</h3>
+                             <Activity className="w-4 h-4 text-[#32704F]" />
+                             <h3 className="text-xs font-bold text-[var(--sclade-text-primary)] uppercase tracking-wider">Recruiter Perspective</h3>
                           </div>
-                          <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded text-[9px] font-bold uppercase tracking-widest">Live</span>
+                          <span className="px-2 py-0.5 bg-[#E4F2E9] text-[#32704F] border border-[#32704F]/20 rounded text-[10px] font-bold uppercase tracking-wider">Live</span>
                        </div>
                        
-                       <div className="space-y-6">
+                       <div className="space-y-5">
                           <div className="flex items-center justify-between">
                              <div className="flex flex-col">
-                                <span className="text-2xl font-bold">
+                                <span className="text-2xl font-bold text-[var(--sclade-text-primary)]">
                                   {typeof signals.recruiterReadability === "number" ? `${signals.recruiterReadability}%` : "—"}
                                 </span>
-                                <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--sclade-text-muted)]">Scan Readability</span>
+                                <span className="text-xs font-semibold uppercase tracking-wider text-[var(--sclade-text-muted)]">Scan Readability</span>
                              </div>
-                             <div className="w-12 h-12 rounded-full border-4 border-emerald-500/20 border-t-emerald-500 flex items-center justify-center">
-                                <Target className="w-5 h-5 text-emerald-500" />
+                             <div className="w-11 h-11 rounded-full border-3 border-[#E4F2E9] border-t-[#32704F] flex items-center justify-center">
+                                <Target className="w-5 h-5 text-[#32704F]" />
                              </div>
                           </div>
 
-                          <div className="p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl">
-                             <p className="text-[10px] text-emerald-800 dark:text-emerald-200/80 leading-relaxed font-bold">
+                          <div className="p-3.5 bg-[#E4F2E9]/60 dark:bg-emerald-950/20 border border-[#32704F]/20 rounded-lg">
+                             <p className="text-xs text-[#32704F] dark:text-emerald-300 leading-relaxed font-medium">
                                 System detects strong <strong>{signals.strongestDomain || "Software Engineering"}</strong> domain expertise. 
                                 Commit density is <strong>{signals.commitDensity || "Consistent"}</strong>.
                              </p>
@@ -220,10 +220,10 @@ export default async function DashboardPage() {
                     </div>
                  </div>
                ) : (
-                 <div className="glass-panel p-6 rounded-3xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] flex items-center justify-between transition-colors duration-200">
-                    <div className="flex items-center gap-4">
-                       <div className="w-10 h-10 bg-violet-500/10 rounded-xl flex items-center justify-center text-violet-400">
-                          <Cpu className="w-5 h-5" />
+                 <div className="p-5 rounded-xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] flex items-center justify-between transition-colors duration-200 shadow-xs">
+                    <div className="flex items-center gap-3.5">
+                       <div className="w-9 h-9 bg-[#E7EDFF] rounded-lg flex items-center justify-center text-[#5473D1]">
+                          <Cpu className="w-4 h-4" />
                        </div>
                        <div>
                           <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--sclade-text-primary)]">Engineering Insights</h4>
@@ -232,7 +232,7 @@ export default async function DashboardPage() {
                     </div>
                     <Link
                       href="/dashboard/syncing"
-                      className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold transition-all shadow-sm"
+                      className="px-3.5 py-1.5 bg-[#5473D1] hover:bg-[#4261C0] text-white rounded-lg text-xs font-bold uppercase tracking-wider transition-all shadow-xs cursor-pointer"
                     >
                       Run Sync
                     </Link>
@@ -247,70 +247,69 @@ export default async function DashboardPage() {
            </div>
 
            {/* Right Column - Stats & Links */}
-           <div className="lg:col-span-4 space-y-8">
-              <div className="glass-panel p-8 rounded-[2.5rem] bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] transition-colors duration-200">
-                 <h3 className="text-[11px] font-bold text-[var(--sclade-text-secondary)] uppercase tracking-[0.2em] mb-6">Quick Operations</h3>
-                 <div className="space-y-4">
-                    <Link href="/editor" className="group flex items-center justify-between p-5 bg-[var(--sclade-btn-secondary-bg)] rounded-3xl border border-[var(--sclade-card-border)] text-[var(--sclade-text-primary)] hover:border-blue-500/30 hover:bg-[var(--sclade-card-bg)] transition-all">
-                       <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
-                            <FileText className="w-5 h-5" />
+           <div className="lg:col-span-4 space-y-6">
+              <div className="p-6 rounded-xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] shadow-xs transition-colors duration-200">
+                 <h3 className="text-xs font-bold text-[var(--sclade-text-secondary)] uppercase tracking-wider mb-4">Quick Operations</h3>
+                 <div className="space-y-3">
+                    <Link href="/editor" className="group flex items-center justify-between p-3.5 bg-[var(--sclade-btn-secondary-bg)] rounded-lg border border-[var(--sclade-card-border)] text-[var(--sclade-text-primary)] hover:border-[#CFD9FF] hover:bg-[#E7EDFF]/50 transition-all">
+                       <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-[#E7EDFF] rounded-lg flex items-center justify-center text-[#5473D1] group-hover:scale-105 transition-transform">
+                            <FileText className="w-4 h-4" />
                           </div>
                           <div className="flex flex-col">
-                            <span className="text-sm font-bold uppercase tracking-wide">Resume Editor</span>
-                            <span className="text-[10px] text-[var(--sclade-text-secondary)] uppercase tracking-widest">
+                            <span className="text-xs font-bold uppercase tracking-wider">Resume Editor</span>
+                            <span className="text-[10px] text-[var(--sclade-text-secondary)]">
                                {mainResume?.updatedAt ? `Updated ${new Date(mainResume.updatedAt).toLocaleDateString()}` : "Not started"}
                             </span>
                           </div>
                        </div>
-                       <ArrowRight className="w-4 h-4 text-[var(--sclade-text-muted)] group-hover:translate-x-1 transition-transform" />
+                       <ArrowRight className="w-4 h-4 text-[var(--sclade-text-muted)] group-hover:text-[#5473D1] group-hover:translate-x-1 transition-all" />
                     </Link>
-                    <Link href="/dashboard/syncing" className="group flex items-center justify-between p-5 bg-[var(--sclade-btn-secondary-bg)] rounded-3xl border border-[var(--sclade-card-border)] text-[var(--sclade-text-primary)] hover:border-violet-500/30 hover:bg-[var(--sclade-card-bg)] transition-all">
-                       <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 bg-violet-500/10 rounded-xl flex items-center justify-center text-violet-400 group-hover:scale-110 transition-transform">
-                            <LayoutDashboard className="w-5 h-5" />
+                    <Link href="/dashboard/syncing" className="group flex items-center justify-between p-3.5 bg-[var(--sclade-btn-secondary-bg)] rounded-lg border border-[var(--sclade-card-border)] text-[var(--sclade-text-primary)] hover:border-[#CFD9FF] hover:bg-[#E7EDFF]/50 transition-all">
+                       <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-[#E7EDFF] rounded-lg flex items-center justify-center text-[#5473D1] group-hover:scale-105 transition-transform">
+                            <LayoutDashboard className="w-4 h-4" />
                           </div>
                           <div className="flex flex-col">
-                            <span className="text-sm font-bold uppercase tracking-wide">Import from GitHub</span>
-                            <span className="text-[10px] text-[var(--sclade-text-secondary)] uppercase tracking-widest">
+                            <span className="text-xs font-bold uppercase tracking-wider">Import from GitHub</span>
+                            <span className="text-[10px] text-[var(--sclade-text-secondary)]">
                                {dbUser.githubData ? "Repositories synced" : "Connect GitHub"}
                             </span>
                           </div>
                        </div>
-                       <ArrowRight className="w-4 h-4 text-[var(--sclade-text-muted)] group-hover:translate-x-1 transition-transform" />
+                       <ArrowRight className="w-4 h-4 text-[var(--sclade-text-muted)] group-hover:text-[#5473D1] group-hover:translate-x-1 transition-all" />
                     </Link>
                     {isSystemAdmin && (
-                       <Link href="/admin" className="group flex items-center justify-between p-5 bg-[var(--sclade-btn-secondary-bg)] rounded-3xl border border-[var(--sclade-card-border)] text-[var(--sclade-text-primary)] hover:border-emerald-500/30 hover:bg-[var(--sclade-card-bg)] transition-all">
-                          <div className="flex items-center gap-4">
-                             <div className="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
-                               <Shield className="w-5 h-5" />
+                       <Link href="/admin" className="group flex items-center justify-between p-3.5 bg-[var(--sclade-btn-secondary-bg)] rounded-lg border border-[var(--sclade-card-border)] text-[var(--sclade-text-primary)] hover:border-[#CFD9FF] hover:bg-[#E7EDFF]/50 transition-all">
+                          <div className="flex items-center gap-3">
+                             <div className="w-8 h-8 bg-[#E4F2E9] rounded-lg flex items-center justify-center text-[#32704F] group-hover:scale-105 transition-transform">
+                               <Shield className="w-4 h-4" />
                              </div>
                              <div className="flex flex-col">
-                                <span className="text-sm font-bold uppercase tracking-wide">Admin Console</span>
-                                <span className="text-[10px] text-[var(--sclade-text-secondary)] uppercase tracking-widest">
+                                <span className="text-xs font-bold uppercase tracking-wider">Admin Console</span>
+                                <span className="text-[10px] text-[var(--sclade-text-secondary)]">
                                    Broadcasts & Registry
                                 </span>
                              </div>
                           </div>
-                          <ArrowRight className="w-4 h-4 text-[var(--sclade-text-muted)] group-hover:translate-x-1 transition-transform" />
+                          <ArrowRight className="w-4 h-4 text-[var(--sclade-text-muted)] group-hover:text-[#32704F] group-hover:translate-x-1 transition-all" />
                        </Link>
                     )}
                  </div>
               </div>
 
-              <div className="relative overflow-hidden group p-8 rounded-[2.5rem] bg-gradient-to-br from-blue-600 to-blue-800 shadow-2xl shadow-blue-500/20">
-                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-3xl -mr-16 -mt-16 group-hover:bg-white/20 transition-all" />
-                 <div className="flex items-center gap-3 mb-2">
-                    <h3 className="font-bold text-2xl">Resummit Pro</h3>
-                    <span className="px-2.5 py-0.5 bg-white/20 text-white text-[9px] font-bold uppercase tracking-wider rounded-full">Coming Soon</span>
+              <div className="p-6 rounded-xl bg-gradient-to-br from-[#5473D1] to-[#4261C0] text-white shadow-xs">
+                 <div className="flex items-center gap-2 mb-2">
+                    <h3 className="font-bold text-lg">Resummit Pro</h3>
+                    <span className="px-2 py-0.5 bg-white/20 text-white text-[9px] font-bold uppercase tracking-wider rounded-md">Coming Soon</span>
                  </div>
-                 <p className="text-blue-100 text-sm mb-8 leading-relaxed opacity-80">Unlock real-time ATS monitoring and multi-version resume management.</p>
-                 <button disabled className="w-full py-4 bg-white/10 border border-white/25 text-white/80 font-bold rounded-2xl text-sm cursor-not-allowed select-none transition-all">
+                 <p className="text-blue-50 text-xs mb-5 leading-relaxed opacity-90">Unlock real-time ATS monitoring and multi-version resume management.</p>
+                 <button disabled className="w-full py-2.5 bg-white/15 border border-white/30 text-white font-bold rounded-lg text-xs cursor-not-allowed select-none transition-all">
                     Coming Soon
                  </button>
               </div>
 
-              <div className="p-4">
+              <div className="pt-2">
                 <form
                   action={async () => {
                     "use server";
@@ -319,9 +318,9 @@ export default async function DashboardPage() {
                 >
                    <button
                      type="submit"
-                     className="block w-full py-3 text-center text-red-500/60 hover:text-red-500 text-xs font-bold transition-all border border-red-500/10 rounded-2xl cursor-pointer bg-transparent"
+                     className="block w-full py-2.5 text-center text-red-600/80 hover:text-red-600 text-xs font-semibold transition-all border border-red-200 dark:border-red-900/30 rounded-lg cursor-pointer bg-transparent hover:bg-red-50 dark:hover:bg-red-950/20"
                    >
-                      Sign Out Terminal
+                      Sign Out
                    </button>
                 </form>
              </div>
