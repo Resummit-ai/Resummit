@@ -2,7 +2,7 @@ import 'server-only';
 // @ts-ignore
 import { prisma as db } from './db.js';
 
-export const prisma = db;
+export const prisma: any = db;
 
 /**
  * Robustly resolves the database User ID from a session.

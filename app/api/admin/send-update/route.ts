@@ -16,6 +16,8 @@ const schema = z.object({
  * Sends an update email to all users (or a subset).
  * Protected: only you (the admin) can call this.
  */
+export const dynamic = "force-dynamic";
+
 export async function POST(req: Request) {
   const session = await auth();
 
