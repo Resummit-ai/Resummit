@@ -505,6 +505,7 @@ export function EditorClient({
   const [jobTitle, setJobTitle] = useState("");
   const [theme, setTheme] = useState("light");
   const [leftWidth, setLeftWidth] = useState(440);
+  const isNarrowLeft = leftWidth < 430;
   const [rightWidth, setRightWidth] = useState(360);
   const [isLeftCollapsed, setIsLeftCollapsed] = useState(false);
   const [isRightCollapsed, setIsRightCollapsed] = useState(false);
@@ -1516,7 +1517,7 @@ export function EditorClient({
 
         {personalInfoOpen && (
           <div className="p-4 pt-1 space-y-4 border-t border-neutral-100 dark:border-neutral-800">
-            <div className="grid grid-cols-2 gap-3.5">
+            <div className={`grid ${isNarrowLeft ? "grid-cols-1" : "grid-cols-2"} gap-3.5`}>
               <div className="col-span-1">
                 <SectionLabel required>Full Name</SectionLabel>
                 <InlineEdit
@@ -1549,7 +1550,7 @@ export function EditorClient({
                   placeholder="+1 (555) 000 000"
                 />
               </div>
-              <div className="col-span-2">
+              <div className={isNarrowLeft ? "col-span-1" : "col-span-2"}>
                 <SectionLabel required>Location</SectionLabel>
                 <InlineEdit
                   value={cv.location}
@@ -1672,12 +1673,12 @@ export function EditorClient({
           >
             <Trash2 className="w-4 h-4" />
           </button>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="col-span-2">
+          <div className={`grid ${isNarrowLeft ? "grid-cols-1" : "grid-cols-2"} gap-4`}>
+            <div className={isNarrowLeft ? "col-span-1" : "col-span-2"}>
               <SectionLabel>Institution</SectionLabel>
               <InlineEdit value={edu.school} onChange={(v) => updateEdu(i, "school", v)} placeholder="University Name" />
             </div>
-            <div className="col-span-2">
+            <div className={isNarrowLeft ? "col-span-1" : "col-span-2"}>
               <SectionLabel>Degree / Certification</SectionLabel>
               <InlineEdit value={edu.degree} onChange={(v) => updateEdu(i, "degree", v)} placeholder="B.Sc. in Engineering" />
             </div>
@@ -2402,7 +2403,7 @@ export function EditorClient({
 
             {expandedProject === pIdx && (
               <div className="p-7 space-y-6 border-t border-white/5 animate-in slide-in-from-top-4 duration-300">
-                <div className="grid grid-cols-2 gap-4">
+                <div className={`grid ${isNarrowLeft ? "grid-cols-1" : "grid-cols-2"} gap-4`}>
                   <div>
                     <SectionLabel>Project Title</SectionLabel>
                     <InlineEdit value={p.title} onChange={(v) => updateProject(pIdx, "title", v)} placeholder="Project Title" />
@@ -2847,52 +2848,55 @@ export function EditorClient({
             </div>
 
             {/* Editor Panel Toolbar */}
-            <div className="px-5 py-3.5 border-b border-[#DADCE0] dark:border-neutral-800 flex items-center justify-between shrink-0">
-              <div className="flex items-center gap-3">
+            <div className="px-3.5 sm:px-4 py-2.5 border-b border-[#DADCE0] dark:border-neutral-800 flex items-center justify-between gap-2 shrink-0 min-w-0">
+              <div className="flex items-center gap-2 min-w-0 flex-1">
                 <Link
                   href="/dashboard"
-                  className="p-1.5 rounded-lg text-neutral-500 hover:text-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                  className="p-1.5 rounded-lg text-neutral-500 hover:text-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors shrink-0"
                   title="Back to Dashboard"
                 >
                   <ArrowLeft className="w-4 h-4" />
                 </Link>
-                <h2 className="text-sm font-bold text-[#202124] dark:text-white font-outfit">
+                <h2 className="text-sm font-bold text-[#202124] dark:text-white font-outfit shrink-0">
                   Editor
                 </h2>
                 {/* Save status */}
-                <div className="flex items-center gap-1.5 text-xs text-neutral-500">
+                <div 
+                  className="flex items-center gap-1.5 text-xs text-neutral-500 shrink-0"
+                  title={saveStatus === "saving" ? "Saving changes..." : saveStatus === "error" ? "Save failed" : saveTimer.current ? "Unsaved changes" : "Saved just now"}
+                >
                   {saveStatus === "saving" ? (
                     <>
-                      <Loader2 className="w-3 h-3 animate-spin text-[#1A73E8]" />
-                      <span className="text-[#1A73E8] font-medium">Saving...</span>
+                      <Loader2 className="w-3 h-3 animate-spin text-[#1A73E8] shrink-0" />
+                      <span className={`text-[#1A73E8] font-medium whitespace-nowrap text-[11px] ${leftWidth < 410 ? "hidden" : "inline"}`}>Saving...</span>
                     </>
                   ) : saveStatus === "error" ? (
                     <>
-                      <span className="w-2 h-2 rounded-full bg-red-500" />
-                      <span className="text-red-500 font-medium">Save failed</span>
+                      <span className="w-2 h-2 rounded-full bg-red-500 shrink-0" />
+                      <span className={`text-red-500 font-medium whitespace-nowrap text-[11px] ${leftWidth < 410 ? "hidden" : "inline"}`}>Save failed</span>
                     </>
                   ) : saveTimer.current ? (
                     <>
-                      <span className="w-2 h-2 rounded-full bg-amber-500" />
-                      <span className="text-amber-500 font-medium">Unsaved</span>
+                      <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0" />
+                      <span className={`text-amber-500 font-medium whitespace-nowrap text-[11px] ${leftWidth < 410 ? "hidden" : "inline"}`}>Unsaved</span>
                     </>
                   ) : (
                     <>
-                      <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                      <span className="text-neutral-500 font-medium">Saved just now</span>
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                      <span className={`text-neutral-500 dark:text-neutral-400 font-medium whitespace-nowrap text-[11px] ${leftWidth < 410 ? "hidden" : "inline"}`}>Saved</span>
                     </>
                   )}
                 </div>
               </div>
 
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1 shrink-0">
                 <button
                   onClick={() => {
                     if (confirm("Revert unsaved changes and reload editor?")) {
                       window.location.reload();
                     }
                   }}
-                  className="p-1.5 rounded-lg border border-[#DADCE0] dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-300 transition-all cursor-pointer"
+                  className="p-1.5 rounded-lg border border-[#DADCE0] dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-300 transition-all cursor-pointer shrink-0"
                   title="Revert / Reload"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
@@ -2900,7 +2904,7 @@ export function EditorClient({
 
                 <button
                   onClick={() => setAtsPanelOpen(true)}
-                  className="p-1.5 rounded-lg border border-[#DADCE0] dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-[#1A73E8] transition-all cursor-pointer"
+                  className="p-1.5 rounded-lg border border-[#DADCE0] dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-[#1A73E8] transition-all cursor-pointer shrink-0"
                   title="ATS Scoring & AI Audit"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
@@ -2915,19 +2919,20 @@ export function EditorClient({
                     saveCV();
                   }}
                   disabled={saveStatus === "saving"}
-                  className="flex items-center gap-1.5 bg-[#1A73E8] hover:bg-[#1557B0] active:scale-95 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-sm transition-all disabled:opacity-50 cursor-pointer"
+                  className="flex items-center gap-1.5 bg-[#1A73E8] hover:bg-[#1557B0] active:scale-95 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg shadow-sm transition-all disabled:opacity-50 cursor-pointer shrink-0"
+                  title="Save Resume"
                 >
                   {saveStatus === "saving" ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
                   ) : (
                     <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
                   )}
-                  <span>Save</span>
+                  <span className={leftWidth < 360 ? "hidden" : "inline"}>Save</span>
                 </button>
 
                 <button
                   onClick={() => setIsLeftCollapsed(true)}
-                  className="p-1.5 rounded-lg border border-[#DADCE0] dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-500 hover:text-neutral-800 transition-all cursor-pointer max-md:hidden"
+                  className="p-1.5 rounded-lg border border-[#DADCE0] dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-500 hover:text-neutral-800 transition-all cursor-pointer max-md:hidden shrink-0"
                   title="Minimize editor panel"
                 >
                   <PanelLeftClose className="w-3.5 h-3.5" />
@@ -2936,23 +2941,23 @@ export function EditorClient({
             </div>
 
             {/* Section Tabs */}
-            <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#DADCE0] dark:border-neutral-800 bg-white dark:bg-neutral-900 overflow-x-auto gap-1 shrink-0 custom-scrollbar">
+            <div className="flex items-center px-3 py-2 border-b border-[#DADCE0] dark:border-neutral-800 bg-white dark:bg-neutral-900 overflow-x-auto gap-1 shrink-0 custom-scrollbar">
               {tabs.map((tab) => {
                 const isActive = activeTab === tab.id;
                 return (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id as EditorTab)}
-                    className={`flex flex-col items-center justify-center py-2 px-2.5 min-w-[58px] rounded-xl transition-all cursor-pointer ${
+                    className={`flex flex-col items-center justify-center py-1.5 px-2.5 min-w-[52px] shrink-0 rounded-xl transition-all cursor-pointer ${
                       isActive
-                        ? "bg-[#E8F0FE] text-[#1A73E8] font-semibold border border-blue-200/80 shadow-xs"
+                        ? "bg-[#E8F0FE] text-[#1A73E8] font-semibold border border-blue-200/80 shadow-xs dark:bg-blue-950/60 dark:border-blue-800/80 dark:text-blue-300"
                         : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800/60 border border-transparent"
                     }`}
                   >
-                    <span className={isActive ? "text-[#1A73E8]" : "text-neutral-500"}>
+                    <span className={isActive ? "text-[#1A73E8] dark:text-blue-300" : "text-neutral-500 dark:text-neutral-400"}>
                       {tab.icon}
                     </span>
-                    <span className="text-[11px] mt-1 leading-none">{tab.label}</span>
+                    <span className="text-[11px] mt-1 leading-none whitespace-nowrap">{tab.label}</span>
                   </button>
                 );
               })}
@@ -3220,32 +3225,42 @@ export function EditorClient({
                   }}
                   className={`w-full p-3.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${
                     isCurrentVersionMain
-                      ? "bg-[#E8F0FE] border-2 border-[#1A73E8] text-[#1A73E8]"
-                      : "bg-white dark:bg-neutral-800 border-[#DADCE0] dark:border-neutral-700 hover:border-neutral-400"
+                      ? "bg-[#E8F0FE] dark:bg-blue-950/40 border-2 border-[#1A73E8] dark:border-blue-500 shadow-sm"
+                      : "bg-white dark:bg-neutral-800/90 border-[#DADCE0] dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-600"
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-                      isCurrentVersionMain ? "bg-white text-[#1A73E8]" : "bg-blue-50 text-[#1A73E8]"
+                      isCurrentVersionMain 
+                        ? "bg-white dark:bg-blue-900/60 text-[#1A73E8] dark:text-blue-300 shadow-xs" 
+                        : "bg-blue-50 dark:bg-neutral-700 text-[#1A73E8] dark:text-blue-400"
                     }`}>
                       <FileText className="w-5 h-5" />
                     </div>
                     <div className="min-w-0">
-                      <div className="text-xs font-bold text-[#202124] dark:text-neutral-100 truncate">
+                      <div className={`text-xs font-bold truncate ${
+                        isCurrentVersionMain 
+                          ? "text-[#1A73E8] dark:text-blue-200" 
+                          : "text-[#202124] dark:text-neutral-100"
+                      }`}>
                         Master Resume
                       </div>
-                      <div className="text-[11px] text-neutral-500 truncate">
+                      <div className={`text-[11px] truncate ${
+                        isCurrentVersionMain 
+                          ? "text-blue-600/85 dark:text-blue-300/80" 
+                          : "text-neutral-500 dark:text-neutral-400"
+                      }`}>
                         Primary profile
                       </div>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     {isCurrentVersionMain && (
-                      <span className="bg-[#1A73E8] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                      <span className="bg-[#1A73E8] dark:bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
                         Active
                       </span>
                     )}
-                    <ChevronRight className={`w-4 h-4 ${isCurrentVersionMain ? "text-[#1A73E8]" : "text-neutral-400"}`} />
+                    <ChevronRight className={`w-4 h-4 ${isCurrentVersionMain ? "text-[#1A73E8] dark:text-blue-300" : "text-neutral-400 dark:text-neutral-500"}`} />
                   </div>
                 </div>
 
@@ -3264,30 +3279,36 @@ export function EditorClient({
                         }}
                         className={`w-full p-3.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between pr-9 ${
                           isSelected
-                            ? "bg-[#E8F0FE] border-2 border-[#1A73E8] text-[#1A73E8]"
-                            : "bg-white dark:bg-neutral-800 border-[#DADCE0] dark:border-neutral-700 hover:border-neutral-400"
+                            ? "bg-[#E8F0FE] dark:bg-blue-950/40 border-2 border-[#1A73E8] dark:border-blue-500 shadow-sm"
+                            : "bg-white dark:bg-neutral-800/90 border-[#DADCE0] dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-600"
                         }`}
                       >
                         <div className="flex items-center gap-3 min-w-0">
                           <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-                            isSelected ? "bg-white text-[#1A73E8]" : "bg-blue-50 text-[#1A73E8]"
+                            isSelected 
+                              ? "bg-white dark:bg-blue-900/60 text-[#1A73E8] dark:text-blue-300 shadow-xs" 
+                              : "bg-blue-50 dark:bg-neutral-700 text-[#1A73E8] dark:text-blue-400"
                           }`}>
                             <FileText className="w-5 h-5" />
                           </div>
                           <div className="min-w-0">
-                            <div className="text-xs font-bold text-[#202124] dark:text-neutral-100 truncate">
+                            <div className={`text-xs font-bold truncate ${
+                              isSelected 
+                                ? "text-[#1A73E8] dark:text-blue-200" 
+                                : "text-[#202124] dark:text-neutral-100"
+                            }`}>
                               {title}
                             </div>
-                            <div className="flex items-center gap-1.5 text-[11px] text-neutral-500 mt-0.5">
+                            <div className="flex items-center gap-1.5 text-[11px] mt-0.5">
                               <span className="font-semibold text-emerald-600 dark:text-emerald-400">
                                 {score}% match
                               </span>
-                              <span>·</span>
-                              <span>{dateStr}</span>
+                              <span className="text-neutral-400 dark:text-neutral-500">·</span>
+                              <span className="text-neutral-500 dark:text-neutral-300 font-medium">{dateStr}</span>
                             </div>
                           </div>
                         </div>
-                        <ChevronRight className={`w-4 h-4 shrink-0 ${isSelected ? "text-[#1A73E8]" : "text-neutral-400"}`} />
+                        <ChevronRight className={`w-4 h-4 shrink-0 ${isSelected ? "text-[#1A73E8] dark:text-blue-300" : "text-neutral-400 dark:text-neutral-500"}`} />
                       </div>
 
                       {/* Delete Version Button */}
@@ -3312,7 +3333,7 @@ export function EditorClient({
                             }
                           }
                         }}
-                        className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1.5 text-neutral-400 hover:text-red-500 opacity-0 group-hover/item:opacity-100 transition-opacity rounded-lg z-10 cursor-pointer"
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1.5 text-neutral-400 dark:text-neutral-400 hover:text-red-500 dark:hover:text-red-400 opacity-0 group-hover/item:opacity-100 transition-opacity rounded-lg z-10 cursor-pointer"
                         title="Delete this tailored version"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
