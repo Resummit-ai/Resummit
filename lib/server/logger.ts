@@ -72,6 +72,11 @@ export const logger = {
     emit('warn', `security.${event}`, params);
   },
 
+  /** Log a warning event */
+  warn(category: string, event: string, params?: Record<string, unknown>) {
+    emit('warn', `${category}.${event}`, params ?? {});
+  },
+
   /** Log an error with optional context */
   error(event: string, error: unknown, params?: Record<string, unknown>) {
     emit('error', event, {

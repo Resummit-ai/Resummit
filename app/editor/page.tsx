@@ -76,7 +76,7 @@ export default async function EditorPage({
               phone: "",
               location: ""
             },
-            summary: "Software engineer focused on building high-impact technical solutions. Demonstrated expertise in building modular tools and systems.",
+            summary: "",
             experience: [
               {
                 company: "Tech Solutions Inc. (Example)",

@@ -343,7 +343,8 @@ export const CVDocument = ({ cv, projects }: { cv: CVData; projects: ProjectData
     .map((p) => ({
       ...p,
       highlights: (p.highlights || []).filter((h) => h.trim()).slice(0, 2),
-    }));
+    }))
+    .filter((p) => p.highlights.length > 0);
 
   const cleanExperience = (experience || []).slice(0, 3).map((exp: any) => ({
     ...exp,

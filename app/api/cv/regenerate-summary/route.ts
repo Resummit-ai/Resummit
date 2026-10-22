@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { prisma, resolveUserId } from "@/lib/server/prisma";
 import { NextResponse } from "next/server";
-import { regenerateSummary } from "@/lib/aiService";
+import { regenerateSummary, AIUnavailableError } from "@/lib/aiService";
 import { fetchRepoReadme } from "@/lib/github";
 import { withCache } from "@/lib/server/cache";
 import { checkRateLimit } from "@/lib/server/ratelimit";
@@ -66,6 +66,15 @@ export async function POST(req: Request) {
   } catch (error: any) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.issues }, { status: 400 });
+    }
+    if (error instanceof AIUnavailableError) {
+      if (error.reason === "LIMIT") {
+        return NextResponse.json({ error: "AI_LIMIT", message: "Daily AI limit reached" }, { status: 429 });
+      }
+      return NextResponse.json({ error: "AI_UNAVAILABLE", message: "AI is busy, try again in a minute" }, { status: 503 });
+    }
+    if (error?.message === "AI_DAILY_LIMIT_EXCEEDED" || error?.message === "AI_QUOTA_EXCEEDED") {
+      return NextResponse.json({ error: "AI_LIMIT", message: "Daily AI limit reached" }, { status: 429 });
     }
     console.error("AI Summary Regen Error:", error);
     return NextResponse.json({ error: error.message || "Failed to generate summary" }, { status: 500 });

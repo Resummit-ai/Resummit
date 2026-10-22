@@ -168,8 +168,26 @@ export function safeParseJSON(raw: string): any {
   return JSON.parse(cleaned.slice(start, end + 1))
 }
 
+export class AIUnavailableError extends Error {
+  constructor(public reason: "LIMIT" | "FAILED") {
+    super(reason);
+    this.name = "AIUnavailableError";
+  }
+}
+
+export function factualProject(repo: any, techStack: string[]) {
+  return {
+    title: repo.name || repo.title || "Project",
+    description: repo.description ?? "",
+    techStack,
+    highlights: [] as string[],
+    needsReview: true,
+  };
+}
+
 export interface GeneratedCV {
   summary: string
+  needsReview?: boolean
   skills: {
     languages: string[]
     frameworks: string[]
@@ -181,6 +199,7 @@ export interface GeneratedCV {
     highlights: string[]
     description: string
     aiGenerated: boolean
+    needsReview?: boolean
   }>
 }
 
@@ -247,28 +266,19 @@ ${JSON.stringify(repoSummary, null, 2)}`
   try {
     const raw = await callAI(prompt)
     parsed = safeParseJSON(raw)
-  } catch (err) {
-    console.warn("[AI] callAI failed inside generateCVFromRepos. Falling back to deterministic resume parsing.", err);
+  } catch (err: any) {
+    logger.warn("ai", "fallback_used", { fn: "generateCVFromRepos", reason: err?.message || String(err) });
+    console.warn("[AI] callAI failed inside generateCVFromRepos. Falling back to factual resume parsing.", err);
 
-    // Deterministic parsing of repo names, languages, and descriptions
-    const projectsList = repos.slice(0, 3).map((r, idx) => {
+    // Factual parsing only: no invented highlights or claims
+    const projectsList = repos.slice(0, 3).map((r) => {
       const language = r.language || "TypeScript";
       const techStack = Array.isArray(r.topics) && r.topics.length > 0
         ? r.topics.slice(0, 3)
         : [language, "Node.js", "Git"];
 
-      const highlights = [
-        `Engineered ${r.name} using ${language} to resolve bottleneck latency and improve component runtime efficiency.`,
-        r.description
-          ? `Integrated ${techStack.join(', ')} and structured standard code patterns to increase application reliability.`
-          : `Refactored core modules and component interfaces to decrease loading times and accelerate deployment pipelines.`
-      ];
-
       return {
-        title: r.name || `Engineering Project ${idx + 1}`,
-        techStack,
-        description: r.description || `High-performance modular project developed using ${language}.`,
-        highlights,
+        ...factualProject(r, techStack),
         aiGenerated: false
       };
     });
@@ -277,7 +287,8 @@ ${JSON.stringify(repoSummary, null, 2)}`
     const allTopics = Array.from(new Set(repos.flatMap(r => r.topics || []).filter(Boolean))) as string[];
 
     parsed = {
-      summary: `High-signal Software Engineer specializing in modern software development and engineering solutions. Demonstrated expertise in building modular tools and systems using ${allLanguages.slice(0, 3).join(', ')}.`,
+      summary: "",
+      needsReview: true,
       skills: {
         languages: allLanguages.length > 0 ? allLanguages.slice(0, 4) : ["TypeScript", "JavaScript", "Python"],
         frameworks: allTopics.filter(t => ["react", "nextjs", "nestjs", "express", "django", "vue"].includes(t.toLowerCase())).slice(0, 4),
@@ -289,11 +300,10 @@ ${JSON.stringify(repoSummary, null, 2)}`
 
   // Validate and fill defaults if model misses fields
   return {
-    summary: Array.isArray(parsed.summary)
-      ? parsed.summary.join(' ')
-      : (typeof parsed.summary === 'string'
-        ? parsed.summary
-        : 'Software engineer building web applications and tools. Experienced in JavaScript and Python.'),
+    summary: typeof parsed.summary === 'string'
+      ? parsed.summary
+      : (Array.isArray(parsed.summary) ? parsed.summary.join(' ') : ""),
+    needsReview: Boolean(parsed.needsReview) || !parsed.summary,
     skills: {
       languages: parsed.skills?.languages || [],
       frameworks: parsed.skills?.frameworks || [],
@@ -302,9 +312,10 @@ ${JSON.stringify(repoSummary, null, 2)}`
     projects: (parsed.projects || []).slice(0, 3).map((p: any) => ({
       title: p.title || p.name || 'Project',
       techStack: Array.isArray(p.techStack) ? p.techStack : [p.tech || 'JavaScript'],
-      description: p.description || 'Project built with modern technologies.',
-      highlights: (p.highlights || p.bullets || ['Built this project using modern web technologies.']).slice(0, 2),
-      aiGenerated: true,
+      description: p.description ?? '',
+      highlights: (Array.isArray(p.highlights) ? p.highlights : (Array.isArray(p.bullets) ? p.bullets : [])).filter((h: any) => typeof h === 'string' && h.trim().length > 0).slice(0, 2),
+      aiGenerated: p.aiGenerated ?? true,
+      needsReview: p.needsReview ?? (!p.highlights || p.highlights.length === 0),
     })),
   }
 }
@@ -368,25 +379,11 @@ Rules:
 
   let raw = "";
   try {
-    raw = await callAI(prompt);
+    raw = await callAI(prompt, { feature: "regenerate_summary" });
   } catch (error: any) {
-    console.warn("[AI] callAI failed inside regenerateSummary. Falling back to deterministic summary generation.", error);
-    const langs = Array.isArray(skills?.languages) ? skills.languages : [];
-    const frams = Array.isArray(skills?.frameworks) ? skills.frameworks : [];
-    const tls = Array.isArray(skills?.tools) ? skills.tools : [];
-
-    const techLangs = langs.length > 0 ? langs.slice(0, 3) : ["TypeScript", "JavaScript", "Python"];
-    const techFrams = frams.length > 0 ? frams.slice(0, 3) : ["React", "Next.js", "Node.js"];
-    const techTools = tls.length > 0 ? tls.slice(0, 2) : ["Git", "Docker"];
-
-    const rolesWord = targetRole || "Software Engineer";
-    const langString = techLangs.slice(0, 3).join(", ");
-    const sent1 = `Engineers high-impact applications and software systems as a ${rolesWord}, focusing on clean architecture and reliable integration using ${langString}.`;
-
-    const framToolString = [...techFrams.slice(0, 2), ...techTools.slice(0, 1)].join(", ");
-    const sent2 = `Deploys and maintains performant backend and frontend architectures employing ${framToolString} to increase run-time performance and application delivery.`;
-
-    return `${sent1} ${sent2}`;
+    const isLimit = error?.message === "AI_DAILY_LIMIT_EXCEEDED" || error?.message === "AI_QUOTA_EXCEEDED";
+    logger.warn("ai", "fallback_used", { fn: "regenerateSummary", reason: isLimit ? "AI_DAILY_LIMIT_EXCEEDED" : (error?.message || "FAILED") });
+    throw new AIUnavailableError(isLimit ? "LIMIT" : "FAILED");
   }
 
   let cleaned = "";
@@ -429,17 +426,11 @@ Rules:
 
   let raw = "";
   try {
-    raw = await callAI(prompt);
+    raw = await callAI(prompt, { feature: "regenerate_bullet" });
   } catch (error: any) {
-    console.warn("[AI] callAI failed inside regenerateBullet. Falling back to deterministic bullet generation.", error);
-    const techStr = Array.isArray(tech) ? (tech as string[]).slice(0, 2).join(', ') : tech;
-    const cleanBullet = bullet.replace(/^\s*[-\*•]\s*/, '').trim();
-    const startsWithVerb = /^[A-Z][a-z]+ed\b/.test(cleanBullet);
-    const verb = startsWithVerb ? "" : "Enhanced ";
-    const techInject = techStr && !cleanBullet.toLowerCase().includes(techStr.toLowerCase())
-      ? ` with ${techStr}`
-      : "";
-    raw = `${verb}${cleanBullet}${techInject}`;
+    const isLimit = error?.message === "AI_DAILY_LIMIT_EXCEEDED" || error?.message === "AI_QUOTA_EXCEEDED";
+    logger.warn("ai", "fallback_used", { fn: "regenerateBullet", reason: isLimit ? "AI_DAILY_LIMIT_EXCEEDED" : (error?.message || "FAILED") });
+    throw new AIUnavailableError(isLimit ? "LIMIT" : "FAILED");
   }
   return raw.replace(/^"|"$/g, '').trim();
 }

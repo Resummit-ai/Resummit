@@ -1,6 +1,7 @@
 import { prisma } from "./server/prisma";
 import { fetchUserRepos, fetchRepoReadme, GithubRepo, SKILL_MAP, SKILL_CATEGORIES, isJunkRepo } from "./github";
-import { generateBatchBullets } from "./aiService";
+import { generateBatchBullets, factualProject } from "./aiService";
+import { logger } from "./server/logger";
 
 export interface SuggestionScoring {
   stars: number;
@@ -279,31 +280,23 @@ export async function runSmartSync(userId: string, accessToken: string, email?: 
               isRealSkill(t, repo.name)
             )
           };
-        } catch (aiErr) {
+        } catch (aiErr: any) {
+          logger.warn("ai", "fallback_used", { fn: "suggestionEngine.top3", reason: aiErr?.message || String(aiErr) });
           console.warn(`[SYNC] AI generation failed for ${repo.name}, falling back to deterministic:`, aiErr);
           useDeterministic = true;
         }
       }
 
       if (useDeterministic) {
-        // Generate deterministically for positions 4-30 (eliminates LLM overhead completely)
+        // Generate deterministically for positions 4-30 (factual only, no invented claims)
+        logger.warn("ai", "fallback_used", { fn: "suggestionEngine.deterministic", reason: `repo_${idx + 1}` });
         const language = repo.language || "TypeScript";
         const techStack = Array.isArray(repo.topics) && repo.topics.length > 0 
           ? repo.topics.slice(0, 3) 
           : [language, "Node.js", "Git"];
         
-        const highlights = [
-          `Engineered ${repo.name} using ${language} to resolve bottleneck latency and improve component runtime efficiency.`,
-          repo.description 
-            ? `Integrated ${techStack.join(', ')} and structured standard code patterns to increase application reliability.`
-            : `Refactored core modules and component interfaces to decrease loading times and accelerate deployment pipelines.`
-        ];
-
         projectData = {
-          title: repo.name,
-          techStack,
-          description: repo.description || `High-performance modular project developed using ${language}.`,
-          highlights,
+          ...factualProject(repo, techStack),
           aiGenerated: false
         };
 

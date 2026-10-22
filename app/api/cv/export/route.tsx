@@ -21,7 +21,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No CV data provided" }, { status: 400 });
     }
 
-    const stream = await renderToStream(<CVDocument cv={cv} projects={projects} />);
+    const validProjects = (Array.isArray(projects) ? projects : []).filter((p: any) => {
+      const hl = Array.isArray(p.highlights) ? p.highlights : [];
+      return hl.some((h: any) => typeof h === "string" && h.trim().length > 0);
+    });
+
+    const stream = await renderToStream(<CVDocument cv={cv} projects={validProjects} />);
 
     // Convert stream to standard response
     return new Response(stream as any, {

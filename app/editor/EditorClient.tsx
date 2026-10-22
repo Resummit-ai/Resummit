@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { Download, GripVertical, Plus, Trash2, RotateCcw, Link as LinkIcon, CheckCircle2, Activity, Eye, Sparkles, Target, X, Loader2, User, Briefcase, Code2, GraduationCap, Zap, AlertTriangle, ChevronDown, ChevronUp, Save, Wifi, WifiOff, ArrowUp, ArrowDown, ExternalLink, Rocket, Cpu, Code, Terminal, GitBranch, Lock, Sun, Moon, RefreshCw, History, FileText } from "lucide-react";
+import { Download, GripVertical, Plus, Trash2, RotateCcw, Link as LinkIcon, CheckCircle2, Activity, Eye, Sparkles, Target, X, Loader2, User, Briefcase, Code2, GraduationCap, Zap, AlertTriangle, AlertCircle, ChevronDown, ChevronUp, Save, Wifi, WifiOff, ArrowUp, ArrowDown, ExternalLink, Rocket, Cpu, Code, Terminal, GitBranch, Lock, Sun, Moon, RefreshCw, History, FileText } from "lucide-react";
 import type { CVData, ProjectData, CVSkills, CVExperience, CVEducation, SaveStatus, EditorTab } from "@/lib/types";
 import { ResumePreview } from "@/components/editor/ResumePreview";
 import { normalizeAndDedupeSkills } from "@/lib/skills-data";
@@ -468,6 +468,14 @@ export function EditorClient({
   const [isScoring, setIsScoring] = useState(false);
   const [atsPanelOpen, setAtsPanelOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type?: "error" | "info" | "warning" } | null>(null);
+
+  const showToast = useCallback((message: string, type: "error" | "info" | "warning" = "info") => {
+    setToast({ message, type });
+    setTimeout(() => {
+      setToast((prev) => (prev?.message === message ? null : prev));
+    }, 4500);
+  }, []);
   const [isTailoring, setIsTailoring] = useState(false);
   const [jdText, setJdText] = useState("");
   const [jobTitle, setJobTitle] = useState("");
@@ -978,17 +986,19 @@ export function EditorClient({
       });
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.error || `Server error: ${res.status}`);
+        const message = errData.message || (res.status === 429 ? "Daily AI limit reached" : (res.status === 503 ? "AI is busy, try again in a minute" : "Failed to improve summary."));
+        showToast(message, "error");
+        return; // Leave current text unchanged
       }
       const d = await res.json();
       if (d.summary) {
         setSuggestedSummary(d.summary);
       } else {
-        throw new Error("No summary returned from the AI service.");
+        showToast("No summary returned from the AI service.", "error");
       }
     } catch (err: any) {
       console.error(err);
-      alert(err.message || "Failed to improve summary. Please try again.");
+      showToast(err.message || "Failed to improve summary. Please try again.", "error");
     } finally {
       setRegeneratingSummary(false);
     }
@@ -1063,24 +1073,35 @@ export function EditorClient({
       });
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.error || `Server error: ${res.status}`);
+        const message = errData.message || (res.status === 429 ? "Daily AI limit reached" : (res.status === 503 ? "AI is busy, try again in a minute" : "Failed to optimize bullet."));
+        showToast(message, "error");
+        return; // Leave current text unchanged
       }
       const d = await res.json();
       if (d.bullet) {
         const projectId = projects[pIdx].id;
         setSuggestedProjectBullets(prev => ({ ...prev, [`${projectId}-${bIdx}`]: d.bullet }));
       } else {
-        throw new Error("No rewritten bullet returned from the AI service.");
+        showToast("No rewritten bullet returned from the AI service.", "error");
       }
     } catch (err: any) {
       console.error(err);
-      alert(err.message || "Failed to optimize bullet. Please try again.");
+      showToast(err.message || "Failed to optimize bullet. Please try again.", "error");
     } finally {
       setRewritingBullet(null);
     }
   };
 
   const handleExportPDF = async () => {
+    const included = projects.filter((p) => p.included !== false);
+    const projectsWithEmptyHighlights = included.filter(
+      (p) => !p.highlights || p.highlights.filter((h) => h && h.trim().length > 0).length === 0
+    );
+    if (projectsWithEmptyHighlights.length > 0) {
+      const names = projectsWithEmptyHighlights.map((p) => p.title || "Untitled Project").join(", ");
+      alert(`Warning: The following projects have no bullet highlights and will be skipped in the exported PDF: ${names}`);
+    }
+
     setIsExporting(true);
     try {
       const res = await fetch("/api/cv/export", {
@@ -1096,9 +1117,11 @@ export function EditorClient({
         a.download = `${(cv.name || "resume").replace(/\s+/g, "_")}_resume.pdf`;
         a.click();
         window.URL.revokeObjectURL(url);
+      } else {
+        showToast("Export failed. Please try again.", "error");
       }
     } catch {
-      alert("Export failed");
+      showToast("Export failed. Please try again.", "error");
     } finally {
       setIsExporting(false);
     }
@@ -1446,7 +1469,14 @@ export function EditorClient({
 
       <div className="pt-4 border-t border-white/5">
         <div className="flex items-center justify-between mb-3">
-          <SectionLabel>Professional Summary</SectionLabel>
+          <div className="flex items-center gap-2">
+            <SectionLabel>Professional Summary</SectionLabel>
+            {((cv as any).needsReview || !cv.summary?.trim()) && (
+              <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 bg-amber-500/10 text-amber-500 rounded border border-amber-500/20">
+                Needs your input
+              </span>
+            )}
+          </div>
           <button
             onClick={handleRegenerateSummary}
             disabled={regeneratingSummary}
@@ -2196,6 +2226,11 @@ export function EditorClient({
                   <p className="text-[15px] font-bold text-[var(--sclade-text-primary)] truncate font-outfit tracking-tight">{p.title || "Untitled Project"}</p>
                   {p.included === false && <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 bg-neutral-800 text-neutral-400 rounded-lg border border-[var(--sclade-popover-border)]">Excluded</span>}
                   {p.aiGenerated && <span className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 bg-blue-500/10 text-blue-400 rounded border border-blue-500/10">AI</span>}
+                  {((p as any).needsReview || !p.highlights || p.highlights.filter((h: any) => h && h.trim().length > 0).length === 0) && (
+                    <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 bg-amber-500/10 text-amber-500 rounded border border-amber-500/20">
+                      Needs your input
+                    </span>
+                  )}
                 </div>
                 <p className="text-[10px] font-bold uppercase tracking-[2px] text-neutral-600 mt-1">{(p.techStack || []).join(" • ")}</p>
               </div>
@@ -3066,6 +3101,14 @@ export function EditorClient({
         </div>
       )}
       
+      {toast && (
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-xl bg-neutral-900 border border-neutral-700 shadow-2xl text-white text-xs font-semibold animate-in slide-in-from-bottom-2">
+          <AlertCircle className={`w-4 h-4 ${toast.type === "error" ? "text-red-400" : toast.type === "warning" ? "text-amber-400" : "text-blue-400"}`} />
+          <span>{toast.message}</span>
+          <button onClick={() => setToast(null)} className="ml-2 text-neutral-400 hover:text-white">✕</button>
+        </div>
+      )}
+
       <style jsx global>{`
         .custom-scrollbar::-webkit-scrollbar {
           width: 4px;
