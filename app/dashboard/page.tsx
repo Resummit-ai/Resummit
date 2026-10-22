@@ -11,6 +11,7 @@ import { ATSScoreCard } from "@/components/dashboard/ATSScoreCard";
 import { UserIdentify } from "@/components/providers/user-identify";
 import { Onboarding } from "@/components/onboarding/Onboarding";
 import { EngineeringSignals } from "@/lib/server/githubIntelligence";
+import { logger } from "@/lib/server/logger";
 
 export const metadata: Metadata = {
   title: "Resummit Dashboard — Developer Engineering DNA",
@@ -18,38 +19,58 @@ export const metadata: Metadata = {
 };
 export default async function DashboardPage() {
   const session = await auth();
-  const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "adelmuhammed786@gmail.com";
-  const isSystemAdmin = session?.user?.email === ADMIN_EMAIL;
-
   if (!session?.user) {
     redirect("/login");
   }
+
+  const isSystemAdmin = Boolean(
+    process.env.ADMIN_EMAIL && session.user.email === process.env.ADMIN_EMAIL
+  );
 
   const userId = await resolveUserId(session);
   if (!userId) {
     redirect("/login");
   }
 
-  let dbUser = await prisma.user.findUnique({
-    where: { id: userId },
-    include: {
-      suggestions: {
-        where: { status: "PENDING" },
-        orderBy: { priority: "desc" },
-      },
-      resumes: {
-        include: {
-          versions: {
-            where: { isMain: true },
-            take: 1,
+  let dbUser;
+  try {
+    dbUser = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        suggestions: {
+          where: { status: "PENDING" },
+          orderBy: { priority: "desc" },
+        },
+        resumes: {
+          include: {
+            versions: {
+              where: { isMain: true },
+              take: 1,
+            },
           },
         },
-      },
-      githubData: true,
-    }
-  });
-
-
+        githubData: true,
+      }
+    });
+  } catch (error) {
+    logger.error("dashboard.db_lookup", error, { userId });
+    return (
+      <div className="min-h-screen bg-[var(--sclade-bg)] flex items-center justify-center p-6 text-center font-outfit">
+        <div className="max-w-md p-8 rounded-2xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] shadow-sm">
+          <h2 className="text-xl font-bold mb-2 text-[var(--sclade-text-primary)]">Something went wrong</h2>
+          <p className="text-sm text-[var(--sclade-text-secondary)] mb-6">
+            We couldn&apos;t load your dashboard data. Please refresh the page to try again.
+          </p>
+          <a
+            href="/dashboard"
+            className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-sm font-semibold transition-colors inline-block"
+          >
+            Refresh
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   if (!dbUser) {
     redirect("/login");
