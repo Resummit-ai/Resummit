@@ -505,13 +505,13 @@ export function EditorClient({
   const [jobTitle, setJobTitle] = useState("");
   const [theme, setTheme] = useState("light");
   const [leftWidth, setLeftWidth] = useState(440);
-  const isNarrowLeft = leftWidth < 430;
   const [rightWidth, setRightWidth] = useState(360);
   const [isLeftCollapsed, setIsLeftCollapsed] = useState(false);
   const [isRightCollapsed, setIsRightCollapsed] = useState(false);
   const [isDraggingLeft, setIsDraggingLeft] = useState(false);
   const [isDraggingRight, setIsDraggingRight] = useState(false);
   const [windowWidth, setWindowWidth] = useState(1200);
+  const isNarrowLeft = leftWidth < 430 || windowWidth < 768;
 
   const resizingLeftRef = useRef(false);
   const resizingRightRef = useRef(false);
@@ -2818,18 +2818,17 @@ export function EditorClient({
         {isLeftCollapsed && (
           <button
             onClick={() => setIsLeftCollapsed(false)}
-            className="fixed left-3 top-20 z-40 p-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-[#DADCE0] dark:border-neutral-800 shadow-md hover:bg-neutral-50 dark:hover:bg-neutral-800 text-[#1A73E8] flex items-center gap-1.5 text-xs font-semibold cursor-pointer animate-in fade-in"
+            className="fixed left-3 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-neutral-900 hover:bg-neutral-800 text-white shadow-2xl active:scale-95 transition-all flex items-center justify-center cursor-pointer group animate-in fade-in"
             title="Open Editor Panel"
           >
-            <PanelLeftOpen className="w-4 h-4" />
-            <span className="hidden sm:inline">Editor</span>
+            <PanelLeftOpen className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
           </button>
         )}
 
         {/* ── Left Editor Panel ── */}
         {!isLeftCollapsed && (
           <div
-            style={{ width: `${leftWidth}px` }}
+            style={{ width: windowWidth < 768 ? "100%" : `${leftWidth}px` }}
             className={`relative shrink-0 border-r border-[#DADCE0] dark:border-neutral-800 bg-white dark:bg-neutral-900 flex flex-col h-full overflow-hidden z-20 ${
               mobileTab !== "editor" ? "hidden md:flex" : "flex"
             }`}
@@ -2925,14 +2924,14 @@ export function EditorClient({
                   {saveStatus === "saving" ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
                   ) : (
-                    <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+                    <Save className="w-3.5 h-3.5 stroke-[2.2]" />
                   )}
-                  <span className={leftWidth < 360 ? "hidden" : "inline"}>Save</span>
+                  <span>Save</span>
                 </button>
 
                 <button
                   onClick={() => setIsLeftCollapsed(true)}
-                  className="p-1.5 rounded-lg border border-[#DADCE0] dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-500 hover:text-neutral-800 transition-all cursor-pointer max-md:hidden shrink-0"
+                  className="p-1.5 rounded-lg border border-[#DADCE0] dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200 transition-all cursor-pointer shrink-0"
                   title="Minimize editor panel"
                 >
                   <PanelLeftClose className="w-3.5 h-3.5" />
@@ -2941,14 +2940,16 @@ export function EditorClient({
             </div>
 
             {/* Section Tabs */}
-            <div className="flex items-center px-3 py-2 border-b border-[#DADCE0] dark:border-neutral-800 bg-white dark:bg-neutral-900 overflow-x-auto gap-1 shrink-0 custom-scrollbar">
+            <div className={`px-2.5 py-2 border-b border-[#DADCE0] dark:border-neutral-800 bg-white dark:bg-neutral-900 shrink-0 ${
+              isNarrowLeft ? "grid grid-cols-3 gap-1.5" : "grid grid-cols-6 gap-1"
+            }`}>
               {tabs.map((tab) => {
                 const isActive = activeTab === tab.id;
                 return (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id as EditorTab)}
-                    className={`flex flex-col items-center justify-center py-1.5 px-2.5 min-w-[52px] shrink-0 rounded-xl transition-all cursor-pointer ${
+                    className={`flex flex-col items-center justify-center py-2 px-1 rounded-xl transition-all cursor-pointer ${
                       isActive
                         ? "bg-[#E8F0FE] text-[#1A73E8] font-semibold border border-blue-200/80 shadow-xs dark:bg-blue-950/60 dark:border-blue-800/80 dark:text-blue-300"
                         : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800/60 border border-transparent"
@@ -2957,7 +2958,9 @@ export function EditorClient({
                     <span className={isActive ? "text-[#1A73E8] dark:text-blue-300" : "text-neutral-500 dark:text-neutral-400"}>
                       {tab.icon}
                     </span>
-                    <span className="text-[11px] mt-1 leading-none whitespace-nowrap">{tab.label}</span>
+                    <span className="text-[11px] mt-1 leading-none text-center font-medium truncate w-full">
+                      {tab.label}
+                    </span>
                   </button>
                 );
               })}
@@ -2984,18 +2987,20 @@ export function EditorClient({
         }`}>
           {/* Preview Toolbar */}
           <div className="py-2.5 px-6 flex items-center justify-between border-b border-[#DADCE0] dark:border-neutral-800 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md z-10 shrink-0">
-            {/* Left: Page navigation & Left sidebar toggle if collapsed */}
+            {/* Left: Page navigation & Left sidebar toggle */}
             <div className="flex items-center gap-2">
-              {isLeftCollapsed && (
-                <button
-                  onClick={() => setIsLeftCollapsed(false)}
-                  className="p-1.5 rounded-lg border border-[#DADCE0] dark:border-neutral-700 bg-white dark:bg-neutral-800 text-[#1A73E8] hover:bg-blue-50 transition-colors text-xs font-semibold flex items-center gap-1 cursor-pointer"
-                  title="Expand Editor Panel"
-                >
-                  <PanelLeftOpen className="w-3.5 h-3.5" />
-                  <span className="text-[11px]">Editor</span>
-                </button>
-              )}
+              <button
+                onClick={() => setIsLeftCollapsed(prev => !prev)}
+                className={`p-1.5 rounded-lg border transition-all cursor-pointer flex items-center gap-1.5 ${
+                  !isLeftCollapsed 
+                    ? "bg-blue-50 text-[#1A73E8] border-blue-200 dark:bg-blue-900/30 dark:border-blue-800" 
+                    : "bg-white text-neutral-600 border-[#DADCE0] dark:bg-neutral-800 dark:border-neutral-700 hover:text-neutral-900 dark:hover:text-white"
+                }`}
+                title={isLeftCollapsed ? "Open Editor Panel" : "Minimize Editor Panel"}
+              >
+                {isLeftCollapsed ? <PanelLeftOpen className="w-3.5 h-3.5" /> : <PanelLeftClose className="w-3.5 h-3.5" />}
+                <span className="text-[11px] font-semibold hidden sm:inline">Editor</span>
+              </button>
 
               <div className="flex items-center gap-1 bg-white dark:bg-neutral-800 px-2 py-1 rounded-lg border border-[#DADCE0] dark:border-neutral-700 text-xs text-neutral-600 dark:text-neutral-300">
                 <button
