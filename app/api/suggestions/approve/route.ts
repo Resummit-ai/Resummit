@@ -10,7 +10,7 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { id } = body;
+    const { id, confirmReplace } = body;
     
     const suggestion = await prisma.suggestion.findUnique({
       where: { id, userId }
@@ -63,9 +63,31 @@ export async function POST(req: Request) {
       if (!exists) {
         updatedProjects.unshift(projectToAdd);
       }
-    } else if (suggestion.type === "IMPROVE_PROJECT" && suggestion.entityId) {
+    } else if (suggestion.type === "IMPROVE_PROJECT") {
+      const existingProject = currentProjects.find((p: any) => 
+        (suggestion.entityId && p.id === suggestion.entityId) || 
+        p.title?.toLowerCase() === projectToAdd.title?.toLowerCase()
+      );
+
+      if (!confirmReplace) {
+        return NextResponse.json({
+          error: "CONFIRM_REPLACE",
+          current: existingProject || null,
+          proposed: projectToAdd,
+        }, { status: 409 });
+      }
+
+      if (existingProject) {
+        await prisma.suggestion.update({
+          where: { id },
+          data: {
+            currentData: typeof existingProject === 'string' ? existingProject : JSON.stringify(existingProject)
+          }
+        });
+      }
+
       updatedProjects = currentProjects.map((p: any) => 
-        p.id === suggestion.entityId 
+        (p.id === suggestion.entityId || (existingProject && p.id === existingProject.id))
           ? { ...p, ...projectToAdd, id: p.id }
           : p
       );

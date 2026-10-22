@@ -43,6 +43,11 @@ export function SmartUpdateCenter({
   const [scanning, setScanning] = useState(false);
   const [scanError, setScanError] = useState<string | null>(null);
   const [reviewing, setReviewing] = useState<Suggestion | null>(null);
+  const [conflictModal, setConflictModal] = useState<{
+    id: string;
+    current: any;
+    proposed: any;
+  } | null>(null);
   const [activeTab, setActiveTab] = useState<"all" | "projects" | "skills">("all");
 
   const isMounted = useRef(true);
@@ -200,16 +205,27 @@ export function SmartUpdateCenter({
     }
   };
 
-  const handleApprove = async (id: string, proposed: any) => {
+  const handleApprove = async (id: string, proposed: any, confirmReplace: boolean = false) => {
     try {
       const res = await fetch("/api/suggestions/approve", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, proposed }),
+        body: JSON.stringify({ id, proposed, confirmReplace }),
       });
       const data = await res.json();
       
+      if (res.status === 409 && data.error === "CONFIRM_REPLACE") {
+        setReviewing(null);
+        setConflictModal({
+          id,
+          current: data.current,
+          proposed: data.proposed,
+        });
+        return;
+      }
+
       if (data.success) {
+        setConflictModal(null);
         const currentReviewing = reviewing;
 
         if (isMounted.current) {
@@ -705,6 +721,88 @@ export function SmartUpdateCenter({
                     Discard
                   </button>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* 409 Conflict Modal: Keep Mine vs Replace */}
+      {conflictModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm">
+          <div className="bg-[var(--sclade-bg)] border border-[var(--sclade-card-border)] rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
+            <div className="p-8">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-base font-bold text-[var(--sclade-text-primary)] mb-1">Confirm Project Replacement</h3>
+                  <p className="text-xs text-[var(--sclade-text-secondary)]">This project already exists in your resume. Review both versions before replacing.</p>
+                </div>
+                <button 
+                  onClick={() => setConflictModal(null)}
+                  className="p-2 hover:bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] rounded-full transition-colors text-[var(--sclade-text-secondary)] cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Side by side comparison */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                {/* Your Version */}
+                <div className="p-5 rounded-2xl bg-amber-500/5 border border-amber-500/20 flex flex-col justify-between">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-amber-500 mb-2 block">Your Version</span>
+                    <h4 className="font-bold text-sm text-[var(--sclade-text-primary)] mb-1">{conflictModal.current?.title || conflictModal.current?.name || "Existing Project"}</h4>
+                    <p className="text-xs text-[var(--sclade-text-secondary)] mb-3">{conflictModal.current?.description || "No description"}</p>
+                    <div className="space-y-1.5">
+                      <p className="text-[9px] font-bold uppercase text-[var(--sclade-text-muted)]">Highlights</p>
+                      <ul className="list-disc pl-4 text-xs space-y-1 text-[var(--sclade-text-secondary)]">
+                        {((conflictModal.current?.highlights || conflictModal.current?.bullets) || []).map((h: string, i: number) => (
+                          <li key={i}>{h}</li>
+                        ))}
+                        {(!conflictModal.current?.highlights && !conflictModal.current?.bullets) && (
+                          <li className="italic text-[var(--sclade-text-muted)]">No highlights</li>
+                        )}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Suggested Version */}
+                <div className="p-5 rounded-2xl bg-blue-500/5 border border-blue-500/20 flex flex-col justify-between">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-blue-500 mb-2 block">Suggested Version</span>
+                    <h4 className="font-bold text-sm text-[var(--sclade-text-primary)] mb-1">{conflictModal.proposed?.title || conflictModal.proposed?.name || "Suggested Project"}</h4>
+                    <p className="text-xs text-[var(--sclade-text-secondary)] mb-3">{conflictModal.proposed?.description || "No description"}</p>
+                    <div className="space-y-1.5">
+                      <p className="text-[9px] font-bold uppercase text-[var(--sclade-text-muted)]">Highlights</p>
+                      <ul className="list-disc pl-4 text-xs space-y-1 text-[var(--sclade-text-secondary)]">
+                        {(conflictModal.proposed?.highlights || conflictModal.proposed?.bullets || []).map((h: string, i: number) => (
+                          <li key={i}>{h}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => {
+                    handleDiscard(conflictModal.id);
+                    setConflictModal(null);
+                  }}
+                  className="flex-1 py-3 px-4 bg-[var(--sclade-btn-secondary-bg)] hover:bg-neutral-200 dark:hover:bg-neutral-800 border border-[var(--sclade-card-border)] text-[var(--sclade-text-primary)] rounded-xl text-xs font-bold transition-all text-center cursor-pointer"
+                >
+                  Keep mine
+                </button>
+                <button
+                  onClick={() => {
+                    handleApprove(conflictModal.id, conflictModal.proposed, true);
+                  }}
+                  className="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold transition-all text-center shadow-md shadow-blue-500/20 cursor-pointer"
+                >
+                  Replace
+                </button>
               </div>
             </div>
           </div>
