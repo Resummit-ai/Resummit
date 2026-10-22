@@ -1,4 +1,5 @@
 import { callAI, safeParseJSON } from "../aiService";
+import { logger } from "./logger";
 
 export interface EngineeringSignals {
   stackConfidence: number;
@@ -13,8 +14,12 @@ export interface EngineeringSignals {
 export async function generateEngineeringSignals(
   repos: any[],
   targetRole: string
-): Promise<EngineeringSignals> {
+): Promise<EngineeringSignals | null> {
   const safeRepos = Array.isArray(repos) ? repos : [];
+  if (safeRepos.length === 0) {
+    return null;
+  }
+
   const repoSummary = safeRepos.slice(0, 10).map(r => ({
     name: r.name,
     description: r.description,
@@ -47,37 +52,23 @@ ${JSON.stringify(repoSummary, null, 2)}`;
   try {
     const raw = await callAI(prompt);
     parsed = safeParseJSON(raw);
-  } catch (err) {
-    console.warn("[AI] callAI failed inside generateEngineeringSignals. Falling back to deterministic signals.", err);
-    const allLanguages = Array.from(new Set(safeRepos.map(r => r.language).filter(Boolean))) as string[];
-    const primaryDomain = targetRole.includes("Frontend") 
-      ? "Frontend" 
-      : targetRole.includes("Backend") 
-        ? "Backend" 
-        : "Fullstack";
+  } catch (err: any) {
+    logger.warn("ai", "fallback_used", { fn: "generateEngineeringSignals", reason: err?.message || String(err) });
+    console.warn("[AI] callAI failed inside generateEngineeringSignals. Returning null.", err);
+    return null;
+  }
 
-    parsed = {
-      stackConfidence: 85,
-      topSkills: allLanguages.slice(0, 3).map((lang, idx) => ({
-        name: lang,
-        level: 90 - (idx * 10),
-        category: primaryDomain
-      })),
-      commitDensity: "High",
-      architectureInference: ["SPA", "REST APIs", "Modular Monolith"],
-      projectMaturity: 75,
-      recruiterReadability: 85,
-      strongestDomain: primaryDomain
-    };
+  if (typeof parsed?.stackConfidence !== "number") {
+    return null;
   }
 
   return {
-    stackConfidence: parsed.stackConfidence || 75,
-    topSkills: parsed.topSkills || [],
+    stackConfidence: parsed.stackConfidence,
+    topSkills: Array.isArray(parsed.topSkills) ? parsed.topSkills : [],
     commitDensity: parsed.commitDensity || "Moderate",
-    architectureInference: parsed.architectureInference || [],
-    projectMaturity: parsed.projectMaturity || 70,
-    recruiterReadability: parsed.recruiterReadability || 80,
+    architectureInference: Array.isArray(parsed.architectureInference) ? parsed.architectureInference : [],
+    projectMaturity: typeof parsed.projectMaturity === "number" ? parsed.projectMaturity : 0,
+    recruiterReadability: typeof parsed.recruiterReadability === "number" ? parsed.recruiterReadability : 0,
     strongestDomain: parsed.strongestDomain || "Fullstack",
   };
 }

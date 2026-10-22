@@ -133,9 +133,6 @@ export default async function DashboardPage() {
 
       <main className="relative z-10 w-full px-8 py-8 md:px-16 md:py-12 xl:py-16">
         <header className="mb-12">
-           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-500 text-[10px] uppercase font-bold tracking-widest mb-4">
-             AI Active • Claude-3.5
-           </div>
            <h1 className="text-4xl font-bold tracking-tight flex items-center gap-4">
              Welcome back, {dbUser.name?.split(' ')[0]}
            </h1>
@@ -156,7 +153,7 @@ export default async function DashboardPage() {
                />
 
                {/* Engineering DNA Core */}
-               {signals && (
+               {typeof signals?.stackConfidence === "number" ? (
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="glass-panel p-8 rounded-[2.5rem] bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] relative overflow-hidden group transition-colors duration-200">
                        <div className="flex items-center justify-between mb-8">
@@ -176,7 +173,7 @@ export default async function DashboardPage() {
                              <div className="w-full h-1.5 bg-black/5 dark:bg-white/5 rounded-full overflow-hidden">
                                 <div 
                                   className="h-full bg-violet-500 rounded-full transition-all duration-1000" 
-                                  style={{ width: `${signals.stackConfidence || 0}%` }} 
+                                  style={{ width: `${Math.min(100, Math.max(0, signals.stackConfidence))}%` }} 
                                 />
                              </div>
                           </div>
@@ -203,7 +200,9 @@ export default async function DashboardPage() {
                        <div className="space-y-6">
                           <div className="flex items-center justify-between">
                              <div className="flex flex-col">
-                                <span className="text-2xl font-bold">{signals.recruiterReadability || 0}%</span>
+                                <span className="text-2xl font-bold">
+                                  {typeof signals.recruiterReadability === "number" ? `${signals.recruiterReadability}%` : "—"}
+                                </span>
                                 <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--sclade-text-muted)]">Scan Readability</span>
                              </div>
                              <div className="w-12 h-12 rounded-full border-4 border-emerald-500/20 border-t-emerald-500 flex items-center justify-center">
@@ -219,6 +218,24 @@ export default async function DashboardPage() {
                           </div>
                        </div>
                     </div>
+                 </div>
+               ) : (
+                 <div className="glass-panel p-6 rounded-3xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] flex items-center justify-between transition-colors duration-200">
+                    <div className="flex items-center gap-4">
+                       <div className="w-10 h-10 bg-violet-500/10 rounded-xl flex items-center justify-center text-violet-400">
+                          <Cpu className="w-5 h-5" />
+                       </div>
+                       <div>
+                          <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--sclade-text-primary)]">Engineering Insights</h4>
+                          <p className="text-xs text-[var(--sclade-text-secondary)]">Run a sync to generate insights</p>
+                       </div>
+                    </div>
+                    <Link
+                      href="/dashboard/syncing"
+                      className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold transition-all shadow-sm"
+                    >
+                      Run Sync
+                    </Link>
                  </div>
                )}
 

@@ -2,6 +2,7 @@ import { prisma } from "./server/prisma";
 import { fetchUserRepos, fetchRepoReadme, GithubRepo, SKILL_MAP, SKILL_CATEGORIES, isJunkRepo } from "./github";
 import { generateBatchBullets, factualProject } from "./aiService";
 import { logger } from "./server/logger";
+import { generateEngineeringSignals } from "./server/githubIntelligence";
 
 export interface SuggestionScoring {
   stars: number;
@@ -398,19 +399,36 @@ export async function runSmartSync(userId: string, accessToken: string, email?: 
 
   // 6. Update GitHub Data and Sync Time
   // Store full repo objects including owner info for future README fetching
+  let freshSignals = null;
+  try {
+    const role = user.targetRole || "Software Engineer";
+    freshSignals = await generateEngineeringSignals(repos, role);
+  } catch (sigErr) {
+    logger.warn("sync", "signals_failed", { userId: user.id, error: String(sigErr) });
+  }
+
+  const updateData: any = {
+    repositories: repos.slice(0, 50) as any, // Prisma Json field
+    lastSyncedAt: new Date()
+  };
+  if (freshSignals !== null) {
+    updateData.signals = freshSignals as any;
+  }
+
+  const createData: any = {
+    userId: user.id,
+    repositories: repos.slice(0, 50) as any,
+    lastSyncedAt: new Date()
+  };
+  if (freshSignals !== null) {
+    createData.signals = freshSignals as any;
+  }
+
   await prisma.gitHubData.upsert({
     where: { userId: user.id },
-    update: { 
-      repositories: repos.slice(0, 50) as any, // Prisma Json field
-      lastSyncedAt: new Date() 
-    },
-    create: {
-      userId: user.id,
-      repositories: repos.slice(0, 50) as any,
-      lastSyncedAt: new Date()
-    }
+    update: updateData,
+    create: createData
   });
-
 
   return { success: true, count: topSuggestions.length };
 }
