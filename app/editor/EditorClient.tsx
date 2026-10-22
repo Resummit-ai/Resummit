@@ -2,10 +2,11 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { Download, GripVertical, Plus, Trash2, RotateCcw, Link as LinkIcon, CheckCircle2, Activity, Eye, Sparkles, Target, X, Loader2, User, Briefcase, Code2, GraduationCap, Zap, AlertTriangle, AlertCircle, ChevronDown, ChevronUp, Save, Wifi, WifiOff, ArrowUp, ArrowDown, ExternalLink, Rocket, Cpu, Code, Terminal, GitBranch, Lock, Sun, Moon, RefreshCw, History, FileText } from "lucide-react";
+import { Download, GripVertical, Plus, Trash2, RotateCcw, Link as LinkIcon, CheckCircle2, Activity, Eye, Sparkles, Target, X, Loader2, User, Briefcase, Code2, GraduationCap, Zap, AlertTriangle, AlertCircle, ChevronDown, ChevronUp, Save, Wifi, WifiOff, ArrowUp, ArrowDown, ExternalLink, Rocket, Cpu, Code, Terminal, GitBranch, Lock, Sun, Moon, RefreshCw, History, FileText, ArrowLeft, ChevronRight, Maximize2, Minimize2 } from "lucide-react";
 import type { CVData, ProjectData, CVSkills, CVExperience, CVEducation, SaveStatus, EditorTab } from "@/lib/types";
 import { ResumePreview } from "@/components/editor/ResumePreview";
 import { normalizeAndDedupeSkills } from "@/lib/skills-data";
+import { DashboardControls } from "@/components/dashboard/DashboardControls";
 
 // ─────────────────────────────────────────────
 // Sub-components
@@ -18,6 +19,7 @@ function InlineEdit({
   className = "",
   multiline = false,
   rows = 3,
+  icon,
 }: {
   value: string;
   onChange: (v: string) => void;
@@ -25,6 +27,7 @@ function InlineEdit({
   className?: string;
   multiline?: boolean;
   rows?: number;
+  icon?: React.ReactNode;
 }) {
   if (multiline) {
     return (
@@ -33,18 +36,25 @@ function InlineEdit({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         rows={rows}
-        className={`w-full bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] rounded-lg px-3.5 py-2.5 text-[13px] text-[var(--sclade-text-primary)] placeholder:text-[var(--sclade-text-muted)] outline-none focus:border-[var(--sclade-primary)] focus:ring-2 focus:ring-[var(--sclade-primary)]/10 transition-all resize-none leading-relaxed font-medium ${className}`}
+        className={`w-full bg-white dark:bg-neutral-800 border border-[#DADCE0] dark:border-neutral-700 rounded-lg px-3.5 py-2.5 text-[13px] text-[#202124] dark:text-neutral-100 placeholder:text-neutral-400 outline-none focus:border-[#1A73E8] focus:ring-2 focus:ring-[#1A73E8]/15 transition-all resize-none leading-relaxed font-normal ${className}`}
       />
     );
   }
   return (
-    <input
-      type="text"
-      value={value || ""}
-      onChange={(e) => onChange(e.target.value)}
-      placeholder={placeholder}
-      className={`w-full bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] rounded-lg px-3.5 py-2 text-[13px] text-[var(--sclade-text-primary)] placeholder:text-[var(--sclade-text-muted)] outline-none focus:border-[var(--sclade-primary)] focus:ring-2 focus:ring-[var(--sclade-primary)]/10 transition-all font-medium ${className}`}
-    />
+    <div className="relative flex items-center w-full">
+      {icon && (
+        <div className="absolute left-3 flex items-center pointer-events-none text-neutral-500 z-10">
+          {icon}
+        </div>
+      )}
+      <input
+        type="text"
+        value={value || ""}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className={`w-full bg-white dark:bg-neutral-800 border border-[#DADCE0] dark:border-neutral-700 rounded-lg ${icon ? "pl-9" : "px-3.5"} py-2 text-[13px] text-[#202124] dark:text-neutral-100 placeholder:text-neutral-400 outline-none focus:border-[#1A73E8] focus:ring-2 focus:ring-[#1A73E8]/15 transition-all font-normal ${className}`}
+      />
+    </div>
   );
 }
 
@@ -90,10 +100,11 @@ function SkillTag({ label, onRemove }: { label: string; onRemove: () => void }) 
   );
 }
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
+function SectionLabel({ children, required }: { children: React.ReactNode; required?: boolean }) {
   return (
-    <label className="block text-[10px] font-bold uppercase tracking-wider text-[var(--sclade-text-secondary)] mb-1.5 ml-0.5">
+    <label className="block text-[12px] font-semibold text-[#5F6368] dark:text-neutral-300 mb-1.5 ml-0.5">
       {children}
+      {required && <span className="text-[#1A73E8] ml-0.5 font-bold">*</span>}
     </label>
   );
 }
@@ -404,7 +415,8 @@ export function EditorClient({
   initialSuggestions = [],
   initialJobTarget = null,
   initialVersionsList = [],
-  initialTab = "profile"
+  initialTab = "profile",
+  user,
 }: {
   resumeId: string;
   versionId: string;
@@ -415,6 +427,11 @@ export function EditorClient({
   initialJobTarget?: any;
   initialVersionsList?: any[];
   initialTab?: EditorTab;
+  user?: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+  };
 }) {
   const [currentVersionId, setCurrentVersionId] = useState<string>(versionId);
   const [activeJobTarget, setActiveJobTarget] = useState<any>(initialJobTarget);
@@ -427,6 +444,16 @@ export function EditorClient({
   const [tailorJdText, setTailorJdText] = useState("");
   const [tailorBaseOption, setTailorBaseOption] = useState<"clone" | "scratch">("clone");
   const [isCreatingTailoredVersion, setIsCreatingTailoredVersion] = useState(false);
+
+  // Layout states for redesign
+  const [zoom, setZoom] = useState<number>(100);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(2);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  const [personalInfoOpen, setPersonalInfoOpen] = useState<boolean>(true);
+  const [summaryOpen, setSummaryOpen] = useState<boolean>(true);
+  const [lastSavedTime, setLastSavedTime] = useState<Date | null>(new Date());
+  const [mobileTab, setMobileTab] = useState<"editor" | "preview" | "versions">("editor");
   // Map ResumeVersion fields to local state
   const [personalInfo, setPersonalInfo] = useState<any>(
     typeof initialData.personalInfo === 'string' 
@@ -1421,82 +1448,156 @@ export function EditorClient({
   // Tab: Profile
   // ─────────────────────────────────────────────
   const renderProfile = () => (
-    <div className="space-y-6">
-      <div className="grid grid-cols-2 gap-4">
-        <div className="col-span-1">
-          <SectionLabel>Full Name</SectionLabel>
-          <InlineEdit value={cv.name} onChange={(v) => updatePersonalInfo("name", v)} placeholder="Full Name" />
-        </div>
-        <div className="col-span-1">
-          <SectionLabel>Target Job Title</SectionLabel>
-          <InlineEdit
-            value={cv.targetRole}
-            onChange={(v) => updatePersonalInfo("targetRole", v)}
-            placeholder="e.g. Senior Backend Engineer"
-          />
-        </div>
-        <div className="col-span-2 grid grid-cols-2 gap-4">
-          <div>
-            <SectionLabel>Email Address</SectionLabel>
-            <InlineEdit value={cv.email} onChange={(v) => updatePersonalInfo("email", v)} placeholder="professional@email.com" />
+    <div className="space-y-4">
+      {/* Accordion 1: Personal Information */}
+      <div className="bg-white dark:bg-neutral-900 border border-[#DADCE0] dark:border-neutral-800 rounded-xl overflow-hidden shadow-xs">
+        <button
+          type="button"
+          onClick={() => setPersonalInfoOpen((prev) => !prev)}
+          className="w-full flex items-center justify-between p-4 bg-white dark:bg-neutral-900 hover:bg-neutral-50/50 dark:hover:bg-neutral-800/50 transition-colors text-left cursor-pointer"
+        >
+          <div className="flex items-center gap-2.5">
+            <User className="w-4 h-4 text-[#1A73E8]" />
+            <span className="text-[13px] font-bold text-[#202124] dark:text-neutral-100 font-outfit">
+              Personal Information
+            </span>
           </div>
-          <div>
-            <SectionLabel>Phone Number</SectionLabel>
-            <InlineEdit value={cv.phone} onChange={(v) => updatePersonalInfo("phone", v)} placeholder="+1 (555) 000 000" />
+          {personalInfoOpen ? (
+            <ChevronUp className="w-4 h-4 text-neutral-400" />
+          ) : (
+            <ChevronDown className="w-4 h-4 text-neutral-400" />
+          )}
+        </button>
+
+        {personalInfoOpen && (
+          <div className="p-4 pt-1 space-y-4 border-t border-neutral-100 dark:border-neutral-800">
+            <div className="grid grid-cols-2 gap-3.5">
+              <div className="col-span-1">
+                <SectionLabel required>Full Name</SectionLabel>
+                <InlineEdit
+                  value={cv.name}
+                  onChange={(v) => updatePersonalInfo("name", v)}
+                  placeholder="e.g. Adel Muhammed"
+                />
+              </div>
+              <div className="col-span-1">
+                <SectionLabel required>Target Job Title</SectionLabel>
+                <InlineEdit
+                  value={cv.targetRole}
+                  onChange={(v) => updatePersonalInfo("targetRole", v)}
+                  placeholder="e.g. Software Engineer"
+                />
+              </div>
+              <div className="col-span-1">
+                <SectionLabel required>Email Address</SectionLabel>
+                <InlineEdit
+                  value={cv.email}
+                  onChange={(v) => updatePersonalInfo("email", v)}
+                  placeholder="professional@email.com"
+                />
+              </div>
+              <div className="col-span-1">
+                <SectionLabel required>Phone Number</SectionLabel>
+                <InlineEdit
+                  value={cv.phone}
+                  onChange={(v) => updatePersonalInfo("phone", v)}
+                  placeholder="+1 (555) 000 000"
+                />
+              </div>
+              <div className="col-span-2">
+                <SectionLabel required>Location</SectionLabel>
+                <InlineEdit
+                  value={cv.location}
+                  onChange={(v) => updatePersonalInfo("location", v)}
+                  placeholder="e.g. San Francisco, CA"
+                />
+              </div>
+              <div className="col-span-1">
+                <SectionLabel>GitHub Link</SectionLabel>
+                <InlineEdit
+                  value={cv.github}
+                  onChange={(v) => updatePersonalInfo("github", v)}
+                  placeholder="github.com/handle"
+                  icon={
+                    <svg className="w-4 h-4 fill-current text-neutral-800 dark:text-neutral-200" viewBox="0 0 24 24">
+                      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                  }
+                />
+              </div>
+              <div className="col-span-1">
+                <SectionLabel>LinkedIn Link</SectionLabel>
+                <InlineEdit
+                  value={cv.linkedin}
+                  onChange={(v) => updatePersonalInfo("linkedin", v)}
+                  placeholder="linkedin.com/in/handle"
+                  icon={
+                    <svg className="w-4 h-4 fill-[#0A66C2]" viewBox="0 0 24 24">
+                      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+                    </svg>
+                  }
+                />
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="col-span-2">
-          <SectionLabel>Location</SectionLabel>
-          <InlineEdit value={cv.location} onChange={(v) => updatePersonalInfo("location", v)} placeholder="San Francisco, CA" />
-        </div>
-        <div className="col-span-1">
-          <SectionLabel>GitHub Link</SectionLabel>
-          <InlineEdit value={cv.github} onChange={(v) => updatePersonalInfo("github", v)} placeholder="github.com/handle" />
-        </div>
-        <div className="col-span-1">
-          <SectionLabel>LinkedIn Link</SectionLabel>
-          <InlineEdit
-            value={cv.linkedin}
-            onChange={(v) => updatePersonalInfo("linkedin", v)}
-            placeholder="linkedin.com/in/handle"
-          />
-        </div>
+        )}
       </div>
 
-      <div className="pt-4 border-t border-white/5">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <SectionLabel>Professional Summary</SectionLabel>
-            {((cv as any).needsReview || !cv.summary?.trim()) && (
-              <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 bg-amber-500/10 text-amber-500 rounded border border-amber-500/20">
-                Needs your input
-              </span>
-            )}
+      {/* Accordion 2: Professional Summary */}
+      <div className="bg-white dark:bg-neutral-900 border border-[#DADCE0] dark:border-neutral-800 rounded-xl overflow-hidden shadow-xs">
+        <button
+          type="button"
+          onClick={() => setSummaryOpen((prev) => !prev)}
+          className="w-full flex items-center justify-between p-4 bg-white dark:bg-neutral-900 hover:bg-neutral-50/50 dark:hover:bg-neutral-800/50 transition-colors text-left cursor-pointer"
+        >
+          <div className="flex items-center gap-2.5">
+            <FileText className="w-4 h-4 text-[#1A73E8]" />
+            <span className="text-[13px] font-bold text-[#202124] dark:text-neutral-100 font-outfit">
+              Professional Summary
+            </span>
           </div>
-          <button
-            onClick={handleRegenerateSummary}
-            disabled={regeneratingSummary}
-            className="flex items-center gap-2 group text-[10px] font-black uppercase tracking-widest text-blue-400 hover:text-blue-300 disabled:opacity-50 transition-all bg-blue-500/5 hover:bg-blue-500/10 px-3 py-1.5 rounded-full border border-blue-500/10"
-          >
-            {regeneratingSummary ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-            ) : (
-              <Sparkles className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
-            )}
-            {regeneratingSummary ? "Analyzing Content" : "✦ AI Improve"}
-          </button>
-        </div>
-        <InlineEdit
-          value={cv.summary}
-          onChange={(v) => setSummary(v)}
-          placeholder="Two sentences of high-impact technical positioning."
-          multiline
-          rows={5}
-        />
-        <div className="mt-3 flex items-start gap-2 px-3 py-2 bg-amber-500/10 dark:bg-yellow-500/5 border border-amber-500/20 dark:border-yellow-500/10 rounded-xl">
-           <Zap className="w-3 h-3 text-amber-600 dark:text-yellow-500 mt-0.5 shrink-0" />
-           <p className="text-[10px] text-amber-800/80 dark:text-yellow-200/60 leading-relaxed font-medium">Recruiters scan this for 7 seconds. Aim for exactly two high-density sentences.</p>
-        </div>
+          {summaryOpen ? (
+            <ChevronUp className="w-4 h-4 text-neutral-400" />
+          ) : (
+            <ChevronDown className="w-4 h-4 text-neutral-400" />
+          )}
+        </button>
+
+        {summaryOpen && (
+          <div className="p-4 pt-1 space-y-3 border-t border-neutral-100 dark:border-neutral-800">
+            <div className="flex items-center justify-between">
+              <SectionLabel>Summary</SectionLabel>
+              <button
+                type="button"
+                onClick={handleRegenerateSummary}
+                disabled={regeneratingSummary}
+                className="flex items-center gap-1.5 text-[11px] font-semibold text-[#1A73E8] hover:text-[#1557B0] disabled:opacity-50 transition-colors cursor-pointer"
+              >
+                {regeneratingSummary ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <Sparkles className="w-3.5 h-3.5" />
+                )}
+                <span>AI Improve</span>
+              </button>
+            </div>
+            <InlineEdit
+              value={cv.summary}
+              onChange={(v) => setSummary(v)}
+              placeholder="Software Engineer specializing in scalable web services..."
+              multiline
+              rows={5}
+            />
+            <div className="flex items-center justify-between text-[11px] text-neutral-400 pt-1">
+              <span className="text-[10px] text-neutral-500">
+                Aim for 2-3 concise, high-impact technical sentences.
+              </span>
+              <span className="font-mono text-neutral-500 font-medium">
+                {summary.length}/500
+              </span>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -2594,374 +2695,495 @@ export function EditorClient({
   // Render
   // ─────────────────────────────────────────────
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-[var(--sclade-bg)] text-[var(--sclade-text-primary)] overflow-hidden font-inter selection:bg-blue-500/30 transition-colors duration-200">
-      {/* Dragging Global Overlay */}
-      {isDragging && (
-        <div className="fixed inset-0 z-50 cursor-col-resize select-none" />
-      )}
+    <div className="flex flex-col h-screen bg-[#F5F6F8] dark:bg-neutral-950 text-[#202124] dark:text-neutral-100 overflow-hidden font-sans selection:bg-blue-500/20">
+      {/* ── Top Application Header ── */}
+      <header className="h-16 shrink-0 bg-white dark:bg-neutral-900 border-b border-[#DADCE0] dark:border-neutral-800 px-6 flex items-center justify-between z-30">
+        <div className="flex items-center gap-4">
+          <Link href="/dashboard" className="flex items-center gap-3 group">
+            <svg viewBox="0 0 32 32" className="w-7 h-7" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7 6C7 4.34315 8.34315 3 10 3H19L25 9V26C25 27.6569 23.6569 29 22 29H10C8.34315 29 7 27.6569 7 26V6Z" fill="#1A73E8" />
+              <path d="M19 3V9H25L19 3Z" fill="#1557B0" opacity="0.8" />
+              <path d="M11 13H17M11 17H21M11 21H18M11 25H20" stroke="white" strokeWidth="2" strokeLinecap="round" />
+              <path d="M20 8.5L25 3.5" stroke="#1A73E8" strokeWidth="2" strokeLinecap="round" />
+              <path d="M25 3.5L27 6.5L23.5 5.5Z" fill="#1A73E8" />
+            </svg>
+            <span className="font-extrabold text-base tracking-tight text-[#202124] dark:text-white font-outfit">
+              RESUMMIT
+            </span>
+          </Link>
 
+          <div className="h-5 w-px bg-[#DADCE0] dark:bg-neutral-800 mx-1 hidden sm:block" />
 
-
-      {/* ── Left Sidebar Header ── */}
-      <div 
-        style={{ width: `${sidebarWidth}px` }}
-        className="max-md:!w-full h-[50vh] md:h-full flex-shrink-0 flex flex-col border-r border-[var(--sclade-popover-border)] bg-[var(--sclade-popover-bg)] shadow-[10px_0_40px_rgba(0,0,0,0.4)] z-20 transition-colors duration-200 relative group/sidebar"
-      >
-        {/* Resize Handle */}
-        <div
-          onMouseDown={startResizing}
-          className={`absolute top-0 -right-1.5 w-3 h-full cursor-col-resize z-30 group max-md:hidden transition-colors ${
-            isDragging ? "bg-blue-500/10" : "hover:bg-blue-500/5 active:bg-blue-500/10"
-          }`}
-          title="Drag to resize sidebar"
-        >
-          <div className={`absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-[2px] rounded-full transition-all duration-150 ${
-            isDragging 
-              ? "bg-blue-500 h-20 shadow-[0_0_8px_rgba(59,130,246,0.6)]" 
-              : "bg-neutral-600/30 group-hover:bg-blue-500/60 h-8 group-hover:h-16"
-          }`} />
-        </div>
-        {/* Superior Header */}
-        <header className={`py-5 flex items-center justify-between border-b border-[var(--sclade-popover-border)] relative bg-[var(--sclade-popover-bg)] transition-all duration-200 ${isCompact ? "px-3" : "px-6"}`}>
-          <div className="absolute inset-0 bg-blue-600/5 blur-[80px] pointer-events-none" />
-          <div className={`flex items-center relative transition-all duration-200 ${isCompact ? "gap-2" : "gap-3.5"}`}>
-            {/* Versions Sidebar Toggle Button */}
-            <button
-              onClick={() => setShowVersionsSidebar(prev => !prev)}
-              className="flex items-center justify-center w-8 h-8 rounded-xl bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-popover-border)] text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-[var(--sclade-input-bg)] active:scale-95 transition-all cursor-pointer"
-              title={showVersionsSidebar ? "Hide Versions History" : "Show Versions History"}
-            >
-              <History className={`w-3.5 h-3.5 transition-transform duration-300 ${showVersionsSidebar ? "text-blue-500 scale-105" : ""}`} />
-            </button>
+          <div className="flex items-center gap-2">
             <Link
               href="/dashboard"
-              className={`logo origin-left cursor-pointer hover:opacity-90 transition-all duration-200 ${isCompact ? "scale-[0.7] !gap-1.5" : "scale-[0.8] !gap-3"}`}
+              className="flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors"
             >
-              <svg viewBox="0 0 32 32" className="logo-icon-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7 6C7 4.34315 8.34315 3 10 3H19L25 9V26C25 27.6569 23.6569 29 22 29H10C8.34315 29 7 27.6569 7 26V6Z" className="logo-doc-body" />
-                <path d="M19 3V9H25L19 3Z" className="logo-doc-fold" />
-                <path d="M11 13H17M11 17H21M11 21H18M11 25H20" className="logo-doc-lines" strokeWidth="2" strokeLinecap="round" />
-                <path d="M20 8.5L25 3.5" className="logo-flag-pole" strokeWidth="2" strokeLinecap="round" />
-                <path d="M25 3.5L27 6.5L23.5 5.5Z" className="logo-flag-banner" />
-              </svg>
-              <div className="logo-text-group">
-                <div className="logo-wordmark flex items-center font-outfit">
-                  RESUMMIT
-                  <span className="text-[9px] font-black uppercase bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-1.5 py-0.5 rounded-md ml-1.5 shadow-[0_2px_8px_rgba(37,99,235,0.3)] tracking-wider normal-case h-fit">
-                    AI
-                  </span>
-                </div>
-                <div className={`logo-tagline font-mono ${isCompact ? "hidden" : "block"}`}>YOUR COMMITS. YOUR CAREER.</div>
-              </div>
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span className="font-bold text-sm text-[#202124] dark:text-white font-outfit">Editor</span>
             </Link>
+            <span className="text-xs text-neutral-400 hidden md:inline ml-2">
+              Your career. Your control.
+            </span>
           </div>
-          <div className={`flex items-center relative transition-all duration-200 ${isCompact ? "gap-1.5" : "gap-2.5"}`}>
-            <button
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="flex items-center justify-center w-8 h-8 rounded-xl bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-popover-border)] text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-[var(--sclade-input-bg)] active:scale-95 transition-all cursor-pointer"
-              title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            >
-              {theme === "dark" ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
-            </button>
-            <SaveIndicator />
-          </div>
-        </header>
-
-        {/* CV Quality Warnings */}
-        <CvWarningBanner />
-
-        {/* Global Action Bar */}
-        <div className="px-6 py-4 border-b border-[var(--sclade-popover-border)] flex flex-col gap-4 bg-[var(--sclade-glass-tint)]">
-            <div className="flex items-center justify-between">
-               {atsData && !isScoring ? (
-                 <div className="flex items-center gap-2">
-                   <button
-                     onClick={() => setAtsPanelOpen(true)}
-                     className={`px-3 py-1.5 rounded-xl border transition-all hover:scale-105 active:scale-95 flex items-center gap-2 text-[9px] font-black uppercase tracking-widest ${
-                       atsData.score >= 70
-                         ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.1)]"
-                         : "bg-amber-500/10 text-amber-400 border-amber-500/20 shadow-[0_0_20px_rgba(245,158,11,0.1)]"
-                     }`}
-                   >
-                     <Target className="w-3 h-3" />
-                     {atsData.score} Score
-                   </button>
-                   <button
-                     onClick={loadATS}
-                     title="Recalculate ATS score"
-                     className="p-1.5 rounded-xl bg-white/5 border border-white/5 text-neutral-400 hover:text-white transition-all hover:scale-105 active:scale-95 cursor-pointer"
-                   >
-                     <RefreshCw className="w-3 h-3" />
-                   </button>
-                 </div>
-               ) : atsError && !isScoring ? (
-                 <div className="flex items-center gap-2">
-                   <button
-                     onClick={loadATS}
-                     className="px-3 py-1.5 rounded-xl bg-red-500/10 text-red-400 border border-red-500/20 hover:scale-105 active:scale-95 flex items-center gap-2 text-[9px] font-black uppercase tracking-widest transition-all"
-                   >
-                     <AlertTriangle className="w-3 h-3" />
-                     Retry Scoring
-                   </button>
-                   <span className="text-[10px] text-red-400/80 font-medium truncate max-w-[120px] ml-1" title={atsError}>
-                     {atsError}
-                   </span>
-                 </div>
-               ) : (
-                 <div className="px-3 py-1.5 rounded-xl bg-white/5 border border-white/5 text-neutral-400 text-[9px] font-black uppercase animate-pulse flex items-center gap-2">
-                   <Loader2 className="w-3 h-3 animate-spin" /> Scoring...
-                 </div>
-               )}
-
-               <button
-                 onClick={handleExportPDF}
-                 disabled={isExporting}
-                 className="flex items-center gap-2 bg-[var(--sclade-btn-secondary-bg)] text-[var(--sclade-btn-secondary-text)] hover:opacity-90 transition-all px-4 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest shadow-lg border border-[var(--sclade-popover-border)] disabled:opacity-50"
-               >
-                 {isExporting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Download className="w-3 h-3" />}
-                 Export
-               </button>
-            </div>
-
-            <div className="flex bg-[var(--sclade-input-bg)] p-1 rounded-xl border border-[var(--sclade-input-border)] relative overflow-hidden h-10">
-              <div 
-                className={`absolute top-1 bottom-1 transition-all duration-500 ease-out rounded-lg ${
-                  mode === "non-specialized" ? "left-1 w-[49%] bg-neutral-200 dark:bg-white shadow-sm" : "left-[50%] w-[49%] bg-blue-600"
-                }`}
-              />
-              <button
-                onClick={() => setMode("non-specialized")}
-                className={`relative z-10 flex-1 py-1 text-[9px] font-black uppercase tracking-widest transition-all duration-500 ${
-                  mode === "non-specialized" ? "text-neutral-900 dark:text-black font-extrabold" : "text-[var(--sclade-text-muted)] hover:text-[var(--sclade-text-secondary)]"
-                }`}
-              >
-                Non-Specialized
-              </button>
-              <button
-                onClick={() => setShowUpgradeModal(true)}
-                className="relative z-10 flex-1 py-1 text-[9px] font-black uppercase tracking-widest transition-all duration-500 text-[var(--sclade-text-muted)] hover:text-[var(--sclade-text-secondary)] flex items-center justify-center gap-1.5 cursor-pointer"
-              >
-                <span>Specialized</span>
-                <Lock className="w-2.5 h-2.5 text-[var(--sclade-text-muted)] shrink-0" />
-              </button>
-            </div>
         </div>
 
-        <div className="flex bg-[var(--sclade-nav-bg)] px-2 py-2 gap-1 border-b border-[var(--sclade-popover-border)] transition-colors duration-200">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id as EditorTab)}
-              className={`flex-1 flex flex-col items-center justify-center gap-1.5 py-3 text-[8px] font-black uppercase tracking-widest transition-all rounded-xl border ${
-                activeTab === tab.id
-                  ? "bg-blue-500/10 border-blue-500/30 text-blue-600 dark:text-blue-400"
-                  : "bg-transparent border-transparent text-[var(--sclade-text-muted)] hover:text-[var(--sclade-text-secondary)]"
-              }`}
-            >
-              {tab.icon}
-              <span className="mt-0.5">{tab.label}</span>
-            </button>
-          ))}
+        <div className="flex items-center gap-3">
+          <DashboardControls user={user || { name: personalInfo.name || "User", email: personalInfo.email, image: undefined }} />
         </div>
+      </header>
 
-        {/* Tab Context Window */}
-        <div className="flex-1 overflow-y-auto px-6 py-6 pb-32 custom-scrollbar">
-          {activeTab === "profile" && renderProfile()}
-          {activeTab === "skills" && renderSkills()}
-          {activeTab === "experience" && renderExperience()}
-          {activeTab === "projects" && renderProjects()}
-          {activeTab === "education" && renderEducation()}
-          {activeTab === "tailor" && renderTailor()}
-        </div>
+      {/* Mobile Switcher (visible on mobile only) */}
+      <div className="md:hidden flex items-center justify-around border-b border-[#DADCE0] dark:border-neutral-800 bg-white dark:bg-neutral-900 px-4 py-2 shrink-0">
+        <button
+          onClick={() => setMobileTab("editor")}
+          className={`text-xs font-semibold px-3 py-1.5 rounded-lg ${
+            mobileTab === "editor" ? "bg-[#E8F0FE] text-[#1A73E8]" : "text-neutral-600"
+          }`}
+        >
+          Editor
+        </button>
+        <button
+          onClick={() => setMobileTab("preview")}
+          className={`text-xs font-semibold px-3 py-1.5 rounded-lg ${
+            mobileTab === "preview" ? "bg-[#E8F0FE] text-[#1A73E8]" : "text-neutral-600"
+          }`}
+        >
+          Preview
+        </button>
+        <button
+          onClick={() => setMobileTab("versions")}
+          className={`text-xs font-semibold px-3 py-1.5 rounded-lg ${
+            mobileTab === "versions" ? "bg-[#E8F0FE] text-[#1A73E8]" : "text-neutral-600"
+          }`}
+        >
+          Versions
+        </button>
       </div>
 
-      {/* ── Right Panel: Precision CV Preview ── */}
-      <div className="flex-1 bg-[var(--sclade-bg)] border-t md:border-t-0 md:border-l border-[var(--sclade-popover-border)] overflow-y-auto flex px-6 md:px-12 py-12 md:py-16 justify-center items-start custom-scrollbar transition-colors duration-200">
-        <div className="relative group">
-          <div className="absolute inset-0 bg-blue-600/5 blur-[120px] -z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
-          <ResumePreview 
-            data={cv} 
-            projects={projects} 
-            template="formal"
-            mode={mode}
-            generatingStates={{
-              summary: regeneratingSummary,
-              skills: suggestingSkills,
-              experienceIndex: generatingExpBullets,
-              projectIndex: generatingProjectFromReadme,
-              rewritingBullet: rewritingBullet,
-              isTailoring: isTailoring,
-            }}
-            suggestions={{
-              summary: suggestedSummary,
-              projectBullets: suggestedProjectBullets,
-            }}
-            onAcceptSuggestion={handleAcceptSuggestion}
-            onDiscardSuggestion={handleDiscardSuggestion}
-            onRevertField={(field, value, index, bulletIndex) => {
-              if (field === "summary") {
-                setSummary(value);
-              } else if (field === "skills") {
-                setSkills(value);
-              } else if (field === "experience") {
-                const nu = [...experience];
-                nu[index!] = value;
-                setExperience(nu);
-              } else if (field === "projects") {
-                const nu = [...projects];
-                nu[index!] = value;
-                setProjects(nu);
-              } else if (field === "project-bullet") {
-                const nu = [...projects];
-                const highlights = [...nu[index!].highlights];
-                highlights[bulletIndex!] = value;
-                nu[index!] = { ...nu[index!], highlights };
-                setProjects(nu);
-              } else if (field === "education") {
-                const nu = [...education];
-                nu[index!] = value;
-                setEducation(nu);
-              } else if (field === "achievements") {
-                const nu = [...achievements];
-                nu[index!] = value;
-                setAchievements(nu);
-              }
-            }}
-          />
-        </div>
-      </div>
-
-      {/* ── ChatGPT-Style Version History Sidebar (Right side aligned with border-l) ── */}
-      {showVersionsSidebar && (
-        <>
-          {/* Mobile Backdrop Overlay */}
-          <div 
-            onClick={() => setShowVersionsSidebar(false)}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden animate-fade-in"
-          />
-          {/* Sidebar Drawer Container */}
-          <div className="fixed right-0 top-0 bottom-0 w-[260px] md:relative md:w-[230px] md:right-auto md:top-auto md:bottom-auto h-full flex-shrink-0 flex flex-col border-l border-[var(--sclade-popover-border)] bg-[var(--sclade-popover-bg)] backdrop-blur-md z-50 md:z-30 transition-all duration-300 shadow-2xl md:shadow-none animate-in slide-in-from-right duration-200">
-          {/* Sidebar Top: New Tailoring Run Button */}
-          <div className="p-4 border-b border-[var(--sclade-popover-border)]">
-            <button
-              onClick={() => {
-                setTailorJobTitle("");
-                setTailorJdText("");
-                setTailorBaseOption("clone");
-                setShowTailorModal(true);
-              }}
-              className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-lg shadow-blue-600/10 text-xs cursor-pointer"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              Tailor for New Job
-            </button>
-          </div>
-
-          {/* Versions List */}
-          <div className="flex-1 overflow-y-auto p-3 space-y-2 custom-scrollbar">
-            <div className="text-[9px] font-black uppercase tracking-[0.15em] text-[var(--sclade-text-muted)] px-2.5 mb-2">
-              Resume Versions
-            </div>
-
-            {/* Master Resume (Main) */}
-            <button
-              onClick={() => {
-                window.location.href = `/editor?tab=${activeTab}`;
-              }}
-              className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all text-left border ${
-                isCurrentVersionMain
-                  ? "bg-blue-500/10 border-blue-500/30 text-blue-600 dark:text-blue-400 font-bold shadow-md"
-                  : "border-transparent text-[var(--sclade-text-secondary)] hover:bg-[var(--sclade-input-bg)] hover:text-[var(--sclade-text-primary)] hover:border-[var(--sclade-input-border)]"
-              }`}
-            >
-              <FileText className="w-4 h-4 text-blue-500 shrink-0" />
-              <div className="flex-1 min-w-0">
-                <div className="text-xs truncate">Master Resume</div>
-                <div className="text-[9px] text-[var(--sclade-text-muted)] mt-0.5 uppercase tracking-wider">Primary Profile</div>
+      {/* ── Main Three-Panel Workspace ── */}
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+        {/* ── Left Editor Panel ── */}
+        <div className={`w-full md:w-[460px] xl:w-[480px] shrink-0 border-r border-[#DADCE0] dark:border-neutral-800 bg-white dark:bg-neutral-900 flex flex-col h-full overflow-hidden z-20 ${
+          mobileTab !== "editor" ? "hidden md:flex" : "flex"
+        }`}>
+          {/* Editor Panel Toolbar */}
+          <div className="px-5 py-3.5 border-b border-[#DADCE0] dark:border-neutral-800 flex items-center justify-between shrink-0">
+            <div className="flex items-center gap-3">
+              <Link
+                href="/dashboard"
+                className="p-1.5 rounded-lg text-neutral-500 hover:text-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                title="Back to Dashboard"
+              >
+                <ArrowLeft className="w-4 h-4" />
+              </Link>
+              <h2 className="text-sm font-bold text-[#202124] dark:text-white font-outfit">
+                Editor
+              </h2>
+              {/* Save status */}
+              <div className="flex items-center gap-1.5 text-xs text-neutral-500">
+                {saveStatus === "saving" ? (
+                  <>
+                    <Loader2 className="w-3 h-3 animate-spin text-[#1A73E8]" />
+                    <span className="text-[#1A73E8] font-medium">Saving...</span>
+                  </>
+                ) : saveStatus === "error" ? (
+                  <>
+                    <span className="w-2 h-2 rounded-full bg-red-500" />
+                    <span className="text-red-500 font-medium">Save failed</span>
+                  </>
+                ) : saveTimer.current ? (
+                  <>
+                    <span className="w-2 h-2 rounded-full bg-amber-500" />
+                    <span className="text-amber-500 font-medium">Unsaved</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                    <span className="text-neutral-500 font-medium">Saved just now</span>
+                  </>
+                )}
               </div>
-            </button>
+            </div>
 
-            {/* Divider */}
-            {versionsList.filter((v: any) => !v.isMain).length > 0 && (
-              <div className="h-px bg-[var(--sclade-popover-border)] my-3 animate-pulse" />
-            )}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => {
+                  if (confirm("Revert unsaved changes and reload editor?")) {
+                    window.location.reload();
+                  }
+                }}
+                className="p-1.5 rounded-lg border border-[#DADCE0] dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-300 transition-all cursor-pointer"
+                title="Revert / Reload"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+              </button>
 
-            {/* Tailored Resumes */}
-            {versionsList.filter((v: any) => !v.isMain).map((version: any) => {
-              const isSelected = currentVersionId === version.id;
-              const title = version.jobTarget?.title || version.versionName?.replace("Tailored: ", "") || "Tailored Position";
-              const score = version.jobTarget?.matchScore || version.atsScore || 0;
-              
+              <button
+                onClick={() => setAtsPanelOpen(true)}
+                className="p-1.5 rounded-lg border border-[#DADCE0] dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-[#1A73E8] transition-all cursor-pointer"
+                title="ATS Scoring & AI Audit"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+              </button>
+
+              <button
+                onClick={() => {
+                  if (saveTimer.current) {
+                    clearTimeout(saveTimer.current);
+                    saveTimer.current = null;
+                  }
+                  saveCV();
+                }}
+                disabled={saveStatus === "saving"}
+                className="flex items-center gap-1.5 bg-[#1A73E8] hover:bg-[#1557B0] active:scale-95 text-white text-xs font-semibold px-3.5 py-1.5 rounded-lg shadow-sm transition-all disabled:opacity-50 cursor-pointer"
+              >
+                {saveStatus === "saving" ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+                )}
+                <span>Save</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Section Tabs */}
+          <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#DADCE0] dark:border-neutral-800 bg-white dark:bg-neutral-900 overflow-x-auto gap-1 shrink-0 custom-scrollbar">
+            {tabs.map((tab) => {
+              const isActive = activeTab === tab.id;
               return (
-                <div key={version.id} className="relative group/item">
-                  <button
-                    onClick={() => {
-                      window.location.href = `/editor?versionId=${version.id}&tab=${activeTab}`;
-                    }}
-                    className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all text-left pr-10 border ${
-                      isSelected
-                        ? "bg-blue-500/10 border-blue-500/30 text-blue-600 dark:text-blue-400 font-bold shadow-md"
-                        : "border-transparent text-[var(--sclade-text-secondary)] hover:bg-[var(--sclade-input-bg)] hover:text-[var(--sclade-text-primary)] hover:border-[var(--sclade-input-border)]"
-                    }`}
-                  >
-                    <Sparkles className="w-4 h-4 text-blue-500 shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <div className="text-xs truncate font-medium">{title}</div>
-                      <div className="flex items-center gap-1.5 mt-0.5">
-                        <span className={`text-[9px] font-black uppercase ${score >= 70 ? "text-emerald-500" : "text-amber-500"}`}>
-                          {score}% Match
-                        </span>
-                        <span className="text-[8px] text-[var(--sclade-text-muted)]">•</span>
-                        <span className="text-[8.5px] text-[var(--sclade-text-muted)]">
-                          {new Date(version.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
-                        </span>
-                      </div>
-                    </div>
-                  </button>
-                  
-                  {/* Delete Version Button */}
-                  <button
-                    onClick={async (e) => {
-                      e.stopPropagation();
-                      if (confirm(`Are you sure you want to delete the tailored version for "${title}"?`)) {
-                        try {
-                          const res = await fetch(`/api/cv/delete-version?versionId=${version.id}`, {
-                            method: "DELETE"
-                          });
-                          if (res.ok) {
-                            setVersionsList(prev => prev.filter((v: any) => v.id !== version.id));
-                            if (isSelected) {
-                              window.location.href = "/editor";
-                            }
-                          } else {
-                            alert("Failed to delete version");
-                          }
-                        } catch {
-                          alert("Error deleting version");
-                        }
-                      }
-                    }}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-[var(--sclade-text-muted)] hover:text-red-500 opacity-0 group-hover/item:opacity-100 transition-opacity hover:bg-red-500/5 rounded-lg z-10 cursor-pointer"
-                    title="Delete this tailored version"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                </div>
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as EditorTab)}
+                  className={`flex flex-col items-center justify-center py-2 px-2.5 min-w-[58px] rounded-xl transition-all cursor-pointer ${
+                    isActive
+                      ? "bg-[#E8F0FE] text-[#1A73E8] font-semibold border border-blue-200/80 shadow-xs"
+                      : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800/60 border border-transparent"
+                  }`}
+                >
+                  <span className={isActive ? "text-[#1A73E8]" : "text-neutral-500"}>
+                    {tab.icon}
+                  </span>
+                  <span className="text-[11px] mt-1 leading-none">{tab.label}</span>
+                </button>
               );
             })}
+          </div>
 
-            {versionsList.filter((v: any) => !v.isMain).length === 0 && (
-              <div className="text-center py-8 px-4 border border-dashed border-[var(--sclade-popover-border)] rounded-2xl bg-[var(--sclade-input-bg)]/30">
-                <Sparkles className="w-6 h-6 text-[var(--sclade-text-muted)] mx-auto mb-2 opacity-50" />
-                <p className="text-[10px] text-[var(--sclade-text-muted)] leading-normal font-medium">
-                  No tailored resumes yet. Paste a job description to optimize your CV.
-                </p>
-              </div>
-            )}
+          {/* CV Warnings Banner if any */}
+          <CvWarningBanner />
+
+          {/* Tab Context Window (Form Content) */}
+          <div className="flex-1 overflow-y-auto p-5 pb-24 custom-scrollbar">
+            {activeTab === "profile" && renderProfile()}
+            {activeTab === "skills" && renderSkills()}
+            {activeTab === "experience" && renderExperience()}
+            {activeTab === "projects" && renderProjects()}
+            {activeTab === "education" && renderEducation()}
+            {activeTab === "tailor" && renderTailor()}
           </div>
         </div>
-        </>
-      )}
+
+        {/* ── Center Preview Workspace ── */}
+        <div className={`flex-1 min-w-0 bg-[#F5F6F8] dark:bg-neutral-950 flex flex-col h-full overflow-hidden relative ${
+          mobileTab !== "preview" ? "hidden md:flex" : "flex"
+        }`}>
+          {/* Preview Toolbar */}
+          <div className="py-2.5 px-6 flex items-center justify-between border-b border-[#DADCE0] dark:border-neutral-800 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md z-10 shrink-0">
+            {/* Page navigation */}
+            <div className="flex items-center gap-2 bg-white dark:bg-neutral-800 px-2 py-1 rounded-lg border border-[#DADCE0] dark:border-neutral-700 text-xs text-neutral-600 dark:text-neutral-300">
+              <button
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage <= 1}
+                className="p-1 hover:text-neutral-900 dark:hover:text-white disabled:opacity-30 cursor-pointer"
+                title="Previous page"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+              </button>
+              <span className="font-medium px-1 select-none">{currentPage} / {totalPages}</span>
+              <button
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage >= totalPages}
+                className="p-1 hover:text-neutral-900 dark:hover:text-white disabled:opacity-30 cursor-pointer"
+                title="Next page"
+              >
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            {/* Middle: PDF Export */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleExportPDF}
+                disabled={isExporting}
+                className="flex items-center gap-1.5 px-3 py-1 bg-white dark:bg-neutral-800 border border-[#DADCE0] dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700 text-xs font-medium rounded-lg text-neutral-700 dark:text-neutral-200 transition-colors shadow-xs cursor-pointer disabled:opacity-50"
+              >
+                {isExporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+                <span>Export PDF</span>
+              </button>
+            </div>
+
+            {/* Right: Zoom & Fullscreen */}
+            <div className="flex items-center gap-2">
+              <select
+                value={zoom}
+                onChange={(e) => setZoom(Number(e.target.value))}
+                className="bg-white dark:bg-neutral-800 border border-[#DADCE0] dark:border-neutral-700 rounded-lg px-2.5 py-1 text-xs text-neutral-700 dark:text-neutral-200 outline-none cursor-pointer font-medium shadow-xs"
+              >
+                <option value={75}>75%</option>
+                <option value={90}>90%</option>
+                <option value={100}>100%</option>
+                <option value={125}>125%</option>
+              </select>
+
+              <button
+                onClick={() => setIsFullscreen(f => !f)}
+                className="p-1.5 rounded-lg border border-[#DADCE0] dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-all shadow-xs cursor-pointer"
+                title={isFullscreen ? "Exit Fullscreen" : "Fullscreen Preview"}
+              >
+                {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
+              </button>
+            </div>
+          </div>
+
+          {/* Centered Document Canvas */}
+          <div className="flex-1 overflow-y-auto p-6 md:p-8 flex justify-center items-start custom-scrollbar">
+            <div
+              style={{ transform: `scale(${zoom / 100})`, transformOrigin: "top center" }}
+              className="transition-transform duration-200"
+            >
+              <div className="bg-white text-black shadow-lg rounded-sm border border-neutral-200/80">
+                <ResumePreview 
+                  data={cv} 
+                  projects={projects} 
+                  template="formal"
+                  mode={mode}
+                  generatingStates={{
+                    summary: regeneratingSummary,
+                    skills: suggestingSkills,
+                    experienceIndex: generatingExpBullets,
+                    projectIndex: generatingProjectFromReadme,
+                    rewritingBullet: rewritingBullet,
+                    isTailoring: isTailoring,
+                  }}
+                  suggestions={{
+                    summary: suggestedSummary,
+                    projectBullets: suggestedProjectBullets,
+                  }}
+                  onAcceptSuggestion={handleAcceptSuggestion}
+                  onDiscardSuggestion={handleDiscardSuggestion}
+                  onRevertField={(field, value, index, bulletIndex) => {
+                    if (field === "summary") {
+                      setSummary(value);
+                    } else if (field === "skills") {
+                      setSkills(value);
+                    } else if (field === "experience") {
+                      const nu = [...experience];
+                      nu[index!] = value;
+                      setExperience(nu);
+                    } else if (field === "projects") {
+                      const nu = [...projects];
+                      nu[index!] = value;
+                      setProjects(nu);
+                    } else if (field === "project-bullet") {
+                      const nu = [...projects];
+                      const highlights = [...nu[index!].highlights];
+                      highlights[bulletIndex!] = value;
+                      nu[index!] = { ...nu[index!], highlights };
+                      setProjects(nu);
+                    } else if (field === "education") {
+                      const nu = [...education];
+                      nu[index!] = value;
+                      setEducation(nu);
+                    } else if (field === "achievements") {
+                      const nu = [...achievements];
+                      nu[index!] = value;
+                      setAchievements(nu);
+                    }
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Right Sidebar: Versions & Tailor ── */}
+        <div className={`w-full md:w-[350px] xl:w-[390px] shrink-0 border-l border-[#DADCE0] dark:border-neutral-800 bg-white dark:bg-neutral-900 flex flex-col h-full overflow-y-auto p-5 space-y-5 custom-scrollbar z-20 ${
+          mobileTab !== "versions" ? "hidden md:flex" : "flex"
+        }`}>
+          {/* Tailor for New Job Button */}
+          <button
+            onClick={() => {
+              setTailorJobTitle("");
+              setTailorJdText("");
+              setTailorBaseOption("clone");
+              setShowTailorModal(true);
+            }}
+            className="w-full py-3 px-4 bg-[#1A73E8] hover:bg-[#1557B0] text-white font-medium text-sm rounded-xl flex items-center justify-center gap-2 shadow-sm transition-all active:scale-[0.98] cursor-pointer"
+          >
+            <Plus className="w-4 h-4 stroke-[2.5]" />
+            <span>Tailor for New Job</span>
+          </button>
+
+          {/* Resume Versions Section */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-bold text-[#202124] dark:text-neutral-100">
+                Resume Versions
+              </h3>
+              <button 
+                onClick={() => {}} 
+                className="text-xs font-semibold text-[#1A73E8] hover:underline flex items-center gap-1 cursor-pointer"
+              >
+                <span>View all</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            <div className="space-y-2.5">
+              {/* Master Resume card */}
+              <div
+                onClick={() => {
+                  window.location.href = `/editor?tab=${activeTab}`;
+                }}
+                className={`w-full p-3.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${
+                  isCurrentVersionMain
+                    ? "bg-[#E8F0FE] border-2 border-[#1A73E8] text-[#1A73E8]"
+                    : "bg-white dark:bg-neutral-800 border-[#DADCE0] dark:border-neutral-700 hover:border-neutral-400"
+                }`}
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+                    isCurrentVersionMain ? "bg-white text-[#1A73E8]" : "bg-blue-50 text-[#1A73E8]"
+                  }`}>
+                    <FileText className="w-5 h-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-xs font-bold text-[#202124] dark:text-neutral-100 truncate">
+                      Master Resume
+                    </div>
+                    <div className="text-[11px] text-neutral-500 truncate">
+                      Primary profile
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  {isCurrentVersionMain && (
+                    <span className="bg-[#1A73E8] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                      Active
+                    </span>
+                  )}
+                  <ChevronRight className={`w-4 h-4 ${isCurrentVersionMain ? "text-[#1A73E8]" : "text-neutral-400"}`} />
+                </div>
+              </div>
+
+              {/* Tailored Resumes */}
+              {versionsList.filter((v: any) => !v.isMain).map((version: any) => {
+                const isSelected = currentVersionId === version.id;
+                const title = version.jobTarget?.title || version.versionName?.replace("Tailored: ", "") || "Tailored Position";
+                const score = version.jobTarget?.matchScore || version.atsScore || 0;
+                const dateStr = new Date(version.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+
+                return (
+                  <div key={version.id} className="relative group/item">
+                    <div
+                      onClick={() => {
+                        window.location.href = `/editor?versionId=${version.id}&tab=${activeTab}`;
+                      }}
+                      className={`w-full p-3.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between pr-9 ${
+                        isSelected
+                          ? "bg-[#E8F0FE] border-2 border-[#1A73E8] text-[#1A73E8]"
+                          : "bg-white dark:bg-neutral-800 border-[#DADCE0] dark:border-neutral-700 hover:border-neutral-400"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+                          isSelected ? "bg-white text-[#1A73E8]" : "bg-blue-50 text-[#1A73E8]"
+                        }`}>
+                          <FileText className="w-5 h-5" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-xs font-bold text-[#202124] dark:text-neutral-100 truncate">
+                            {title}
+                          </div>
+                          <div className="flex items-center gap-1.5 text-[11px] text-neutral-500 mt-0.5">
+                            <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+                              {score}% match
+                            </span>
+                            <span>·</span>
+                            <span>{dateStr}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <ChevronRight className={`w-4 h-4 shrink-0 ${isSelected ? "text-[#1A73E8]" : "text-neutral-400"}`} />
+                    </div>
+
+                    {/* Delete Version Button */}
+                    <button
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        if (confirm(`Are you sure you want to delete the tailored version for "${title}"?`)) {
+                          try {
+                            const res = await fetch(`/api/cv/delete-version?versionId=${version.id}`, {
+                              method: "DELETE"
+                            });
+                            if (res.ok) {
+                              setVersionsList(prev => prev.filter((v: any) => v.id !== version.id));
+                              if (isSelected) {
+                                window.location.href = "/editor";
+                              }
+                            } else {
+                              alert("Failed to delete version");
+                            }
+                          } catch {
+                            alert("Error deleting version");
+                          }
+                        }
+                      }}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1.5 text-neutral-400 hover:text-red-500 opacity-0 group-hover/item:opacity-100 transition-opacity rounded-lg z-10 cursor-pointer"
+                      title="Delete this tailored version"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                );
+              })}
+
+              {versionsList.filter((v: any) => !v.isMain).length === 0 && (
+                <div className="text-center py-6 px-4 border border-dashed border-[#DADCE0] dark:border-neutral-800 rounded-xl bg-neutral-50/50 dark:bg-neutral-800/30">
+                  <Sparkles className="w-5 h-5 text-neutral-400 mx-auto mb-2 opacity-50" />
+                  <p className="text-xs text-neutral-500 leading-normal">
+                    No tailored resumes yet. Click Tailor for New Job to optimize your CV.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Resummit Pro promotional card */}
+          <div className="bg-gradient-to-br from-[#1A73E8] to-[#1557B0] text-white rounded-2xl p-5 shadow-sm space-y-3 relative overflow-hidden mt-auto shrink-0">
+            <div className="flex items-center gap-2">
+              <span className="bg-white/20 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                PRO
+              </span>
+              <span className="text-[11px] text-blue-100 font-medium">Coming Soon</span>
+            </div>
+            <div>
+              <h4 className="text-base font-bold text-white">Resummit Pro</h4>
+              <p className="text-xs text-blue-100/90 leading-relaxed mt-1">
+                Unlock real-time ATS monitoring and multi-version resume management.
+              </p>
+            </div>
+            <button
+              disabled
+              className="w-full py-2 bg-white/15 border border-white/20 text-white font-medium text-xs rounded-xl cursor-default text-center"
+            >
+              Coming Soon
+            </button>
+          </div>
+        </div>
+      </div>
 
       {/* Audit Modal Reveal */}
       {atsPanelOpen && atsData && (

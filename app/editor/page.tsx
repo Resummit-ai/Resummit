@@ -227,6 +227,11 @@ export default async function EditorPage({
         initialJobTarget={jobTarget}
         initialVersionsList={allVersions}
         initialTab={(tab as any) || "profile"}
+        user={{
+          name: dbUser.name,
+          email: dbUser.email,
+          image: dbUser.image,
+        }}
       />
     </div>
   );
