@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { Bell, Settings, User, X, Check, Shield, Cpu, RefreshCw, Moon, Sparkles, Sun, LogOut } from "lucide-react";
+import { Bell, Settings, User, X, Check, Shield, Cpu, RefreshCw, Moon, Sparkles, Sun, LogOut, HelpCircle } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { signOut } from "next-auth/react";
 
@@ -28,10 +28,19 @@ const DEFAULT_NOTIFICATIONS: NotificationItem[] = [];
 export function DashboardControls({ user }: DashboardControlsProps) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const [aiModel, setAiModel] = useState("gemini");
   const [autoSync, setAutoSync] = useState(true);
   const [theme, setTheme] = useState("light");
   const [mounted, setMounted] = useState(false);
+
+  const initials = (user.name || "User")
+    .split(" ")
+    .map((p) => p[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase() || "AM";
 
   useEffect(() => {
     setMounted(true);
@@ -207,18 +216,7 @@ export function DashboardControls({ user }: DashboardControlsProps) {
         </AnimatePresence>
       </div>
 
-      {/* ── Settings Trigger ── */}
-      <button
-        onClick={() => {
-          setShowSettings(true);
-          setShowNotifications(false);
-        }}
-        className={`p-2 rounded-lg border border-[var(--sclade-card-border)] bg-[var(--sclade-card-bg)] hover:bg-[#E7EDFF] hover:border-[#CFD9FF] hover:text-[#5473D1] transition-all text-[var(--sclade-text-secondary)] cursor-pointer relative ${
-          showSettings ? "bg-[#E7EDFF] text-[#5473D1] border-[#CFD9FF]" : ""
-        }`}
-      >
-        <Settings className="w-4 h-4" />
-      </button>
+
 
       {/* Settings Side-Drawer */}
       {mounted && createPortal(
@@ -369,20 +367,115 @@ export function DashboardControls({ user }: DashboardControlsProps) {
       document.body
     )}
 
-      {/* ── User Avatar ── */}
-      <div className="h-6 w-[1px] bg-[var(--sclade-card-border)] mx-1" />
-      <div className="flex items-center gap-2">
-        <div className="w-8 h-8 rounded-lg bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-card-border)] flex items-center justify-center overflow-hidden">
+      {/* ── Settings Gear Button ── */}
+      <button
+        onClick={() => {
+          setShowSettings(!showSettings);
+          setShowNotifications(false);
+          setShowUserMenu(false);
+        }}
+        className={`p-2 rounded-lg border border-[var(--sclade-card-border)] bg-[var(--sclade-card-bg)] hover:bg-[#E7EDFF] hover:border-[#CFD9FF] hover:text-[#5473D1] transition-all text-[var(--sclade-text-secondary)] cursor-pointer ${
+          showSettings ? "bg-[#E7EDFF] text-[#5473D1] border-[#CFD9FF]" : ""
+        }`}
+        title="Settings"
+      >
+        <Settings className="w-4 h-4" />
+      </button>
+
+      {/* ── User Avatar & Dropdown Menu ── */}
+      <div className="relative">
+        <button
+          onClick={() => {
+            setShowUserMenu(!showUserMenu);
+            setShowNotifications(false);
+          }}
+          className="flex items-center gap-1.5 cursor-pointer focus:outline-none"
+        >
+          <div className="w-8 h-8 rounded-full bg-[#E1E5EB] dark:bg-neutral-800 border border-[var(--sclade-card-border)] flex items-center justify-center text-xs font-bold text-[var(--sclade-text-secondary)] shadow-xs">
+            {initials}
+          </div>
           {user.image ? (
-            <img
-              src={user.image}
-              alt={user.name || ""}
-              className="w-full h-full object-cover"
-            />
+            <div className="w-8 h-8 rounded-full overflow-hidden border border-[var(--sclade-card-border)]">
+              <img
+                src={user.image}
+                alt={user.name || ""}
+                className="w-full h-full object-cover"
+              />
+            </div>
           ) : (
-            <User className="w-4 h-4 text-[var(--sclade-text-secondary)]" />
+            <div className="w-8 h-8 rounded-full overflow-hidden border border-[var(--sclade-card-border)] bg-slate-300 dark:bg-neutral-700 flex items-center justify-center text-[10px] text-slate-600 dark:text-slate-300 font-bold">
+              <User className="w-4 h-4 text-slate-500" />
+            </div>
           )}
-        </div>
+        </button>
+
+        <AnimatePresence>
+          {showUserMenu && (
+            <>
+              {/* Invisible backdrop */}
+              <div
+                className="fixed inset-0 z-40"
+                onClick={() => setShowUserMenu(false)}
+              />
+
+              <motion.div
+                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                transition={{ duration: 0.15 }}
+                className="absolute right-0 mt-2 w-64 rounded-2xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] shadow-xl z-50 p-2 overflow-hidden text-[var(--sclade-text-primary)]"
+              >
+                {/* User Info Header */}
+                <div className="flex items-center gap-3 p-3">
+                  <div className="w-9 h-9 rounded-full bg-[#E1E5EB] dark:bg-neutral-800 flex items-center justify-center text-xs font-bold text-[var(--sclade-text-secondary)] shrink-0">
+                    {initials}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-bold text-[var(--sclade-text-primary)] truncate">
+                      {user.name || "Adel Muhammed"}
+                    </p>
+                    <p className="text-[11px] text-[var(--sclade-text-secondary)] truncate">
+                      {user.email || ""}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="h-[1px] bg-[var(--sclade-card-border)] my-1" />
+
+                {/* Dropdown Items */}
+                <div className="space-y-0.5">
+                  <button
+                    onClick={() => {
+                      setShowUserMenu(false);
+                      setShowSettings(true);
+                    }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-[var(--sclade-subtle-bg)] rounded-lg transition-colors cursor-pointer text-left"
+                  >
+                    <Settings className="w-4 h-4 text-[var(--sclade-text-muted)]" />
+                    Settings
+                  </button>
+                  <a
+                    href="mailto:support@resummit.dev?subject=Resummit%20Help"
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-[var(--sclade-subtle-bg)] rounded-lg transition-colors cursor-pointer text-left"
+                  >
+                    <HelpCircle className="w-4 h-4 text-[var(--sclade-text-muted)]" />
+                    Help & Support
+                  </a>
+                </div>
+
+                <div className="h-[1px] bg-[var(--sclade-card-border)] my-1" />
+
+                <button
+                  onClick={() => signOut({ callbackUrl: "/" })}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg transition-colors cursor-pointer text-left"
+                >
+                  <LogOut className="w-4 h-4 text-red-500" />
+                  Sign Out
+                </button>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
