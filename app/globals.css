@@ -947,3 +947,38 @@ body {
     display: none !important;
   }
 }
+
+/* Exact Reference Tokens Enforcement */
+.landing-root {
+  background-color: rgb(10, 10, 10) !important;
+  color: rgb(242, 239, 233) !important;
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif !important;
+}
+
+.landing-root h1 {
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif !important;
+  font-weight: 500 !important;
+  color: rgb(242, 239, 233) !important;
+  letter-spacing: -1.2px !important;
+  line-height: 1 !important;
+}
+
+.landing-root h2 {
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif !important;
+  font-weight: 500 !important;
+  color: rgb(242, 239, 233) !important;
+  letter-spacing: -0.9px !important;
+}
+
+.landing-root h3 {
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif !important;
+  color: rgb(242, 239, 233) !important;
+}
+
+.landing-root p {
+  color: rgba(242, 239, 233, 0.7);
+}
+
+.landing-root section {
+  background-color: rgb(10, 10, 10);
+}
