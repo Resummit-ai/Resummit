@@ -3,7 +3,35 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { GitBranch, Sparkles, Check, ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+
+const leftItemVariants = {
+  hidden: { opacity: 0, x: -6 },
+  visible: (delay: number) => ({
+    opacity: 1,
+    x: 0,
+    transition: { delay: delay * 0.3, duration: 0.25 }
+  }),
+  dimmed: {
+    opacity: 0.45,
+    x: 0,
+    transition: { duration: 0.2 }
+  }
+};
+
+const rightItemVariants = {
+  hidden: { opacity: 0, y: 6 },
+  visible: (delay: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: delay * 0.3, duration: 0.25 }
+  }),
+  hiddenInstant: {
+    opacity: 0.1,
+    y: 6,
+    transition: { duration: 0.2 }
+  }
+};
 
 export function MagicSection({ hasSession = false }: { hasSession?: boolean }) {
   const [step, setStep] = useState(0);
@@ -13,19 +41,19 @@ export function MagicSection({ hasSession = false }: { hasSession?: boolean }) {
   useEffect(() => {
     if (!ref.current) return;
     const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !active) {
+      if (entry.isIntersecting) {
         setActive(true);
       }
-    }, { threshold: 0.2 });
+    }, { threshold: 0.15 });
     observer.observe(ref.current);
     return () => observer.disconnect();
-  }, [active]);
+  }, []);
 
   useEffect(() => {
     if (!active) return;
     const timer = setInterval(() => {
-      setStep((s) => (s >= 3 ? 3 : s + 1));
-    }, 1600);
+      setStep((s) => (s >= 3 ? 0 : s + 1));
+    }, 2400);
     return () => clearInterval(timer);
   }, [active]);
 
@@ -51,7 +79,7 @@ export function MagicSection({ hasSession = false }: { hasSession?: boolean }) {
           {/* Left: GitHub Commits Widget */}
           <motion.div
             animate={{
-              borderColor: step === 0 || step === 3 ? "rgba(0, 153, 255, 0.4)" : "#27272a",
+              borderColor: step === 0 || step === 3 ? "rgba(0, 153, 255, 0.45)" : "#27272a",
               opacity: step === 2 ? 0.7 : 1,
             }}
             transition={{ duration: 0.4 }}
@@ -81,7 +109,12 @@ export function MagicSection({ hasSession = false }: { hasSession?: boolean }) {
 
               <div className="space-y-3">
                 {/* Commit 1 */}
-                <div className="p-3 rounded-xl bg-[#18181b] border border-[#27272a] flex items-center justify-between gap-3">
+                <motion.div
+                  variants={leftItemVariants}
+                  custom={0.1}
+                  animate={step === 0 || step === 3 ? "visible" : "dimmed"}
+                  className="p-3 rounded-xl bg-[#18181b] border border-[#27272a] flex items-center justify-between gap-3 transition-colors"
+                >
                   <div className="space-y-1">
                     <div className="text-xs sm:text-sm font-normal text-[#f2efe9]">
                       feat: add weather api integration
@@ -98,10 +131,15 @@ export function MagicSection({ hasSession = false }: { hasSession?: boolean }) {
                   <span className="font-mono text-xs font-medium text-[#0099ff] bg-[#0099ff]/10 px-2 py-1 rounded">
                     a3f2c1e
                   </span>
-                </div>
+                </motion.div>
 
                 {/* Commit 2 */}
-                <div className="p-3 rounded-xl bg-[#18181b] border border-[#27272a] flex items-center justify-between gap-3">
+                <motion.div
+                  variants={leftItemVariants}
+                  custom={0.3}
+                  animate={step === 0 || step === 3 ? "visible" : "dimmed"}
+                  className="p-3 rounded-xl bg-[#18181b] border border-[#27272a] flex items-center justify-between gap-3 transition-colors"
+                >
                   <div className="space-y-1">
                     <div className="text-xs sm:text-sm font-normal text-[#f2efe9]">
                       fix: render bug on mobile
@@ -118,10 +156,15 @@ export function MagicSection({ hasSession = false }: { hasSession?: boolean }) {
                   <span className="font-mono text-xs font-medium text-[#0099ff] bg-[#0099ff]/10 px-2 py-1 rounded">
                     b8e4d2f
                   </span>
-                </div>
+                </motion.div>
 
                 {/* Commit 3 */}
-                <div className="p-3 rounded-xl bg-[#18181b] border border-[#27272a] flex items-center justify-between gap-3">
+                <motion.div
+                  variants={leftItemVariants}
+                  custom={0.5}
+                  animate={step === 0 || step === 3 ? "visible" : "dimmed"}
+                  className="p-3 rounded-xl bg-[#18181b] border border-[#27272a] flex items-center justify-between gap-3 transition-colors"
+                >
                   <div className="space-y-1">
                     <div className="text-xs sm:text-sm font-normal text-[#f2efe9]">
                       feat: hook up openweather api
@@ -138,7 +181,7 @@ export function MagicSection({ hasSession = false }: { hasSession?: boolean }) {
                   <span className="font-mono text-xs font-medium text-[#0099ff] bg-[#0099ff]/10 px-2 py-1 rounded">
                     c9a1b3d
                   </span>
-                </div>
+                </motion.div>
               </div>
             </div>
           </motion.div>
@@ -147,39 +190,50 @@ export function MagicSection({ hasSession = false }: { hasSession?: boolean }) {
           <div className="lg:col-span-1 flex flex-col items-center justify-center py-4 lg:py-0">
             <motion.div
               animate={step === 1 ? {
-                scale: [1, 1.15, 1],
-                boxShadow: ["0 0 15px rgba(0,153,255,0.3)", "0 0 35px rgba(168,85,247,0.8)", "0 0 15px rgba(0,153,255,0.3)"]
-              } : {}}
-              transition={{ duration: 1.2, repeat: Infinity }}
-              className="w-14 h-14 rounded-full bg-gradient-to-tr from-[#0099ff] to-indigo-500 flex items-center justify-center shadow-lg border border-[#0099ff]/40"
+                scale: [1, 1.18, 1],
+                boxShadow: ["0 0 15px rgba(0,153,255,0.4)", "0 0 40px rgba(168,85,247,0.85)", "0 0 15px rgba(0,153,255,0.4)"]
+              } : {
+                scale: 1,
+                boxShadow: "0 0 15px rgba(0,153,255,0.15)"
+              }}
+              transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+              className="w-14 h-14 rounded-full bg-gradient-to-tr from-[#0099ff] to-indigo-500 flex items-center justify-center shadow-lg border border-[#0099ff]/50"
             >
               <Sparkles className="w-6 h-6 text-white" />
             </motion.div>
-            <span className="text-[11px] font-mono font-medium tracking-widest uppercase text-[#0099ff] mt-2 text-center">
+            <motion.span
+              animate={step === 1 ? { color: ["#0099ff", "#a855f7", "#0099ff"] } : { color: "#0099ff" }}
+              transition={{ duration: 1.2, repeat: Infinity }}
+              className="text-[11px] font-mono font-medium tracking-widest uppercase mt-2 text-center"
+            >
               AI SYNTHESIS
-            </span>
+            </motion.span>
           </div>
 
           {/* Right: Recruiter-Ready Resume Output */}
           <motion.div
             animate={{
               opacity: step >= 2 ? 1 : 0.35,
-              borderColor: step === 3 ? "rgba(16, 185, 129, 0.4)" : "#27272a",
+              borderColor: step === 3 ? "rgba(16, 185, 129, 0.45)" : "#27272a",
             }}
             transition={{ duration: 0.4 }}
             className="lg:col-span-5 rounded-2xl border border-[#27272a] bg-[#141417] p-6 shadow-2xl relative"
           >
-            {/* Floating ATS Badge */}
-            {step === 3 && (
-              <motion.div
-                initial={{ scale: 0, y: 10 }}
-                animate={{ scale: 1, y: 0 }}
-                className="absolute -top-3.5 right-6 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500 text-black text-xs font-medium font-mono shadow-lg"
-              >
-                <Check size={12} strokeWidth={3} />
-                <span>ATS Grade: A+</span>
-              </motion.div>
-            )}
+            {/* Floating ATS Badge with Spring Animation */}
+            <AnimatePresence>
+              {step === 3 && (
+                <motion.div
+                  initial={{ scale: 0, y: 12 }}
+                  animate={{ scale: 1, y: 0 }}
+                  exit={{ scale: 0, opacity: 0 }}
+                  transition={{ type: "spring", stiffness: 350, damping: 15 }}
+                  className="absolute -top-3.5 right-6 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500 text-black text-xs font-medium font-mono shadow-lg"
+                >
+                  <Check size={12} strokeWidth={3} />
+                  <span>ATS Grade: A+</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <div className="border-b border-[#27272a] pb-3 mb-4">
               <h3 className="text-lg font-medium text-[#f2efe9] uppercase tracking-wider font-serif">ALEX CARTER</h3>
@@ -196,15 +250,27 @@ export function MagicSection({ hasSession = false }: { hasSession?: boolean }) {
               </div>
 
               <div className="space-y-2">
-                <p>
+                <motion.p
+                  variants={rightItemVariants}
+                  custom={0.1}
+                  animate={step >= 2 ? "visible" : "hiddenInstant"}
+                >
                   • Developed a <strong className="text-[#f2efe9] font-medium">weather forecasting application</strong> using React and the OpenWeather API to provide real-time weather information.
-                </p>
-                <p>
+                </motion.p>
+                <motion.p
+                  variants={rightItemVariants}
+                  custom={0.3}
+                  animate={step >= 2 ? "visible" : "hiddenInstant"}
+                >
                   • Integrated <strong className="text-[#f2efe9] font-medium">external API services</strong> and implemented dynamic data rendering for live forecast updates.
-                </p>
-                <p>
+                </motion.p>
+                <motion.p
+                  variants={rightItemVariants}
+                  custom={0.5}
+                  animate={step >= 2 ? "visible" : "hiddenInstant"}
+                >
                   • Improved <strong className="text-[#f2efe9] font-medium">mobile responsiveness</strong> by resolving rendering issues and optimizing the interface across devices.
-                </p>
+                </motion.p>
               </div>
             </div>
           </motion.div>

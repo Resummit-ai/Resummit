@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Check, Minus, ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 import { LANDING_CONFIG } from "@/lib/landing-config";
 
 export function PricingSection() {
@@ -113,31 +114,41 @@ export function PricingSection() {
   return (
     <section id="pricing" className="scroll-mt-12 bg-[#09090b] text-white py-24 sm:py-32 border-t border-neutral-900">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        {/* Top Billing Toggle (Pill style matching reference) */}
+        {/* Top Billing Toggle (Pill style matching reference with animated sliding pill) */}
         <div className="flex justify-center">
-          <div className="inline-flex items-center rounded-full border border-neutral-800 bg-[#16161a] p-1 shadow-inner">
+          <div className="relative inline-flex items-center rounded-full border border-[#27272a] bg-[#141417] p-1 shadow-inner">
             <button
               type="button"
               onClick={() => setBillingPeriod("monthly")}
-              className={`rounded-full px-4 py-1.5 text-xs font-medium transition-all ${
-                billingPeriod === "monthly"
-                  ? "bg-neutral-800 text-white shadow-sm"
-                  : "text-neutral-400 hover:text-white"
+              className={`relative z-10 rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${
+                billingPeriod === "monthly" ? "text-white" : "text-neutral-400 hover:text-white"
               }`}
             >
-              Monthly
+              {billingPeriod === "monthly" && (
+                <motion.div
+                  layoutId="billing-pill"
+                  className="absolute inset-0 rounded-full bg-neutral-800 shadow-sm"
+                  transition={{ type: "spring", stiffness: 450, damping: 35 }}
+                />
+              )}
+              <span className="relative z-10">Monthly</span>
             </button>
             <button
               type="button"
               onClick={() => setBillingPeriod("yearly")}
-              className={`rounded-full px-4 py-1.5 text-xs font-medium transition-all flex items-center gap-1.5 ${
-                billingPeriod === "yearly"
-                  ? "bg-neutral-800 text-white shadow-sm"
-                  : "text-neutral-400 hover:text-white"
+              className={`relative z-10 rounded-full px-4 py-1.5 text-xs font-medium transition-colors flex items-center gap-1.5 ${
+                billingPeriod === "yearly" ? "text-white" : "text-neutral-400 hover:text-white"
               }`}
             >
-              <span>Annual</span>
-              <span className="rounded-full bg-sky-500/20 px-1.5 py-0.2 text-[10px] font-semibold text-sky-400">
+              {billingPeriod === "yearly" && (
+                <motion.div
+                  layoutId="billing-pill"
+                  className="absolute inset-0 rounded-full bg-neutral-800 shadow-sm"
+                  transition={{ type: "spring", stiffness: 450, damping: 35 }}
+                />
+              )}
+              <span className="relative z-10">Annual</span>
+              <span className="relative z-10 rounded-full bg-sky-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-sky-400">
                 Save 20%
               </span>
             </button>

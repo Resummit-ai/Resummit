@@ -1,11 +1,39 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { Navbar } from "./Navbar";
 import { Hero } from "./Hero";
 
-// Below-the-fold sections
+// Below-the-fold dynamic imports
+const MarqueeSection = dynamic(
+  () => import("./MarqueeSection").then((m) => m.MarqueeSection),
+  { ssr: true }
+);
+const PipelineSection = dynamic(
+  () => import("./PipelineSection").then((m) => m.PipelineSection),
+  { ssr: true }
+);
+const WorkflowCanvas = dynamic(
+  () => import("./WorkflowCanvas").then((m) => m.WorkflowCanvas),
+  { ssr: true }
+);
+const CommitStreamSection = dynamic(
+  () => import("./CommitStreamSection").then((m) => m.CommitStreamSection),
+  { ssr: true }
+);
+const EditorDemoSection = dynamic(
+  () => import("./EditorDemoSection").then((m) => m.EditorDemoSection),
+  { ssr: true }
+);
+const MagicSection = dynamic(
+  () => import("./MagicSection").then((m) => m.MagicSection),
+  { ssr: true }
+);
+const RoleVersionsSection = dynamic(
+  () => import("./RoleVersionsSection").then((m) => m.RoleVersionsSection),
+  { ssr: true }
+);
 const ResumePreviewSection = dynamic(
   () => import("./ResumePreviewSection").then((m) => m.ResumePreviewSection),
   { ssr: true }
@@ -18,28 +46,8 @@ const StatsStripSection = dynamic(
   () => import("./StatsStripSection").then((m) => m.StatsStripSection),
   { ssr: true }
 );
-const MarqueeSection = dynamic(
-  () => import("./MarqueeSection").then((m) => m.MarqueeSection),
-  { ssr: true }
-);
-const MagicSection = dynamic(
-  () => import("./MagicSection").then((m) => m.MagicSection),
-  { ssr: true }
-);
 const FeaturePillarsSection = dynamic(
   () => import("./FeaturePillarsSection").then((m) => m.FeaturePillarsSection),
-  { ssr: true }
-);
-const WorkflowCanvas = dynamic(
-  () => import("./WorkflowCanvas").then((m) => m.WorkflowCanvas),
-  { ssr: true }
-);
-const CommitStreamSection = dynamic(
-  () => import("./CommitStreamSection").then((m) => m.CommitStreamSection),
-  { ssr: true }
-);
-const RoleVersionsSection = dynamic(
-  () => import("./RoleVersionsSection").then((m) => m.RoleVersionsSection),
   { ssr: true }
 );
 const PricingSection = dynamic(
@@ -64,52 +72,93 @@ const Footer = dynamic(
 );
 
 export function NewLandingPage() {
+  const scrollBarRef = useRef<HTMLDivElement>(null);
+
+  // Scroll Progress Bar matching localhost:3000
+  useEffect(() => {
+    const onScroll = () => {
+      if (!scrollBarRef.current) return;
+      const el = document.documentElement;
+      const pct = el.scrollHeight > el.clientHeight
+        ? (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100
+        : 0;
+      scrollBarRef.current.style.width = `${pct}%`;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <div className="landing-root min-h-screen bg-[#0a0a0a] text-[#f2efe9] selection:bg-neutral-800 selection:text-white font-sans antialiased">
+      {/* 0. Scroll Progress Bar at the top of the viewport */}
+      <div
+        ref={scrollBarRef}
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          height: "3px",
+          width: "0%",
+          background: "linear-gradient(90deg, #0099ff, #a78bfa, #06b6d4)",
+          backgroundSize: "200% 100%",
+          zIndex: 99999,
+          willChange: "width",
+          boxShadow: "0 0 10px rgba(0, 153, 255, 0.7)",
+        }}
+      />
+
       <Navbar />
+
       <main>
-        {/* 1. Single Unified Hero Section (Directly from localhost:3000 FairweatherHero, dark styled, no white borders) */}
+        {/* 1. Hero Section: Editorial headline with RotatingText at top, real developer dashboard card below */}
         <Hero />
 
-        {/* 2. Interactive Output (Screenshot 1: Authentic full Alex Developer resume + Recruiter-Ready copy) */}
-        <ResumePreviewSection />
-
-        {/* 3. Design Statement Quote (Screenshot 3: "Create meaningful digital experiences where every line unfolds with [precision]...") */}
-        <DesignStatementSection />
-
-        {/* 4. Stats Strip (Screenshot 4: 50+ Resumes Generated, 10+ Countries, <60s Generation, 100% Free) */}
-        <StatsStripSection />
-
-        {/* 5. Tech Stack Marquee (Docker, Prisma, Redis, AWS, Next.js, React, TypeScript, GitHub, TensorFlow, PostgreSQL...) */}
+        {/* 2. Tech Stack Marquee (Serving developers shipping code at...) */}
         <MarqueeSection />
 
-        {/* 6. The Magic: Raw commit to recruiter bullet (Screenshot 5: weather-app commits -> pulsing AI synthesis -> Alex Carter resume) */}
-        <MagicSection />
+        {/* 3. Pipeline Architecture: Everything between your commits and your next offer (4 interactive tabs) */}
+        <PipelineSection />
 
-        {/* 7. Features: Built for developers (GitHub Sync, AI Resume Writing, PDF Export with sky header cards) */}
-        <FeaturePillarsSection />
-
-        {/* 8. Interactive Node Graph Canvas with animated pulsing SVG beams */}
+        {/* 4. Interactive Workflow Canvas: Wire up your resume in a minute (Connect all + animated laser beams) */}
         <WorkflowCanvas />
 
-        {/* 9. Commit Stream & Real-time Throughput with World Matrix */}
+        {/* 5. Global Commit Stream: Real-time throughput & World Matrix */}
         <CommitStreamSection />
 
-        {/* 10. Role Catalog with Vertical Icon Rail */}
+        {/* 6. Code Demo Section: Paste one repo. Generate in seconds (Interactive Run streaming code runner) */}
+        <EditorDemoSection />
+
+        {/* 7. The Magic: Raw commit to recruiter bullet (Continuous 4-phase looping transformation) */}
+        <MagicSection />
+
+        {/* 8. Role Catalog with Vertical Icon Rail (Tailored versions for every tech stack) */}
         <RoleVersionsSection />
 
-        {/* 11. Pricing Matrix (Hobby, Pro, Lifetime, Campus) */}
+        {/* 9. Interactive Resume Output (Alex Developer single-page resume + ATS audit score 98%) */}
+        <ResumePreviewSection />
+
+        {/* 10. Design Statement Quote ("Create meaningful digital experiences where every line unfolds...") */}
+        <DesignStatementSection />
+
+        {/* 11. Stats Strip (50+ Resumes Generated, 10+ Countries, <60s Generation, 100% Free with animated counters) */}
+        <StatsStripSection />
+
+        {/* 12. Feature Pillars: Built for developers (3 cards with sky headers) */}
+        <FeaturePillarsSection />
+
+        {/* 13. Pricing Matrix with animated sliding Monthly/Annual toggle */}
         <PricingSection />
 
-        {/* 12. FAQ Accordion */}
+        {/* 14. FAQ Accordion */}
         <FaqSection />
 
-        {/* 13. Feedback Form submitting to /api/feedback + Adel Muhammed attribution */}
+        {/* 15. Feedback Form submitting to /api/feedback + Adel Muhammed attribution */}
         <FeedbackSection />
 
-        {/* 14. Mountain Landscape Final CTA Banner */}
+        {/* 16. Mountain Landscape Final CTA Banner */}
         <FinalCtaSection />
       </main>
+
       <Footer />
     </div>
   );

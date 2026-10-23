@@ -97,54 +97,101 @@ export function WorkflowCanvas() {
           />
 
           {/* Animated SVG Beams in background */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none hidden lg:block opacity-40">
+          <svg className="absolute inset-0 w-full h-full pointer-events-none hidden lg:block opacity-60">
+            {/* Left to Center Beams */}
             {connectedNodes.repos && (
               <motion.path
                 d="M 340 100 C 450 100, 430 220, 500 220"
                 fill="none"
-                stroke="#f59e0b"
-                strokeWidth="2"
+                stroke="#0099ff"
+                strokeWidth="2.5"
                 strokeDasharray="6 6"
                 initial={{ strokeDashoffset: 50 }}
                 animate={{ strokeDashoffset: 0 }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
               />
             )}
             {connectedNodes.commits && (
               <motion.path
                 d="M 340 210 C 440 210, 440 250, 500 250"
                 fill="none"
-                stroke="#3b82f6"
-                strokeWidth="2"
+                stroke="#0099ff"
+                strokeWidth="2.5"
                 strokeDasharray="6 6"
                 initial={{ strokeDashoffset: 50 }}
                 animate={{ strokeDashoffset: 0 }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
               />
             )}
             {connectedNodes.roles && (
               <motion.path
                 d="M 340 320 C 440 320, 440 280, 500 280"
                 fill="none"
-                stroke="#10b981"
-                strokeWidth="2"
+                stroke="#0099ff"
+                strokeWidth="2.5"
                 strokeDasharray="6 6"
                 initial={{ strokeDashoffset: 50 }}
                 animate={{ strokeDashoffset: 0 }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
               />
             )}
             {connectedNodes.rules && (
               <motion.path
                 d="M 340 430 C 450 430, 430 310, 500 310"
                 fill="none"
-                stroke="#a855f7"
-                strokeWidth="2"
+                stroke="#0099ff"
+                strokeWidth="2.5"
                 strokeDasharray="6 6"
                 initial={{ strokeDashoffset: 50 }}
                 animate={{ strokeDashoffset: 0 }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
               />
+            )}
+
+            {/* Center to Right Output Beams */}
+            {connectedCount > 0 && (
+              <>
+                <motion.path
+                  d="M 720 220 C 780 220, 780 100, 840 100"
+                  fill="none"
+                  stroke="#10b981"
+                  strokeWidth="2"
+                  strokeDasharray="6 6"
+                  initial={{ strokeDashoffset: 50 }}
+                  animate={{ strokeDashoffset: 0 }}
+                  transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
+                />
+                <motion.path
+                  d="M 720 250 C 780 250, 780 210, 840 210"
+                  fill="none"
+                  stroke="#10b981"
+                  strokeWidth="2"
+                  strokeDasharray="6 6"
+                  initial={{ strokeDashoffset: 50 }}
+                  animate={{ strokeDashoffset: 0 }}
+                  transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
+                />
+                <motion.path
+                  d="M 720 280 C 780 280, 780 320, 840 320"
+                  fill="none"
+                  stroke="#10b981"
+                  strokeWidth="2"
+                  strokeDasharray="6 6"
+                  initial={{ strokeDashoffset: 50 }}
+                  animate={{ strokeDashoffset: 0 }}
+                  transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
+                />
+                <motion.path
+                  d="M 720 310 C 780 310, 780 430, 840 430"
+                  fill="none"
+                  stroke="#10b981"
+                  strokeWidth="2"
+                  strokeDasharray="6 6"
+                  initial={{ strokeDashoffset: 50 }}
+                  animate={{ strokeDashoffset: 0 }}
+                  transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
+                />
+              </>
             )}
           </svg>
 

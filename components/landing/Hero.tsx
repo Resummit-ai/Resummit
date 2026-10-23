@@ -8,31 +8,106 @@ import RotatingText from "@/components/ui/RotatingText";
 
 export function Hero({ hasSession = false }: { hasSession?: boolean }) {
   return (
-    <section className="relative pt-28 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
+    <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
       {/* Background ambient lighting */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-blue-600/10 blur-[130px] pointer-events-none rounded-full" />
+      <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-blue-600/10 blur-[140px] pointer-events-none rounded-full" />
 
-      {/* Main Hero Card Container - matches referral site card background and border */}
+      {/* Top Editorial Content */}
+      <div className="text-center max-w-4xl mx-auto mb-14">
+        {/* Badge Pill matching referral site style */}
+        <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full mb-6">
+          <span className="bg-white/10 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">New</span>
+          <span className="text-xs font-normal text-[#f2efe9]/80">GitHub-powered resume intelligence is live</span>
+        </div>
+
+        {/* Dynamic Headline with RotatingText */}
+        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-medium tracking-tight text-[#f2efe9] leading-[1.08] mb-6">
+          Your GitHub already proves <br className="hidden sm:inline" />
+          your experience in{" "}
+          <span className="inline-block mt-1 sm:mt-0">
+            <RotatingText
+              texts={[
+                "Full-Stack Systems",
+                "Cloud Infrastructure",
+                "Distributed Systems",
+                "High-Scale APIs",
+                "AI & Machine Learning",
+                "Modern Web Apps",
+              ]}
+              color="#f2efe9"
+              badgeBackground="#18181b"
+              badgeRadius={14}
+              badgePaddingX={16}
+              badgePaddingY={4}
+              font={{
+                fontFamily: "Inter, system-ui, sans-serif",
+                fontWeight: 600,
+                fontSize: "clamp(1.5rem, 3.4vw, 2.5rem)",
+                letterSpacing: "-0.03em",
+                lineHeight: "1.2",
+              }}
+            />
+          </span>
+        </h1>
+
+        {/* Subtitle */}
+        <p className="text-base sm:text-lg text-[#f2efe9]/70 max-w-2xl mx-auto mb-8 leading-relaxed font-normal">
+          Resummit analyzes repositories, commits, and architecture to turn real developer work into clean, recruiter-ready resumes.
+        </p>
+
+        {/* CTA Buttons & Social Proof */}
+        <div className="flex flex-wrap items-center justify-center gap-5 mb-8">
+          <Link
+            href={hasSession ? "/dashboard" : "/login"}
+            className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-2.5 text-sm font-medium text-black transition-all hover:bg-neutral-200 shadow-md group"
+          >
+            <span>{hasSession ? "Go to Dashboard" : "Build my CV free"}</span>
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Link>
+
+          <div className="inline-flex items-center gap-2 text-xs text-[#f2efe9]/80 font-normal">
+            <span className="text-amber-400">★</span>
+            <span className="font-semibold text-[#f2efe9]">4.9</span>
+            <span className="text-[#f2efe9]/50">average from 1,200+ developers</span>
+          </div>
+        </div>
+
+        {/* Trust Guarantees */}
+        <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-[#f2efe9]/60">
+          <span className="inline-flex items-center gap-1.5">
+            <Check size={14} className="text-emerald-400" />
+            Free to start · No credit card required
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <Check size={14} className="text-emerald-400" />
+            Read-only GitHub OAuth · Zero write permissions
+          </span>
+        </div>
+      </div>
+
+      {/* Main Hero Card Container - Dashboard Preview */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="relative rounded-[28px] border border-[#27272a] bg-[#0e0e12] overflow-hidden shadow-2xl"
+        transition={{ duration: 0.7, delay: 0.1 }}
+        className="relative rounded-[28px] border border-[#27272a] bg-[#0e0e12] overflow-hidden shadow-[0_24px_80px_rgba(0,0,0,0.8)]"
       >
-        {/* Top Sky Artwork Panel */}
-        <div className="relative h-[340px] sm:h-[400px] w-full overflow-visible bg-[#1a365d]">
+        {/* Pixel-art sky landscape backdrop */}
+        <div className="relative h-[220px] sm:h-[280px] w-full overflow-hidden bg-[#1a365d]">
           <img
             src="/images/fairweather_sky.jpg"
             alt="Pixel-art sky landscape"
-            className="w-full h-full object-cover object-[center_30%] block"
+            className="w-full h-full object-cover object-[center_35%] block"
             style={{ imageRendering: "pixelated" }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-transparent to-black/60 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-[#0e0e12] pointer-events-none" />
+        </div>
 
-          {/* Floating Product Preview Window rising out of the sky */}
-          <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-[94%] max-w-[840px] bg-[#121217] backdrop-blur-xl border border-[#27272a] rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.7)] z-10 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-neutral-700">
+        {/* Nested Product Preview Window */}
+        <div className="relative -mt-36 sm:-mt-44 px-4 sm:px-8 pb-8 z-10">
+          <div className="bg-[#121217] backdrop-blur-xl border border-[#27272a] rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.7)] overflow-hidden transition-all duration-300 hover:border-neutral-700">
             {/* Window Header */}
-            <div className="px-4 py-3 bg-[#18181b]/90 border-b border-[#27272a] flex items-center justify-between">
+            <div className="px-4 py-3 bg-[#18181b]/95 border-b border-[#27272a] flex items-center justify-between">
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
                 <span className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
@@ -122,98 +197,19 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
           </div>
         </div>
 
-        {/* Lower Hero Content: Editorial Resummit Content */}
-        <div className="pt-28 sm:pt-32 pb-14 px-6 sm:px-12 text-center max-w-4xl mx-auto">
-          {/* Badge Pill matching referral site style */}
-          <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-xs font-normal text-[#f2efe9]/80">GitHub-powered resume intelligence</span>
+        {/* Verified Resummit Specs Metrics Line */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-6 px-6 sm:px-12 border-t border-[#27272a] bg-[#101014] text-center">
+          <div className="space-y-1">
+            <div className="text-2xl sm:text-3xl font-medium text-[#f2efe9] tracking-tight">94%</div>
+            <div className="text-xs text-[#f2efe9]/50">Median ATS parse rate across tech recruiters</div>
           </div>
-
-          {/* Dynamic Headline with RotatingText matching referral font-medium text-[#f2efe9] */}
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-medium tracking-tight text-[#f2efe9] leading-[1.12] mb-6">
-            Your GitHub already proves <br className="hidden sm:inline" />
-            your experience in{" "}
-            <span className="inline-block mt-1 sm:mt-0">
-              <RotatingText
-                texts={[
-                  "Full-Stack Systems",
-                  "Cloud Infrastructure",
-                  "Distributed Systems",
-                  "High-Scale APIs",
-                  "AI & Machine Learning",
-                  "Modern Web Apps",
-                ]}
-                color="#f2efe9"
-                badgeBackground="#1c1d22"
-                badgeRadius={14}
-                badgePaddingX={18}
-                badgePaddingY={4}
-                font={{
-                  fontFamily: "Inter, system-ui, sans-serif",
-                  fontWeight: 600,
-                  fontSize: "clamp(1.5rem, 3.4vw, 2.5rem)",
-                  letterSpacing: "-0.03em",
-                  lineHeight: "1.2",
-                }}
-              />
-            </span>
-          </h1>
-
-          {/* Subheading matching referral site text-[#f2efe9]/70 */}
-          <p className="text-base sm:text-lg text-[#f2efe9]/70 max-w-2xl mx-auto mb-8 leading-relaxed font-normal">
-            Resummit analyzes repositories, commits, technologies, and project structures
-            to generate clean, recruiter-ready resumes from the work you already built.
-          </p>
-
-          {/* Action Buttons matching referral button dimensions (h-9, rounded-full) */}
-          <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
-            <Link
-              href={hasSession ? "/dashboard" : "/login"}
-              className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-2.5 text-sm font-medium text-black transition-all hover:bg-neutral-200 shadow-md group"
-            >
-              <span>{hasSession ? "Go to Dashboard" : "Start for free"}</span>
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-
-            <button
-              type="button"
-              onClick={() => {
-                const element = document.getElementById("interactive-resume");
-                element?.scrollIntoView({ behavior: "smooth" });
-              }}
-              className="inline-flex items-center rounded-full border border-[#27272a] bg-[#141417] px-5 py-2.5 text-sm font-medium text-[#f2efe9]/80 hover:text-[#f2efe9] hover:bg-[#1f1f23] transition-colors"
-            >
-              See how it works
-            </button>
+          <div className="space-y-1 border-t md:border-t-0 md:border-x border-[#27272a] pt-4 md:pt-0">
+            <div className="text-2xl sm:text-3xl font-medium text-[#f2efe9] tracking-tight">&lt;60s</div>
+            <div className="text-xs text-[#f2efe9]/50">Average generation time from public repos</div>
           </div>
-
-          {/* Verified Resummit Specs Metrics Line */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8 border-t border-[#27272a] text-center">
-            <div className="space-y-1">
-              <div className="text-2xl sm:text-3xl font-medium text-[#f2efe9] tracking-tight">94%</div>
-              <div className="text-xs text-[#f2efe9]/50">Median ATS parse rate across tech recruiters</div>
-            </div>
-            <div className="space-y-1 border-t md:border-t-0 md:border-x border-[#27272a] pt-4 md:pt-0">
-              <div className="text-2xl sm:text-3xl font-medium text-[#f2efe9] tracking-tight">&lt;60s</div>
-              <div className="text-xs text-[#f2efe9]/50">Average generation time from public repos</div>
-            </div>
-            <div className="space-y-1 border-t md:border-t-0 border-[#27272a] pt-4 md:pt-0">
-              <div className="text-2xl sm:text-3xl font-medium text-[#f2efe9] tracking-tight">100%</div>
-              <div className="text-xs text-[#f2efe9]/50">Read-only GitHub access · Never writes to repos</div>
-            </div>
-          </div>
-
-          {/* Trust Guarantees */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-[#f2efe9]/60">
-            <span className="inline-flex items-center gap-1.5">
-              <Check size={14} className="text-emerald-400" />
-              Free to start · No credit card required
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <Check size={14} className="text-emerald-400" />
-              Read-only GitHub OAuth · Zero write permissions
-            </span>
+          <div className="space-y-1 border-t md:border-t-0 border-[#27272a] pt-4 md:pt-0">
+            <div className="text-2xl sm:text-3xl font-medium text-[#f2efe9] tracking-tight">100%</div>
+            <div className="text-xs text-[#f2efe9]/50">Read-only GitHub access · Never writes to repos</div>
           </div>
         </div>
       </motion.div>
