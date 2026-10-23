@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Loader2, CheckCircle2, GitBranch, Sparkles, Brain } from "lucide-react";
+import { Loader2, CheckCircle2, GitBranch, FolderGit2, Brain } from "lucide-react";
 
 type SyncStep = "FETCHING" | "SELECTING" | "GENERATING" | "SAVING" | "COMPLETED" | "ERROR";
 
@@ -59,7 +59,7 @@ export default function SyncingPage() {
           <div className={`absolute inset-0 border-4 border-[var(--sclade-primary)] rounded-full border-t-transparent animate-spin ${step === "COMPLETED" || step === "ERROR" ? "hidden" : ""}`} />
           <div className="absolute inset-0 flex items-center justify-center">
             {step === "FETCHING" && <GitBranch className="w-8 h-8 text-[var(--sclade-text-muted)]" />}
-            {step === "SELECTING" && <Sparkles className="w-8 h-8 text-[var(--sclade-primary)]" />}
+            {step === "SELECTING" && <FolderGit2 className="w-8 h-8 text-[var(--sclade-primary)]" />}
             {step === "GENERATING" && <Brain className="w-8 h-8 text-[var(--sclade-primary)]" />}
             {step === "SAVING" && <Loader2 className="w-8 h-8 text-[var(--sclade-primary)] animate-spin" />}
             {step === "COMPLETED" && <CheckCircle2 className="w-8 h-8 text-[var(--sclade-success-text,#32704F)]" />}

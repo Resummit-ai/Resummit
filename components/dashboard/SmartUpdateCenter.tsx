@@ -392,7 +392,7 @@ export function SmartUpdateCenter({
         <div className="relative w-16 h-16 mx-auto mb-6 flex items-center justify-center">
           <div className="absolute inset-0 border-2 border-[#5473D1]/20 rounded-full" />
           <div className="absolute inset-0 border-2 border-[#5473D1] rounded-full border-t-transparent animate-spin" />
-          <Zap className="w-6 h-6 text-[#5473D1] animate-pulse" />
+          <RefreshCw className="w-6 h-6 text-[#5473D1]" />
         </div>
 
         <h3 className="text-base font-bold text-[var(--sclade-text-primary)] mb-1 tracking-tight">AI is Synchronizing GitHub Codebases</h3>
@@ -564,10 +564,10 @@ export function SmartUpdateCenter({
         </div>
 
         {isCurrentlySyncing && (
-          <div className="flex items-center gap-3 p-4 bg-blue-500/10 border border-blue-500/20 rounded-2xl animate-pulse">
-            <Zap className="w-4 h-4 text-blue-400" />
-            <span className="text-[9px] font-bold text-blue-400 uppercase tracking-wider">
-              {filterType === "skill" ? "Scanning Skills..." : "Scanning Projects..."}
+          <div className="flex items-center gap-3 p-3.5 bg-[#E8F0FE] dark:bg-[#004A77]/20 border border-[#1A73E8]/20 rounded-xl">
+            <Loader2 className="w-4 h-4 text-[#1A73E8] animate-spin" />
+            <span className="text-xs font-medium text-[#1A73E8] dark:text-[#C2E7FF]">
+              {filterType === "skill" ? "Scanning skills..." : "Scanning projects..."}
             </span>
           </div>
         )}
@@ -673,7 +673,7 @@ export function SmartUpdateCenter({
         {/* Header */}
         <div className="flex items-center justify-between pb-5 border-b border-[var(--sclade-card-border)]/60 mb-6">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-[#5473D1]" />
+            <FolderGit2 className="w-4 h-4 text-[#5473D1]" />
             <h3 className="text-sm font-bold text-[var(--sclade-text-primary)] tracking-tight">
               Discoveries
             </h3>

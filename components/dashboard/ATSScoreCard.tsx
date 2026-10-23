@@ -231,9 +231,9 @@ export function ATSScoreCard({ storedScore, versionId, resumeName, versionName }
         {quickFixes.length > 0 && (
           <div className="space-y-2.5 pt-2">
             <div className="flex items-center gap-1.5 text-[#5473D1]">
-              <Zap className="w-3.5 h-3.5 fill-[#5473D1]" />
+              <Target className="w-3.5 h-3.5 text-[#5473D1]" />
               <p className="text-xs font-bold tracking-wider text-[var(--sclade-text-primary)]">
-                Quick wins
+                Recommended Actions
               </p>
             </div>
             <div className="space-y-1.5 pl-0.5">

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { Bell, Settings, User, X, Check, Shield, Cpu, RefreshCw, Moon, Sparkles, Sun, LogOut, HelpCircle } from "lucide-react";
+import { Bell, Settings, User, X, Check, Shield, Cpu, RefreshCw, Moon, Brain, Sun, LogOut, HelpCircle } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { signOut } from "next-auth/react";
 
@@ -293,7 +293,7 @@ export function DashboardControls({ user }: DashboardControlsProps) {
                             : "text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-white dark:hover:bg-neutral-800"
                         }`}
                       >
-                        <Sparkles className="w-3.5 h-3.5" />
+                        <Brain className="w-3.5 h-3.5" />
                         Claude 3.5
                       </button>
                     </div>

@@ -228,18 +228,18 @@ export default async function DashboardPage() {
                 </div>
 
                 {/* Resummit Pro Banner */}
-                <div className="p-6 md:p-7 rounded-2xl bg-gradient-to-br from-[#5473D1] to-[#4261C0] text-white shadow-xs">
+                <div className="p-6 md:p-7 rounded-2xl bg-neutral-900 border border-neutral-800 text-white shadow-sm">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="px-1.5 py-0.5 bg-white/20 text-white text-[9px] font-black uppercase tracking-wider rounded">PRO</span>
-                    <h3 className="font-bold text-base">Resummit Pro</h3>
-                    <span className="px-2 py-0.5 bg-white/20 text-white text-[9px] font-bold uppercase tracking-wider rounded-md ml-auto">Coming Soon</span>
+                    <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 border border-blue-500/30 text-[10px] font-bold uppercase tracking-wider rounded-md">PRO</span>
+                    <h3 className="font-bold text-base text-white">Resummit Pro</h3>
+                    <span className="px-2 py-0.5 bg-neutral-800 text-neutral-400 text-[10px] font-medium rounded-md ml-auto">Coming Soon</span>
                   </div>
-                  <p className="text-blue-50 text-xs mb-5 leading-relaxed opacity-90">
+                  <p className="text-neutral-300 text-xs mb-5 leading-relaxed">
                     Unlock real-time ATS monitoring and multi-version resume management.
                   </p>
                   <button
                     disabled
-                    className="w-full py-2.5 bg-white/20 hover:bg-white/25 border border-white/20 text-white font-bold rounded-xl text-xs cursor-not-allowed select-none transition-all shadow-xs"
+                    className="w-full py-2.5 bg-neutral-800/80 border border-neutral-700/60 text-neutral-400 font-medium rounded-xl text-xs cursor-not-allowed select-none transition-colors"
                   >
                     Coming Soon
                   </button>
