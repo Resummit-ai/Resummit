@@ -480,10 +480,10 @@ export function SmartUpdateCenter({
               {suggestion.description}
             </p>
             <div className="flex items-center gap-2 mt-2.5">
-              <span className="text-[10px] font-bold text-[#32704F] bg-[#E4F2E9] border border-[#32704F]/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                {Math.round(suggestion.confidence * 100)}% MATCH
+              <span className="text-xs font-medium text-[#137333] bg-[#E6F4EA] dark:bg-[#137333]/20 border border-[#CEEAD6] dark:border-[#137333]/30 px-2.5 py-0.5 rounded-full">
+                {Math.round(suggestion.confidence * 100)}% match
               </span>
-              <span className="text-[10px] font-medium text-[var(--sclade-text-muted)]">
+              <span className="text-xs text-[var(--sclade-text-muted)]">
                 · {timeFormatted}
               </span>
             </div>
@@ -492,9 +492,9 @@ export function SmartUpdateCenter({
 
         <button
           onClick={() => setReviewing(suggestion)}
-          className="px-3.5 py-1.5 rounded-lg border border-[#CFD9FF] hover:border-[#5473D1] hover:bg-[#E7EDFF] text-[#5473D1] text-xs font-bold uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer shrink-0"
+          className="px-3 py-1.5 rounded-lg border border-[#DADCE0] dark:border-neutral-700 hover:bg-[#F1F3F4] dark:hover:bg-neutral-800 text-[#1A73E8] text-xs font-medium flex items-center gap-1 transition-colors cursor-pointer shrink-0"
         >
-          REVIEW <ChevronRight className="w-3.5 h-3.5 stroke-[2.5]" />
+          Review <ChevronRight className="w-3.5 h-3.5" />
         </button>
       </div>
     );
@@ -522,10 +522,10 @@ export function SmartUpdateCenter({
               {suggestion.description}
             </p>
             <div className="flex items-center gap-2 mt-2.5">
-              <span className="text-[10px] font-bold text-[#32704F] bg-[#E4F2E9] border border-[#32704F]/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                {Math.round(suggestion.confidence * 100)}% MATCH
+              <span className="text-xs font-medium text-[#137333] bg-[#E6F4EA] dark:bg-[#137333]/20 border border-[#CEEAD6] dark:border-[#137333]/30 px-2.5 py-0.5 rounded-full">
+                {Math.round(suggestion.confidence * 100)}% match
               </span>
-              <span className="text-[10px] font-medium text-[var(--sclade-text-muted)]">
+              <span className="text-xs text-[var(--sclade-text-muted)]">
                 · {timeFormatted}
               </span>
             </div>
@@ -534,9 +534,9 @@ export function SmartUpdateCenter({
 
         <button
           onClick={() => setReviewing(suggestion)}
-          className="px-3.5 py-1.5 rounded-lg border border-[#CFD9FF] hover:border-[#5473D1] hover:bg-[#E7EDFF] text-[#5473D1] text-xs font-bold uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer shrink-0"
+          className="px-3 py-1.5 rounded-lg border border-[#DADCE0] dark:border-neutral-700 hover:bg-[#F1F3F4] dark:hover:bg-neutral-800 text-[#1A73E8] text-xs font-medium flex items-center gap-1 transition-colors cursor-pointer shrink-0"
         >
-          REVIEW <ChevronRight className="w-3.5 h-3.5 stroke-[2.5]" />
+          Review <ChevronRight className="w-3.5 h-3.5" />
         </button>
       </div>
     );
@@ -761,8 +761,8 @@ export function SmartUpdateCenter({
             <div className="p-6">
               <div className="flex items-center justify-between mb-5 pb-3 border-b border-[var(--sclade-card-border)]">
                 <div>
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--sclade-text-primary)]">Review AI Suggestion</h3>
-                  <p className="text-[11px] text-[var(--sclade-text-secondary)] uppercase tracking-wider mt-0.5">{reviewing.type.replace('_', ' ')}</p>
+                  <h3 className="text-sm font-semibold text-[var(--sclade-text-primary)]">Review suggestion</h3>
+                  <p className="text-xs text-[var(--sclade-text-secondary)] mt-0.5">{reviewing.type.replace('_', ' ')}</p>
                 </div>
                 <button 
                   onClick={() => setReviewing(null)}
@@ -774,7 +774,7 @@ export function SmartUpdateCenter({
 
               <div className="space-y-5">
                 <div className="p-4 bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-card-border)] rounded-xl">
-                  <h5 className="text-xs font-bold text-[var(--sclade-text-secondary)] uppercase tracking-wider mb-3">AI Proposed Changes</h5>
+                  <h5 className="text-xs font-medium text-[var(--sclade-text-secondary)] mb-3">Proposed changes</h5>
                   <div className="text-xs text-[var(--sclade-text-primary)] leading-relaxed">
                     {/* Render specific fields based on type */}
                     {reviewing.type === 'NEW_PROJECT' && (
@@ -852,14 +852,14 @@ export function SmartUpdateCenter({
                 <div className="flex gap-3 pt-2">
                   <button
                     onClick={() => handleApprove(reviewing.id, JSON.parse(reviewing.proposedData))}
-                    className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-[#32704F] hover:bg-[#285a3f] text-white rounded-lg text-xs font-bold uppercase tracking-wider transition-all shadow-xs cursor-pointer"
+                    className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 bg-[#1A73E8] hover:bg-[#1557B0] text-white rounded-lg text-xs font-medium transition-colors shadow-xs cursor-pointer"
                   >
                     <Check className="w-4 h-4" />
-                    Approve & Sync
+                    Accept and apply
                   </button>
                   <button
                     onClick={() => handleDiscard(reviewing.id)}
-                    className="px-5 py-2.5 bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-card-border)] hover:bg-red-50 dark:hover:bg-red-950/20 text-[var(--sclade-text-secondary)] hover:text-red-600 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer"
+                    className="px-4 py-2.5 bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-card-border)] hover:bg-[#F1F3F4] dark:hover:bg-neutral-800 text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] rounded-lg text-xs font-medium transition-colors cursor-pointer"
                   >
                     Discard
                   </button>
@@ -935,17 +935,17 @@ export function SmartUpdateCenter({
                     handleDiscard(conflictModal.id);
                     setConflictModal(null);
                   }}
-                  className="flex-1 py-2 px-3.5 bg-[var(--sclade-btn-secondary-bg)] hover:bg-[var(--sclade-subtle-bg)] border border-[var(--sclade-card-border)] text-[var(--sclade-text-primary)] rounded-lg text-xs font-bold uppercase tracking-wider transition-all text-center cursor-pointer"
+                  className="flex-1 py-2 px-3.5 bg-[var(--sclade-btn-secondary-bg)] hover:bg-[var(--sclade-subtle-bg)] border border-[var(--sclade-card-border)] text-[var(--sclade-text-primary)] rounded-lg text-xs font-medium transition-colors text-center cursor-pointer"
                 >
-                  Keep mine
+                  Keep current
                 </button>
                 <button
                   onClick={() => {
                     handleApprove(conflictModal.id, conflictModal.proposed, true);
                   }}
-                  className="flex-1 py-2 px-3.5 bg-[#5473D1] hover:bg-[#4261C0] text-white rounded-lg text-xs font-bold uppercase tracking-wider transition-all text-center shadow-xs cursor-pointer"
+                  className="flex-1 py-2 px-3.5 bg-[#1A73E8] hover:bg-[#1557B0] text-white rounded-lg text-xs font-medium transition-colors text-center shadow-xs cursor-pointer"
                 >
-                  Replace
+                  Update with suggestion
                 </button>
               </div>
             </div>

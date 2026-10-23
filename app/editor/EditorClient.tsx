@@ -3197,7 +3197,7 @@ export function EditorClient({
         }`}>
           {/* Preview Toolbar */}
           <div className="py-2.5 px-6 flex items-center justify-between border-b border-[#DADCE0] dark:border-neutral-800 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md z-10 shrink-0">
-            {/* Left: Page navigation & Left sidebar toggle */}
+            {/* Left: Left sidebar toggle */}
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsLeftCollapsed(prev => !prev)}
@@ -3211,11 +3211,6 @@ export function EditorClient({
                 {isLeftCollapsed ? <PanelLeftOpen className="w-3.5 h-3.5" /> : <PanelLeftClose className="w-3.5 h-3.5" />}
                 <span className="text-[11px] font-semibold hidden sm:inline">Editor</span>
               </button>
-
-              <div className="flex items-center gap-1.5 bg-white dark:bg-neutral-800 px-2.5 py-1 rounded-lg border border-[#DADCE0] dark:border-neutral-700 text-xs text-neutral-600 dark:text-neutral-300 font-medium select-none shadow-xs">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
-                <span>1 Page</span>
-              </div>
             </div>
 
             {/* Middle: PDF Export */}
@@ -3223,10 +3218,10 @@ export function EditorClient({
               <button
                 onClick={handleExportPDF}
                 disabled={isExporting}
-                className="flex items-center gap-1.5 px-3 py-1 bg-white dark:bg-neutral-800 border border-[#DADCE0] dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700 text-xs font-medium rounded-lg text-neutral-700 dark:text-neutral-200 transition-colors shadow-xs cursor-pointer disabled:opacity-50"
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-[#1A73E8] hover:bg-[#1557B0] active:bg-[#174EA6] text-white text-xs font-medium rounded-lg transition-colors shadow-xs cursor-pointer disabled:opacity-50"
               >
                 {isExporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
-                <span>Export PDF</span>
+                <span>Download PDF</span>
               </button>
             </div>
 
