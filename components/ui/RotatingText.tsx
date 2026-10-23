@@ -1,26 +1,20 @@
 "use client";
 
 import * as React from "react";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { gsap } from "gsap";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-type FontStyle = React.CSSProperties;
+export type FontStyle = React.CSSProperties;
 
-type TransitionValue = {
-  type?: string;
+export type TransitionValue = {
   duration?: number;
   delay?: number;
   ease?: string | number[];
   staggerChildren?: number;
 };
 
-type StaggerFrom = "first" | "last" | "center" | "random";
-type SplitBy = "characters" | "words" | "lines";
-
-type WordPart = {
-  characters: string[];
-  needsSpace: boolean;
-};
+export type StaggerFrom = "first" | "last" | "center" | "random";
+export type SplitBy = "characters" | "words" | "lines";
 
 export type RotatingTextProps = {
   prefix?: string;
@@ -36,50 +30,27 @@ export type RotatingTextProps = {
   splitBy?: SplitBy;
   staggerFrom?: StaggerFrom;
   auto?: boolean;
+  rotationInterval?: number;
   transition?: TransitionValue;
   className?: string;
   style?: React.CSSProperties;
 };
 
-const ROTATION_INTERVAL_MS = 2400;
-
-const mapEase = (ease: TransitionValue["ease"]): string => {
-  if (typeof ease !== "string") return "power2.out";
-
-  const easeMap: Record<string, string> = {
-    linear: "none",
-    easeIn: "power2.in",
-    easeOut: "power2.out",
-    easeInOut: "power2.inOut",
-    circIn: "circ.in",
-    circOut: "circ.out",
-    circInOut: "circ.inOut",
-    backIn: "back.in",
-    backOut: "back.out(1.7)",
-    backInOut: "back.inOut",
-    anticipate: "back.out(1.7)",
-  };
-
-  return easeMap[ease] ?? ease;
-};
-
-const mapStaggerFrom = (
-  staggerFrom: StaggerFrom
-): "start" | "end" | "center" | "random" => {
-  if (staggerFrom === "first") return "start";
-  if (staggerFrom === "last") return "end";
-  return staggerFrom;
-};
-
-const useIsoLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect;
-
 const splitIntoCharacters = (text: string): string[] => {
   if (typeof Intl !== "undefined" && "Segmenter" in Intl) {
-    const segmenter = new Intl.Segmenter("en", { granularity: "grapheme" });
-    return Array.from(segmenter.segment(text), (part) => part.segment);
+    try {
+      const segmenter = new Intl.Segmenter("en", { granularity: "grapheme" });
+      return Array.from(segmenter.segment(text), (part) => part.segment);
+    } catch {
+      // Fallback below
+    }
   }
   return Array.from(text);
+};
+
+type WordPart = {
+  characters: string[];
+  needsSpace: boolean;
 };
 
 const buildElements = (text: string, splitBy: SplitBy): WordPart[] => {
@@ -104,179 +75,68 @@ const buildElements = (text: string, splitBy: SplitBy): WordPart[] => {
   }));
 };
 
-function __OriginkitBase_RotatingText({
+export default function RotatingText({
   prefix = "",
   texts = ["components!", "interfaces!", "experiences!"],
   font = {
     fontFamily: "Inter, system-ui, sans-serif",
     fontWeight: 700,
     letterSpacing: "-0.02em",
-    lineHeight: "1.1em",
+    lineHeight: "1.25",
     textAlign: "left",
   },
-  color = "#ffffff",
+  color = "#FFFFFF",
   prefixColor = "#E8E8E8",
   badgeBackground = "#5473D1",
-  badgePaddingX = 16,
-  badgePaddingY = 4,
-  badgeRadius = 12,
-  gap = 12,
+  badgePaddingX = 20,
+  badgePaddingY = 6,
+  badgeRadius = 14,
+  gap = 10,
   splitBy = "characters",
-  staggerFrom = "first",
   auto = true,
+  rotationInterval = 2800,
   transition = {
-    type: "tween",
-    duration: 0.45,
-    delay: 0,
-    ease: "easeOut",
-    staggerChildren: 0.025,
+    duration: 0.38,
+    staggerChildren: 0.02,
   },
   className,
   style,
 }: RotatingTextProps) {
-  const safeTexts =
-    texts && texts.length > 0
-      ? texts
-      : ["components", "animation", "carousel"];
+  // Stabilize texts array so inline array props in parent components don't restart animations
+  const textsKey = Array.isArray(texts) ? texts.join("|||") : "";
+  const safeTexts = useMemo(() => {
+    return texts && texts.length > 0 ? texts : ["components", "interfaces"];
+  }, [textsKey]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
-  const contentRef = useRef<HTMLSpanElement>(null);
-  const badgeRef = useRef<HTMLSpanElement>(null);
-  const isAnimating = useRef(false);
-  const isFirstRender = useRef(true);
-  const hasSizedBadge = useRef(false);
 
-  const elements = useMemo(
-    () => buildElements(safeTexts[currentTextIndex] ?? "", splitBy),
-    [safeTexts, currentTextIndex, splitBy]
-  );
-
-  useEffect(() => {
-    if (currentTextIndex > safeTexts.length - 1) {
-      setCurrentTextIndex(0);
-    }
-  }, [safeTexts.length, currentTextIndex]);
-
+  // Rotation interval timer
   useEffect(() => {
     if (!auto || safeTexts.length <= 1) return;
 
-    const getNextIndex = (index: number) => {
-      if (index >= safeTexts.length - 1) return 0;
-      return index + 1;
-    };
+    const timer = setInterval(() => {
+      setCurrentTextIndex((prev) => (prev + 1) % safeTexts.length);
+    }, rotationInterval);
 
-    const intervalId = window.setInterval(() => {
-      if (isAnimating.current) return;
+    return () => clearInterval(timer);
+  }, [auto, safeTexts.length, rotationInterval]);
 
-      const content = contentRef.current;
-      if (!content) return;
+  const currentText = safeTexts[currentTextIndex] ?? safeTexts[0] ?? "";
+  const elements = useMemo(
+    () => buildElements(currentText, splitBy),
+    [currentText, splitBy]
+  );
 
-      const chars = content.querySelectorAll(".char");
-      if (chars.length === 0) {
-        setCurrentTextIndex((index) => getNextIndex(index));
-        return;
-      }
+  const staggerEach = transition.staggerChildren ?? 0.02;
+  const duration = transition.duration ?? 0.38;
 
-      const duration = transition.duration ?? 0.45;
-      const staggerEach = transition.staggerChildren ?? 0.025;
-      const ease = mapEase(transition.ease);
-
-      isAnimating.current = true;
-      gsap.killTweensOf(chars);
-
-      gsap.to(chars, {
-        yPercent: -120,
-        opacity: 0,
-        duration,
-        stagger: {
-          each: staggerEach,
-          from: mapStaggerFrom(staggerFrom),
-        },
-        ease,
-        onComplete: () => {
-          setCurrentTextIndex((index) => getNextIndex(index));
-        },
-      });
-    }, ROTATION_INTERVAL_MS);
-
-    return () => window.clearInterval(intervalId);
-  }, [auto, safeTexts.length, staggerFrom, transition]);
-
-  useEffect(() => {
-    const content = contentRef.current;
-    if (!content) return;
-
-    const chars = content.querySelectorAll(".char");
-    if (chars.length === 0) {
-      isAnimating.current = false;
-      return;
-    }
-
-    gsap.killTweensOf(chars);
-
-    const duration = transition.duration ?? 0.45;
-    const delay = isFirstRender.current ? (transition.delay ?? 0) : 0;
-    const staggerEach = transition.staggerChildren ?? 0.025;
-    const ease = mapEase(transition.ease);
-
-    isFirstRender.current = false;
-    isAnimating.current = true;
-
-    gsap.fromTo(
-      chars,
-      { yPercent: 100, opacity: 0 },
-      {
-        yPercent: 0,
-        opacity: 1,
-        duration,
-        delay,
-        stagger: {
-          each: staggerEach,
-          from: mapStaggerFrom(staggerFrom),
-        },
-        ease,
-        onComplete: () => {
-          isAnimating.current = false;
-        },
-      }
-    );
-
-    return () => {
-      gsap.killTweensOf(chars);
-    };
-  }, [currentTextIndex, elements, staggerFrom, transition]);
-
-  useIsoLayoutEffect(() => {
-    const badge = badgeRef.current;
-    const content = contentRef.current;
-    if (!badge || !content) return;
-
-    const nextWidth = content.scrollWidth + badgePaddingX * 2;
-    const duration = transition.duration ?? 0.45;
-    const ease = mapEase(transition.ease);
-
-    gsap.killTweensOf(badge);
-
-    if (!hasSizedBadge.current) {
-      hasSizedBadge.current = true;
-      gsap.set(badge, { width: nextWidth });
-      return;
-    }
-
-    gsap.to(badge, {
-      width: nextWidth,
-      duration,
-      ease,
-    });
-  }, [currentTextIndex, elements, badgePaddingX, transition]);
-
-  const textAlign =
-    (font.textAlign as React.CSSProperties["textAlign"]) ?? "left";
+  const textAlign = (font.textAlign as React.CSSProperties["textAlign"]) ?? "left";
   const justifyContent =
     textAlign === "center"
       ? "center"
       : textAlign === "right" || textAlign === "end"
-        ? "flex-end"
-        : "flex-start";
+      ? "flex-end"
+      : "flex-start";
 
   return (
     <span
@@ -286,7 +146,7 @@ function __OriginkitBase_RotatingText({
         display: "inline-flex",
         alignItems: "center",
         justifyContent,
-        flexWrap: "wrap",
+        flexWrap: "nowrap",
         gap,
         textAlign,
         verticalAlign: "middle",
@@ -299,96 +159,117 @@ function __OriginkitBase_RotatingText({
         </span>
       ) : null}
 
-      <span
-        ref={badgeRef}
+      <motion.span
+        layout
+        transition={{
+          layout: {
+            type: "spring",
+            stiffness: 450,
+            damping: 38,
+            mass: 0.8,
+          },
+        }}
         style={{
           display: "inline-flex",
           alignItems: "center",
           justifyContent: "center",
-          overflow: "hidden",
           verticalAlign: "middle",
           backgroundColor: badgeBackground,
           color,
           borderRadius: badgeRadius,
-          paddingTop: badgePaddingY,
-          paddingBottom: badgePaddingY,
-          paddingLeft: badgePaddingX,
-          paddingRight: badgePaddingX,
+          padding: `${badgePaddingY}px ${badgePaddingX}px`,
           boxSizing: "border-box",
-          boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
-          transition: "background-color 0.3s ease",
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          position: "relative",
+          lineHeight: 1.25,
+          minHeight: "1.35em",
+          boxShadow:
+            badgeBackground === "#FFFFFF"
+              ? "0 4px 18px rgba(0,0,0,0.12)"
+              : "0 8px 24px rgba(84, 115, 209, 0.35)",
         }}
       >
-        <span
-          style={{
-            position: "absolute",
-            width: 1,
-            height: 1,
-            padding: 0,
-            margin: -1,
-            overflow: "hidden",
-            clip: "rect(0, 0, 0, 0)",
-            whiteSpace: "nowrap",
-            borderWidth: 0,
-          }}
-        >
-          {prefix ? `${prefix} ` : ""}
-          {safeTexts[currentTextIndex]}
-        </span>
-
-        <span
-          ref={contentRef}
-          aria-hidden="true"
-          style={{
-            display: "inline-flex",
-            flexWrap: splitBy === "lines" ? "nowrap" : "wrap",
-            flexDirection: splitBy === "lines" ? "column" : "row",
-            whiteSpace: "nowrap",
-            position: "relative",
-          }}
-        >
-          {elements.map((wordObj, wordIndex) => (
-            <span
-              key={`${currentTextIndex}-${wordIndex}`}
-              style={{ display: "inline-flex" }}
-            >
-              {wordObj.characters.map((char, charIndex) => (
-                <span
-                  key={`${currentTextIndex}-${wordIndex}-${charIndex}`}
-                  className="char"
-                  style={{
-                    display: "inline-block",
-                    willChange: "transform, opacity",
-                  }}
-                >
-                  {char === " " ? "\u00A0" : char}
-                </span>
-              ))}
-              {wordObj.needsSpace ? (
-                <span style={{ whiteSpace: "pre" }}> </span>
-              ) : null}
-            </span>
-          ))}
-        </span>
-      </span>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.span
+            key={currentTextIndex}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={{
+              initial: {},
+              animate: {
+                transition: {
+                  staggerChildren: staggerEach,
+                  delayChildren: 0.015,
+                },
+              },
+              exit: {
+                transition: {
+                  staggerChildren: staggerEach * 0.7,
+                  staggerDirection: 1,
+                },
+              },
+            }}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              whiteSpace: "nowrap",
+              lineHeight: "inherit",
+            }}
+          >
+            {elements.map((wordObj, wordIndex) => (
+              <span
+                key={`${currentTextIndex}-${wordIndex}`}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  whiteSpace: "nowrap",
+                  lineHeight: "inherit",
+                }}
+              >
+                {wordObj.characters.map((char, charIndex) => (
+                  <motion.span
+                    key={`${currentTextIndex}-${wordIndex}-${charIndex}`}
+                    variants={{
+                      initial: { y: "115%", opacity: 0 },
+                      animate: {
+                        y: "0%",
+                        opacity: 1,
+                        transition: {
+                          duration,
+                          ease: [0.16, 1, 0.3, 1],
+                        },
+                      },
+                      exit: {
+                        y: "-115%",
+                        opacity: 0,
+                        transition: {
+                          duration: duration * 0.65,
+                          ease: [0.7, 0, 0.84, 0],
+                        },
+                      },
+                    }}
+                    style={{
+                      display: "inline-block",
+                      willChange: "transform, opacity",
+                      whiteSpace: "pre",
+                      lineHeight: "inherit",
+                    }}
+                  >
+                    {char === " " ? "\u00A0" : char}
+                  </motion.span>
+                ))}
+                {wordObj.needsSpace ? (
+                  <span style={{ display: "inline-block", width: "0.28em" }}>
+                    {"\u00A0"}
+                  </span>
+                ) : null}
+              </span>
+            ))}
+          </motion.span>
+        </AnimatePresence>
+      </motion.span>
     </span>
   );
-}
-
-const __originkitPresetProps = {
-  prefix: "",
-  prefixColor: "#E8E8E8",
-  color: "#FFFFFF",
-  badgeBackground: "#5473D1",
-  badgePaddingY: 6,
-  badgePaddingX: 16,
-  badgeRadius: 14,
-  gap: 12,
-  splitBy: "characters" as const,
-  staggerFrom: "first" as const,
-  auto: true,
-};
-
-export default function RotatingText(props: RotatingTextProps) {
-  return <__OriginkitBase_RotatingText {...(__originkitPresetProps as any)} {...props} />;
 }

@@ -168,17 +168,6 @@ export function LandingClient({
   // Mouse parallax — ref-based (no re-renders)
   const glowRef = useRef<HTMLDivElement>(null);
 
-  // Typewriter
-  const typewriterRoles = [
-    "Full-Stack Development",
-    "AI Engineering",
-    "Backend Engineering",
-    "Software Engineering",
-    "DevOps Engineering"
-  ];
-  const [twIndex, setTwIndex] = useState(0);
-  const [twText, setTwText] = useState("");
-  const [twDeleting, setTwDeleting] = useState(false);
 
   // Stats counters
   const [countersActive, setCountersActive] = useState(false);
@@ -296,22 +285,6 @@ export function LandingClient({
     return () => { window.removeEventListener("mousemove", onMove); cancelAnimationFrame(raf); };
   }, []);
 
-  // Typewriter effect
-  useEffect(() => {
-    const current = typewriterRoles[twIndex];
-    let timeout: ReturnType<typeof setTimeout>;
-    if (!twDeleting && twText.length < current.length) {
-      timeout = setTimeout(() => setTwText(current.slice(0, twText.length + 1)), 60);
-    } else if (!twDeleting && twText.length === current.length) {
-      timeout = setTimeout(() => setTwDeleting(true), 2000);
-    } else if (twDeleting && twText.length > 0) {
-      timeout = setTimeout(() => setTwText(twText.slice(0, -1)), 35);
-    } else if (twDeleting && twText.length === 0) {
-      setTwDeleting(false);
-      setTwIndex((i) => (i + 1) % typewriterRoles.length);
-    }
-    return () => clearTimeout(timeout);
-  }, [twText, twDeleting, twIndex]);
 
   // Stats counter animation
   useEffect(() => {
@@ -2511,8 +2484,8 @@ export function LandingClient({
 
               <h1>
                 Your GitHub already proves <br />
-                your experience in
-                <div style={{ marginTop: "12px", minHeight: "56px", display: "flex", alignItems: "center" }}>
+                your experience in{" "}
+                <span style={{ display: "inline-block", verticalAlign: "middle", marginTop: "4px" }}>
                   <RotatingText
                     texts={[
                       "Full-Stack Systems",
@@ -2525,17 +2498,17 @@ export function LandingClient({
                     color="#FFFFFF"
                     badgeBackground="#5473D1"
                     badgeRadius={14}
-                    badgePaddingX={18}
-                    badgePaddingY={6}
+                    badgePaddingX={20}
+                    badgePaddingY={5}
                     font={{
                       fontFamily: "Inter, system-ui, sans-serif",
                       fontWeight: 800,
-                      fontSize: "clamp(1.5rem, 3.2vw, 2.3rem)",
+                      fontSize: "clamp(1.6rem, 3.4vw, 2.5rem)",
                       letterSpacing: "-0.02em",
-                      lineHeight: "1.2",
+                      lineHeight: "1.15",
                     }}
                   />
-                </div>
+                </span>
               </h1>
 
               <p>
@@ -2954,12 +2927,12 @@ export function LandingClient({
               </span>
               meaningful digital experiences where every line unfolds with{" "}
               <RotatingText
-                texts={["purpose,", "clarity,", "precision,", "motion,"]}
+                texts={["purpose,", "precision,", "vision,", "structure,"]}
                 color="#0F172A"
                 badgeBackground="#FFFFFF"
                 badgeRadius={14}
-                badgePaddingX={16}
-                badgePaddingY={2}
+                badgePaddingX={18}
+                badgePaddingY={3}
                 gap={8}
                 font={{
                   fontFamily: "Inter, system-ui, sans-serif",
