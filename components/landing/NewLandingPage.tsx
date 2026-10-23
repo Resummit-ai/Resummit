@@ -145,6 +145,11 @@ export function NewLandingPage() {
         [data-theme="light"] .landing-root h4 {
           color: #171717 !important;
         }
+        .light .hero-subtitle,
+        [data-theme="light"] .hero-subtitle {
+          color: #262626 !important;
+          font-weight: 450 !important;
+        }
 
         /* Dark mode section and typography overrides */
         .dark .landing-root section:not(.preserve-dark),

@@ -9,7 +9,7 @@ import ArrowRevealButton from "@/components/ui/ArrowRevealButton";
 
 export function Hero({ hasSession = false }: { hasSession?: boolean }) {
   const heroContainerRef = useRef<HTMLDivElement>(null);
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [theme, setTheme] = useState<"dark" | "light">("light");
 
   useEffect(() => {
     const updateTheme = () => {
@@ -43,20 +43,21 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
         <img
           src="/images/hero_mountain_bg.jpg"
           alt="Majestic mountain landscape"
-          className="w-full h-full object-cover object-[center_30%] opacity-40 dark:opacity-65 scale-105 transition-transform duration-1000 ease-out"
+          className="w-full h-full object-cover object-[center_35%] opacity-80 dark:opacity-65 scale-105 transition-all duration-1000 ease-out"
         />
         {/* Subtle needlepoint tapestry canvas texture overlay */}
         <div
-          className="absolute inset-0 opacity-15 dark:opacity-25"
+          className="absolute inset-0 opacity-10 dark:opacity-20"
           style={{
             backgroundImage:
-              "linear-gradient(to right, rgba(0,0,0,0.3) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,0.3) 1px, transparent 1px)",
+              "linear-gradient(to right, rgba(0,0,0,0.2) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,0.2) 1px, transparent 1px)",
             backgroundSize: "3px 3px",
           }}
         />
-        {/* Vignette gradient for light & dark modes */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#F5F5F3]/85 via-[#F5F5F3]/30 to-[#F5F5F3] dark:from-[#0a0a0a]/90 dark:via-[#0a0a0a]/40 dark:to-[#0a0a0a] pointer-events-none transition-colors duration-300" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(0,153,255,0.08),transparent_50%)] pointer-events-none" />
+        {/* Soft vignette preserving rich mountain colors while easing transitions */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#F5F5F3]/50 via-transparent to-[#F5F5F3] dark:from-[#0a0a0a]/85 dark:via-[#0a0a0a]/40 dark:to-[#0a0a0a] pointer-events-none transition-colors duration-300" />
+        {/* Smooth horizontal gradient to maintain high contrast readability for left-aligned text while allowing mountain landscape to shine */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#F5F5F3]/75 via-[#F5F5F3]/30 to-transparent dark:from-[#0a0a0a]/80 dark:via-[#0a0a0a]/30 dark:to-transparent pointer-events-none" />
       </div>
 
       {/* 2. Main Container with Left-Aligned Content */}
@@ -82,10 +83,10 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
                   "AI & Machine Learning",
                   "Modern Web Apps",
                 ]}
-                color={theme === "light" ? "#171717" : "#f2efe9"}
-                badgeBackground={theme === "light" ? "#ffffff" : "#141417"}
+                color="#FFFFFF"
+                badgeBackground="#0077ff"
                 badgeRadius={14}
-                badgePaddingX={18}
+                badgePaddingX={20}
                 badgePaddingY={6}
                 font={{
                   fontFamily: "Inter, system-ui, sans-serif",
@@ -99,7 +100,7 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
           </h1>
 
           {/* Left-Aligned Subtitle */}
-          <p className="text-base sm:text-lg text-[#52525b] dark:text-[#f2efe9]/75 max-w-2xl mb-8 leading-relaxed font-normal">
+          <p className="hero-subtitle text-base sm:text-lg text-neutral-800 dark:text-[#f2efe9]/80 max-w-2xl mb-8 leading-relaxed font-normal">
             Resummit analyzes repositories, commits, and architecture to turn real developer work into clean, recruiter-ready resumes. No manual formatting needed—just connect GitHub and watch your resume build itself.
           </p>
 
@@ -141,21 +142,21 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
               See sample resume →
             </button>
 
-            <div className="inline-flex items-center gap-2 text-xs text-[#52525b] dark:text-[#f2efe9]/80 font-normal ml-2">
+            <div className="inline-flex items-center gap-2 text-xs text-neutral-700 dark:text-[#f2efe9]/80 font-normal ml-2">
               <span className="text-amber-500 dark:text-amber-400 text-sm">★</span>
-              <span className="font-semibold text-[#171717] dark:text-[#f2efe9]">4.9</span>
-              <span className="text-[#707070] dark:text-[#f2efe9]/60">average from 1,200+ developers</span>
+              <span className="font-bold text-neutral-900 dark:text-[#f2efe9]">4.9</span>
+              <span className="text-neutral-600 dark:text-[#f2efe9]/60">average from 1,200+ developers</span>
             </div>
           </div>
 
           {/* Trust Guarantees */}
-          <div className="flex flex-wrap items-center gap-6 text-xs text-[#52525b] dark:text-[#f2efe9]/70 mb-14">
+          <div className="flex flex-wrap items-center gap-6 text-xs text-neutral-700 dark:text-[#f2efe9]/75 font-medium mb-14">
             <span className="inline-flex items-center gap-1.5">
-              <Check size={14} className="text-emerald-600 dark:text-emerald-400" />
+              <Check size={14} className="text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
               Free developer preview · No credit card required
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <Check size={14} className="text-emerald-600 dark:text-emerald-400" />
+              <Check size={14} className="text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
               Read-only GitHub OAuth · Zero code modifications
             </span>
           </div>
