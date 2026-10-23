@@ -6,6 +6,7 @@ import { GitBranch, Brain, FileDown, KeyRound, Terminal, Cpu, FileCheck, Chevron
 import { signOut } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import ArrowRevealButton from "@/components/ui/ArrowRevealButton";
+import RotatingText from "@/components/ui/RotatingText";
 
 const TECH_LOGOS = [
   {
@@ -2511,10 +2512,30 @@ export function LandingClient({
               <h1>
                 Your GitHub already proves <br />
                 your experience in
-                <span className="gradient-text" style={{ display: "block", height: "2.05em", marginTop: "8px", overflow: "hidden" }}>
-                  {twText}
-                  <span className="typewriter-cursor">&nbsp;</span>
-                </span>
+                <div style={{ marginTop: "12px", minHeight: "56px", display: "flex", alignItems: "center" }}>
+                  <RotatingText
+                    texts={[
+                      "Full-Stack Systems",
+                      "Cloud Infrastructure",
+                      "Distributed Systems",
+                      "High-Scale APIs",
+                      "AI & Machine Learning",
+                      "Modern Web Apps",
+                    ]}
+                    color="#FFFFFF"
+                    badgeBackground="#5473D1"
+                    badgeRadius={14}
+                    badgePaddingX={18}
+                    badgePaddingY={6}
+                    font={{
+                      fontFamily: "Inter, system-ui, sans-serif",
+                      fontWeight: 800,
+                      fontSize: "clamp(1.5rem, 3.2vw, 2.3rem)",
+                      letterSpacing: "-0.02em",
+                      lineHeight: "1.2",
+                    }}
+                  />
+                </div>
               </h1>
 
               <p>
@@ -2899,6 +2920,59 @@ export function LandingClient({
               </div>
             </div>
 
+          </div>
+        </section>
+
+        {/* Originkit Design Statement Banner */}
+        <section className="statement-banner-section" style={{ padding: "80px 24px 60px", textAlign: "center", position: "relative", zIndex: 10 }}>
+          <div className="container" style={{ maxWidth: "980px", margin: "0 auto" }}>
+            <h2
+              style={{
+                fontFamily: "Inter, system-ui, sans-serif",
+                fontSize: "clamp(2rem, 4.4vw, 3.4rem)",
+                fontWeight: 600,
+                lineHeight: 1.35,
+                letterSpacing: "-0.03em",
+                color: theme === "dark" ? "#94A3B8" : "#64748B",
+                textAlign: "center",
+              }}
+            >
+              <span
+                style={{
+                  display: "inline-block",
+                  background: "#5473D1",
+                  color: "#FFFFFF",
+                  padding: "4px 20px",
+                  borderRadius: "14px",
+                  fontWeight: 800,
+                  marginRight: "10px",
+                  verticalAlign: "middle",
+                  boxShadow: "0 8px 24px rgba(84, 115, 209, 0.35)",
+                }}
+              >
+                Create
+              </span>
+              meaningful digital experiences where every line unfolds with{" "}
+              <RotatingText
+                texts={["purpose,", "clarity,", "precision,", "motion,"]}
+                color="#0F172A"
+                badgeBackground="#FFFFFF"
+                badgeRadius={14}
+                badgePaddingX={16}
+                badgePaddingY={2}
+                gap={8}
+                font={{
+                  fontFamily: "Inter, system-ui, sans-serif",
+                  fontWeight: 800,
+                  fontSize: "clamp(1.9rem, 4.2vw, 3.2rem)",
+                  letterSpacing: "-0.03em",
+                  color: "#0F172A",
+                  display: "inline-flex",
+                  verticalAlign: "middle",
+                }}
+              />
+              {" "}clarity, and a touch of motion.
+            </h2>
           </div>
         </section>
 
