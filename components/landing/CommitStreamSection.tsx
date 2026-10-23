@@ -1,133 +1,143 @@
 "use client";
 
 import React from "react";
-import { GitCommit, Sparkles, RefreshCw, Lock, Zap } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Globe, GitFork, ShieldCheck, Activity } from "lucide-react";
+import { LANDING_CONFIG } from "@/lib/landing-config";
 
 export function CommitStreamSection() {
-  const commits = [
-    {
-      hash: "8f3a1c2",
-      msg: "perf(cache): migrate session storage to Redis cluster",
-      repo: "resummit/api",
-      time: "2h ago",
-      bullet: "Migrated session caching layer to Redis cluster, slashing median API latency by 42%.",
-    },
-    {
-      hash: "3b91c0e",
-      msg: "feat(auth): implement GitHub OAuth2 & JWT session validation",
-      repo: "resummit/web",
-      time: "4h ago",
-      bullet: "Engineered secure GitHub OAuth2 authentication workflow supporting 10,000+ daily sessions.",
-    },
-    {
-      hash: "1d4a9f7",
-      msg: "refactor: optimize Postgres connection pool & index queries",
-      repo: "resummit/db",
-      time: "1d ago",
-      bullet: "Optimized relational database queries and connection pooling, reducing 99th percentile query timeouts to 0%.",
-    },
-  ];
-
   const features = [
     {
-      title: "One-click GitHub sync",
-      desc: "Connect your profile in seconds without manual copy-pasting.",
-      icon: <Zap className="h-5 w-5 text-blue-400" />,
+      title: "One link, all repositories",
+      desc: "Connect once. Resummit tracks your public and private repositories, auto-updating achievements whenever you push.",
+      icon: <Globe className="h-4 w-4 text-sky-400" />,
     },
     {
-      title: "Bullets from real commits",
-      desc: "Accomplishments grounded in code you actually wrote and shipped.",
-      icon: <Sparkles className="h-5 w-5 text-emerald-400" />,
+      title: "Automated impact metrics",
+      desc: "Diffs and PR descriptions are converted into Google XYZ-style quantified bullet points with real performance numbers.",
+      icon: <GitFork className="h-4 w-4 text-sky-400" />,
     },
     {
-      title: "Your edits are never overwritten",
-      desc: "Refine bullets anytime; subsequent syncs preserve your personal wording.",
-      icon: <RefreshCw className="h-5 w-5 text-amber-400" />,
+      title: "Strict code privacy",
+      desc: "Strict read-only metadata access. Your proprietary business logic and code secrets are never indexed or retained.",
+      icon: <ShieldCheck className="h-4 w-4 text-sky-400" />,
     },
     {
-      title: "Read-only GitHub access",
-      desc: "Strictly read-only OAuth permissions. We never write or commit to your repos.",
-      icon: <Lock className="h-5 w-5 text-purple-400" />,
+      title: "ATS scored on every sync",
+      desc: "We validate every bullet against real corporate applicant tracking filters before exporting your PDF.",
+      icon: <Activity className="h-4 w-4 text-sky-400" />,
     },
   ];
 
   return (
-    <section className="bg-[rgb(10,10,10)] text-[rgb(242,239,233)] py-24 sm:py-32 border-t border-white/10">
+    <section className="bg-[#09090b] text-white py-24 sm:py-32 border-t border-neutral-900 overflow-hidden">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        {/* Header */}
-        <div className="max-w-2xl">
-          <p className="text-xs font-semibold tracking-wider text-blue-400 uppercase">
-            Continuous Sync
-          </p>
-          <h2 className="mt-3 text-4xl font-medium tracking-tight text-balance sm:text-5xl text-[rgb(242,239,233)]">
-            Every commit, reflected
-          </h2>
-          <p className="mt-4 text-base text-[rgba(242,239,233,0.7)]">
-            Your git history is converted directly into measurable, ATS-friendly achievement statements.
-          </p>
-        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          {/* Left Title & Action */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="inline-flex items-center gap-2 rounded-full border border-sky-500/20 bg-sky-500/10 px-3 py-1 text-xs font-medium text-sky-400">
+              <span>✳</span>
+              <span>Git Activity Matrix</span>
+            </div>
 
-        {/* Split Visual: Left commits stream, Right synthesized bullets */}
-        <div className="mt-14 rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-10 backdrop-blur-md">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-            {/* Left: Commit Stream */}
-            <div className="md:col-span-6 space-y-4">
-              <div className="flex items-center justify-between text-xs font-mono text-[rgba(242,239,233,0.5)] border-b border-white/10 pb-2">
-                <span>RAW GIT COMMITS</span>
-                <span>STATUS: PARSED</span>
+            <h2 className="text-4xl font-normal sm:font-medium tracking-tight text-white sm:text-5xl leading-[1.15]">
+              Every commit lands close to your resume
+            </h2>
+
+            <p className="text-base text-neutral-400 leading-relaxed">
+              Resummit continuously tracks your GitHub activity across organizations, converting daily engineering output into interview-ready proof.
+            </p>
+
+            <div>
+              <Link
+                href={LANDING_CONFIG.brand.primaryCta.href}
+                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-neutral-800 hover:border-white/40 shadow-sm"
+              >
+                <span>See sample resume</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Right Matrix Graphic with Stats */}
+          <div className="lg:col-span-7 relative">
+            {/* Top Stats */}
+            <div className="flex items-center justify-end gap-8 mb-4 pr-4">
+              <div className="text-right">
+                <span className="block text-[11px] font-mono text-neutral-400 uppercase tracking-wider">
+                  Bullets / sec
+                </span>
+                <span className="text-2xl font-bold font-mono text-white">14.8</span>
               </div>
-              <div className="space-y-3">
-                {commits.map((c, i) => (
-                  <div
-                    key={i}
-                    className="rounded-xl border border-white/10 bg-black/40 p-3.5 font-mono text-xs space-y-1.5"
-                  >
-                    <div className="flex items-center justify-between text-[rgba(242,239,233,0.4)] text-[11px]">
-                      <span className="flex items-center gap-1.5 text-blue-400">
-                        <GitCommit className="h-3.5 w-3.5" />
-                        <span>{c.hash}</span>
-                      </span>
-                      <span>{c.repo}</span>
-                    </div>
-                    <p className="text-[rgb(242,239,233)] font-sans text-xs">{c.msg}</p>
-                  </div>
-                ))}
+              <div className="text-right">
+                <span className="block text-[11px] font-mono text-neutral-400 uppercase tracking-wider">
+                  Repos live
+                </span>
+                <span className="text-2xl font-bold font-mono text-white">1,420</span>
               </div>
             </div>
 
-            {/* Right: Synthesized Resume Bullets */}
-            <div className="md:col-span-6 space-y-4">
-              <div className="flex items-center justify-between text-xs font-mono text-[rgba(242,239,233,0.5)] border-b border-white/10 pb-2">
-                <span>ATS-READY BULLETS</span>
-                <span>METRICS APPLIED</span>
+            {/* Matrix Card */}
+            <div className="relative rounded-2xl border border-white/10 bg-[#0e0e11] p-6 sm:p-8 overflow-hidden min-h-[320px] flex flex-col justify-between">
+              {/* Subtle Dotted Grid World */}
+              <div
+                className="absolute inset-0 opacity-[0.12] pointer-events-none"
+                style={{
+                  backgroundImage: "radial-gradient(#38bdf8 1px, transparent 1px)",
+                  backgroundSize: "16px 16px",
+                }}
+              />
+
+              {/* Glowing Nodes / Commit Points */}
+              <div className="relative z-10 flex items-center justify-between text-xs text-neutral-400">
+                <span className="font-mono text-[11px] text-neutral-500">RESUMMIT GLOBAL SYNC</span>
+                <div className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-sky-400 animate-ping" />
+                  <span className="font-mono text-[11px] text-sky-400 font-semibold">
+                    GITHUB 42 MS
+                  </span>
+                </div>
               </div>
-              <div className="space-y-3">
-                {commits.map((c, i) => (
-                  <div
-                    key={i}
-                    className="rounded-xl border border-emerald-500/20 bg-emerald-500/[0.04] p-3.5 text-xs text-[rgb(242,239,233)] space-y-1.5"
-                  >
-                    <div className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-400">
-                      <Sparkles className="h-3.5 w-3.5" />
-                      <span>Synthesized Impact</span>
-                    </div>
-                    <p className="text-[rgba(242,239,233,0.9)] leading-relaxed">{c.bullet}</p>
+
+              {/* Interactive Visual Commit Stream Line */}
+              <div className="relative z-10 my-8 space-y-3">
+                <div className="rounded-xl border border-neutral-800 bg-[#16161c]/80 p-3 flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-3">
+                    <span className="h-2 w-2 rounded-full bg-sky-400" />
+                    <span className="font-mono text-neutral-300">git push origin main</span>
                   </div>
-                ))}
+                  <span className="text-[11px] font-mono text-neutral-500">api/v2 8f3a1c2</span>
+                </div>
+
+                <div className="rounded-xl border border-sky-500/30 bg-sky-500/[0.08] p-3 flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-3">
+                    <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                    <span className="text-neutral-200">
+                      Auto-synthesized: "Reduced API response times by 42% via Redis cache..."
+                    </span>
+                  </div>
+                  <span className="text-[11px] font-mono text-emerald-400">ATS 98%</span>
+                </div>
+              </div>
+
+              {/* Bottom Tag */}
+              <div className="relative z-10 flex items-center justify-between text-[11px] font-mono text-neutral-500 pt-3 border-t border-neutral-800/80">
+                <span>Active Webhooks: 4 organizations</span>
+                <span>Latency p95: 84ms</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* 4 Feature Rows */}
-        <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {features.map((feat, i) => (
-            <div key={i} className="rounded-xl border border-white/10 bg-white/[0.02] p-5 space-y-2.5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/5">
+        {/* 4 Feature Columns Below Map (Exact match to reference) */}
+        <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pt-12 border-t border-neutral-900">
+          {features.map((feat, idx) => (
+            <div key={idx} className="space-y-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sky-500/10">
                 {feat.icon}
               </div>
-              <h3 className="text-base font-semibold text-[rgb(242,239,233)]">{feat.title}</h3>
-              <p className="text-xs text-[rgba(242,239,233,0.7)] leading-relaxed">{feat.desc}</p>
+              <h3 className="text-sm font-semibold text-white tracking-tight">{feat.title}</h3>
+              <p className="text-xs text-neutral-400 leading-relaxed">{feat.desc}</p>
             </div>
           ))}
         </div>

@@ -46,31 +46,31 @@ export function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-[rgb(10,10,10)]/80 backdrop-blur-md border-b border-white/10 py-2"
-          : "bg-transparent py-4"
+          ? "bg-[#09090b]/85 backdrop-blur-md border-b border-white/10 py-3"
+          : "bg-transparent py-5"
       }`}
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-        {/* Brand Logo */}
+      <div className="mx-auto flex h-12 max-w-7xl items-center justify-between px-6 lg:px-8">
+        {/* Brand Logo - clean geometric hexagon matching reference */}
         <Link
           href="/"
-          className="flex items-center gap-2 text-base font-semibold text-[rgb(242,239,233)] tracking-tight focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgb(242,239,233)]"
+          className="flex items-center gap-2.5 text-base font-medium text-white tracking-tight"
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[rgb(242,239,233)] text-neutral-950 font-bold text-sm">
-            R
-          </div>
-          <span>{LANDING_CONFIG.brand.name}</span>
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" className="text-white">
+            <path d="M12 2L3 7v10l9 5 9-5V7l-9-5zm0 2.2L19 8.6v6.8L12 19.4 5 15.4V8.6L12 4.2z" />
+          </svg>
+          <span className="font-semibold">{LANDING_CONFIG.brand.name}</span>
         </Link>
 
-        {/* Desktop Links */}
+        {/* Center Desktop Links */}
         <nav className="hidden md:flex items-center gap-8">
           {LANDING_CONFIG.navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-[rgba(242,239,233,0.7)] transition-colors hover:text-[rgb(242,239,233)]"
+              className="text-sm font-normal text-neutral-400 transition-colors hover:text-white"
             >
               {link.label}
             </a>
@@ -78,13 +78,13 @@ export function Navbar() {
         </nav>
 
         {/* Right Actions */}
-        <div className="hidden md:flex items-center gap-3">
-          {/* Theme cycle button */}
+        <div className="hidden md:flex items-center gap-5">
+          {/* Theme switcher */}
           <button
             type="button"
             onClick={cycleTheme}
-            aria-label="Toggle color theme"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-[rgb(242,239,233)] inset-ring inset-ring-white/10 hover:bg-white/10 transition-colors"
+            aria-label="Toggle theme"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 hover:text-white transition-colors"
           >
             {themeMode === "dark" && <Moon className="h-4 w-4" />}
             {themeMode === "light" && <Sun className="h-4 w-4" />}
@@ -93,14 +93,14 @@ export function Navbar() {
 
           <Link
             href="/login"
-            className="inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-medium text-[rgb(242,239,233)] hover:text-white transition-colors"
+            className="text-sm font-medium text-neutral-300 hover:text-white transition-colors"
           >
             Log in
           </Link>
 
           <Link
             href={LANDING_CONFIG.brand.primaryCta.href}
-            className="inline-flex shrink-0 items-center justify-center rounded-full bg-[rgb(242,239,233)] px-5 py-2 text-sm font-medium text-neutral-950 transition-all hover:bg-[rgb(242,239,233)]/90"
+            className="inline-flex shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-sm font-medium text-white transition-all hover:bg-white/15"
           >
             {LANDING_CONFIG.brand.primaryCta.label}
           </Link>
@@ -110,19 +110,9 @@ export function Navbar() {
         <div className="flex items-center gap-2 md:hidden">
           <button
             type="button"
-            onClick={cycleTheme}
-            aria-label="Toggle theme"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-[rgb(242,239,233)] inset-ring inset-ring-white/10"
-          >
-            {themeMode === "dark" && <Moon className="h-4 w-4" />}
-            {themeMode === "light" && <Sun className="h-4 w-4" />}
-            {themeMode === "system" && <Laptop className="h-4 w-4" />}
-          </button>
-          <button
-            type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Open navigation menu"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-[rgb(242,239,233)] inset-ring inset-ring-white/10"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-white"
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -131,14 +121,14 @@ export function Navbar() {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-white/10 bg-[rgb(10,10,10)]/95 px-6 py-6 backdrop-blur-md">
+        <div className="md:hidden border-b border-white/10 bg-[#09090b]/95 px-6 py-6 backdrop-blur-md">
           <nav className="flex flex-col gap-4">
             {LANDING_CONFIG.navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-base font-medium text-[rgba(242,239,233,0.8)] hover:text-[rgb(242,239,233)]"
+                className="text-base font-medium text-neutral-300 hover:text-white"
               >
                 {link.label}
               </a>
@@ -147,14 +137,14 @@ export function Navbar() {
               <Link
                 href="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="inline-flex h-10 items-center justify-center rounded-full bg-white/5 text-sm font-medium text-[rgb(242,239,233)] inset-ring inset-ring-white/10"
+                className="inline-flex h-10 items-center justify-center rounded-full bg-white/5 text-sm font-medium text-white"
               >
                 Log in
               </Link>
               <Link
                 href={LANDING_CONFIG.brand.primaryCta.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="inline-flex h-10 items-center justify-center rounded-full bg-[rgb(242,239,233)] text-sm font-medium text-neutral-950"
+                className="inline-flex h-10 items-center justify-center rounded-full bg-white text-sm font-medium text-black"
               >
                 {LANDING_CONFIG.brand.primaryCta.label}
               </Link>

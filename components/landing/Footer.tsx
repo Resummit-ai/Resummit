@@ -7,78 +7,134 @@ import { GithubIcon, LinkedinIcon } from "./Icons";
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-[rgb(10,10,10)] text-[rgb(242,239,233)] py-16">
+    <footer className="bg-[#09090b] text-white pt-16 pb-12 border-t border-neutral-900">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
-          {/* Brand Col */}
-          <div className="col-span-2">
-            <Link href="/" className="flex items-center gap-2 text-base font-semibold text-[rgb(242,239,233)]">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[rgb(242,239,233)] text-neutral-950 font-bold text-xs">
-                R
-              </div>
-              <span>{LANDING_CONFIG.brand.name}</span>
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
+          {/* Brand Column */}
+          <div className="md:col-span-5 space-y-4">
+            <Link
+              href="/"
+              className="flex items-center gap-2.5 text-base font-medium text-white tracking-tight"
+            >
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" className="text-white">
+                <path d="M12 2L3 7v10l9 5 9-5V7l-9-5zm0 2.2L19 8.6v6.8L12 19.4 5 15.4V8.6L12 4.2z" />
+              </svg>
+              <span className="font-semibold text-lg">{LANDING_CONFIG.brand.name}</span>
             </Link>
-            <p className="mt-3 max-w-sm text-xs text-[rgba(242,239,233,0.6)] leading-relaxed">
-              GitHub-powered, auto-updating resume builder for software engineers, CS students, and tech professionals.
+            <p className="max-w-sm text-xs sm:text-sm text-neutral-400 leading-relaxed">
+              Fast resume generation from your code, built for every developer shipping in public.
             </p>
-            <div className="mt-6 flex items-center gap-3">
-              <a
-                href="https://github.com/dragon486/Resummit"
-                target="_blank"
-                rel="noreferrer"
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 text-[rgba(242,239,233,0.7)] hover:text-white hover:bg-white/10 transition-colors"
-                aria-label="GitHub repository"
-              >
-                <GithubIcon className="h-4 w-4" />
-              </a>
-              <a
-                href="https://www.linkedin.com/in/adel-muhammed-71328a2b5"
-                target="_blank"
-                rel="noreferrer"
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 text-[rgba(242,239,233,0.7)] hover:text-white hover:bg-white/10 transition-colors"
-                aria-label="LinkedIn profile"
-              >
-                <LinkedinIcon className="h-4 w-4" />
-              </a>
-            </div>
           </div>
 
-          {/* 4 Directory Columns */}
-          {LANDING_CONFIG.footer.columns.map((col, idx) => (
-            <div key={idx} className="col-span-1">
-              <p className="text-xs font-semibold tracking-wider text-[rgb(242,239,233)] uppercase">
-                {col.title}
-              </p>
-              <ul className="mt-4 space-y-2.5 text-xs text-[rgba(242,239,233,0.6)]">
-                {col.links.map((link, lIdx) => (
-                  <li key={lIdx}>
-                    {link.href.startsWith("/") || link.href.startsWith("#") ? (
-                      <Link href={link.href} className="hover:text-[rgb(242,239,233)] transition-colors">
-                        {link.label}
-                      </Link>
-                    ) : (
-                      <a
-                        href={link.href}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="hover:text-[rgb(242,239,233)] transition-colors"
-                      >
-                        {link.label}
-                      </a>
-                    )}
-                  </li>
-                ))}
+          {/* 3 Navigation Columns */}
+          <div className="md:col-span-7 grid grid-cols-3 gap-8">
+            {/* Product */}
+            <div>
+              <p className="text-xs font-semibold text-white tracking-wider">Product</p>
+              <ul className="mt-4 space-y-3 text-xs text-neutral-400">
+                <li>
+                  <a href="#pipeline" className="hover:text-white transition-colors">
+                    Pipeline
+                  </a>
+                </li>
+                <li>
+                  <a href="#workflow" className="hover:text-white transition-colors">
+                    Workflow
+                  </a>
+                </li>
+                <li>
+                  <a href="#roles" className="hover:text-white transition-colors">
+                    Role Presets
+                  </a>
+                </li>
+                <li>
+                  <a href="#pricing" className="hover:text-white transition-colors">
+                    Pricing
+                  </a>
+                </li>
               </ul>
             </div>
-          ))}
+
+            {/* Developers */}
+            <div>
+              <p className="text-xs font-semibold text-white tracking-wider">Developers</p>
+              <ul className="mt-4 space-y-3 text-xs text-neutral-400">
+                <li>
+                  <Link href="/login" className="hover:text-white transition-colors">
+                    Connect GitHub
+                  </Link>
+                </li>
+                <li>
+                  <a href="https://github.com/dragon486/Resummit" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
+                    GitHub Repo
+                  </a>
+                </li>
+                <li>
+                  <a href="#faq" className="hover:text-white transition-colors">
+                    FAQ
+                  </a>
+                </li>
+                <li>
+                  <span className="inline-flex items-center gap-1.5 text-neutral-500">
+                    <span>API</span>
+                    <span className="rounded bg-sky-500/20 px-1.5 py-0.2 text-[10px] text-sky-400 font-mono">
+                      Soon
+                    </span>
+                  </span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Company */}
+            <div>
+              <p className="text-xs font-semibold text-white tracking-wider">Company</p>
+              <ul className="mt-4 space-y-3 text-xs text-neutral-400">
+                <li>
+                  <Link href="/privacy" className="hover:text-white transition-colors">
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/terms" className="hover:text-white transition-colors">
+                    Terms of Service
+                  </Link>
+                </li>
+                <li>
+                  <a href="https://www.linkedin.com/in/adel-muhammed-71328a2b5" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
+                    Contact
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-xs text-[rgba(242,239,233,0.5)] gap-4">
-          <p>{LANDING_CONFIG.footer.copyright}</p>
-          <div className="flex items-center gap-6">
-            <Link href="/privacy" className="hover:text-[rgb(242,239,233)]">Privacy</Link>
-            <Link href="/terms" className="hover:text-[rgb(242,239,233)]">Terms</Link>
+        {/* Bottom Status & Copyright Bar */}
+        <div className="mt-16 pt-8 border-t border-neutral-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neutral-500">
+          <div className="flex items-center gap-4">
+            <a
+              href="https://github.com/dragon486/Resummit"
+              target="_blank"
+              rel="noreferrer"
+              className="p-1.5 rounded-full hover:text-white transition-colors"
+              aria-label="GitHub"
+            >
+              <GithubIcon className="h-4 w-4" />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/adel-muhammed-71328a2b5"
+              target="_blank"
+              rel="noreferrer"
+              className="p-1.5 rounded-full hover:text-white transition-colors"
+              aria-label="LinkedIn"
+            >
+              <LinkedinIcon className="h-4 w-4" />
+            </a>
+          </div>
+
+          <div className="flex items-center gap-6 font-mono text-[11px]">
+            <span>{LANDING_CONFIG.realStats.bulletsWritten.toLocaleString()} bullets written</span>
+            <span>{LANDING_CONFIG.footer.copyright}</span>
           </div>
         </div>
       </div>

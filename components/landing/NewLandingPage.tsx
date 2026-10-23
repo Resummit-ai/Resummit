@@ -39,7 +39,7 @@ const Footer = dynamic(() => import("./Footer").then((m) => m.Footer), {
 
 export function NewLandingPage() {
   return (
-    <div className="landing-root min-h-screen bg-[rgb(10,10,10)] text-[rgb(242,239,233)] selection:bg-blue-500 selection:text-white font-sans antialiased">
+    <div className="landing-root min-h-screen bg-[#09090b] text-white selection:bg-neutral-700 selection:text-white font-sans antialiased">
       <Navbar />
       <main>
         <Hero />

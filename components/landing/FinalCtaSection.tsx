@@ -2,39 +2,48 @@
 
 import React from "react";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { LANDING_CONFIG } from "@/lib/landing-config";
 
 export function FinalCtaSection() {
   return (
-    <section className="relative isolate overflow-hidden bg-[rgb(10,10,10)] text-[rgb(242,239,233)] py-24 sm:py-32 border-t border-white/10">
-      {/* Background glow blob */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-24 left-1/2 -z-10 -translate-x-1/2 transform-gpu blur-3xl"
-      >
-        <div className="aspect-[1000/500] w-[60rem] bg-gradient-to-tr from-blue-600/30 to-[rgb(242,239,233)]/10 opacity-30" />
-      </div>
+    <section className="bg-[#09090b] text-white py-16 sm:py-24">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        {/* Mountain Landscape Banner matching reference final CTA */}
+        <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl min-h-[300px] sm:min-h-[360px] p-8 sm:p-14 flex flex-col justify-end">
+          {/* Background Mountain Sky Image */}
+          <img
+            src="/images/fairweather_sky.jpg"
+            alt="Mountain ridge landscape"
+            className="absolute inset-0 h-full w-full object-cover object-center"
+          />
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
 
-      <div className="mx-auto max-w-4xl px-6 text-center">
-        <h2 className="text-4xl font-medium tracking-tight text-balance sm:text-5xl text-[rgb(242,239,233)]">
-          Ready to build the CV your commits deserve?
-        </h2>
-        <p className="mx-auto mt-4 max-w-xl text-base text-[rgba(242,239,233,0.7)]">
-          Join developers using Resummit to stay interview-ready without rewriting resumes from scratch.
-        </p>
+          {/* Content */}
+          <div className="relative z-10 flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+            <div className="max-w-2xl">
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-normal sm:font-medium tracking-tight text-white leading-[1.08]">
+                Ready to build the CV your commits deserve?
+              </h2>
+            </div>
 
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-          <Link
-            href="/login"
-            className="inline-flex shrink-0 items-center justify-center rounded-full bg-[rgb(242,239,233)] px-6 py-2.5 text-sm font-medium text-neutral-950 transition-all hover:bg-[rgb(242,239,233)]/90 shadow-[0_0_20px_rgba(242,239,233,0.2)]"
-          >
-            Build my CV free
-          </Link>
-          <a
-            href="#pricing"
-            className="inline-flex shrink-0 items-center justify-center rounded-full bg-white/5 px-6 py-2.5 text-sm font-medium text-[rgb(242,239,233)] inset-ring inset-ring-white/10 hover:bg-white/10"
-          >
-            See pricing
-          </a>
+            <div className="flex flex-wrap items-center gap-4 shrink-0">
+              <Link
+                href={LANDING_CONFIG.brand.primaryCta.href}
+                className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-neutral-950 transition-all hover:bg-neutral-200 shadow-xl"
+              >
+                <span>{LANDING_CONFIG.brand.primaryCta.label}</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <a
+                href="#pricing"
+                className="inline-flex items-center rounded-full border border-white/20 bg-black/60 backdrop-blur-md px-6 py-3 text-sm font-medium text-white transition-all hover:bg-black/80 hover:border-white/40 shadow-sm"
+              >
+                See pricing
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </section>

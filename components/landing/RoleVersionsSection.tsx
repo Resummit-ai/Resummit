@@ -1,163 +1,181 @@
 "use client";
 
 import React, { useState } from "react";
-import { Check, X, ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Code2, Server, BrainCircuit, Cloud, Layers, Check } from "lucide-react";
+import { LANDING_CONFIG } from "@/lib/landing-config";
 
 export function RoleVersionsSection() {
   const roles = [
     {
-      id: "frontend",
-      title: "Frontend Engineer",
-      match: "94%",
-      skills: ["React", "TypeScript", "Tailwind CSS", "Next.js", "Web Performance"],
-      missingSkills: [
-        { skill: "GraphQL", inCv: false, suggestion: "Add GitHub PR #34 query caching example" },
-        { skill: "Cypress E2E", inCv: false, suggestion: "Highlight playwright automated test suite" },
-        { skill: "Next.js App Router", inCv: true, suggestion: "Present in master resume profile" },
+      id: "fullstack",
+      name: "Senior Full-Stack Engineer",
+      tagline: "End-to-end web architectures, high-performance APIs, and reactive interfaces.",
+      tags: ["TypeScript", "Next.js 15", "PostgreSQL", "Tailwind", "+6 skills"],
+      prompt: "Which commits demonstrate full-stack ownership?",
+      bullets: [
+        "Architected end-to-end multi-tenant dashboard with Next.js App Router and Prisma, serving 14,000 active users.",
+        "Implemented optimistic UI state and server actions, reducing user-perceived mutation latency by 65%.",
+        "Configured end-to-end CI/CD test automation covering unit, integration, and Playwright workflows.",
       ],
     },
     {
       id: "backend",
-      title: "Backend Engineer",
-      match: "88%",
-      skills: ["Node.js", "PostgreSQL", "Go", "Docker", "Redis"],
-      missingSkills: [
-        { skill: "Kubernetes", inCv: false, suggestion: "Connect homelab k3s deployment manifest repo" },
-        { skill: "gRPC", inCv: true, suggestion: "Present in microservices commit log" },
-        { skill: "Kafka Streaming", inCv: false, suggestion: "Mention async webhook message queue" },
+      name: "Distributed Systems & Backend",
+      tagline: "High-throughput microservices, concurrency, database query tuning, and cache architecture.",
+      tags: ["Go", "PostgreSQL", "Kafka", "Docker", "+4 skills"],
+      prompt: "Show system scale and concurrency metrics:",
+      bullets: [
+        "Engineered concurrent event broker handling 50,000 events/sec with <15ms p95 latency.",
+        "Refactored Postgres connection pooling and schema indices, eliminating query timeouts under traffic spikes.",
+        "Implemented distributed tracing with OpenTelemetry across 8 containerized microservices.",
       ],
     },
     {
       id: "ai",
-      title: "AI & ML Engineer",
-      match: "82%",
-      skills: ["Python", "PyTorch", "Hugging Face", "Vector DBs", "RAG"],
-      missingSkills: [
-        { skill: "LangChain / LlamaIndex", inCv: true, suggestion: "Highlight LLM document search project" },
-        { skill: "vLLM / TensorRT", inCv: false, suggestion: "Extract GPU batch benchmark from README" },
-        { skill: "Eval Metrics (ROUGE)", inCv: false, suggestion: "Include prompt tuning evaluation test results" },
+      name: "AI & LLM Application Engineer",
+      tagline: "RAG pipelines, vector search, model fine-tuning, and low-latency inference serving.",
+      tags: ["Python", "PyTorch", "vLLM", "Vector DBs", "+5 skills"],
+      prompt: "Highlight production AI features shipped:",
+      bullets: [
+        "Built production RAG pipeline using pgvector and hybrid BM25 search, improving retrieval accuracy by 28%.",
+        "Optimized LLM streaming token generation latency from 140ms to 42ms using vLLM and TensorRT-LLM.",
+        "Evaluated model drift and Hallucination rates with automated synthetic test harnesses.",
       ],
     },
     {
-      id: "data",
-      title: "Data Engineer",
-      match: "79%",
-      skills: ["SQL", "dbt", "Apache Spark", "Airflow", "Snowflake"],
-      missingSkills: [
-        { skill: "Apache Airflow", inCv: false, suggestion: "Sync automated ETL cron workflow repository" },
-        { skill: "dbt transformations", inCv: true, suggestion: "Present in analytics modeling pipeline" },
-        { skill: "Delta Lake", inCv: false, suggestion: "Document parquet storage format optimizations" },
+      id: "devops",
+      name: "DevOps & Cloud Infrastructure",
+      tagline: "Kubernetes orchestration, Terraform automation, and 99.99% uptime reliability.",
+      tags: ["Kubernetes", "AWS", "Terraform", "GitHub Actions", "+4 skills"],
+      prompt: "Summarize infrastructure optimizations:",
+      bullets: [
+        "Automated multi-region Kubernetes cluster provisioning with Terraform, cutting deployment time from 2 hours to 8 minutes.",
+        "Configured Prometheus & Grafana alerting pipelines, dropping mean-time-to-detection (MTTD) by 70%.",
+        "Enforced strict IAM least-privilege security roles across 12 production AWS accounts.",
       ],
     },
   ];
 
-  const [selectedRole, setSelectedRole] = useState(roles[0]);
+  const [activeRoleIndex, setActiveRoleIndex] = useState(0);
+  const currentRole = roles[activeRoleIndex];
 
   return (
-    <section className="bg-[rgb(10,10,10)] text-[rgb(242,239,233)] py-24 sm:py-32 border-t border-white/10">
+    <section id="roles" className="scroll-mt-12 bg-[#09090b] text-white py-24 sm:py-32 border-t border-neutral-900">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="max-w-2xl">
-          <p className="text-xs font-semibold tracking-wider text-blue-400 uppercase">
-            Role Targeting
-          </p>
-          <h2 className="mt-3 text-4xl font-medium tracking-tight text-balance sm:text-5xl text-[rgb(242,239,233)]">
-            One CV per job
-          </h2>
-          <p className="mt-4 text-base text-[rgba(242,239,233,0.7)]">
-            Select a target profile to view real-time skill matching and gap recommendations.
-          </p>
-        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          {/* Left: Section Header & CTAs */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="inline-flex items-center gap-2 rounded-full border border-sky-500/20 bg-sky-500/10 px-3 py-1 text-xs font-medium text-sky-400">
+              <span>✳</span>
+              <span>Role catalog</span>
+            </div>
 
-        {/* Roles & Audit Split */}
-        <div className="mt-14 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left: Role Selection Cards */}
-          <div className="lg:col-span-5 space-y-3">
-            {roles.map((role) => {
-              const isSelected = selectedRole.id === role.id;
+            <h2 className="text-4xl font-normal sm:font-medium tracking-tight text-white sm:text-5xl leading-[1.15]">
+              Every developer role, ready to export
+            </h2>
 
-              return (
-                <button
-                  key={role.id}
-                  type="button"
-                  onClick={() => setSelectedRole(role)}
-                  className={`w-full text-left rounded-xl border p-4 transition-all ${
-                    isSelected
-                      ? "border-blue-500 bg-blue-500/[0.08] shadow-[0_0_20px_rgba(37,99,235,0.15)]"
-                      : "border-white/10 bg-white/[0.02] hover:bg-white/[0.05]"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-semibold text-sm text-[rgb(242,239,233)]">{role.title}</span>
-                    <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 font-mono text-xs font-semibold text-emerald-400">
-                      {role.match} match
+            <p className="text-base text-neutral-400 leading-relaxed">
+              Pick from tailored presets for Backend, Frontend, Fullstack, AI/ML, and DevOps. Each version weights your repositories to match recruiter requirements.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-4 pt-2">
+              <Link
+                href={LANDING_CONFIG.brand.primaryCta.href}
+                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-neutral-800 hover:border-white/40 shadow-sm"
+              >
+                <span>Browse all roles</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <button
+                type="button"
+                className="rounded-full border border-neutral-800 bg-[#121215] px-5 py-2.5 text-sm font-medium text-neutral-300 hover:text-white hover:border-neutral-700 transition-colors"
+              >
+                Create custom role
+              </button>
+            </div>
+          </div>
+
+          {/* Right: Role Card with Vertical Icon Rail (Exact match to reference) */}
+          <div className="lg:col-span-7">
+            <div className="rounded-2xl border border-white/10 bg-[#0e0e12] overflow-hidden flex shadow-2xl">
+              {/* Vertical Icon Rail */}
+              <div className="w-14 shrink-0 border-r border-neutral-800 bg-[#121217] p-2 flex flex-col items-center gap-3">
+                {roles.map((role, idx) => {
+                  const isActive = activeRoleIndex === idx;
+                  return (
+                    <button
+                      key={role.id}
+                      type="button"
+                      onClick={() => setActiveRoleIndex(idx)}
+                      className={`flex h-10 w-10 items-center justify-center rounded-xl transition-all ${
+                        isActive
+                          ? "bg-neutral-800 text-sky-400 shadow-sm border border-neutral-700"
+                          : "text-neutral-500 hover:text-neutral-300 hover:bg-neutral-900"
+                      }`}
+                      title={role.name}
+                    >
+                      {idx === 0 && <Layers className="h-5 w-5" />}
+                      {idx === 1 && <Server className="h-5 w-5" />}
+                      {idx === 2 && <BrainCircuit className="h-5 w-5" />}
+                      {idx === 3 && <Cloud className="h-5 w-5" />}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Main Role Details Panel */}
+              <div className="flex-1 p-6 sm:p-8 space-y-6">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-xs text-sky-400 font-semibold uppercase tracking-wider">
+                      Target Profile
                     </span>
                   </div>
-                  <div className="mt-2.5 flex flex-wrap gap-1.5">
-                    {role.skills.map((skill, sIdx) => (
+                  <h3 className="mt-1 text-2xl font-bold tracking-tight text-white">
+                    {currentRole.name}
+                  </h3>
+                  <p className="mt-1 text-xs sm:text-sm text-neutral-400">
+                    {currentRole.tagline}
+                  </p>
+
+                  {/* Tags */}
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {currentRole.tags.map((tag, tIdx) => (
                       <span
-                        key={sIdx}
-                        className="rounded bg-white/5 px-2 py-0.5 text-[11px] text-[rgba(242,239,233,0.6)]"
+                        key={tIdx}
+                        className="rounded-md border border-neutral-800 bg-neutral-900/80 px-2.5 py-1 text-xs font-mono text-neutral-300"
                       >
-                        {skill}
+                        {tag}
                       </span>
                     ))}
                   </div>
-                </button>
-              );
-            })}
-          </div>
+                </div>
 
-          {/* Right: Skill Gap Audit Panel */}
-          <div className="lg:col-span-7 rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8 backdrop-blur-md">
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
-              <div>
-                <h3 className="text-base font-semibold text-[rgb(242,239,233)]">
-                  Missing Skills Gap Analysis
-                </h3>
-                <p className="text-xs text-[rgba(242,239,233,0.5)]">
-                  Target Role: {selectedRole.title}
-                </p>
+                {/* Simulated Synthesis Card */}
+                <div className="space-y-3 pt-2 border-t border-neutral-800/80">
+                  {/* Prompt */}
+                  <div className="inline-block rounded-xl bg-neutral-800/80 px-3.5 py-2 text-xs text-neutral-300">
+                    {currentRole.prompt}
+                  </div>
+
+                  {/* Bullet points generated */}
+                  <div className="rounded-xl border border-neutral-800 bg-[#14141a] p-4 space-y-2.5">
+                    {currentRole.bullets.map((b, bIdx) => (
+                      <div key={bIdx} className="flex items-start gap-2.5 text-xs text-neutral-300 leading-relaxed">
+                        <Check className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
+                        <span>{b}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Footer Status */}
+                <div className="flex items-center justify-between text-[11px] font-mono text-neutral-500 pt-2 border-t border-neutral-800/80">
+                  <span>ATS Match: 98%</span>
+                  <span className="text-emerald-400">Ready to export</span>
+                </div>
               </div>
-              <span className="rounded-full bg-white/10 px-3 py-1 text-xs text-[rgba(242,239,233,0.8)]">
-                {selectedRole.missingSkills.filter((s) => !s.inCv).length} gaps found
-              </span>
-            </div>
-
-            {/* Gap Table */}
-            <div className="mt-6 overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead>
-                  <tr className="border-b border-white/10 text-[rgba(242,239,233,0.5)] font-mono uppercase">
-                    <th className="pb-3 font-medium">Skill</th>
-                    <th className="pb-3 font-medium">In your CV?</th>
-                    <th className="pb-3 font-medium">Suggestion</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5">
-                  {selectedRole.missingSkills.map((row, rIdx) => (
-                    <tr key={rIdx} className="hover:bg-white/[0.02] transition-colors">
-                      <td className="py-3.5 font-medium text-[rgb(242,239,233)]">{row.skill}</td>
-                      <td className="py-3.5">
-                        {row.inCv ? (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-medium text-emerald-400">
-                            <Check className="h-3 w-3" /> Yes
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-red-500/10 px-2 py-0.5 text-[11px] font-medium text-red-400">
-                            <X className="h-3 w-3" /> Missing
-                          </span>
-                        )}
-                      </td>
-                      <td className="py-3.5 text-[rgba(242,239,233,0.7)]">{row.suggestion}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-blue-400">
-              <span>Automatic tailoring addresses identified gaps</span>
-              <ArrowRight className="h-4 w-4" />
             </div>
           </div>
         </div>
