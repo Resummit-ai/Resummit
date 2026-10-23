@@ -5,122 +5,129 @@ import { normalizeAndDedupeSkills, formatLinkedIn, formatGitHub } from "@/lib/sk
 
 // Standard Times-Roman styles matching the FormalTemplate in ResumePreview.tsx perfectly
 // Dynamic styling configurations matching the FormalTemplate in ResumePreview.tsx
-const getDynamicConfig = (score: number) => {
-  let fontSizeBody = 8.2;
-  let fontSizeSecTitle = 9.2;
-  let fontSizeSummary = 8.5;
-  let fontSizeEntryHeader = 9.2;
-  let fontSizeSub = 8.5;
-  let fontSizePeriod = 8.2;
-  let fontSizeName = 20;
+// Dynamic styling configurations matching the FormalTemplate in ResumePreview.tsx
+const getDynamicConfig = (
+  cv: CVData,
+  cleanExperience: any[],
+  includedProjects: any[],
+  skills: { languages?: string[]; frameworks?: string[]; tools?: string[] },
+  displaySummary: string
+) => {
+  const expCount = cleanExperience.length;
+  const expBullets = cleanExperience.reduce((sum, e) => sum + (e.bullets?.length || 0), 0);
+  const projCount = includedProjects.length;
+  const projBullets = includedProjects.reduce((sum, p) => sum + (p.highlights?.length || 0), 0);
+  const eduCount = (cv.education || []).length;
+  const achCount = (cv.achievements || []).filter((a: string) => a && a.trim()).slice(0, 4).length;
+  const summaryLength = displaySummary ? displaySummary.length : 0;
 
-  let lineHeightBody = 1.25;
-  let lineHeightSummary = 1.25;
-  let lineHeightSkills = 1.3;
+  // Accurate content volume units based on vertical layout footprints
+  const volume =
+    (summaryLength > 0 ? summaryLength / 85 : 0) +
+    ((skills.languages?.length || skills.frameworks?.length || skills.tools?.length) ? 5 : 0) +
+    (expCount * 2.8 + expBullets * 1.5) +
+    (projCount * 2.8 + projBullets * 1.5) +
+    (eduCount * 2.2) +
+    (achCount * 1.5);
 
-  let paddingHorizontal = 28; // ~10mm
-  let paddingVertical = 20;   // ~7mm
-  let marginHeader = 6;
-  let marginSection = 6;
-  let sectionTitlePaddingTop = 2;
-  let sectionTitleMarginBottom = 3;
-  let entryGap = 4.5;
-  let bulletMarginBottom = 1.2;
-  let skillLineMarginBottom = 1;
-
-  if (score >= 45) {
-    // Extensive content: 3+ jobs, 3+ projects, long summary
-    fontSizeBody = 7.2;
-    fontSizeSecTitle = 8;
-    fontSizeSummary = 7.5;
-    fontSizeEntryHeader = 8;
-    fontSizeSub = 7.5;
-    fontSizePeriod = 7.2;
-    fontSizeName = 17;
-
-    lineHeightBody = 1.12;
-    lineHeightSummary = 1.12;
-    lineHeightSkills = 1.16;
-
-    paddingHorizontal = 24;
-    paddingVertical = 14;
-    marginHeader = 3.5;
-    marginSection = 3.5;
-    sectionTitlePaddingTop = 1.2;
-    sectionTitleMarginBottom = 1.5;
-    entryGap = 2.5;
-    bulletMarginBottom = 0.5;
-    skillLineMarginBottom = 0.5;
-  } else if (score >= 32) {
-    // Standard full resume (e.g. 2-3 jobs, 2-3 projects with multiple bullets)
-    fontSizeBody = 7.8;
-    fontSizeSecTitle = 8.8;
-    fontSizeSummary = 8;
-    fontSizeEntryHeader = 8.8;
-    fontSizeSub = 8;
-    fontSizePeriod = 7.8;
-    fontSizeName = 19;
-
-    lineHeightBody = 1.2;
-    lineHeightSummary = 1.2;
-    lineHeightSkills = 1.24;
-
-    paddingHorizontal = 26;
-    paddingVertical = 18;
-    marginHeader = 4.5;
-    marginSection = 5;
-    sectionTitlePaddingTop = 1.8;
-    sectionTitleMarginBottom = 2.2;
-    entryGap = 3.5;
-    bulletMarginBottom = 1;
-    skillLineMarginBottom = 0.8;
-  } else if (score < 22) {
-    // Light content: expand slightly so it nicely breathes without cramped voids
-    fontSizeBody = 8.5;
-    fontSizeSecTitle = 9.5;
-    fontSizeSummary = 8.8;
-    fontSizeEntryHeader = 9.5;
-    fontSizeSub = 8.6;
-    fontSizePeriod = 8.4;
-    fontSizeName = 21;
-
-    lineHeightBody = 1.32;
-    lineHeightSummary = 1.32;
-    lineHeightSkills = 1.35;
-
-    paddingHorizontal = 28;
-    paddingVertical = 22;
-    marginHeader = 7;
-    marginSection = 7;
-    sectionTitlePaddingTop = 2.5;
-    sectionTitleMarginBottom = 3.5;
-    entryGap = 5.5;
-    bulletMarginBottom = 1.8;
-    skillLineMarginBottom = 1.2;
+  if (volume >= 66) {
+    // Extensive/dense content: tighter line heights and margins to strictly fit single A4 page
+    return {
+      volume,
+      fontSizeBody: 7.5,
+      fontSizeSecTitle: 8.5,
+      fontSizeSummary: 7.8,
+      fontSizeEntryHeader: 8.5,
+      fontSizeSub: 7.8,
+      fontSizePeriod: 7.5,
+      fontSizeName: 18,
+      lineHeightBody: 1.16,
+      lineHeightSummary: 1.16,
+      lineHeightSkills: 1.20,
+      paddingHorizontal: 24,
+      paddingVertical: 16,
+      marginHeader: 5,
+      marginSection: 5,
+      sectionTitlePaddingTop: 1.6,
+      sectionTitleMarginBottom: 2.2,
+      entryGap: 3.2,
+      bulletMarginBottom: 0.8,
+      skillLineMarginBottom: 0.6,
+    };
+  } else if (volume >= 42) {
+    // Full standard content (e.g. 2-3 jobs, 3 projects with bullets, education, achievements)
+    // Fills standard A4 cleanly without crunching and without big gaps!
+    return {
+      volume,
+      fontSizeBody: 8.35,
+      fontSizeSecTitle: 9.4,
+      fontSizeSummary: 8.55,
+      fontSizeEntryHeader: 9.4,
+      fontSizeSub: 8.5,
+      fontSizePeriod: 8.35,
+      fontSizeName: 21,
+      lineHeightBody: 1.30,
+      lineHeightSummary: 1.30,
+      lineHeightSkills: 1.34,
+      paddingHorizontal: 28,
+      paddingVertical: 26,
+      marginHeader: 10,
+      marginSection: 11.5,
+      sectionTitlePaddingTop: 2.6,
+      sectionTitleMarginBottom: 3.8,
+      entryGap: 6.2,
+      bulletMarginBottom: 2.0,
+      skillLineMarginBottom: 1.4,
+    };
+  } else if (volume >= 28) {
+    // Moderate content: gently distributes space between sections to fill A4 gracefully
+    return {
+      volume,
+      fontSizeBody: 8.5,
+      fontSizeSecTitle: 9.5,
+      fontSizeSummary: 8.8,
+      fontSizeEntryHeader: 9.5,
+      fontSizeSub: 8.6,
+      fontSizePeriod: 8.5,
+      fontSizeName: 21.5,
+      lineHeightBody: 1.33,
+      lineHeightSummary: 1.33,
+      lineHeightSkills: 1.36,
+      paddingHorizontal: 28,
+      paddingVertical: 28,
+      marginHeader: 11.5,
+      marginSection: 13,
+      sectionTitlePaddingTop: 2.8,
+      sectionTitleMarginBottom: 4.2,
+      entryGap: 7.0,
+      bulletMarginBottom: 2.4,
+      skillLineMarginBottom: 1.6,
+    };
+  } else {
+    // Light content: expands sections and padding naturally so it fills A4 without empty voids
+    return {
+      volume,
+      fontSizeBody: 8.7,
+      fontSizeSecTitle: 9.8,
+      fontSizeSummary: 9.0,
+      fontSizeEntryHeader: 9.8,
+      fontSizeSub: 8.8,
+      fontSizePeriod: 8.7,
+      fontSizeName: 22,
+      lineHeightBody: 1.36,
+      lineHeightSummary: 1.36,
+      lineHeightSkills: 1.38,
+      paddingHorizontal: 30,
+      paddingVertical: 32,
+      marginHeader: 13,
+      marginSection: 14.5,
+      sectionTitlePaddingTop: 3.0,
+      sectionTitleMarginBottom: 4.8,
+      entryGap: 8.0,
+      bulletMarginBottom: 2.8,
+      skillLineMarginBottom: 1.8,
+    };
   }
-
-  return {
-    score,
-    fontSizeBody,
-    fontSizeSecTitle,
-    fontSizeSummary,
-    fontSizeEntryHeader,
-    fontSizeSub,
-    fontSizePeriod,
-    fontSizeName,
-    lineHeightBody,
-    lineHeightSummary,
-    lineHeightSkills,
-    paddingHorizontal,
-    paddingVertical,
-    marginHeader,
-    marginSection,
-    sectionTitlePaddingTop,
-    sectionTitleMarginBottom,
-    entryGap,
-    bulletMarginBottom,
-    skillLineMarginBottom,
-  };
 };
 
 const getDynamicStyles = (config: ReturnType<typeof getDynamicConfig>) => {
@@ -149,16 +156,16 @@ const getDynamicStyles = (config: ReturnType<typeof getDynamicConfig>) => {
       flexDirection: "row",
       justifyContent: "center",
       flexWrap: "wrap",
-      fontSize: config.score > 48 ? 7.5 : 8,
+      fontSize: config.volume > 66 ? 7.5 : 8,
       color: "#4a5568",
     },
     contactText: {
-      fontSize: config.score > 48 ? 7.5 : 8,
+      fontSize: config.volume > 66 ? 7.5 : 8,
       fontFamily: "Times-Roman",
       color: "#4a5568",
     },
     contactSep: {
-      fontSize: config.score > 48 ? 7.5 : 8,
+      fontSize: config.volume > 66 ? 7.5 : 8,
       color: "#4a5568",
       marginHorizontal: 4,
     },
@@ -225,7 +232,7 @@ const getDynamicStyles = (config: ReturnType<typeof getDynamicConfig>) => {
       marginLeft: 10,
     },
     entryTimeRightItalic: {
-      fontSize: config.score > 48 ? 7.5 : 8,
+      fontSize: config.volume > 66 ? 7.5 : 8,
       fontFamily: "Times-Italic",
       color: "#4a5568",
       textAlign: "right",
@@ -235,13 +242,13 @@ const getDynamicStyles = (config: ReturnType<typeof getDynamicConfig>) => {
       fontSize: config.fontSizeSub,
       fontFamily: "Times-Roman",
       color: "#4a5568",
-      marginBottom: config.score > 35 ? 1 : 3,
+      marginBottom: config.volume > 50 ? 1 : 3,
     },
     entryDescriptionItalic: {
       fontSize: config.fontSizeBody,
       fontFamily: "Times-Roman",
       color: "#2d3748",
-      marginBottom: config.score > 35 ? 1 : 3,
+      marginBottom: config.volume > 50 ? 1 : 3,
     },
     // ── Bullet Lists ──
     bulletRow: {
@@ -354,151 +361,6 @@ const BulletList = ({ bullets, styles }: { bullets: string[]; styles: any }) => 
   </View>
 );
 
-// Accurately estimates the rendered content height of the resume to dynamically size the PDF
-function estimateContentHeight(
-  cv: CVData,
-  cleanExperience: any[],
-  includedProjects: any[],
-  skills: { languages: string[]; frameworks: string[]; tools: string[] },
-  displaySummary: string,
-  config: ReturnType<typeof getDynamicConfig>,
-  lastSection: string
-): number {
-  const printableWidth = 595.28 - config.paddingHorizontal * 2;
-  let totalHeight = 0;
-
-  // 1. Header: Name
-  totalHeight += config.fontSizeName * 1.15 + 3;
-
-  // Contact row
-  const contactParts: string[] = [];
-  if (cv.location) contactParts.push(cv.location);
-  if (cv.email) contactParts.push(cv.email);
-  if (cv.phone) contactParts.push(cv.phone);
-  if (cv.github) contactParts.push(formatGitHub(cv.github));
-  if (cv.linkedin) contactParts.push(formatLinkedIn(cv.linkedin));
-  if (contactParts.length > 0) {
-    const contactStr = contactParts.join(" • ");
-    const contactLines = Math.max(1, Math.ceil((contactStr.length * 4.4) / printableWidth));
-    totalHeight += contactLines * (config.score > 48 ? 7.5 : 8) * 1.35;
-  }
-  totalHeight += config.marginHeader;
-
-  const secTitleHeight =
-    config.fontSizeSecTitle + config.sectionTitlePaddingTop + config.sectionTitleMarginBottom + 1.5;
-
-  // 2. Summary
-  if (displaySummary && displaySummary.trim().length > 0) {
-    totalHeight += secTitleHeight;
-    const charWidth = 0.46 * config.fontSizeSummary;
-    const charsPerLine = Math.floor(printableWidth / charWidth);
-    const summaryLines = Math.max(1, Math.ceil(displaySummary.length / Math.max(charsPerLine * 0.88, 1)));
-    totalHeight += summaryLines * (config.fontSizeSummary * config.lineHeightSummary);
-    if (lastSection !== "summary") totalHeight += config.marginSection;
-  }
-
-  // 3. Technical Skills
-  const hasSkills =
-    (skills.languages || []).length > 0 ||
-    (skills.frameworks || []).length > 0 ||
-    (skills.tools || []).length > 0;
-  if (hasSkills) {
-    totalHeight += secTitleHeight;
-    const charWidth = 0.46 * config.fontSizeBody;
-    const charsPerLine = Math.floor(printableWidth / charWidth);
-
-    if ((skills.languages || []).length > 0) {
-      const lineStr = `Languages: ${skills.languages.join(", ")}`;
-      const lines = Math.max(1, Math.ceil(lineStr.length / Math.max(charsPerLine * 0.88, 1)));
-      totalHeight += lines * (config.fontSizeBody * config.lineHeightSkills) + config.skillLineMarginBottom;
-    }
-    if ((skills.frameworks || []).length > 0) {
-      const lineStr = `Frameworks: ${skills.frameworks.join(", ")}`;
-      const lines = Math.max(1, Math.ceil(lineStr.length / Math.max(charsPerLine * 0.88, 1)));
-      totalHeight += lines * (config.fontSizeBody * config.lineHeightSkills) + config.skillLineMarginBottom;
-    }
-    if ((skills.tools || []).length > 0) {
-      const lineStr = `Tools & Cloud: ${skills.tools.join(", ")}`;
-      const lines = Math.max(1, Math.ceil(lineStr.length / Math.max(charsPerLine * 0.88, 1)));
-      totalHeight += lines * (config.fontSizeBody * config.lineHeightSkills) + config.skillLineMarginBottom;
-    }
-    if (lastSection !== "skills") totalHeight += config.marginSection;
-  }
-
-  // 4. Professional Experience
-  if (cleanExperience.length > 0) {
-    totalHeight += secTitleHeight;
-    const bulletPrintableWidth = printableWidth - 21;
-    const bulletCharWidth = 0.46 * config.fontSizeBody;
-    const bulletCharsPerLine = Math.floor(bulletPrintableWidth / bulletCharWidth);
-
-    for (const exp of cleanExperience) {
-      totalHeight += Math.max(config.fontSizeEntryHeader, config.fontSizePeriod) * 1.25;
-      totalHeight += config.fontSizeSub * 1.25 + (config.score > 35 ? 1 : 3);
-
-      for (const bullet of exp.bullets || []) {
-        const lines = Math.max(1, Math.ceil(bullet.length / Math.max(bulletCharsPerLine * 0.88, 1)));
-        totalHeight += lines * (config.fontSizeBody * config.lineHeightBody) + config.bulletMarginBottom;
-      }
-      totalHeight += config.entryGap;
-    }
-    if (lastSection !== "experience") totalHeight += config.marginSection;
-  }
-
-  // 5. Technical Projects
-  if (includedProjects.length > 0) {
-    totalHeight += secTitleHeight;
-    const highlightPrintableWidth = printableWidth - 21;
-    const highlightCharWidth = 0.46 * config.fontSizeBody;
-    const highlightCharsPerLine = Math.floor(highlightPrintableWidth / highlightCharWidth);
-
-    for (const project of includedProjects) {
-      totalHeight += config.fontSizeEntryHeader * 1.25;
-      if (project.description && project.description.trim()) {
-        const charWidth = 0.46 * config.fontSizeBody;
-        const charsPerLine = Math.floor(printableWidth / charWidth);
-        const lines = Math.max(1, Math.ceil(project.description.length / Math.max(charsPerLine * 0.9, 1)));
-        totalHeight += lines * (config.fontSizeBody * 1.2) + (config.score > 35 ? 1 : 3);
-      }
-      for (const highlight of project.highlights || []) {
-        const lines = Math.max(1, Math.ceil(highlight.length / Math.max(highlightCharsPerLine * 0.88, 1)));
-        totalHeight += lines * (config.fontSizeBody * config.lineHeightBody) + config.bulletMarginBottom;
-      }
-      totalHeight += config.entryGap;
-    }
-    if (lastSection !== "projects") totalHeight += config.marginSection;
-  }
-
-  // 6. Education
-  const education = typeof cv.education === "string" ? JSON.parse(cv.education as any) : cv.education;
-  if (education && education.length > 0) {
-    totalHeight += secTitleHeight;
-    for (const edu of education) {
-      totalHeight += config.fontSizeEntryHeader * 1.25;
-      totalHeight += config.fontSizeSub * 1.25;
-      totalHeight += config.entryGap;
-    }
-    if (lastSection !== "education") totalHeight += config.marginSection;
-  }
-
-  // 7. Achievements
-  const achievements = (cv.achievements || []).filter((a: string) => a && a.trim()).slice(0, 4);
-  if (achievements.length > 0) {
-    totalHeight += secTitleHeight;
-    for (const ach of achievements) {
-      const { title } = parseAchievementString(ach);
-      const lines = Math.max(1, Math.ceil(title.length / 85));
-      totalHeight += lines * (config.fontSizeBody * 1.3) + 3.5;
-    }
-    if (lastSection !== "achievements") totalHeight += config.marginSection;
-  }
-
-  // Top & bottom page padding
-  totalHeight += config.paddingVertical * 2;
-
-  return totalHeight;
-}
-
 export const CVDocument = ({ cv, projects }: { cv: CVData; projects: ProjectData[] }) => {
   // Gracefully parse and normalize skills properties
   const rawSkills = typeof cv.skills === "string" ? JSON.parse(cv.skills as any) : cv.skills;
@@ -538,29 +400,11 @@ export const CVDocument = ({ cv, projects }: { cv: CVData; projects: ProjectData
     } catch { /* ignore */ }
   }
 
-  // Calculate dynamic density score for PDF scaling matching ResumePreview
-  const expCount = cleanExperience.length;
-  const expBullets = cleanExperience.reduce((sum: number, e: any) => sum + (e.bullets?.length || 0), 0);
-  const projCount = includedProjects.length;
-  const projBullets = includedProjects.reduce((sum: number, p: any) => sum + (p.highlights?.length || 0), 0);
-  const eduCount = (education || []).length;
-  const achCount = (cv.achievements || []).filter((a: string) => a.trim()).slice(0, 4).length;
-  const summaryLength = displaySummary ? displaySummary.length : 0;
-
-  const score =
-    expCount * 3 +
-    expBullets * 1 +
-    projCount * 3 +
-    projBullets * 1 +
-    eduCount * 2 +
-    achCount * 1.5 +
-    (summaryLength > 200 ? Math.ceil(summaryLength / 80) : 2);
-
-  const config = getDynamicConfig(score);
+  // Calculate dynamic typography and vertical distribution to fill standard A4 cleanly
+  const config = getDynamicConfig(cv, cleanExperience, includedProjects, skills, displaySummary);
   const styles = getDynamicStyles(config);
 
   // Identify the last rendered section so we can remove trailing section margin
-  // for perfectly symmetrical top & bottom padding without empty bottom space.
   const hasAchievements = cv.achievements && cv.achievements.some((a: string) => a.trim());
   const hasEducation = education && education.length > 0;
   const hasProjects = includedProjects.length > 0;
@@ -579,26 +423,9 @@ export const CVDocument = ({ cv, projects }: { cv: CVData; projects: ProjectData
   else if (hasSkills) lastSection = "skills";
   else if (hasSummary) lastSection = "summary";
 
-  // Calculate dynamic content-fit height:
-  // Standard A4 dimensions: Width = 595.28pt, Height = 841.89pt.
-  // If content is less than A4, page height is fitted cleanly to the content
-  // so the downloaded PDF has ZERO blank bottom space.
-  // If content is full, page height caps at 841.89pt (A4) to strictly enforce 1 page.
-  const estimatedHeight = estimateContentHeight(
-    cv,
-    cleanExperience,
-    includedProjects,
-    skills,
-    displaySummary,
-    config,
-    lastSection
-  );
-
-  const pageHeight = Math.min(841.89, Math.max(340, Math.ceil(estimatedHeight + 12)));
-
   return (
     <Document>
-      <Page size={[595.28, pageHeight]} style={styles.page}>
+      <Page size="A4" style={styles.page}>
         
         {/* Centered Header */}
         <View style={styles.header}>

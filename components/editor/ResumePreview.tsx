@@ -205,7 +205,7 @@ function FormalTemplate({
       highlights: (p.highlights || []).filter((h) => h.trim()).slice(0, 2),
     }));
 
-  // Calculate content density score to dynamically scale styling for single-page enforcement
+  // Calculate content volume to dynamically scale styling for single-page A4 balance
   const expCount = cleanExperience.length;
   const expBullets = cleanExperience.reduce((sum, e) => sum + (e.bullets?.length || 0), 0);
   const projCount = includedProjects.length;
@@ -213,97 +213,129 @@ function FormalTemplate({
   const eduCount = data.education.length;
   const achCount = (data.achievements || []).filter((a) => a.trim()).slice(0, 4).length;
   const summaryLength = displaySummary ? displaySummary.length : 0;
+  const hasSkills = Boolean(
+    (displaySkills.languages || []).length > 0 ||
+    (displaySkills.frameworks || []).length > 0 ||
+    (displaySkills.tools || []).length > 0
+  );
 
-  const score = expCount * 3 + expBullets * 1 + projCount * 3 + projBullets * 1 + eduCount * 2 + achCount * 1.5 + (summaryLength > 200 ? Math.ceil(summaryLength / 80) : 2);
+  const volume =
+    (summaryLength > 0 ? summaryLength / 85 : 0) +
+    (hasSkills ? 5 : 0) +
+    (expCount * 2.8 + expBullets * 1.5) +
+    (projCount * 2.8 + projBullets * 1.5) +
+    (eduCount * 2.2) +
+    (achCount * 1.5);
 
-  // Dynamic style scaling variables
-  let fontSizeBody = "8.2pt";
-  let fontSizeSecTitle = "9.2pt";
-  let fontSizeSummary = "8.5pt";
-  let fontSizeEntryHeader = "9.2pt";
+  let fontSizeBody = "8.35pt";
+  let fontSizeSecTitle = "9.4pt";
+  let fontSizeSummary = "8.55pt";
+  let fontSizeEntryHeader = "9.4pt";
   let fontSizeSub = "8.5pt";
-  let fontSizePeriod = "8.2pt";
-  let fontSizeName = "20pt";
+  let fontSizePeriod = "8.35pt";
+  let fontSizeName = "21pt";
   
-  let lineHeightBody = 1.25;
-  let lineHeightSummary = 1.25;
-  let lineHeightSkills = 1.3;
+  let lineHeightBody = 1.30;
+  let lineHeightSummary = 1.30;
+  let lineHeightSkills = 1.34;
   
-  let paddingPage = "7mm 10mm";
-  let marginHeader = "6px";
-  let marginSection = "6px";
-  let sectionTitlePaddingTop = "2px";
-  let sectionTitleMarginBottom = "3px";
-  let entryGap = "4.5px";
-  let bulletMarginBottom = "1.2px";
-  let skillLineMarginBottom = "1px";
+  let paddingPage = "9mm 10mm";
+  let marginHeader = "10px";
+  let marginSection = "11.5px";
+  let sectionTitlePaddingTop = "2.6px";
+  let sectionTitleMarginBottom = "3.8px";
+  let entryGap = "6.2px";
+  let bulletMarginBottom = "2.0px";
+  let skillLineMarginBottom = "1.4px";
 
-  if (score >= 45) {
-    // Extensive content: 3+ jobs, 3+ projects, long summary
-    fontSizeBody = "7.2pt";
-    fontSizeSecTitle = "8pt";
-    fontSizeSummary = "7.5pt";
-    fontSizeEntryHeader = "8pt";
-    fontSizeSub = "7.5pt";
-    fontSizePeriod = "7.2pt";
-    fontSizeName = "17pt";
+  if (volume >= 66) {
+    // Extensive/dense content: tighter line heights and margins to strictly fit single A4 page
+    fontSizeBody = "7.5pt";
+    fontSizeSecTitle = "8.5pt";
+    fontSizeSummary = "7.8pt";
+    fontSizeEntryHeader = "8.5pt";
+    fontSizeSub = "7.8pt";
+    fontSizePeriod = "7.5pt";
+    fontSizeName = "18pt";
     
-    lineHeightBody = 1.12;
-    lineHeightSummary = 1.12;
-    lineHeightSkills = 1.16;
+    lineHeightBody = 1.16;
+    lineHeightSummary = 1.16;
+    lineHeightSkills = 1.20;
     
-    paddingPage = "5mm 8.5mm";
-    marginHeader = "3.5px";
-    marginSection = "3.5px";
-    sectionTitlePaddingTop = "1.2px";
-    sectionTitleMarginBottom = "1.5px";
-    entryGap = "2.5px";
-    bulletMarginBottom = "0.5px";
-    skillLineMarginBottom = "0.5px";
-  } else if (score >= 32) {
-    // Standard full resume (e.g. 2-3 jobs, 2-3 projects with multiple bullets)
-    fontSizeBody = "7.8pt";
-    fontSizeSecTitle = "8.8pt";
-    fontSizeSummary = "8pt";
-    fontSizeEntryHeader = "8.8pt";
-    fontSizeSub = "8pt";
-    fontSizePeriod = "7.8pt";
-    fontSizeName = "19pt";
-    
-    lineHeightBody = 1.2;
-    lineHeightSummary = 1.2;
-    lineHeightSkills = 1.24;
-    
-    paddingPage = "6.5mm 9mm";
-    marginHeader = "4.5px";
+    paddingPage = "5.5mm 8.5mm";
+    marginHeader = "5px";
     marginSection = "5px";
-    sectionTitlePaddingTop = "1.8px";
+    sectionTitlePaddingTop = "1.6px";
     sectionTitleMarginBottom = "2.2px";
-    entryGap = "3.5px";
-    bulletMarginBottom = "1px";
-    skillLineMarginBottom = "0.8px";
-  } else if (score < 22) {
-    // Light content: expand slightly so it nicely breathes without cramped voids
+    entryGap = "3.2px";
+    bulletMarginBottom = "0.8px";
+    skillLineMarginBottom = "0.6px";
+  } else if (volume >= 42) {
+    // Full standard content (e.g. 2-3 jobs, 3 projects with bullets, education, achievements)
+    fontSizeBody = "8.35pt";
+    fontSizeSecTitle = "9.4pt";
+    fontSizeSummary = "8.55pt";
+    fontSizeEntryHeader = "9.4pt";
+    fontSizeSub = "8.5pt";
+    fontSizePeriod = "8.35pt";
+    fontSizeName = "21pt";
+    
+    lineHeightBody = 1.30;
+    lineHeightSummary = 1.30;
+    lineHeightSkills = 1.34;
+    
+    paddingPage = "9mm 10mm";
+    marginHeader = "10px";
+    marginSection = "11.5px";
+    sectionTitlePaddingTop = "2.6px";
+    sectionTitleMarginBottom = "3.8px";
+    entryGap = "6.2px";
+    bulletMarginBottom = "2.0px";
+    skillLineMarginBottom = "1.4px";
+  } else if (volume >= 28) {
+    // Moderate content: gently distributes space between sections to fill A4 gracefully
     fontSizeBody = "8.5pt";
     fontSizeSecTitle = "9.5pt";
     fontSizeSummary = "8.8pt";
     fontSizeEntryHeader = "9.5pt";
     fontSizeSub = "8.6pt";
-    fontSizePeriod = "8.4pt";
-    fontSizeName = "21pt";
+    fontSizePeriod = "8.5pt";
+    fontSizeName = "21.5pt";
     
-    lineHeightBody = 1.32;
-    lineHeightSummary = 1.32;
-    lineHeightSkills = 1.35;
+    lineHeightBody = 1.33;
+    lineHeightSummary = 1.33;
+    lineHeightSkills = 1.36;
     
-    paddingPage = "8mm 10mm";
-    marginHeader = "7px";
-    marginSection = "7px";
-    sectionTitlePaddingTop = "2.5px";
-    sectionTitleMarginBottom = "3.5px";
-    entryGap = "5.5px";
-    bulletMarginBottom = "1.8px";
-    skillLineMarginBottom = "1.2px";
+    paddingPage = "10mm 10mm";
+    marginHeader = "11.5px";
+    marginSection = "13px";
+    sectionTitlePaddingTop = "2.8px";
+    sectionTitleMarginBottom = "4.2px";
+    entryGap = "7.0px";
+    bulletMarginBottom = "2.4px";
+    skillLineMarginBottom = "1.6px";
+  } else {
+    // Light content: expands sections and padding naturally so it fills A4 without empty voids
+    fontSizeBody = "8.7pt";
+    fontSizeSecTitle = "9.8pt";
+    fontSizeSummary = "9.0pt";
+    fontSizeEntryHeader = "9.8pt";
+    fontSizeSub = "8.8pt";
+    fontSizePeriod = "8.7pt";
+    fontSizeName = "22pt";
+    
+    lineHeightBody = 1.36;
+    lineHeightSummary = 1.36;
+    lineHeightSkills = 1.38;
+    
+    paddingPage = "11mm 10.5mm";
+    marginHeader = "13px";
+    marginSection = "14.5px";
+    sectionTitlePaddingTop = "3.0px";
+    sectionTitleMarginBottom = "4.8px";
+    entryGap = "8.0px";
+    bulletMarginBottom = "2.8px";
+    skillLineMarginBottom = "1.8px";
   }
 
   return (
@@ -331,7 +363,7 @@ function FormalTemplate({
         </div>
         <div
           style={{
-            fontSize: score > 48 ? "7.5pt" : "8pt",
+            fontSize: volume > 66 ? "7.5pt" : "8pt",
             color: "#4a5568",
             marginTop: "3px",
             display: "flex",
@@ -508,7 +540,7 @@ function FormalTemplate({
                     </span>
                   </div>
                   <div 
-                    style={{ fontSize: fontSizeSub, color: "#4a5568", marginBottom: score > 35 ? "1px" : "3px" }}
+                    style={{ fontSize: fontSizeSub, color: "#4a5568", marginBottom: volume > 50 ? "1px" : "3px" }}
                   >
                     <AITextTransform 
                       text={exp.company} 
@@ -604,7 +636,7 @@ function FormalTemplate({
                     )}
                     <span
                       style={{
-                        fontSize: score > 48 ? "7.5pt" : "8pt",
+                        fontSize: volume > 66 ? "7.5pt" : "8pt",
                         fontStyle: "italic",
                         color: "#4a5568",
                         whiteSpace: "nowrap",
@@ -627,7 +659,7 @@ function FormalTemplate({
                       style={{
                         fontSize: fontSizeBody,
                         color: "#2d3748",
-                        marginBottom: score > 35 ? "1px" : "3px",
+                        marginBottom: volume > 50 ? "1px" : "3px",
                         marginTop: "2px",
                       }}
                     >
