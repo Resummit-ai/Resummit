@@ -10,19 +10,40 @@ export function Footer() {
     <footer className="bg-[#09090b] text-white pt-16 pb-12 border-t border-neutral-900">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
-          {/* Brand Column */}
+          {/* Brand Column with Official Logo */}
           <div className="md:col-span-5 space-y-4">
             <Link
               href="/"
-              className="flex items-center gap-2.5 text-base font-medium text-white tracking-tight"
+              className="flex items-center gap-2.5 group transition-opacity hover:opacity-95"
             >
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" className="text-white">
-                <path d="M12 2L3 7v10l9 5 9-5V7l-9-5zm0 2.2L19 8.6v6.8L12 19.4 5 15.4V8.6L12 4.2z" />
+              <svg viewBox="0 0 32 32" className="w-7 h-7 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M7 6C7 4.34315 8.34315 3 10 3H19L25 9V26C25 27.6569 23.6569 29 22 29H10C8.34315 29 7 27.6569 7 26V6Z"
+                  className="fill-blue-500/15 stroke-blue-500"
+                  strokeWidth="2"
+                />
+                <path d="M19 3V9H25L19 3Z" className="fill-blue-500 stroke-blue-500" strokeWidth="1.5" />
+                <path
+                  d="M11 13H17M11 17H21M11 21H18M11 25H20"
+                  className="stroke-blue-400"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+                <path d="M20 8.5L25 3.5" className="stroke-blue-400" strokeWidth="2" strokeLinecap="round" />
+                <path d="M25 3.5L27 6.5L23.5 5.5Z" className="fill-blue-400" />
               </svg>
-              <span className="font-semibold text-lg">{LANDING_CONFIG.brand.name}</span>
+              <div className="flex flex-col text-left">
+                <span className="font-extrabold tracking-tight text-white text-sm leading-none font-sans">
+                  RESUMMIT
+                </span>
+                <span className="text-[9px] tracking-wider text-neutral-400 font-mono font-medium leading-tight mt-0.5">
+                  YOUR COMMITS. YOUR CAREER.
+                </span>
+              </div>
             </Link>
             <p className="max-w-sm text-xs sm:text-sm text-neutral-400 leading-relaxed">
-              Fast resume generation from your code, built for every developer shipping in public.
+              Fast resume generation from your code, built for every developer shipping in public. Designed, built, and maintained by{" "}
+              <span className="text-white font-medium">Adel Muhammed</span>.
             </p>
           </div>
 
@@ -33,18 +54,18 @@ export function Footer() {
               <p className="text-xs font-semibold text-white tracking-wider">Product</p>
               <ul className="mt-4 space-y-3 text-xs text-neutral-400">
                 <li>
+                  <a href="#features" className="hover:text-white transition-colors">
+                    Core Features
+                  </a>
+                </li>
+                <li>
                   <a href="#pipeline" className="hover:text-white transition-colors">
-                    Pipeline
+                    Pipeline Workflow
                   </a>
                 </li>
                 <li>
-                  <a href="#workflow" className="hover:text-white transition-colors">
-                    Workflow
-                  </a>
-                </li>
-                <li>
-                  <a href="#roles" className="hover:text-white transition-colors">
-                    Role Presets
+                  <a href="#preview-resume" className="hover:text-white transition-colors">
+                    Sample Resume
                   </a>
                 </li>
                 <li>
@@ -100,8 +121,13 @@ export function Footer() {
                   </Link>
                 </li>
                 <li>
+                  <a href="#feedback" className="hover:text-white transition-colors">
+                    Share Feedback
+                  </a>
+                </li>
+                <li>
                   <a href="https://www.linkedin.com/in/adel-muhammed-71328a2b5" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
-                    Contact
+                    LinkedIn Contact
                   </a>
                 </li>
               </ul>

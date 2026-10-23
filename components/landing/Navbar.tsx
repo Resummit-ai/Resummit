@@ -26,11 +26,9 @@ export function Navbar() {
     if (nextTheme === "dark") {
       root.classList.add("dark");
       root.classList.remove("light");
-      localStorage.setItem("sclade-theme", "dark");
     } else if (nextTheme === "light") {
       root.classList.add("light");
       root.classList.remove("dark");
-      localStorage.setItem("sclade-theme", "light");
     } else {
       const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
       if (prefersDark) {
@@ -40,7 +38,6 @@ export function Navbar() {
         root.classList.add("light");
         root.classList.remove("dark");
       }
-      localStorage.removeItem("sclade-theme");
     }
   };
 
@@ -48,33 +45,80 @@ export function Navbar() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-[#09090b]/85 backdrop-blur-md border-b border-white/10 py-3"
+          ? "bg-[#09090b]/90 backdrop-blur-md border-b border-white/10 py-3"
           : "bg-transparent py-5"
       }`}
     >
       <div className="mx-auto flex h-12 max-w-7xl items-center justify-between px-6 lg:px-8">
-        {/* Brand Logo - clean geometric hexagon matching reference */}
+        {/* Brand Logo - Resummit's official document icon + wordmark */}
         <Link
           href="/"
-          className="flex items-center gap-2.5 text-base font-medium text-white tracking-tight"
+          className="flex items-center gap-2.5 group transition-opacity hover:opacity-95"
         >
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" className="text-white">
-            <path d="M12 2L3 7v10l9 5 9-5V7l-9-5zm0 2.2L19 8.6v6.8L12 19.4 5 15.4V8.6L12 4.2z" />
+          <svg viewBox="0 0 32 32" className="w-7 h-7 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M7 6C7 4.34315 8.34315 3 10 3H19L25 9V26C25 27.6569 23.6569 29 22 29H10C8.34315 29 7 27.6569 7 26V6Z"
+              className="fill-blue-500/15 stroke-blue-500"
+              strokeWidth="2"
+            />
+            <path d="M19 3V9H25L19 3Z" className="fill-blue-500 stroke-blue-500" strokeWidth="1.5" />
+            <path
+              d="M11 13H17M11 17H21M11 21H18M11 25H20"
+              className="stroke-blue-400"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+            <path d="M20 8.5L25 3.5" className="stroke-blue-400" strokeWidth="2" strokeLinecap="round" />
+            <path d="M25 3.5L27 6.5L23.5 5.5Z" className="fill-blue-400" />
           </svg>
-          <span className="font-semibold">{LANDING_CONFIG.brand.name}</span>
+          <div className="flex flex-col text-left">
+            <span className="font-extrabold tracking-tight text-white text-sm leading-none font-sans">
+              RESUMMIT
+            </span>
+            <span className="text-[9px] tracking-wider text-neutral-400 font-mono font-medium leading-tight mt-0.5">
+              YOUR COMMITS. YOUR CAREER.
+            </span>
+          </div>
         </Link>
 
         {/* Center Desktop Links */}
         <nav className="hidden md:flex items-center gap-8">
-          {LANDING_CONFIG.navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="text-sm font-normal text-neutral-400 transition-colors hover:text-white"
-            >
-              {link.label}
-            </a>
-          ))}
+          <a
+            href="#features"
+            className="text-sm font-normal text-neutral-400 transition-colors hover:text-white"
+          >
+            Features
+          </a>
+          <a
+            href="#pipeline"
+            className="text-sm font-normal text-neutral-400 transition-colors hover:text-white"
+          >
+            Workflow
+          </a>
+          <a
+            href="#preview-resume"
+            className="text-sm font-normal text-neutral-400 transition-colors hover:text-white"
+          >
+            Sample Resume
+          </a>
+          <a
+            href="#pricing"
+            className="text-sm font-normal text-neutral-400 transition-colors hover:text-white"
+          >
+            Pricing
+          </a>
+          <a
+            href="#faq"
+            className="text-sm font-normal text-neutral-400 transition-colors hover:text-white"
+          >
+            FAQ
+          </a>
+          <a
+            href="#feedback"
+            className="text-sm font-normal text-neutral-400 transition-colors hover:text-white"
+          >
+            Contact
+          </a>
         </nav>
 
         {/* Right Actions */}
@@ -100,7 +144,7 @@ export function Navbar() {
 
           <Link
             href={LANDING_CONFIG.brand.primaryCta.href}
-            className="inline-flex shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-sm font-medium text-white transition-all hover:bg-white/15"
+            className="inline-flex shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-sm font-medium text-white transition-all hover:bg-white/15 shadow-sm"
           >
             {LANDING_CONFIG.brand.primaryCta.label}
           </Link>
@@ -119,37 +163,68 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-white/10 bg-[#09090b]/95 px-6 py-6 backdrop-blur-md">
-          <nav className="flex flex-col gap-4">
-            {LANDING_CONFIG.navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-base font-medium text-neutral-300 hover:text-white"
-              >
-                {link.label}
-              </a>
-            ))}
-            <div className="mt-4 flex flex-col gap-3 pt-4 border-t border-white/10">
-              <Link
-                href="/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="inline-flex h-10 items-center justify-center rounded-full bg-white/5 text-sm font-medium text-white"
-              >
-                Log in
-              </Link>
-              <Link
-                href={LANDING_CONFIG.brand.primaryCta.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="inline-flex h-10 items-center justify-center rounded-full bg-white text-sm font-medium text-black"
-              >
-                {LANDING_CONFIG.brand.primaryCta.label}
-              </Link>
-            </div>
-          </nav>
+        <div className="md:hidden border-b border-white/10 bg-[#09090b]/95 backdrop-blur-xl px-6 py-5 space-y-4">
+          <div className="flex flex-col space-y-3">
+            <a
+              href="#features"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-sm text-neutral-300 hover:text-white py-1"
+            >
+              Features
+            </a>
+            <a
+              href="#pipeline"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-sm text-neutral-300 hover:text-white py-1"
+            >
+              Workflow
+            </a>
+            <a
+              href="#preview-resume"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-sm text-neutral-300 hover:text-white py-1"
+            >
+              Sample Resume
+            </a>
+            <a
+              href="#pricing"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-sm text-neutral-300 hover:text-white py-1"
+            >
+              Pricing
+            </a>
+            <a
+              href="#faq"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-sm text-neutral-300 hover:text-white py-1"
+            >
+              FAQ
+            </a>
+            <a
+              href="#feedback"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-sm text-neutral-300 hover:text-white py-1"
+            >
+              Contact
+            </a>
+          </div>
+
+          <div className="pt-3 border-t border-white/10 flex items-center justify-between">
+            <Link
+              href="/login"
+              className="text-sm font-medium text-neutral-300 hover:text-white"
+            >
+              Log in
+            </Link>
+            <Link
+              href="/login"
+              className="rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-neutral-950"
+            >
+              Build my CV free
+            </Link>
+          </div>
         </div>
       )}
     </header>
