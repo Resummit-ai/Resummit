@@ -608,10 +608,10 @@ export function SmartUpdateCenter({
               <button
                 onClick={handleScan}
                 disabled={isCurrentlySyncing}
-                className="px-4 py-2 bg-[#5473D1] hover:bg-[#4261C0] text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer flex items-center gap-2 self-start sm:self-auto shrink-0"
+                className="px-4 py-2 bg-[#5473D1] hover:bg-[#4261C0] active:scale-[0.99] text-white rounded-xl text-xs font-semibold transition-all shadow-xs cursor-pointer flex items-center gap-2 self-start sm:self-auto shrink-0 disabled:opacity-60"
               >
-                {isCurrentlySyncing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
-                Run Sync
+                <RefreshCw className={`w-3.5 h-3.5 ${isCurrentlySyncing ? "animate-spin" : ""}`} />
+                {isCurrentlySyncing ? "Syncing..." : "Sync GitHub"}
               </button>
             </div>
 
@@ -649,15 +649,6 @@ export function SmartUpdateCenter({
                   Skills ({skillSuggestions.length})
                 </button>
               </div>
-
-              <button
-                onClick={handleScan}
-                disabled={isCurrentlySyncing}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] hover:bg-[#E7EDFF] hover:border-[#CFD9FF] hover:text-[#5473D1] rounded-lg text-xs font-semibold transition-all text-[var(--sclade-text-secondary)] cursor-pointer self-start sm:self-auto shrink-0"
-              >
-                <RefreshCw className={`w-3.5 h-3.5 ${isCurrentlySyncing ? "animate-spin" : ""}`} />
-                Rescan GitHub
-              </button>
             </div>
           </div>
         </div>

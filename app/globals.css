@@ -36,6 +36,7 @@
   --sclade-input-border: #E1E5EB;
   --sclade-btn-secondary-bg: #F0F3F8;
   --sclade-btn-secondary-text: #20252E;
+  --sclade-subtle-bg: #F0F3F8;
   --sclade-popover-bg: #FFFFFF;
   --sclade-popover-border: #E1E5EB;
 }
@@ -71,6 +72,7 @@
   --sclade-input-border: #282D37;
   --sclade-btn-secondary-bg: #22262F;
   --sclade-btn-secondary-text: #F3F4F6;
+  --sclade-subtle-bg: #22262F;
   --sclade-popover-bg: #181B20;
   --sclade-popover-border: #282D37;
 }

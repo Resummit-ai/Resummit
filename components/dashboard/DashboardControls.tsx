@@ -151,16 +151,16 @@ export function DashboardControls({ user }: DashboardControlsProps) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                 transition={{ duration: 0.15 }}
-                className="absolute right-0 mt-2 w-80 md:w-96 rounded-xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] shadow-lg z-50 p-5 overflow-hidden text-[var(--sclade-text-primary)]"
+                className="absolute right-0 mt-2 w-80 md:w-96 rounded-2xl bg-white dark:bg-[#181B20] border border-neutral-200 dark:border-neutral-800 shadow-2xl z-50 p-5 overflow-hidden"
               >
-                <div className="flex items-center justify-between border-b border-[var(--sclade-card-border)] pb-3 mb-4">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--sclade-text-secondary)]">
+                <div className="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800 pb-3 mb-4">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                     System Notifications
                   </h4>
                   {unreadCount > 0 && (
                     <button
                       onClick={markAllRead}
-                      className="text-[10px] font-bold text-[#5473D1] hover:text-[#4261C0] transition-colors uppercase tracking-wider cursor-pointer"
+                      className="text-[10px] font-bold text-[#5473D1] hover:text-[#4261C0] dark:text-[#7B96E8] dark:hover:text-[#A5B4FC] transition-colors uppercase tracking-wider cursor-pointer"
                     >
                       Mark all read
                     </button>
@@ -169,41 +169,60 @@ export function DashboardControls({ user }: DashboardControlsProps) {
 
                 <div className="space-y-2.5 max-h-[300px] overflow-y-auto pr-1">
                   {notifications.length === 0 ? (
-                    <div className="text-center py-8 text-[var(--sclade-text-muted)] text-[11px] font-medium uppercase tracking-wider">
+                    <div className="text-center py-8 text-neutral-400 dark:text-neutral-400 text-[11px] font-medium uppercase tracking-wider">
                       All caught up!
                     </div>
                   ) : (
                     notifications.map((n) => (
                       <div
                         key={n.id}
-                        className={`p-3 rounded-lg border transition-all relative group/item ${
+                        className={`p-3.5 rounded-xl border transition-all relative group/item ${
                           n.read
-                            ? "bg-[#F0F3F8] dark:bg-neutral-900/40 border-[var(--sclade-card-border)]"
-                            : "bg-[#E7EDFF]/50 border-[#CFD9FF] shadow-xs"
+                            ? "bg-[#F8FAFC] dark:bg-[#15181E] border-neutral-200 dark:border-neutral-800/80"
+                            : "bg-[#E7EDFF]/70 dark:bg-[#1E2538] border-[#CFD9FF] dark:border-[#5473D1]/40 shadow-xs"
                         }`}
                       >
                         <div className="flex justify-between items-start gap-3">
                           <div className="flex-1">
                             <div className="flex items-center gap-2">
                               {!n.read && (
-                                <span className="w-1.5 h-1.5 bg-[#5473D1] rounded-full shrink-0" />
+                                <span className="w-2 h-2 bg-[#5473D1] dark:bg-[#7B96E8] rounded-full shrink-0 ring-2 ring-white dark:ring-[#1E2538]" />
                               )}
-                              <span className="text-xs font-bold text-[var(--sclade-text-primary)]">
+                              <span
+                                className={`text-xs ${
+                                  n.read
+                                    ? "font-medium text-neutral-700 dark:text-neutral-300"
+                                    : "font-bold text-neutral-900 dark:text-white"
+                                }`}
+                              >
                                 {n.title}
                               </span>
                             </div>
-                            <p className="text-xs text-[var(--sclade-text-secondary)] mt-1 leading-relaxed">
+                            <p
+                              className={`text-xs mt-1 leading-relaxed ${
+                                n.read
+                                  ? "text-neutral-500 dark:text-neutral-400"
+                                  : "text-neutral-700 dark:text-neutral-200"
+                              }`}
+                            >
                               {n.desc}
                             </p>
-                            <span className="text-[10px] font-medium text-[var(--sclade-text-muted)] block mt-2 uppercase tracking-wide">
+                            <span
+                              className={`text-[10px] font-medium block mt-2 uppercase tracking-wide ${
+                                n.read
+                                  ? "text-neutral-400 dark:text-neutral-500"
+                                  : "text-neutral-500 dark:text-neutral-400"
+                              }`}
+                            >
                               {n.time}
                             </span>
                           </div>
                           <button
                             onClick={() => clearNotification(n.id)}
-                            className="text-[var(--sclade-text-muted)] hover:text-red-500 p-1 hover:bg-black/5 dark:hover:bg-white/5 rounded transition-all cursor-pointer opacity-0 group-hover/item:opacity-100"
+                            className="text-neutral-400 hover:text-red-500 dark:text-neutral-500 dark:hover:text-red-400 p-1 hover:bg-black/5 dark:hover:bg-white/10 rounded transition-all cursor-pointer opacity-0 group-hover/item:opacity-100"
+                            title="Dismiss notification"
                           >
-                            <X className="w-3 h-3" />
+                            <X className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       </div>
