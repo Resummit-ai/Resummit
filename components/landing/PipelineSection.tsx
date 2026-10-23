@@ -74,17 +74,20 @@ export function PipelineSection() {
   const currentTab = tabs[activeTab];
 
   return (
-    <section id="pipeline" className="scroll-mt-12 bg-[#09090b] text-white py-24 sm:py-32">
+    <section
+      id="pipeline"
+      className="scroll-mt-12 bg-[#F5F5F3] dark:bg-[#09090b] text-[#171717] dark:text-white py-24 sm:py-32 border-t border-[#E5E5E5] dark:border-neutral-900 transition-colors duration-300"
+    >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         {/* Section Header */}
         <div className="max-w-3xl">
-          <h2 className="text-4xl font-normal sm:font-medium tracking-tight text-white sm:text-5xl leading-[1.15]">
+          <h2 className="text-4xl font-extrabold sm:font-bold tracking-tight text-[#171717] dark:text-white sm:text-5xl leading-[1.15]">
             Everything between your commits and your next offer
           </h2>
         </div>
 
         {/* Mountain Container with Floating Live Status Card */}
-        <div className="mt-12 relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl min-h-[460px] sm:min-h-[500px] flex items-center justify-center p-6 sm:p-12">
+        <div className="mt-12 relative rounded-3xl overflow-hidden border border-[#E5E5E5] dark:border-white/10 shadow-2xl min-h-[460px] sm:min-h-[500px] flex items-center justify-center p-6 sm:p-12">
           {/* Mountain Artwork Background */}
           <img
             src="/images/fairweather_sky.jpg"
@@ -92,10 +95,10 @@ export function PipelineSection() {
             className="absolute inset-0 h-full w-full object-cover object-center"
           />
           {/* Subtle gradient vignette */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 pointer-events-none" />
 
-          {/* Floating White Card (Exact match to reference card) */}
-          <div className="relative z-10 w-full max-w-md rounded-2xl bg-[#fafafa]/95 backdrop-blur-md p-6 text-neutral-900 shadow-2xl border border-white/60 transition-all duration-300">
+          {/* Floating White Card */}
+          <div className="relative z-10 w-full max-w-md rounded-2xl bg-white/95 dark:bg-[#fafafa]/95 backdrop-blur-md p-6 text-neutral-900 shadow-2xl border border-white/60 transition-all duration-300">
             {/* Card Header */}
             <div className="flex items-center justify-between">
               <span className="font-mono text-xs text-neutral-500 font-medium">
@@ -151,18 +154,22 @@ export function PipelineSection() {
                 {/* Active indicator top bar */}
                 <div
                   className={`h-[2px] w-full transition-all duration-300 ${
-                    isActive ? "bg-white" : "bg-neutral-800 group-hover:bg-neutral-700"
+                    isActive
+                      ? "bg-blue-600 dark:bg-white"
+                      : "bg-[#E5E5E5] dark:bg-neutral-800 group-hover:bg-neutral-400 dark:group-hover:bg-neutral-700"
                   }`}
                 />
                 <h3
-                  className={`mt-4 text-base font-medium tracking-tight transition-colors ${
-                    isActive ? "text-white" : "text-neutral-400 group-hover:text-neutral-200"
+                  className={`mt-4 text-base font-semibold tracking-tight transition-colors ${
+                    isActive
+                      ? "text-[#171717] dark:text-white"
+                      : "text-[#707070] dark:text-neutral-400 group-hover:text-black dark:group-hover:text-neutral-200"
                   }`}
                 >
                   {tab.title}
                 </h3>
                 {isActive && (
-                  <p className="mt-2 text-xs sm:text-sm text-neutral-400 leading-relaxed animate-fadeIn">
+                  <p className="mt-2 text-xs sm:text-sm text-[#52525b] dark:text-neutral-400 leading-relaxed animate-fadeIn">
                     {tab.description}
                   </p>
                 )}
@@ -175,14 +182,14 @@ export function PipelineSection() {
         <div className="mt-10 flex flex-wrap items-center gap-6">
           <Link
             href={LANDING_CONFIG.brand.primaryCta.href}
-            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-neutral-800 hover:border-white/40 shadow-sm"
+            className="inline-flex items-center gap-2 rounded-full border border-neutral-300 dark:border-white/20 bg-[#171717] dark:bg-neutral-900 px-6 py-2.5 text-sm font-semibold text-white transition-all hover:bg-neutral-800 hover:border-neutral-500 dark:hover:border-white/40 shadow-sm"
           >
             <span>Start auto-syncing</span>
             <ArrowRight className="h-4 w-4" />
           </Link>
           <a
             href="#workflow"
-            className="text-sm font-medium text-neutral-400 hover:text-white transition-colors"
+            className="text-sm font-semibold text-[#707070] dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors"
           >
             Explore the pipeline workflow →
           </a>

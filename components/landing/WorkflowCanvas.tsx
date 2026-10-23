@@ -51,15 +51,15 @@ export function WorkflowCanvas() {
   const connectedCount = Object.values(connectedNodes).filter(Boolean).length;
 
   return (
-    <section id="workflow" className="scroll-mt-12 bg-[#09090b] text-white py-24 sm:py-32 border-t border-neutral-900">
+    <section id="workflow" className="scroll-mt-12 bg-[#F5F5F3] dark:bg-[#09090b] text-[#171717] dark:text-white py-24 sm:py-32 border-t border-[#E5E5E5] dark:border-neutral-900 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="max-w-2xl">
-            <h2 className="text-4xl font-normal sm:font-medium tracking-tight text-white sm:text-5xl leading-[1.15]">
+            <h2 className="text-4xl font-extrabold sm:font-bold tracking-tight text-[#171717] dark:text-white sm:text-5xl leading-[1.15]">
               Wire up your resume in a minute
             </h2>
-            <p className="mt-4 text-base text-neutral-400">
+            <p className="mt-4 text-base text-[#707070] dark:text-neutral-400">
               Connect repositories, commit history, target roles, and rewrite formulas. Resummit turns the graph into an interview-ready resume.
             </p>
           </div>
@@ -69,14 +69,14 @@ export function WorkflowCanvas() {
             <button
               type="button"
               onClick={resetAll}
-              className="text-sm font-medium text-neutral-400 hover:text-white transition-colors px-2 py-1"
+              className="text-sm font-semibold text-[#707070] dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors px-2 py-1"
             >
               Reset
             </button>
             <button
               type="button"
               onClick={connectAll}
-              className="inline-flex items-center gap-1.5 rounded-full border border-neutral-800 bg-neutral-900 px-4 py-1.5 text-xs font-medium text-white hover:bg-neutral-800 transition-colors shadow-sm"
+              className="inline-flex items-center gap-1.5 rounded-full border border-neutral-300 dark:border-neutral-800 bg-[#171717] dark:bg-neutral-900 px-4 py-1.5 text-xs font-semibold text-white hover:bg-neutral-800 transition-colors shadow-sm"
             >
               <Zap className="h-3 w-3 text-amber-400" />
               <span>Connect all</span>
@@ -85,7 +85,7 @@ export function WorkflowCanvas() {
         </div>
 
         {/* Workflow Node Canvas with Subtle Grid & Animated Connecting Beams */}
-        <div className="mt-12 relative rounded-3xl border border-neutral-800/80 bg-[#0c0c0e] p-6 sm:p-10 overflow-hidden shadow-2xl">
+        <div className="mt-12 relative rounded-3xl border border-[#E5E5E5] dark:border-neutral-800/80 bg-white dark:bg-[#0c0c0e] p-6 sm:p-10 overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:shadow-2xl transition-colors duration-300">
           {/* Subtle grid background */}
           <div
             className="absolute inset-0 opacity-[0.03] pointer-events-none"

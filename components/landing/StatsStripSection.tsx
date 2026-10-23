@@ -43,27 +43,27 @@ export function StatsStripSection() {
   const stats = [
     {
       number: `${count1}+`,
-      icon: <FileCheck className="w-5 h-5 text-[#f2efe9]/70" />,
+      icon: <FileCheck className="w-5 h-5 text-[#171717] dark:text-[#f2efe9]/70" />,
       title: "Resumes Generated",
       desc: "Crafted by developers to secure interviews at top tech companies.",
     },
     {
       number: `${count2}+`,
-      icon: <Globe className="w-5 h-5 text-[#f2efe9]/70" />,
+      icon: <Globe className="w-5 h-5 text-[#171717] dark:text-[#f2efe9]/70" />,
       title: "Countries Reached",
       desc: "Helping engineers build global careers across multiple continents.",
     },
     {
       number: `<${count3}s`,
-      icon: <Sparkles className="w-5 h-5 text-[#f2efe9]/70" />,
+      icon: <Sparkles className="w-5 h-5 text-[#171717] dark:text-[#f2efe9]/70" />,
       title: "Generation Time",
       desc: "Instantly parsed from public repository commit histories.",
     },
     {
       number: "100%",
-      icon: <KeyRound className="w-5 h-5 text-[#f2efe9]/70" />,
-      title: "Free to Start",
-      desc: "Sign up today and sync your GitHub without any credit card.",
+      icon: <KeyRound className="w-5 h-5 text-[#171717] dark:text-[#f2efe9]/70" />,
+      title: "Free Developer Access",
+      desc: "Authenticate with GitHub to access the full builder without a credit card.",
     },
   ];
 
@@ -77,19 +77,19 @@ export function StatsStripSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: idx * 0.1 }}
-            className="rounded-2xl border border-[#27272a] bg-[#141417] p-6 flex flex-col justify-between hover:border-neutral-700 transition-all duration-300 hover:-translate-y-1 shadow-lg"
+            className="rounded-2xl border border-[#E5E5E5] dark:border-[#27272a] bg-white dark:bg-[#141417] p-6 flex flex-col justify-between hover:border-neutral-400 dark:hover:border-neutral-700 transition-all duration-300 hover:-translate-y-1 shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:shadow-lg"
           >
             <div className="flex items-center justify-between mb-4">
-              <span className="text-3xl sm:text-4xl font-medium text-[#f2efe9] tracking-tight font-mono">
+              <span className="text-3xl sm:text-4xl font-bold sm:font-medium text-[#171717] dark:text-[#f2efe9] tracking-tight font-mono">
                 {s.number}
               </span>
-              <div className="p-2.5 rounded-xl bg-[#1c1c20] border border-[#27272a]">
+              <div className="p-2.5 rounded-xl bg-[#F7F7F6] dark:bg-[#1c1c20] border border-[#E5E5E5] dark:border-[#27272a]">
                 {s.icon}
               </div>
             </div>
             <div>
-              <h3 className="text-base font-medium text-[#f2efe9] mb-1">{s.title}</h3>
-              <p className="text-xs text-[#f2efe9]/60 leading-relaxed">{s.desc}</p>
+              <h3 className="text-base font-bold sm:font-medium text-[#171717] dark:text-[#f2efe9] mb-1">{s.title}</h3>
+              <p className="text-xs text-[#707070] dark:text-[#f2efe9]/60 leading-relaxed">{s.desc}</p>
             </div>
           </motion.div>
         ))}

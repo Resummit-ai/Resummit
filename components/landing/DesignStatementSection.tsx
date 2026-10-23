@@ -1,21 +1,35 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import RotatingText from "@/components/ui/RotatingText";
 
 export function DesignStatementSection() {
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+
+  useEffect(() => {
+    const updateTheme = () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      setTheme(isDark ? "dark" : "light");
+    };
+    updateTheme();
+
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class", "data-theme"] });
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="py-24 px-6 text-center bg-[#0a0a0a] relative z-10 border-t border-[#27272a]">
+    <section className="py-24 px-6 text-center bg-[#F5F5F3] dark:bg-[#0a0a0a] relative z-10 border-t border-[#E5E5E5] dark:border-[#27272a] transition-colors duration-300">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-2xl sm:text-4xl md:text-5xl font-medium tracking-tight text-[#f2efe9]/70 leading-snug">
-          <span className="inline-block bg-[#5473D1] text-white px-5 py-1 rounded-2xl font-semibold mr-3 align-middle shadow-lg shadow-blue-500/25">
+        <h2 className="text-2xl sm:text-4xl md:text-5xl font-semibold sm:font-medium tracking-tight text-[#171717]/80 dark:text-[#f2efe9]/70 leading-snug">
+          <span className="inline-block bg-[#245DFF] dark:bg-[#5473D1] text-white px-5 py-1 rounded-2xl font-semibold mr-3 align-middle shadow-lg shadow-blue-500/25">
             Create
           </span>
           meaningful digital experiences where every line unfolds with{" "}
           <RotatingText
             texts={["purpose,", "precision,", "vision,", "structure,"]}
-            color="#f2efe9"
-            badgeBackground="#1c1d22"
+            color={theme === "light" ? "#171717" : "#f2efe9"}
+            badgeBackground={theme === "light" ? "#ffffff" : "#1c1d22"}
             badgeRadius={14}
             badgePaddingX={18}
             badgePaddingY={4}
@@ -25,7 +39,7 @@ export function DesignStatementSection() {
               fontWeight: 600,
               fontSize: "clamp(1.8rem, 3.8vw, 3.2rem)",
               letterSpacing: "-0.03em",
-              color: "#f2efe9",
+              color: theme === "light" ? "#171717" : "#f2efe9",
               display: "inline-flex",
               verticalAlign: "middle",
             }}

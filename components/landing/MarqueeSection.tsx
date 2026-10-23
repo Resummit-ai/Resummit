@@ -19,9 +19,9 @@ export function MarqueeSection() {
   const duplicated = [...logos, ...logos, ...logos];
 
   return (
-    <section className="relative bg-[#09090b] py-16 overflow-hidden border-b border-neutral-900">
+    <section className="relative bg-[#F5F5F3] dark:bg-[#09090b] py-16 overflow-hidden border-b border-[#E5E5E5] dark:border-neutral-900 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-6 mb-8 text-center">
-        <p className="text-xs sm:text-sm text-neutral-400">
+        <p className="text-xs sm:text-sm text-[#707070] dark:text-neutral-400">
           Serving developers shipping code at
         </p>
       </div>
@@ -31,7 +31,7 @@ export function MarqueeSection() {
           {duplicated.map((item, idx) => (
             <div
               key={idx}
-              className={`text-xl sm:text-2xl text-neutral-400/70 hover:text-white transition-colors duration-200 select-none ${item.font}`}
+              className={`text-xl sm:text-2xl text-[#707070]/70 hover:text-[#171717] dark:text-neutral-400/70 dark:hover:text-white transition-colors duration-200 select-none ${item.font}`}
             >
               {item.name}
             </div>

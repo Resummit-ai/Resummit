@@ -104,31 +104,31 @@ console.log(\`Audit Score: \${audit.score}/100 - Certified ATS Safe\`);`
   const displayedText = fullResponseTexts[activeTab].slice(0, streamIndex);
 
   return (
-    <section className="bg-[#0a0a0a] text-[#f2efe9] py-24 sm:py-32 border-t border-[#27272a]">
+    <section className="bg-[#F5F5F3] dark:bg-[#0a0a0a] text-[#171717] dark:text-[#f2efe9] py-24 sm:py-32 border-t border-[#E5E5E5] dark:border-[#27272a] transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         {/* Title Header */}
         <div className="max-w-3xl">
-          <div className="text-xs sm:text-sm font-medium uppercase tracking-wider text-[#0099ff] mb-3">
+          <div className="text-xs sm:text-sm font-bold uppercase tracking-wider text-blue-600 dark:text-[#0099ff] mb-3">
             DEVELOPER FIRST
           </div>
-          <h2 className="text-3xl sm:text-5xl font-medium tracking-tight text-[#f2efe9] leading-[1.12]">
+          <h2 className="text-3xl sm:text-5xl font-extrabold sm:font-bold tracking-tight text-[#171717] dark:text-[#f2efe9] leading-[1.12]">
             Paste one repo link. Keep the code you have.
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-[#f2efe9]/70 leading-relaxed font-normal">
+          <p className="mt-4 text-base sm:text-lg text-[#707070] dark:text-[#f2efe9]/70 leading-relaxed font-normal">
             Resummit speaks your Git history, so the work you push every day turns directly into quantifiable achievements without rewriting your life.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link
               href={LANDING_CONFIG.brand.primaryCta.href}
-              className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-2.5 text-sm font-medium text-black transition-all hover:bg-neutral-200 shadow-sm"
+              className="inline-flex items-center gap-2 rounded-full bg-[#171717] dark:bg-white px-6 py-2.5 text-sm font-semibold text-white dark:text-black transition-all hover:bg-neutral-800 dark:hover:bg-neutral-200 shadow-sm"
             >
               <span>Try the live builder</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/login"
-              className="rounded-full border border-[#27272a] bg-[#141417] px-5 py-2.5 text-sm font-medium text-[#f2efe9]/80 hover:text-[#f2efe9] hover:border-neutral-700 transition-colors"
+              className="rounded-full border border-neutral-300 dark:border-[#27272a] bg-white dark:bg-[#141417] px-5 py-2.5 text-sm font-semibold text-[#171717] dark:text-[#f2efe9]/80 hover:text-blue-600 dark:hover:text-[#f2efe9] hover:border-neutral-400 dark:hover:border-neutral-700 transition-colors shadow-sm"
             >
               Connect GitHub
             </Link>

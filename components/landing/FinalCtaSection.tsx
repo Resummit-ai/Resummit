@@ -7,7 +7,7 @@ import ArrowRevealButton from "@/components/ui/ArrowRevealButton";
 
 export function FinalCtaSection() {
   return (
-    <section className="bg-[#0a0a0a] text-[#f2efe9] py-16 sm:py-24 border-t border-[#27272a]">
+    <section className="bg-[#F5F5F3] dark:bg-[#0a0a0a] text-[#171717] dark:text-[#f2efe9] py-16 sm:py-24 border-t border-[#E5E5E5] dark:border-[#27272a] transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         {/* Mountain Landscape Banner matching reference final CTA */}
         <motion.div
@@ -15,7 +15,7 @@ export function FinalCtaSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.6 }}
-          className="relative rounded-3xl overflow-hidden border border-[#27272a] shadow-2xl min-h-[300px] sm:min-h-[360px] p-8 sm:p-14 flex flex-col justify-end"
+          className="relative rounded-3xl overflow-hidden border border-[#E5E5E5] dark:border-[#27272a] shadow-xl min-h-[300px] sm:min-h-[360px] p-8 sm:p-14 flex flex-col justify-end"
         >
           {/* Background Mountain Sky Image */}
           <img
@@ -24,20 +24,20 @@ export function FinalCtaSection() {
             className="absolute inset-0 h-full w-full object-cover object-center opacity-85"
           />
           {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/95 via-[#0a0a0a]/60 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/55 to-transparent pointer-events-none" />
 
           {/* Content */}
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-end justify-between gap-8">
             <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/20 bg-blue-500/10 text-[#0099ff] text-xs font-mono font-semibold tracking-wider uppercase mb-4">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#0099ff] animate-pulse" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-400/30 bg-blue-500/20 text-blue-300 text-xs font-mono font-semibold tracking-wider uppercase mb-4">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
                 Ready to ship
               </div>
-              <h2 className="text-3xl sm:text-5xl md:text-6xl font-medium tracking-tight text-[#f2efe9] leading-[1.08]">
+              <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-[1.08]">
                 Ready to build the CV <br className="hidden sm:block" />your commits deserve?
               </h2>
-              <p className="text-sm sm:text-base text-[#f2efe9]/75 mt-3 max-w-xl font-normal leading-relaxed">
-                Connect your GitHub in one click. 100% free while in early access—no credit card required.
+              <p className="text-sm sm:text-base text-neutral-200 mt-3 max-w-xl font-normal leading-relaxed">
+                Connect your GitHub in one click. Open access during public preview—no credit card required.
               </p>
             </div>
 
@@ -72,7 +72,7 @@ export function FinalCtaSection() {
                   const el = document.getElementById("preview-resume") || document.getElementById("interactive-resume");
                   el?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="inline-flex items-center rounded-full border border-white/15 bg-white/5 backdrop-blur-md px-6 py-3 text-sm font-medium text-[#f2efe9] hover:bg-white/10 hover:border-white/30 transition-all shadow-sm"
+                className="inline-flex items-center rounded-full border border-white/20 bg-black/40 backdrop-blur-md px-6 py-3 text-sm font-medium text-white hover:bg-black/60 hover:border-white/40 transition-all shadow-sm"
               >
                 See sample resume →
               </button>

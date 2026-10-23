@@ -89,7 +89,81 @@ export function NewLandingPage() {
   }, []);
 
   return (
-    <div className="landing-root min-h-screen bg-[#0a0a0a] text-[#f2efe9] selection:bg-neutral-800 selection:text-white font-sans antialiased">
+    <div className="landing-root min-h-screen bg-[#F5F5F3] dark:bg-[#0a0a0a] text-[#171717] dark:text-[#f2efe9] selection:bg-neutral-800 selection:text-white font-sans antialiased transition-colors duration-300">
+      <style jsx global>{`
+        :root,
+        [data-theme="light"],
+        .light {
+          --l-bg: #F5F5F3;
+          --l-card: #FFFFFF;
+          --l-surface-2: #F7F7F6;
+          --l-text: #171717;
+          --l-muted: #707070;
+          --l-border: #E5E5E5;
+        }
+
+        [data-theme="dark"],
+        .dark {
+          --l-bg: #0a0a0a;
+          --l-card: #141417;
+          --l-surface-2: #18181b;
+          --l-text: #f2efe9;
+          --l-muted: #a1a1aa;
+          --l-border: #27272a;
+        }
+
+        .light .landing-root,
+        [data-theme="light"] .landing-root {
+          background-color: #F5F5F3 !important;
+          background-image: radial-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px) !important;
+          background-size: 20px 20px !important;
+          color: #171717 !important;
+        }
+
+        .dark .landing-root,
+        [data-theme="dark"] .landing-root {
+          background-color: #0a0a0a !important;
+          background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px) !important;
+          background-size: 20px 20px !important;
+          color: #f2efe9 !important;
+        }
+
+        /* Light mode section and typography overrides */
+        .light .landing-root section:not(.preserve-dark),
+        [data-theme="light"] .landing-root section:not(.preserve-dark) {
+          background-color: #F5F5F3 !important;
+          border-color: #E5E5E5 !important;
+          color: #171717 !important;
+        }
+        .light .landing-root h1,
+        .light .landing-root h2,
+        .light .landing-root h3,
+        .light .landing-root h4,
+        [data-theme="light"] .landing-root h1,
+        [data-theme="light"] .landing-root h2,
+        [data-theme="light"] .landing-root h3,
+        [data-theme="light"] .landing-root h4 {
+          color: #171717 !important;
+        }
+
+        /* Dark mode section and typography overrides */
+        .dark .landing-root section:not(.preserve-dark),
+        [data-theme="dark"] .landing-root section:not(.preserve-dark) {
+          background-color: #0a0a0a !important;
+          border-color: #27272a !important;
+          color: #f2efe9 !important;
+        }
+        .dark .landing-root h1,
+        .dark .landing-root h2,
+        .dark .landing-root h3,
+        .dark .landing-root h4,
+        [data-theme="dark"] .landing-root h1,
+        [data-theme="dark"] .landing-root h2,
+        [data-theme="dark"] .landing-root h3,
+        [data-theme="dark"] .landing-root h4 {
+          color: #f2efe9 !important;
+        }
+      `}</style>
       {/* 0. Scroll Progress Bar at the top of the viewport */}
       <div
         ref={scrollBarRef}

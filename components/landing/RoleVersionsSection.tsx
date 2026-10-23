@@ -48,11 +48,23 @@ export function RoleVersionsSection() {
       name: "DevOps & Cloud Infrastructure",
       tagline: "Kubernetes orchestration, Terraform automation, and 99.99% uptime reliability.",
       tags: ["Kubernetes", "AWS", "Terraform", "GitHub Actions", "+4 skills"],
-      prompt: "Summarize infrastructure optimizations:",
+      prompt: "Demonstrate cloud reliability and automation:",
       bullets: [
-        "Automated multi-region Kubernetes cluster provisioning with Terraform, cutting deployment time from 2 hours to 8 minutes.",
-        "Configured Prometheus & Grafana alerting pipelines, dropping mean-time-to-detection (MTTD) by 70%.",
-        "Enforced strict IAM least-privilege security roles across 12 production AWS accounts.",
+        "Provisioned multi-region AWS EKS clusters using Terraform modules with zero-downtime failover.",
+        "Reduced mean time to deploy from 45 minutes to 7 minutes with GitHub Actions and Docker caching.",
+        "Implemented Datadog synthetic monitoring and PagerDuty alert escalation matrices for 99.99% SLO.",
+      ],
+    },
+    {
+      id: "frontend",
+      name: "Frontend Architect",
+      tagline: "Design systems, performance budgets, WebGL/Canvas micro-animations, and accessibility.",
+      tags: ["React 19", "CSS Architecture", "TypeScript", "Vite", "+5 skills"],
+      prompt: "Highlight UI performance and engineering design:",
+      bullets: [
+        "Authored company-wide enterprise design system components adopted by 12 distinct product squads.",
+        "Optimized Core Web Vitals (LCP: 1.1s, CLS: 0.01) by pruning unneeded dependencies and bundling split chunks.",
+        "Achieved 100% WCAG 2.1 AA accessibility score across user-facing checkout and dashboard surfaces.",
       ],
     },
   ];
@@ -61,46 +73,43 @@ export function RoleVersionsSection() {
   const currentRole = roles[activeRoleIndex];
 
   return (
-    <section id="roles" className="scroll-mt-12 bg-[#09090b] text-white py-24 sm:py-32 border-t border-neutral-900">
+    <section
+      id="roles"
+      className="scroll-mt-12 bg-[#F5F5F3] dark:bg-[#09090b] text-[#171717] dark:text-white py-24 sm:py-32 border-t border-[#E5E5E5] dark:border-neutral-900 transition-colors duration-300"
+    >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left: Section Header & CTAs */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full border border-sky-500/20 bg-sky-500/10 px-3 py-1 text-xs font-medium text-sky-400">
+            <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-xs font-semibold text-blue-600 dark:text-sky-400">
               <span>✳</span>
               <span>Role catalog</span>
             </div>
 
-            <h2 className="text-4xl font-normal sm:font-medium tracking-tight text-white sm:text-5xl leading-[1.15]">
+            <h2 className="text-4xl font-extrabold sm:font-bold tracking-tight text-[#171717] dark:text-white sm:text-5xl leading-[1.15]">
               Every developer role, ready to export
             </h2>
 
-            <p className="text-base text-neutral-400 leading-relaxed">
+            <p className="text-base text-[#707070] dark:text-neutral-400 leading-relaxed">
               Pick from tailored presets for Backend, Frontend, Fullstack, AI/ML, and DevOps. Each version weights your repositories to match recruiter requirements.
             </p>
 
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <Link
                 href={LANDING_CONFIG.brand.primaryCta.href}
-                className="inline-flex items-center gap-2 rounded-full border border-neutral-800 bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-neutral-800 hover:border-neutral-700 shadow-sm"
+                className="inline-flex items-center gap-2 rounded-full border border-neutral-300 dark:border-neutral-800 bg-[#171717] dark:bg-neutral-900 px-6 py-2.5 text-sm font-semibold text-white transition-all hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-700 shadow-sm"
               >
                 <span>Browse all roles</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
-              <button
-                type="button"
-                className="rounded-full border border-neutral-800 bg-[#121215] px-5 py-2.5 text-sm font-medium text-neutral-300 hover:text-white hover:border-neutral-700 transition-colors"
-              >
-                Create custom role
-              </button>
             </div>
           </div>
 
-          {/* Right: Role Card with Vertical Icon Rail (Exact match to reference) */}
+          {/* Right: Role Card with Vertical Icon Rail */}
           <div className="lg:col-span-7">
-            <div className="rounded-2xl border border-neutral-800/80 bg-[#0e0e12] overflow-hidden flex shadow-2xl">
+            <div className="rounded-2xl border border-[#E5E5E5] dark:border-neutral-800/80 bg-white dark:bg-[#0e0e12] overflow-hidden flex shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:shadow-2xl transition-colors duration-300">
               {/* Vertical Icon Rail */}
-              <div className="w-14 shrink-0 border-r border-neutral-800 bg-[#121217] p-2 flex flex-col items-center gap-3">
+              <div className="w-14 shrink-0 border-r border-[#E5E5E5] dark:border-neutral-800 bg-[#F7F7F6] dark:bg-[#121217] p-2 flex flex-col items-center gap-3">
                 {roles.map((role, idx) => {
                   const isActive = activeRoleIndex === idx;
                   return (
@@ -110,8 +119,8 @@ export function RoleVersionsSection() {
                       onClick={() => setActiveRoleIndex(idx)}
                       className={`flex h-10 w-10 items-center justify-center rounded-xl transition-all ${
                         isActive
-                          ? "bg-neutral-800 text-sky-400 shadow-sm border border-neutral-700"
-                          : "text-neutral-500 hover:text-neutral-300 hover:bg-neutral-900"
+                          ? "bg-white dark:bg-neutral-800 text-blue-600 dark:text-sky-400 shadow-sm border border-[#E5E5E5] dark:border-neutral-700"
+                          : "text-[#707070] dark:text-neutral-500 hover:text-black dark:hover:text-neutral-300 hover:bg-neutral-200/50 dark:hover:bg-neutral-900"
                       }`}
                       title={role.name}
                     >
@@ -119,61 +128,56 @@ export function RoleVersionsSection() {
                       {idx === 1 && <Server className="h-5 w-5" />}
                       {idx === 2 && <BrainCircuit className="h-5 w-5" />}
                       {idx === 3 && <Cloud className="h-5 w-5" />}
+                      {idx === 4 && <Code2 className="h-5 w-5" />}
                     </button>
                   );
                 })}
               </div>
 
-              {/* Main Role Details Panel */}
-              <div className="flex-1 p-6 sm:p-8 space-y-6">
+              {/* Main Role Content */}
+              <div className="p-6 sm:p-8 flex-1 space-y-5">
                 <div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs text-sky-400 font-semibold uppercase tracking-wider">
-                      Target Profile
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs uppercase tracking-wider text-blue-600 dark:text-sky-400 font-semibold">
+                      Target Role
+                    </span>
+                    <span className="font-mono text-xs text-[#707070] dark:text-neutral-500">
+                      Preset 0{activeRoleIndex + 1}
                     </span>
                   </div>
-                  <h3 className="mt-1 text-2xl font-bold tracking-tight text-white">
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#171717] dark:text-white mt-1">
                     {currentRole.name}
                   </h3>
-                  <p className="mt-1 text-xs sm:text-sm text-neutral-400">
+                  <p className="text-xs sm:text-sm text-[#707070] dark:text-neutral-400 mt-1 leading-relaxed">
                     {currentRole.tagline}
                   </p>
-
-                  {/* Tags */}
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {currentRole.tags.map((tag, tIdx) => (
-                      <span
-                        key={tIdx}
-                        className="rounded-md border border-neutral-800 bg-neutral-900/80 px-2.5 py-1 text-xs font-mono text-neutral-300"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
                 </div>
 
-                {/* Simulated Synthesis Card */}
-                <div className="space-y-3 pt-2 border-t border-neutral-800/80">
-                  {/* Prompt */}
-                  <div className="inline-block rounded-xl bg-neutral-800/80 px-3.5 py-2 text-xs text-neutral-300">
-                    {currentRole.prompt}
-                  </div>
+                {/* Tech Stack Chips */}
+                <div className="flex flex-wrap gap-2 pt-1 border-t border-[#E5E5E5] dark:border-neutral-800/80">
+                  {currentRole.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-md border border-[#E5E5E5] dark:border-neutral-800 bg-[#F7F7F6] dark:bg-neutral-900 px-2.5 py-1 text-[11px] font-mono text-[#171717] dark:text-neutral-300"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
 
-                  {/* Bullet points generated */}
-                  <div className="rounded-xl border border-neutral-800 bg-[#14141a] p-4 space-y-2.5">
-                    {currentRole.bullets.map((b, bIdx) => (
-                      <div key={bIdx} className="flex items-start gap-2.5 text-xs text-neutral-300 leading-relaxed">
-                        <Check className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
+                {/* Highlighted Bullets */}
+                <div className="space-y-3 pt-2">
+                  <p className="text-xs font-mono font-semibold text-[#707070] dark:text-neutral-400">
+                    {currentRole.prompt}
+                  </p>
+                  <div className="space-y-2.5">
+                    {currentRole.bullets.map((b, i) => (
+                      <div key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-[#52525b] dark:text-neutral-300 leading-relaxed">
+                        <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
                         <span>{b}</span>
                       </div>
                     ))}
                   </div>
-                </div>
-
-                {/* Footer Status */}
-                <div className="flex items-center justify-between text-[11px] font-mono text-neutral-500 pt-2 border-t border-neutral-800/80">
-                  <span>ATS Match: 98%</span>
-                  <span className="text-emerald-400">Ready to export</span>
                 </div>
               </div>
             </div>
