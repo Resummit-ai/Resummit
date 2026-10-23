@@ -217,98 +217,98 @@ function FormalTemplate({
   const score = expCount * 3 + expBullets * 1 + projCount * 3 + projBullets * 1 + eduCount * 2 + achCount * 1.5 + (summaryLength > 200 ? Math.ceil(summaryLength / 80) : 2);
 
   // Dynamic style scaling variables
-  let fontSizeBody = "8.5pt";
-  let fontSizeSecTitle = "9.5pt";
-  let fontSizeSummary = "9pt";
-  let fontSizeEntryHeader = "9.5pt";
-  let fontSizeSub = "9pt";
-  let fontSizePeriod = "8.5pt";
-  let fontSizeName = "22pt";
+  let fontSizeBody = "8.2pt";
+  let fontSizeSecTitle = "9.2pt";
+  let fontSizeSummary = "8.5pt";
+  let fontSizeEntryHeader = "9.2pt";
+  let fontSizeSub = "8.5pt";
+  let fontSizePeriod = "8.2pt";
+  let fontSizeName = "20pt";
   
-  let lineHeightBody = 1.4;
-  let lineHeightSummary = 1.4;
-  let lineHeightSkills = 1.5;
+  let lineHeightBody = 1.25;
+  let lineHeightSummary = 1.25;
+  let lineHeightSkills = 1.3;
   
-  let paddingPage = "10.5mm 12.3mm";
-  let marginHeader = "8px";
-  let marginSection = "10px";
-  let sectionTitlePaddingTop = "3px";
-  let sectionTitleMarginBottom = "5px";
-  let entryGap = "8px";
-  let bulletMarginBottom = "2px";
+  let paddingPage = "7mm 10mm";
+  let marginHeader = "6px";
+  let marginSection = "6px";
+  let sectionTitlePaddingTop = "2px";
+  let sectionTitleMarginBottom = "3px";
+  let entryGap = "4.5px";
+  let bulletMarginBottom = "1.2px";
   let skillLineMarginBottom = "1px";
 
-  if (score > 62) {
-    // Super Dense
+  if (score >= 45) {
+    // Extensive content: 3+ jobs, 3+ projects, long summary
     fontSizeBody = "7.2pt";
     fontSizeSecTitle = "8pt";
-    fontSizeSummary = "7.6pt";
+    fontSizeSummary = "7.5pt";
     fontSizeEntryHeader = "8pt";
-    fontSizeSub = "7.6pt";
+    fontSizeSub = "7.5pt";
     fontSizePeriod = "7.2pt";
-    fontSizeName = "16.5pt";
+    fontSizeName = "17pt";
     
-    lineHeightBody = 1.1;
-    lineHeightSummary = 1.1;
-    lineHeightSkills = 1.15;
+    lineHeightBody = 1.12;
+    lineHeightSummary = 1.12;
+    lineHeightSkills = 1.16;
     
     paddingPage = "5mm 8.5mm";
-    marginHeader = "3px";
-    marginSection = "3px";
-    sectionTitlePaddingTop = "1px";
+    marginHeader = "3.5px";
+    marginSection = "3.5px";
+    sectionTitlePaddingTop = "1.2px";
     sectionTitleMarginBottom = "1.5px";
-    entryGap = "2px";
-    bulletMarginBottom = "0.2px";
-    skillLineMarginBottom = "0.2px";
-  } else if (score > 52) {
-    // Very Dense
-    fontSizeBody = "7.6pt";
-    fontSizeSecTitle = "8.5pt";
+    entryGap = "2.5px";
+    bulletMarginBottom = "0.5px";
+    skillLineMarginBottom = "0.5px";
+  } else if (score >= 30) {
+    // Standard full resume (e.g. 2-3 jobs, 2-3 projects with multiple bullets)
+    fontSizeBody = "7.8pt";
+    fontSizeSecTitle = "8.8pt";
     fontSizeSummary = "8pt";
-    fontSizeEntryHeader = "8.5pt";
+    fontSizeEntryHeader = "8.8pt";
     fontSizeSub = "8pt";
-    fontSizePeriod = "7.6pt";
-    fontSizeName = "18pt";
+    fontSizePeriod = "7.8pt";
+    fontSizeName = "19pt";
     
     lineHeightBody = 1.2;
     lineHeightSummary = 1.2;
-    lineHeightSkills = 1.25;
+    lineHeightSkills = 1.24;
     
-    paddingPage = "6.5mm 9.5mm";
-    marginHeader = "4px";
-    marginSection = "4px";
-    sectionTitlePaddingTop = "1.5px";
-    sectionTitleMarginBottom = "2px";
-    entryGap = "3px";
-    bulletMarginBottom = "0.5px";
-    skillLineMarginBottom = "0.5px";
-  } else if (score > 42) {
-    // Dense
-    fontSizeBody = "8pt";
-    fontSizeSecTitle = "9pt";
-    fontSizeSummary = "8.5pt";
-    fontSizeEntryHeader = "9pt";
-    fontSizeSub = "8.5pt";
-    fontSizePeriod = "8pt";
-    fontSizeName = "20pt";
-    
-    lineHeightBody = 1.3;
-    lineHeightSummary = 1.3;
-    lineHeightSkills = 1.35;
-    
-    paddingPage = "8.5mm 11mm";
-    marginHeader = "6px";
-    marginSection = "6.5px";
-    sectionTitlePaddingTop = "2px";
-    sectionTitleMarginBottom = "3px";
-    entryGap = "5px";
+    paddingPage = "6.5mm 9mm";
+    marginHeader = "4.5px";
+    marginSection = "5px";
+    sectionTitlePaddingTop = "1.8px";
+    sectionTitleMarginBottom = "2.2px";
+    entryGap = "3.5px";
     bulletMarginBottom = "1px";
-    skillLineMarginBottom = "1px";
+    skillLineMarginBottom = "0.8px";
+  } else if (score < 20) {
+    // Light content: expand slightly so it nicely fills the page without leaving an awkward blank void
+    fontSizeBody = "8.6pt";
+    fontSizeSecTitle = "9.6pt";
+    fontSizeSummary = "9pt";
+    fontSizeEntryHeader = "9.6pt";
+    fontSizeSub = "8.8pt";
+    fontSizePeriod = "8.6pt";
+    fontSizeName = "22pt";
+    
+    lineHeightBody = 1.35;
+    lineHeightSummary = 1.35;
+    lineHeightSkills = 1.4;
+    
+    paddingPage = "9mm 11.5mm";
+    marginHeader = "8px";
+    marginSection = "8px";
+    sectionTitlePaddingTop = "2.5px";
+    sectionTitleMarginBottom = "3.5px";
+    entryGap = "6px";
+    bulletMarginBottom = "2px";
+    skillLineMarginBottom = "1.5px";
   }
 
   return (
     <div
-      className="bg-white text-black w-[210mm] min-h-[297mm] shadow-[0_0_50px_rgba(0,0,0,0.5)] relative"
+      className="bg-white text-black w-[210mm] min-h-[297mm] max-h-[297mm] shadow-[0_0_50px_rgba(0,0,0,0.5)] relative overflow-hidden"
       id="printable-resume"
       style={{
         fontFamily: "'Times New Roman', Times, serif",

@@ -280,14 +280,35 @@ function ExperienceDatePicker({
 // ─────────────────────────────────────────────
 
 function ATSPanel({ data, onClose }: { data: any; onClose: () => void }) {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
-      <div className="bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] p-8 rounded-2xl w-full max-w-xl relative shadow-xl overflow-hidden">
+    <div 
+      onClick={onClose}
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in"
+    >
+      <div 
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white dark:bg-neutral-900 border border-[#DADCE0] dark:border-neutral-800 p-8 rounded-2xl w-full max-w-xl relative shadow-2xl overflow-hidden"
+      >
         <button
-          onClick={onClose}
-          className="absolute top-6 right-6 text-[var(--sclade-text-muted)] hover:text-[var(--sclade-text-primary)] transition-colors p-2 hover:bg-[var(--sclade-subtle-bg)] rounded-lg"
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onClose();
+          }}
+          className="absolute top-5 right-5 z-30 p-2 text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-all cursor-pointer flex items-center justify-center"
+          title="Close Audit (Esc)"
+          aria-label="Close"
         >
-          <X className="w-5 h-5" />
+          <X className="w-5 h-5 pointer-events-none" />
         </button>
 
         <div className="relative">
@@ -3002,24 +3023,9 @@ export function EditorClient({
                 <span className="text-[11px] font-semibold hidden sm:inline">Editor</span>
               </button>
 
-              <div className="flex items-center gap-1 bg-white dark:bg-neutral-800 px-2 py-1 rounded-lg border border-[#DADCE0] dark:border-neutral-700 text-xs text-neutral-600 dark:text-neutral-300">
-                <button
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                  disabled={currentPage <= 1}
-                  className="p-1 hover:text-neutral-900 dark:hover:text-white disabled:opacity-30 cursor-pointer"
-                  title="Previous page"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5" />
-                </button>
-                <span className="font-medium px-1 select-none">{currentPage} / {totalPages}</span>
-                <button
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                  disabled={currentPage >= totalPages}
-                  className="p-1 hover:text-neutral-900 dark:hover:text-white disabled:opacity-30 cursor-pointer"
-                  title="Next page"
-                >
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
+              <div className="flex items-center gap-1.5 bg-white dark:bg-neutral-800 px-2.5 py-1 rounded-lg border border-[#DADCE0] dark:border-neutral-700 text-xs text-neutral-600 dark:text-neutral-300 font-medium select-none shadow-xs">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                <span>1 Page</span>
               </div>
             </div>
 

@@ -5,97 +5,97 @@ import { normalizeAndDedupeSkills, formatLinkedIn, formatGitHub } from "@/lib/sk
 
 // Standard Times-Roman styles matching the FormalTemplate in ResumePreview.tsx perfectly
 const getDynamicStyles = (score: number) => {
-  let fontSizeBody = 8.5;
-  let fontSizeSecTitle = 9.5;
-  let fontSizeSummary = 9;
-  let fontSizeEntryHeader = 9.5;
-  let fontSizeSub = 9;
-  let fontSizePeriod = 8.5;
-  
-  let lineHeightBody = 1.4;
-  let lineHeightSummary = 1.4;
-  let lineHeightSkills = 1.5;
-  
-  let paddingHorizontal = 35; // 12.3mm
-  let paddingVertical = 30; // 10.5mm
-  let marginHeader = 8;
-  let marginSection = 10;
-  let sectionTitlePaddingTop = 3;
-  let sectionTitleMarginBottom = 5;
-  let entryGap = 8;
-  let bulletMarginBottom = 2.5;
-  let skillLineMarginBottom = 1;
-  let fontSizeName = 22;
+  let fontSizeBody = 8.2;
+  let fontSizeSecTitle = 9.2;
+  let fontSizeSummary = 8.5;
+  let fontSizeEntryHeader = 9.2;
+  let fontSizeSub = 8.5;
+  let fontSizePeriod = 8.2;
+  let fontSizeName = 20;
 
-  if (score > 62) {
-    // Super Dense
+  let lineHeightBody = 1.25;
+  let lineHeightSummary = 1.25;
+  let lineHeightSkills = 1.3;
+
+  let paddingHorizontal = 28; // ~10mm
+  let paddingVertical = 20;   // ~7mm
+  let marginHeader = 6;
+  let marginSection = 6;
+  let sectionTitlePaddingTop = 2;
+  let sectionTitleMarginBottom = 3;
+  let entryGap = 4.5;
+  let bulletMarginBottom = 1.2;
+  let skillLineMarginBottom = 1;
+
+  if (score >= 45) {
+    // Extensive content: 3+ jobs, 3+ projects, long summary
     fontSizeBody = 7.2;
     fontSizeSecTitle = 8;
-    fontSizeSummary = 7.6;
+    fontSizeSummary = 7.5;
     fontSizeEntryHeader = 8;
-    fontSizeSub = 7.6;
+    fontSizeSub = 7.5;
     fontSizePeriod = 7.2;
-    fontSizeName = 16.5;
-    
-    lineHeightBody = 1.1;
-    lineHeightSummary = 1.1;
-    lineHeightSkills = 1.15;
-    
-    paddingHorizontal = 24; // 8.5mm
-    paddingVertical = 14; // 5mm
-    marginHeader = 3;
-    marginSection = 3;
-    sectionTitlePaddingTop = 1;
+    fontSizeName = 17;
+
+    lineHeightBody = 1.12;
+    lineHeightSummary = 1.12;
+    lineHeightSkills = 1.16;
+
+    paddingHorizontal = 24;
+    paddingVertical = 14;
+    marginHeader = 3.5;
+    marginSection = 3.5;
+    sectionTitlePaddingTop = 1.2;
     sectionTitleMarginBottom = 1.5;
-    entryGap = 2;
-    bulletMarginBottom = 0.2;
-    skillLineMarginBottom = 0.2;
-  } else if (score > 52) {
-    // Very Dense
-    fontSizeBody = 7.6;
-    fontSizeSecTitle = 8.5;
-    fontSizeSummary = 8;
-    fontSizeEntryHeader = 8.5;
-    fontSizeSub = 8;
-    fontSizePeriod = 7.6;
-    fontSizeName = 18;
-    
-    lineHeightBody = 1.2;
-    lineHeightSummary = 1.2;
-    lineHeightSkills = 1.25;
-    
-    paddingHorizontal = 27; // 9.5mm
-    paddingVertical = 18.5; // 6.5mm
-    marginHeader = 4;
-    marginSection = 4;
-    sectionTitlePaddingTop = 1.5;
-    sectionTitleMarginBottom = 2;
-    entryGap = 3;
+    entryGap = 2.5;
     bulletMarginBottom = 0.5;
     skillLineMarginBottom = 0.5;
-  } else if (score > 42) {
-    // Dense
-    fontSizeBody = 8;
-    fontSizeSecTitle = 9;
-    fontSizeSummary = 8.5;
-    fontSizeEntryHeader = 9;
-    fontSizeSub = 8.5;
-    fontSizePeriod = 8;
-    fontSizeName = 20;
-    
-    lineHeightBody = 1.3;
-    lineHeightSummary = 1.3;
-    lineHeightSkills = 1.35;
-    
-    paddingHorizontal = 31; // 11mm
-    paddingVertical = 24; // 8.5mm
-    marginHeader = 6;
-    marginSection = 6.5;
-    sectionTitlePaddingTop = 2;
-    sectionTitleMarginBottom = 3;
-    entryGap = 5;
+  } else if (score >= 30) {
+    // Standard full resume (e.g. 2-3 jobs, 2-3 projects with multiple bullets)
+    fontSizeBody = 7.8;
+    fontSizeSecTitle = 8.8;
+    fontSizeSummary = 8;
+    fontSizeEntryHeader = 8.8;
+    fontSizeSub = 8;
+    fontSizePeriod = 7.8;
+    fontSizeName = 19;
+
+    lineHeightBody = 1.2;
+    lineHeightSummary = 1.2;
+    lineHeightSkills = 1.24;
+
+    paddingHorizontal = 26;
+    paddingVertical = 18;
+    marginHeader = 4.5;
+    marginSection = 5;
+    sectionTitlePaddingTop = 1.8;
+    sectionTitleMarginBottom = 2.2;
+    entryGap = 3.5;
     bulletMarginBottom = 1;
-    skillLineMarginBottom = 1;
+    skillLineMarginBottom = 0.8;
+  } else if (score < 20) {
+    // Light content: expand slightly so it nicely fills the page without leaving an awkward blank void
+    fontSizeBody = 8.6;
+    fontSizeSecTitle = 9.6;
+    fontSizeSummary = 9;
+    fontSizeEntryHeader = 9.6;
+    fontSizeSub = 8.8;
+    fontSizePeriod = 8.6;
+    fontSizeName = 22;
+
+    lineHeightBody = 1.35;
+    lineHeightSummary = 1.35;
+    lineHeightSkills = 1.4;
+
+    paddingHorizontal = 32;
+    paddingVertical = 25;
+    marginHeader = 8;
+    marginSection = 8;
+    sectionTitlePaddingTop = 2.5;
+    sectionTitleMarginBottom = 3.5;
+    entryGap = 6;
+    bulletMarginBottom = 2;
+    skillLineMarginBottom = 1.5;
   }
 
   return StyleSheet.create({
