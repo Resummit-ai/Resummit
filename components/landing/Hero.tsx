@@ -1,14 +1,26 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import Link from "next/link";
-import { GitBranch, Check, ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { GitBranch, Check } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import RotatingText from "@/components/ui/RotatingText";
+import ArrowRevealButton from "@/components/ui/ArrowRevealButton";
 
 export function Hero({ hasSession = false }: { hasSession?: boolean }) {
+  const heroContainerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: heroContainerRef,
+    offset: ["start start", "end start"],
+  });
+
+  // Onscroll 3D perspective tilt and scale matching reference site
+  const rotateX = useTransform(scrollYProgress, [0, 0.75], [0, 14]);
+  const scale = useTransform(scrollYProgress, [0, 0.75], [1, 0.94]);
+  const opacity = useTransform(scrollYProgress, [0, 0.85], [1, 0.85]);
+
   return (
-    <section className="relative min-h-[92vh] flex flex-col justify-between overflow-hidden border-b border-[#27272a]/60 bg-[#0a0a0a]">
+    <section ref={heroContainerRef} className="relative min-h-[92vh] flex flex-col justify-between overflow-hidden border-b border-[#27272a]/60 bg-[#0a0a0a]">
       {/* 1. Full-bleed Mountain Canvas Background matching Image 1 */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <img
@@ -31,7 +43,7 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
       </div>
 
       {/* 2. Main Container with Left-Aligned Content matching Image 2 */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pt-36 sm:pt-44 pb-16">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pt-36 sm:pt-40 pb-16">
         {/* Editorial Left-Aligned Block */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -39,12 +51,6 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
           transition={{ duration: 0.6 }}
           className="max-w-3xl text-left"
         >
-          {/* Badge Pill */}
-          <div className="inline-flex items-center gap-2 bg-[#18181b]/80 backdrop-blur-md border border-white/10 px-3.5 py-1.5 rounded-full mb-6 shadow-sm">
-            <span className="bg-white/15 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">New</span>
-            <span className="text-xs font-normal text-[#f2efe9]/85">GitHub-powered resume intelligence is live</span>
-          </div>
-
           {/* Huge Left-Aligned Headline matching Image 2 */}
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-medium tracking-tight text-[#f2efe9] leading-[1.08] mb-6">
             Your GitHub already proves <br />
@@ -80,15 +86,32 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
             Resummit analyzes repositories, commits, and architecture to turn real developer work into clean, recruiter-ready resumes. No manual formatting needed—just connect GitHub and watch your resume build itself.
           </p>
 
-          {/* Left-Aligned Action Buttons */}
+          {/* Left-Aligned Action Buttons with ArrowRevealButton from localhost:3000 */}
           <div className="flex flex-wrap items-center gap-4 mb-8">
-            <Link
-              href={hasSession ? "/dashboard" : "/login"}
-              className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-medium text-black transition-all hover:bg-neutral-200 shadow-lg group"
-            >
-              <span>{hasSession ? "Go to Dashboard" : "Build my CV free"}</span>
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
+            <ArrowRevealButton
+              label={hasSession ? "Go to Dashboard" : "Build my CV free"}
+              link={hasSession ? "/dashboard" : "/login"}
+              rounded={100}
+              padding="10px 18px 10px 24px"
+              gap={12}
+              colors={{
+                fill: "#ffffff",
+                textColor: "#09090b",
+                hoverFill: "#f4f4f5",
+                hoverTextColor: "#09090b",
+              }}
+              icon={{
+                side: "right",
+                type: "arrow",
+                background: "#0099ff",
+                color: "#FFFFFF",
+                size: 13,
+                padding: 6,
+                direction: "right",
+                restAngle: 0,
+                hoverAngle: -45,
+              }}
+            />
 
             <button
               type="button"
@@ -121,13 +144,17 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
           </div>
         </motion.div>
 
-        {/* 3. Product Showcase Window (Directly from localhost:3000 authentic weather-app + Alex Carter) */}
-        <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.15 }}
-          className="rounded-2xl border border-[#27272a] bg-[#121217]/95 backdrop-blur-xl shadow-[0_24px_80px_rgba(0,0,0,0.8)] overflow-hidden transition-all duration-300 hover:border-neutral-700"
-        >
+        {/* 3. Product Showcase Window with 3D Onscroll Perspective Tilt */}
+        <div style={{ perspective: "1200px" }}>
+          <motion.div
+            style={{
+              rotateX,
+              scale,
+              opacity,
+              transformStyle: "preserve-3d",
+            }}
+            className="rounded-2xl border border-[#27272a] bg-[#121217]/95 backdrop-blur-xl shadow-[0_24px_80px_rgba(0,0,0,0.8)] overflow-hidden transition-all duration-300 hover:border-neutral-700"
+          >
           {/* Window Header */}
           <div className="px-5 py-3.5 bg-[#18181b]/95 border-b border-[#27272a] flex items-center justify-between">
             <div className="flex items-center gap-1.5">
@@ -233,6 +260,7 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
             </div>
           </div>
         </motion.div>
+        </div>
       </div>
     </section>
   );

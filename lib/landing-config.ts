@@ -188,7 +188,7 @@ export const LANDING_CONFIG = {
     {
       question: "Is Resummit free to use?",
       answer:
-        "Yes. The Hobby plan is completely free and includes 1 Master CV, GitHub analysis, and standard PDF export. Upgrade to Pro only if you need unlimited tailored versions for multiple applications.",
+        "Yes, Resummit is 100% free while in public early access. You get full access to GitHub repo ingestion, Google XYZ bullet generation, role tailoring, and ATS compliance audits with no credit card required.",
     },
     {
       question: "Which export formats are supported?",
@@ -204,7 +204,7 @@ export const LANDING_CONFIG = {
         links: [
           { label: "Features", href: "#features" },
           { label: "How it works", href: "#pipeline" },
-          { label: "Pricing", href: "#pricing" },
+          { label: "Free Access", href: "#pricing" },
           { label: "FAQ", href: "#faq" },
         ],
       },

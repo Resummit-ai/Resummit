@@ -5,6 +5,8 @@ import Link from "next/link";
 import { LANDING_CONFIG } from "@/lib/landing-config";
 import { Menu, X, Sun, Moon, Laptop } from "lucide-react";
 
+import ArrowRevealButton from "@/components/ui/ArrowRevealButton";
+
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -105,7 +107,7 @@ export function Navbar() {
             href="#pricing"
             className="text-sm font-normal text-[#f2efe9]/70 transition-colors hover:text-[#f2efe9]"
           >
-            Pricing
+            Free Access
           </a>
           <a
             href="#faq"
@@ -142,12 +144,30 @@ export function Navbar() {
             Log in
           </Link>
 
-          <Link
-            href={LANDING_CONFIG.brand.primaryCta.href}
-            className="inline-flex shrink-0 items-center justify-center rounded-full bg-white px-4 py-1.5 text-sm font-medium text-black transition-all hover:bg-neutral-200 shadow-sm"
-          >
-            {LANDING_CONFIG.brand.primaryCta.label}
-          </Link>
+          <ArrowRevealButton
+            label="Build my CV free"
+            link={LANDING_CONFIG.brand.primaryCta.href}
+            rounded={100}
+            padding="6px 14px"
+            gap={8}
+            colors={{
+              fill: "#ffffff",
+              textColor: "#09090b",
+              hoverFill: "#f4f4f5",
+              hoverTextColor: "#09090b",
+            }}
+            icon={{
+              side: "right",
+              type: "arrow",
+              background: "#0099ff",
+              color: "#FFFFFF",
+              size: 11,
+              padding: 5,
+              direction: "right",
+              restAngle: 0,
+              hoverAngle: -45,
+            }}
+          />
         </div>
 
         {/* Mobile Hamburger Toggle */}
@@ -193,7 +213,7 @@ export function Navbar() {
               onClick={() => setMobileMenuOpen(false)}
               className="text-sm text-neutral-300 hover:text-white py-1"
             >
-              Pricing
+              Free Access
             </a>
             <a
               href="#faq"

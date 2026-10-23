@@ -70,7 +70,7 @@ export function Footer() {
                 </li>
                 <li>
                   <a href="#pricing" className="hover:text-white transition-colors">
-                    Pricing
+                    Free Access
                   </a>
                 </li>
               </ul>

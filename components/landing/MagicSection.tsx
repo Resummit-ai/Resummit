@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { GitBranch, Sparkles, Check, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import ArrowRevealButton from "@/components/ui/ArrowRevealButton";
 
 const leftItemVariants = {
   hidden: { opacity: 0, x: -6 },
@@ -277,14 +278,31 @@ export function MagicSection({ hasSession = false }: { hasSession?: boolean }) {
         </div>
 
         {/* CTA below transformation */}
-        <div className="mt-14 text-center">
-          <Link
-            href={hasSession ? "/dashboard" : "/login"}
-            className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-2.5 text-sm font-medium text-black transition-all hover:bg-neutral-200 shadow-md group"
-          >
-            <span>{hasSession ? "Go to Dashboard" : "Sign In with GitHub"}</span>
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Link>
+        <div className="mt-14 flex justify-center">
+          <ArrowRevealButton
+            label={hasSession ? "Go to Dashboard" : "Build my CV free"}
+            link={hasSession ? "/dashboard" : "/login"}
+            rounded={100}
+            padding="10px 18px 10px 24px"
+            gap={12}
+            colors={{
+              fill: "#ffffff",
+              textColor: "#09090b",
+              hoverFill: "#f4f4f5",
+              hoverTextColor: "#09090b",
+            }}
+            icon={{
+              side: "right",
+              type: "arrow",
+              background: "#0099ff",
+              color: "#FFFFFF",
+              size: 13,
+              padding: 6,
+              direction: "right",
+              restAngle: 0,
+              hoverAngle: -45,
+            }}
+          />
         </div>
       </div>
     </section>

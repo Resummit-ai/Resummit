@@ -1,296 +1,183 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
-import { Check, Minus, ArrowRight } from "lucide-react";
+import { Check, ShieldCheck, Sparkles, Terminal, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import ArrowRevealButton from "@/components/ui/ArrowRevealButton";
 import { LANDING_CONFIG } from "@/lib/landing-config";
 
 export function PricingSection() {
-  const [billingPeriod, setBillingPeriod] = useState<"monthly" | "yearly">("yearly");
-
-  const plans = [
+  const earlyAccessFeatures = [
     {
-      id: "hobby",
-      name: "Hobby",
-      tagline: "For student developers and side projects.",
-      price: "Free",
-      priceDetail: "No credit card needed",
-      includesTitle: "Includes:",
-      features: [
-        "Up to 3 GitHub repositories",
-        "Google XYZ bullet generator",
-        "Single-page clean ATS PDF",
-        "Community Discord support",
-      ],
-      ctaLabel: "Start for free",
-      ctaHref: "/login",
-      isPrimary: false,
+      title: "Full GitHub Ingestion",
+      desc: "Connect your profile and analyze public and private repositories.",
     },
     {
-      id: "pro",
-      name: "Pro",
-      badge: "Save 20%",
-      tagline: "For developers actively applying to top tech roles.",
-      price: billingPeriod === "yearly" ? "$15" : "$19",
-      priceDetail: "per month, billed yearly",
-      includesTitle: "Everything in Hobby, plus:",
-      features: [
-        "Unlimited GitHub repositories",
-        "5 role-tailored versions",
-        "ATS score parser (Greenhouse/Lever)",
-        "Keyword gap analyzer",
-      ],
-      ctaLabel: "Start a 14-day trial",
-      ctaHref: "/login",
-      isPrimary: false,
+      title: "Google XYZ Formula",
+      desc: "Automatically format achievements as: Accomplished [X] measured by [Y] by doing [Z].",
     },
     {
-      id: "lifetime",
-      name: "Lifetime",
-      badge: "Best Value",
-      tagline: "One-time investment for your entire career.",
-      price: "$49",
-      priceDetail: "one-time payment, forever updates",
-      includesTitle: "Everything in Pro, plus:",
-      features: [
-        "All future templates & features",
-        "GitHub Webhook auto-sync on push",
-        "Custom portfolio CV link",
-        "Priority ATS score reviewer",
-      ],
-      ctaLabel: "Get lifetime access",
-      ctaHref: "/login",
-      isPrimary: true, // White standout button matching reference!
+      title: "5 Role Variants",
+      desc: "Instantly tailor versions for Full-Stack, Backend, Frontend, DevOps, and Data/ML.",
     },
     {
-      id: "enterprise",
-      name: "Campus",
-      tagline: "For university bootcamps, clubs, and hiring teams.",
-      price: "Custom",
-      priceDetail: "Volume pricing for student batches",
-      includesTitle: "Everything in Lifetime, plus:",
-      features: [
-        "Cohort dashboard & bulk seats",
-        "Batch ATS analysis report",
-        "Custom resume templates",
-        "Dedicated onboarding session",
-      ],
-      ctaLabel: "Talk to sales",
-      ctaHref: "mailto:sales@resummit.app",
-      isPrimary: false,
+      title: "ATS Audit & Gap Analysis",
+      desc: "Score keywords and formatting against Greenhouse, Lever, and Workday filters.",
+    },
+    {
+      title: "Clean Single-Page PDF Export",
+      desc: "Strict 1-page typography that passes automated recruiter screening pipelines.",
+    },
+    {
+      title: "Read-Only Security Guarantee",
+      desc: "We strictly request read permissions. Zero code write access, zero repo modifications.",
     },
   ];
 
-  const comparisonCategories = [
+  const honestFaqs = [
     {
-      name: "Usage",
-      rows: [
-        { feature: "Repositories tracked", hobby: "3", pro: "Unlimited", lifetime: "Unlimited", enterprise: "Unlimited" },
-        { feature: "Tailored role versions", hobby: "1", pro: "5", lifetime: "Unlimited", enterprise: "Unlimited" },
-        { feature: "Auto-sync on git push", hobby: false, pro: true, lifetime: true, enterprise: true },
-        { feature: "Export formats", hobby: "PDF", pro: "PDF + TXT", lifetime: "PDF + TXT + MD", enterprise: "All + API" },
-      ],
+      q: "Why is Resummit 100% free right now?",
+      a: "We are building Resummit in public with developer feedback. Scanning real-world codebases helps us continuously tune our AST parsers and bullet point synthesis.",
     },
     {
-      name: "Intelligence & ATS",
-      rows: [
-        { feature: "Google XYZ formula rewrite", hobby: true, pro: true, lifetime: true, enterprise: true },
-        { feature: "Greenhouse / Lever ATS test", hobby: false, pro: true, lifetime: true, enterprise: true },
-        { feature: "Missing keywords gap audit", hobby: false, pro: true, lifetime: true, enterprise: true },
-        { feature: "Custom prompt tuning", hobby: false, pro: false, lifetime: true, enterprise: true },
-      ],
+      q: "Will I need to enter a credit card?",
+      a: "No credit card required. You sign in directly with GitHub OAuth and get instant access to the builder.",
     },
     {
-      name: "Support & Security",
-      rows: [
-        { feature: "Strict read-only Git privacy", hobby: true, pro: true, lifetime: true, enterprise: true },
-        { feature: "Custom portfolio URL", hobby: false, pro: false, lifetime: true, enterprise: true },
-        { feature: "Team dashboard & batch license", hobby: false, pro: false, lifetime: false, enterprise: true },
-      ],
+      q: "What happens to my resumes when beta ends?",
+      a: "All resumes and role variants generated during early access remain saved in your account with unlimited PDF re-downloads and early supporter perks.",
     },
   ];
 
   return (
-    <section id="pricing" className="scroll-mt-12 bg-[#09090b] text-white py-24 sm:py-32 border-t border-neutral-900">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        {/* Top Billing Toggle (Pill style matching reference with animated sliding pill) */}
-        <div className="flex justify-center">
-          <div className="relative inline-flex items-center rounded-full border border-[#27272a] bg-[#141417] p-1 shadow-inner">
-            <button
-              type="button"
-              onClick={() => setBillingPeriod("monthly")}
-              className={`relative z-10 rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${
-                billingPeriod === "monthly" ? "text-white" : "text-neutral-400 hover:text-white"
-              }`}
-            >
-              {billingPeriod === "monthly" && (
-                <motion.div
-                  layoutId="billing-pill"
-                  className="absolute inset-0 rounded-full bg-neutral-800 shadow-sm"
-                  transition={{ type: "spring", stiffness: 450, damping: 35 }}
-                />
-              )}
-              <span className="relative z-10">Monthly</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setBillingPeriod("yearly")}
-              className={`relative z-10 rounded-full px-4 py-1.5 text-xs font-medium transition-colors flex items-center gap-1.5 ${
-                billingPeriod === "yearly" ? "text-white" : "text-neutral-400 hover:text-white"
-              }`}
-            >
-              {billingPeriod === "yearly" && (
-                <motion.div
-                  layoutId="billing-pill"
-                  className="absolute inset-0 rounded-full bg-neutral-800 shadow-sm"
-                  transition={{ type: "spring", stiffness: 450, damping: 35 }}
-                />
-              )}
-              <span className="relative z-10">Annual</span>
-              <span className="relative z-10 rounded-full bg-sky-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-sky-400">
-                Save 20%
-              </span>
-            </button>
+    <section id="pricing" className="py-24 sm:py-32 bg-[#0a0a0a] text-[#f2efe9] relative overflow-hidden border-t border-[#27272a]">
+      {/* Background radial glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-blue-500/5 blur-[120px] rounded-full pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.5 }}
+          className="text-center max-w-3xl mx-auto mb-16"
+        >
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 text-xs font-mono font-semibold tracking-wider uppercase mb-4">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            100% Free · Public Beta
           </div>
-        </div>
+          <h2 className="text-3xl sm:text-5xl font-medium tracking-tight text-[#f2efe9] leading-[1.12] mb-4">
+            Zero paywalls. <br />
+            Completely free for developers.
+          </h2>
+          <p className="text-base sm:text-lg text-[#f2efe9]/70 leading-relaxed font-normal">
+            No fake pricing tiers or surprise checkout screens. Resummit is free while in early access—all features unlocked from day one.
+          </p>
+        </motion.div>
 
-        {/* 4 Elevated Pricing Cards (Exact match to reference) */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {plans.map((plan) => (
-            <div
-              key={plan.id}
-              className="rounded-2xl border border-neutral-800/80 bg-[#111114] p-6 flex flex-col justify-between shadow-xl relative hover:border-neutral-700 transition-colors"
-            >
+        {/* Featured Early Access Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="max-w-4xl mx-auto rounded-3xl border border-[#27272a] bg-[#141417] p-8 sm:p-12 shadow-2xl relative overflow-hidden"
+        >
+          <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/10 blur-[90px] rounded-full pointer-events-none" />
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Left: Price & CTA */}
+            <div className="lg:col-span-5 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#27272a] pb-8 lg:pb-0 lg:pr-8">
               <div>
-                {/* Header */}
-                <div className="flex items-center justify-between">
-                  <h3 className="text-base font-semibold text-white">{plan.name}</h3>
-                  {plan.badge && (
-                    <span className="rounded-full bg-sky-500/20 px-2 py-0.5 text-[10px] font-medium text-sky-400">
-                      {plan.badge}
-                    </span>
-                  )}
+                <span className="text-xs uppercase tracking-wider text-[#0099ff] font-semibold font-mono">
+                  Developer Access
+                </span>
+                <div className="mt-3 flex items-baseline gap-2">
+                  <span className="text-5xl sm:text-6xl font-semibold tracking-tight text-[#f2efe9]">
+                    $0
+                  </span>
+                  <span className="text-sm font-mono text-[#f2efe9]/50">
+                    / early access
+                  </span>
                 </div>
-                <p className="mt-2 text-xs text-neutral-400 min-h-[32px]">{plan.tagline}</p>
-
-                {/* Price Display */}
-                <div className="mt-6">
-                  <div className="text-3xl font-bold tracking-tight text-white font-mono">
-                    {plan.price}
-                  </div>
-                  <div className="text-[11px] text-neutral-500 mt-1">{plan.priceDetail}</div>
-                </div>
-
-                {/* Feature List */}
-                <div className="mt-8 space-y-3">
-                  <div className="text-xs font-medium text-neutral-400">{plan.includesTitle}</div>
-                  <ul className="space-y-2.5 text-xs text-neutral-300">
-                    {plan.features.map((feature, fIdx) => (
-                      <li key={fIdx} className="flex items-start gap-2.5">
-                        <Check className="h-3.5 w-3.5 shrink-0 text-neutral-400 mt-0.5" />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                <p className="text-sm text-[#f2efe9]/70 mt-3 leading-relaxed">
+                  Full, unrestricted access to the entire synthesis engine. No credit card required.
+                </p>
               </div>
 
-              {/* CTA Button */}
-              <div className="mt-8 pt-4">
-                <Link
-                  href={plan.ctaHref}
-                  className={`inline-flex w-full items-center justify-center rounded-full py-2.5 text-xs font-semibold transition-all ${
-                    plan.isPrimary
-                      ? "bg-white text-neutral-950 hover:bg-neutral-200 shadow-md"
-                      : "border border-neutral-700/80 bg-neutral-900 text-neutral-200 hover:bg-neutral-800 hover:text-white"
-                  }`}
-                >
-                  {plan.ctaLabel}
-                </Link>
+              <div className="mt-8 flex flex-col gap-3">
+                <ArrowRevealButton
+                  label="Build my CV free"
+                  link="/login"
+                  rounded={100}
+                  padding="12px 20px 12px 26px"
+                  gap={12}
+                  style={{ width: "100%", justifyContent: "center" }}
+                  colors={{
+                    fill: "#ffffff",
+                    textColor: "#09090b",
+                    hoverFill: "#f4f4f5",
+                    hoverTextColor: "#09090b",
+                  }}
+                  icon={{
+                    side: "right",
+                    type: "arrow",
+                    background: "#0099ff",
+                    color: "#FFFFFF",
+                    size: 13,
+                    padding: 6,
+                    direction: "right",
+                    restAngle: 0,
+                    hoverAngle: -45,
+                  }}
+                />
+                <div className="flex items-center justify-center gap-1.5 text-xs text-[#f2efe9]/50 font-mono">
+                  <ShieldCheck size={14} className="text-emerald-400" />
+                  <span>Read-only GitHub OAuth · Zero spam</span>
+                </div>
               </div>
             </div>
-          ))}
-        </div>
 
-        {/* Feature Comparison Table (Exact match to reference bottom table) */}
-        <div className="mt-20 pt-12 border-t border-neutral-900">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="border-b border-neutral-800 text-neutral-400">
-                  <th className="pb-4 font-semibold text-sm text-white w-2/5">Features</th>
-                  <th className="pb-4 font-semibold w-[15%]">Hobby</th>
-                  <th className="pb-4 font-semibold w-[15%]">Pro</th>
-                  <th className="pb-4 font-semibold w-[15%] text-sky-400">Lifetime</th>
-                  <th className="pb-4 font-semibold w-[15%]">Campus</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-neutral-900">
-                {comparisonCategories.map((category) => (
-                  <React.Fragment key={category.name}>
-                    <tr>
-                      <td
-                        colSpan={5}
-                        className="pt-6 pb-2 font-mono text-[11px] font-semibold text-sky-400 uppercase tracking-wider"
-                      >
-                        {category.name}
-                      </td>
-                    </tr>
-                    {category.rows.map((row, rIdx) => (
-                      <tr key={rIdx} className="hover:bg-neutral-900/40">
-                        <td className="py-3 text-neutral-300 font-medium">{row.feature}</td>
-                        <td className="py-3 text-neutral-400">
-                          {typeof row.hobby === "boolean" ? (
-                            row.hobby ? (
-                              <Check className="h-4 w-4 text-sky-400" />
-                            ) : (
-                              <Minus className="h-4 w-4 text-neutral-600" />
-                            )
-                          ) : (
-                            row.hobby
-                          )}
-                        </td>
-                        <td className="py-3 text-neutral-400">
-                          {typeof row.pro === "boolean" ? (
-                            row.pro ? (
-                              <Check className="h-4 w-4 text-sky-400" />
-                            ) : (
-                              <Minus className="h-4 w-4 text-neutral-600" />
-                            )
-                          ) : (
-                            row.pro
-                          )}
-                        </td>
-                        <td className="py-3 text-white font-medium">
-                          {typeof row.lifetime === "boolean" ? (
-                            row.lifetime ? (
-                              <Check className="h-4 w-4 text-sky-400" />
-                            ) : (
-                              <Minus className="h-4 w-4 text-neutral-600" />
-                            )
-                          ) : (
-                            row.lifetime
-                          )}
-                        </td>
-                        <td className="py-3 text-neutral-400">
-                          {typeof row.enterprise === "boolean" ? (
-                            row.enterprise ? (
-                              <Check className="h-4 w-4 text-sky-400" />
-                            ) : (
-                              <Minus className="h-4 w-4 text-neutral-600" />
-                            )
-                          ) : (
-                            row.enterprise
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </React.Fragment>
-                ))}
-              </tbody>
-            </table>
+            {/* Right: Feature Checklist */}
+            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {earlyAccessFeatures.map((feat, idx) => (
+                <div key={idx} className="flex items-start gap-3 p-3 rounded-xl bg-[#18181b]/80 border border-[#27272a]/70">
+                  <div className="w-5 h-5 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center shrink-0 mt-0.5">
+                    <Check size={12} className="text-emerald-400" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-semibold text-[#f2efe9]">{feat.title}</div>
+                    <div className="text-[11px] text-[#f2efe9]/60 leading-normal mt-0.5">{feat.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
+        </motion.div>
+
+        {/* Honest Beta FAQs */}
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {honestFaqs.map((faq, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.4, delay: idx * 0.1 }}
+              className="p-6 rounded-2xl border border-[#27272a] bg-[#141417]/80 flex flex-col justify-between"
+            >
+              <div>
+                <h3 className="text-sm font-semibold text-[#f2efe9] mb-2 leading-snug">
+                  {faq.q}
+                </h3>
+                <p className="text-xs text-[#f2efe9]/70 leading-relaxed font-normal">
+                  {faq.a}
+                </p>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
