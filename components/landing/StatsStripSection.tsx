@@ -43,25 +43,25 @@ export function StatsStripSection() {
   const stats = [
     {
       number: `${count1}+`,
-      icon: <FileCheck className="w-5 h-5 text-neutral-300" />,
+      icon: <FileCheck className="w-5 h-5 text-[#f2efe9]/70" />,
       title: "Resumes Generated",
       desc: "Crafted by developers to secure interviews at top tech companies.",
     },
     {
       number: `${count2}+`,
-      icon: <Globe className="w-5 h-5 text-neutral-300" />,
+      icon: <Globe className="w-5 h-5 text-[#f2efe9]/70" />,
       title: "Countries Reached",
       desc: "Helping engineers build global careers across multiple continents.",
     },
     {
       number: `<${count3}s`,
-      icon: <Sparkles className="w-5 h-5 text-neutral-300" />,
+      icon: <Sparkles className="w-5 h-5 text-[#f2efe9]/70" />,
       title: "Generation Time",
       desc: "Instantly parsed from public repository commit histories.",
     },
     {
       number: "100%",
-      icon: <KeyRound className="w-5 h-5 text-neutral-300" />,
+      icon: <KeyRound className="w-5 h-5 text-[#f2efe9]/70" />,
       title: "Free to Start",
       desc: "Sign up today and sync your GitHub without any credit card.",
     },
@@ -77,19 +77,19 @@ export function StatsStripSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: idx * 0.1 }}
-            className="rounded-2xl border border-neutral-800/80 bg-[#0e0f14] p-6 flex flex-col justify-between hover:border-neutral-700 transition-all duration-300 hover:-translate-y-1 shadow-lg"
+            className="rounded-2xl border border-[#27272a] bg-[#141417] p-6 flex flex-col justify-between hover:border-neutral-700 transition-all duration-300 hover:-translate-y-1 shadow-lg"
           >
             <div className="flex items-center justify-between mb-4">
-              <span className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-mono">
+              <span className="text-3xl sm:text-4xl font-medium text-[#f2efe9] tracking-tight font-mono">
                 {s.number}
               </span>
-              <div className="p-2.5 rounded-xl bg-neutral-900 border border-neutral-800/80">
+              <div className="p-2.5 rounded-xl bg-[#1c1c20] border border-[#27272a]">
                 {s.icon}
               </div>
             </div>
             <div>
-              <h3 className="text-base font-bold text-neutral-200 mb-1">{s.title}</h3>
-              <p className="text-xs text-neutral-400 leading-relaxed">{s.desc}</p>
+              <h3 className="text-base font-medium text-[#f2efe9] mb-1">{s.title}</h3>
+              <p className="text-xs text-[#f2efe9]/60 leading-relaxed">{s.desc}</p>
             </div>
           </motion.div>
         ))}

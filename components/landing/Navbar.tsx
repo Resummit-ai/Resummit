@@ -45,7 +45,7 @@ export function Navbar() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-[#09090b]/85 backdrop-blur-md border-b border-neutral-800/50 py-3"
+          ? "bg-[#0a0a0a]/85 backdrop-blur-md border-b border-[#27272a] py-3"
           : "bg-transparent py-5"
       }`}
     >
@@ -58,10 +58,10 @@ export function Navbar() {
           <svg viewBox="0 0 32 32" className="w-7 h-7 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M7 6C7 4.34315 8.34315 3 10 3H19L25 9V26C25 27.6569 23.6569 29 22 29H10C8.34315 29 7 27.6569 7 26V6Z"
-              className="fill-blue-500/15 stroke-blue-500"
+              className="fill-blue-500/15 stroke-[#0099ff]"
               strokeWidth="2"
             />
-            <path d="M19 3V9H25L19 3Z" className="fill-blue-500 stroke-blue-500" strokeWidth="1.5" />
+            <path d="M19 3V9H25L19 3Z" className="fill-[#0099ff] stroke-[#0099ff]" strokeWidth="1.5" />
             <path
               d="M11 13H17M11 17H21M11 21H18M11 25H20"
               className="stroke-blue-400"
@@ -72,10 +72,10 @@ export function Navbar() {
             <path d="M25 3.5L27 6.5L23.5 5.5Z" className="fill-blue-400" />
           </svg>
           <div className="flex flex-col text-left">
-            <span className="font-extrabold tracking-tight text-white text-sm leading-none font-sans">
+            <span className="font-extrabold tracking-tight text-[#f2efe9] text-sm leading-none font-sans">
               RESUMMIT
             </span>
-            <span className="text-[9px] tracking-wider text-neutral-400 font-mono font-medium leading-tight mt-0.5">
+            <span className="text-[9px] tracking-wider text-[#f2efe9]/50 font-mono font-medium leading-tight mt-0.5">
               YOUR COMMITS. YOUR CAREER.
             </span>
           </div>
@@ -85,37 +85,37 @@ export function Navbar() {
         <nav className="hidden md:flex items-center gap-8">
           <a
             href="#features"
-            className="text-sm font-normal text-neutral-400 transition-colors hover:text-white"
+            className="text-sm font-normal text-[#f2efe9]/70 transition-colors hover:text-[#f2efe9]"
           >
             Features
           </a>
           <a
             href="#pipeline"
-            className="text-sm font-normal text-neutral-400 transition-colors hover:text-white"
+            className="text-sm font-normal text-[#f2efe9]/70 transition-colors hover:text-[#f2efe9]"
           >
             Workflow
           </a>
           <a
             href="#preview-resume"
-            className="text-sm font-normal text-neutral-400 transition-colors hover:text-white"
+            className="text-sm font-normal text-[#f2efe9]/70 transition-colors hover:text-[#f2efe9]"
           >
             Sample Resume
           </a>
           <a
             href="#pricing"
-            className="text-sm font-normal text-neutral-400 transition-colors hover:text-white"
+            className="text-sm font-normal text-[#f2efe9]/70 transition-colors hover:text-[#f2efe9]"
           >
             Pricing
           </a>
           <a
             href="#faq"
-            className="text-sm font-normal text-neutral-400 transition-colors hover:text-white"
+            className="text-sm font-normal text-[#f2efe9]/70 transition-colors hover:text-[#f2efe9]"
           >
             FAQ
           </a>
           <a
             href="#feedback"
-            className="text-sm font-normal text-neutral-400 transition-colors hover:text-white"
+            className="text-sm font-normal text-[#f2efe9]/70 transition-colors hover:text-[#f2efe9]"
           >
             Contact
           </a>
@@ -128,7 +128,7 @@ export function Navbar() {
             type="button"
             onClick={cycleTheme}
             aria-label="Toggle theme"
-            className="flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 hover:text-white transition-colors"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-[#f2efe9]/60 hover:text-[#f2efe9] transition-colors"
           >
             {themeMode === "dark" && <Moon className="h-4 w-4" />}
             {themeMode === "light" && <Sun className="h-4 w-4" />}
@@ -137,7 +137,7 @@ export function Navbar() {
 
           <Link
             href="/login"
-            className="text-sm font-medium text-neutral-300 hover:text-white transition-colors"
+            className="text-sm font-normal text-[#f2efe9]/70 hover:text-[#f2efe9] transition-colors"
           >
             Log in
           </Link>

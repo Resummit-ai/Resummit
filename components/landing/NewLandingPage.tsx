@@ -65,7 +65,7 @@ const Footer = dynamic(
 
 export function NewLandingPage() {
   return (
-    <div className="landing-root min-h-screen bg-[#09090b] text-white selection:bg-neutral-700 selection:text-white font-sans antialiased">
+    <div className="landing-root min-h-screen bg-[#0a0a0a] text-[#f2efe9] selection:bg-neutral-800 selection:text-white font-sans antialiased">
       <Navbar />
       <main>
         {/* 1. Single Unified Hero Section (Directly from localhost:3000 FairweatherHero, dark styled, no white borders) */}
