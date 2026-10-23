@@ -1,0 +1,13 @@
+# *
+User-agent: *
+Allow: /
+Allow: /login
+Disallow: /dashboard*
+Disallow: /editor*
+Disallow: /api*
+
+# Host
+Host: https://resummit.vercel.app
+
+# Sitemaps
+Sitemap: https://resummit.vercel.app/sitemap.xml
