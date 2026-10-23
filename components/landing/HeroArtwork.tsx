@@ -1,35 +1,32 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 type Particle = {
+  active: boolean;
   x: number;
   y: number;
   vx: number;
   vy: number;
-  baseX: number;
-  baseY: number;
-  progress: number;
-  speed: number;
-  radius: number;
+  size: number;
+  color: string;
   alpha: number;
-  pathIndex: number;
-  scatterX: number;
-  scatterY: number;
+  decay: number;
+  rotation: number;
+  vRot: number;
+  type: "spore" | "leaf" | "dust";
 };
 
 export default function HeroArtwork() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const mouseRef = useRef<{ x: number; y: number; active: boolean }>({
-    x: -9999,
-    y: -9999,
-    active: false,
-  });
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
+    const img = imgRef.current;
     if (!canvas || !container) return;
 
     const ctx = canvas.getContext("2d");
@@ -39,119 +36,196 @@ export default function HeroArtwork() {
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
-    if (prefersReducedMotion) return;
 
     let animId: number;
-    let width = (canvas.width = canvas.offsetWidth);
-    let height = (canvas.height = canvas.offsetHeight);
+    let width = (canvas.width = container.offsetWidth);
+    let height = (canvas.height = container.offsetHeight);
+
+    // Offscreen mask canvas to check branch silhouette
+    const maskCanvas = document.createElement("canvas");
+    const maskCtx = maskCanvas.getContext("2d", { willReadFrequently: true });
+
+    const updateMask = () => {
+      if (!img || !maskCtx || !img.complete || img.naturalWidth === 0) return;
+      maskCanvas.width = 300;
+      maskCanvas.height = 168; // ~16:9 aspect ratio
+      maskCtx.clearRect(0, 0, maskCanvas.width, maskCanvas.height);
+      maskCtx.drawImage(img, 0, 0, maskCanvas.width, maskCanvas.height);
+    };
+
+    if (img && img.complete) {
+      updateMask();
+    }
 
     const handleResize = () => {
-      if (!canvas) return;
-      width = canvas.width = canvas.offsetWidth;
-      height = canvas.height = canvas.offsetHeight;
+      if (!container || !canvas) return;
+      width = canvas.width = container.offsetWidth;
+      height = canvas.height = container.offsetHeight;
+      updateMask();
     };
     window.addEventListener("resize", handleResize);
 
-    // Flow path bezier definitions relative to width & height
-    const getFlowPaths = (w: number, h: number) => {
-      const startX = 0;
-      const startY = h * 0.48;
-      const endX = w;
-      const endY = h * 0.44;
-
-      return [
-        {
-          start: { x: startX, y: startY - 12 },
-          cp1: { x: w * 0.28, y: h * 0.18 },
-          cp2: { x: w * 0.68, y: h * 0.24 },
-          end: { x: endX, y: endY - 15 },
-        },
-        {
-          start: { x: startX, y: startY },
-          cp1: { x: w * 0.32, y: h * 0.46 },
-          cp2: { x: w * 0.62, y: h * 0.44 },
-          end: { x: endX, y: endY },
-        },
-        {
-          start: { x: startX, y: startY + 16 },
-          cp1: { x: w * 0.25, y: h * 0.72 },
-          cp2: { x: w * 0.7, y: h * 0.66 },
-          end: { x: endX, y: endY + 18 },
-        },
-        {
-          start: { x: startX, y: startY + 6 },
-          cp1: { x: w * 0.4, y: h * 0.32 },
-          cp2: { x: w * 0.75, y: h * 0.5 },
-          end: { x: endX, y: endY + 2 },
-        },
-      ];
-    };
-
-    const getBezierPoint = (
-      p0: { x: number; y: number },
-      p1: { x: number; y: number },
-      p2: { x: number; y: number },
-      p3: { x: number; y: number },
-      t: number
-    ) => {
-      const u = 1 - t;
-      const tt = t * t;
-      const uu = u * u;
-      const uuu = uu * u;
-      const ttt = tt * t;
-
-      const x = uuu * p0.x + 3 * uu * t * p1.x + 3 * u * tt * p2.x + ttt * p3.x;
-      const y = uuu * p0.y + 3 * uu * t * p1.y + 3 * u * tt * p2.y + ttt * p3.y;
-      return { x, y };
-    };
-
-    // Initialize particles
-    const PARTICLE_COUNT = 65;
+    // Particle Object Pool
+    const MAX_PARTICLES = 240;
     const particles: Particle[] = [];
-    const colors = ["#245DFF", "#4F8CFF", "#60A5FA", "#93C5FD", "#3B82F6"];
-
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
+    for (let i = 0; i < MAX_PARTICLES; i++) {
       particles.push({
+        active: false,
         x: 0,
         y: 0,
         vx: 0,
         vy: 0,
-        baseX: 0,
-        baseY: 0,
-        progress: Math.random(),
-        speed: 0.002 + Math.random() * 0.004,
-        radius: 1.2 + Math.random() * 2.2,
-        alpha: 0.4 + Math.random() * 0.55,
-        pathIndex: Math.floor(Math.random() * 4),
-        scatterX: 0,
-        scatterY: 0,
+        size: 3,
+        color: "#65A30D",
+        alpha: 1,
+        decay: 0.015,
+        rotation: 0,
+        vRot: 0,
+        type: "spore",
       });
     }
 
-    // Pointer move listener relative to canvas
+    const sporeColors = ["#3F6212", "#4D7C0F", "#65A30D", "#84CC16", "#A3E635", "#22C55E"];
+    const dustColors = ["#FEF08A", "#FBBF24", "#D9F99D", "#FDE047", "#86EFAC"];
+    const leafColors = ["#14532D", "#15803D", "#16A34A", "#22C55E", "#4ADE80", "#166534"];
+
+    // Check if a point (cx, cy) in container coordinates is on or within proximity to the branch
+    const isNearBranch = (cx: number, cy: number): boolean => {
+      if (!img || !maskCtx || maskCanvas.width === 0) {
+        const relY = cy / height;
+        return relY > 0.15 && relY < 0.85;
+      }
+
+      const imgRect = img.getBoundingClientRect();
+      const contRect = container.getBoundingClientRect();
+
+      // Convert container coords to image-relative coords
+      const ix = cx - (imgRect.left - contRect.left);
+      const iy = cy - (imgRect.top - contRect.top);
+
+      if (ix < -40 || ix > imgRect.width + 40 || iy < -40 || iy > imgRect.height + 40) {
+        return false;
+      }
+
+      // Map to mask canvas coordinates (300 x 168)
+      const mx = Math.floor((ix / imgRect.width) * maskCanvas.width);
+      const my = Math.floor((iy / imgRect.height) * maskCanvas.height);
+
+      try {
+        // Generous proximity: sample a radius of 6 pixels in mask (~50px on screen)
+        const radius = 6;
+        const sx = Math.max(0, mx - radius);
+        const sy = Math.max(0, my - radius);
+        const sw = Math.min(maskCanvas.width - sx, radius * 2 + 1);
+        const sh = Math.min(maskCanvas.height - sy, radius * 2 + 1);
+
+        if (sw <= 0 || sh <= 0) return true;
+
+        const imgData = maskCtx.getImageData(sx, sy, sw, sh).data;
+        for (let i = 3; i < imgData.length; i += 4) {
+          if (imgData[i] > 15) {
+            return true; // Near or over non-transparent branch pixel
+          }
+        }
+      } catch {
+        return true;
+      }
+
+      return false;
+    };
+
+    // Emit particles at cursor position with organic velocity
+    const spawnParticles = (x: number, y: number, count: number, pvx: number, pvy: number) => {
+      if (prefersReducedMotion) return;
+
+      const pSpeed = Math.sqrt(pvx * pvx + pvy * pvy);
+      const normX = pSpeed > 0.1 ? -pvy / pSpeed : 0;
+      const normY = pSpeed > 0.1 ? pvx / pSpeed : 0;
+
+      let spawned = 0;
+      for (let i = 0; i < MAX_PARTICLES; i++) {
+        const p = particles[i];
+        if (!p.active) {
+          p.active = true;
+          // Localized organic scatter around pointer
+          const angle = Math.random() * Math.PI * 2;
+          const dist = Math.random() * 28;
+          p.x = x + Math.cos(angle) * dist;
+          p.y = y + Math.sin(angle) * dist;
+
+          const randType = Math.random();
+          if (randType < 0.50) {
+            p.type = "spore";
+            p.color = sporeColors[Math.floor(Math.random() * sporeColors.length)];
+            p.size = 2.4 + Math.random() * 2.8;
+            p.decay = 0.010 + Math.random() * 0.014;
+          } else if (randType < 0.78) {
+            p.type = "dust";
+            p.color = dustColors[Math.floor(Math.random() * dustColors.length)];
+            p.size = 1.6 + Math.random() * 2.2;
+            p.decay = 0.009 + Math.random() * 0.013;
+          } else {
+            p.type = "leaf";
+            p.color = leafColors[Math.floor(Math.random() * leafColors.length)];
+            p.size = 3.6 + Math.random() * 4.4;
+            p.decay = 0.006 + Math.random() * 0.010;
+          }
+
+          // Swirl and drift with mouse impulse
+          const swirlFactor = (Math.random() - 0.5) * 2.0;
+          p.vx = (Math.random() - 0.5) * 1.6 + normX * swirlFactor + pvx * 0.09;
+          p.vy = -0.5 - Math.random() * 1.1 + normY * swirlFactor + pvy * 0.09;
+          p.alpha = 0.82 + Math.random() * 0.18;
+          p.rotation = Math.random() * Math.PI * 2;
+          p.vRot = (Math.random() - 0.5) * 0.14;
+
+          spawned++;
+          if (spawned >= count) break;
+        }
+      }
+    };
+
+    let prevPointerX = -9999;
+    let prevPointerY = -9999;
+
     const onPointerMove = (e: PointerEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      mouseRef.current = {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-        active: true,
-      };
+      const rect = container.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      let pvx = 0;
+      let pvy = 0;
+      if (prevPointerX !== -9999) {
+        pvx = x - prevPointerX;
+        pvy = y - prevPointerY;
+      }
+      const speed = Math.sqrt(pvx * pvx + pvy * pvy);
+
+      prevPointerX = x;
+      prevPointerY = y;
+
+      // Check proximity to the branch
+      if (isNearBranch(x, y)) {
+        // Emit count proportional to movement speed: 4 to 9 particles per move step
+        const count = Math.min(9, Math.max(4, Math.floor(speed / 5) + 2));
+        spawnParticles(x, y, count, pvx, pvy);
+      }
     };
 
     const onPointerLeave = () => {
-      mouseRef.current.active = false;
+      prevPointerX = -9999;
+      prevPointerY = -9999;
     };
 
-    const target = container;
-    target.addEventListener("pointermove", onPointerMove, { passive: true });
-    target.addEventListener("pointerleave", onPointerLeave);
+    container.addEventListener("pointermove", onPointerMove, { passive: true });
+    container.addEventListener("pointerleave", onPointerLeave, { passive: true });
 
-    // Animation Loop
+    // Animation loop
     let isVisible = true;
     const observer = new IntersectionObserver(([entry]) => {
       isVisible = entry.isIntersecting;
     });
-    observer.observe(canvas);
+    observer.observe(container);
 
     const render = () => {
       if (!isVisible) {
@@ -160,56 +234,56 @@ export default function HeroArtwork() {
       }
 
       ctx.clearRect(0, 0, width, height);
-      const paths = getFlowPaths(width, height);
-      const mouse = mouseRef.current;
 
-      for (let i = 0; i < particles.length; i++) {
+      for (let i = 0; i < MAX_PARTICLES; i++) {
         const p = particles[i];
-        p.progress += p.speed;
-        if (p.progress > 1) {
-          p.progress = 0;
-          p.scatterX = 0;
-          p.scatterY = 0;
-          p.pathIndex = Math.floor(Math.random() * paths.length);
+        if (!p.active) continue;
+
+        // Physics: air resistance, gentle settling drift
+        p.vx *= 0.955;
+        p.vy *= 0.955;
+        p.vy += 0.022; // gentle settling drift
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rotation += p.vRot;
+        p.alpha -= p.decay;
+
+        if (p.alpha <= 0.01) {
+          p.active = false;
+          continue;
         }
 
-        const path = paths[p.pathIndex] || paths[0];
-        const pt = getBezierPoint(path.start, path.cp1, path.cp2, path.end, p.progress);
-
-        p.baseX = pt.x;
-        p.baseY = pt.y;
-
-        // Pointer proximity interaction
-        if (mouse.active) {
-          const dx = p.baseX + p.scatterX - mouse.x;
-          const dy = p.baseY + p.scatterY - mouse.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          const maxDist = 95;
-
-          if (dist < maxDist && dist > 0) {
-            const force = (1 - dist / maxDist) * 32;
-            const angle = Math.atan2(dy, dx);
-            p.scatterX += Math.cos(angle) * force * 0.2;
-            p.scatterY += Math.sin(angle) * force * 0.2;
-          }
-        }
-
-        // Smoothly settle scatter back to zero
-        p.scatterX *= 0.92;
-        p.scatterY *= 0.92;
-
-        p.x = p.baseX + p.scatterX;
-        p.y = p.baseY + p.scatterY;
-
-        // Draw particle
         ctx.save();
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = colors[i % colors.length];
-        ctx.globalAlpha = p.alpha;
-        ctx.shadowColor = "#245DFF";
-        ctx.shadowBlur = 6;
-        ctx.fill();
+        ctx.globalAlpha = Math.max(0, p.alpha);
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation);
+
+        if (p.type === "leaf") {
+          // Delicate organic leaf silhouette
+          ctx.beginPath();
+          ctx.ellipse(0, 0, p.size * 1.6, p.size * 0.8, 0, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.shadowColor = "rgba(20, 83, 45, 0.35)";
+          ctx.shadowBlur = 3;
+          ctx.fill();
+        } else if (p.type === "dust") {
+          // Soft glowing pollen grain
+          ctx.beginPath();
+          ctx.arc(0, 0, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.shadowColor = p.color;
+          ctx.shadowBlur = 8;
+          ctx.fill();
+        } else {
+          // Velvety moss spore
+          ctx.beginPath();
+          ctx.arc(0, 0, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.shadowColor = "rgba(77, 124, 15, 0.4)";
+          ctx.shadowBlur = 4;
+          ctx.fill();
+        }
+
         ctx.restore();
       }
 
@@ -221,11 +295,11 @@ export default function HeroArtwork() {
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener("resize", handleResize);
-      target.removeEventListener("pointermove", onPointerMove);
-      target.removeEventListener("pointerleave", onPointerLeave);
+      container.removeEventListener("pointermove", onPointerMove);
+      container.removeEventListener("pointerleave", onPointerLeave);
       observer.disconnect();
     };
-  }, []);
+  }, [imageLoaded]);
 
   return (
     <div
@@ -234,14 +308,12 @@ export default function HeroArtwork() {
       style={{
         position: "relative",
         width: "100%",
-        minHeight: "330px",
-        height: "auto",
+        minHeight: "380px",
         display: "flex",
         alignItems: "center",
-        justifyContent: "space-between",
-        margin: "0 auto 16px auto",
+        justifyContent: "center",
         userSelect: "none",
-        overflow: "visible",
+        cursor: "default",
       }}
     >
       {/* 1. Oversized Faint Background Typography: CAREER */}
@@ -249,14 +321,14 @@ export default function HeroArtwork() {
         aria-hidden="true"
         style={{
           position: "absolute",
-          top: "42%",
+          top: "45%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          fontSize: "clamp(4.5rem, 13vw, 10rem)",
+          fontSize: "clamp(6.5rem, 19vw, 17rem)",
           fontWeight: 900,
           fontFamily: "Inter, system-ui, sans-serif",
-          letterSpacing: "0.1em",
-          color: "rgba(36, 93, 255, 0.035)",
+          letterSpacing: "0.07em",
+          color: "rgba(21, 26, 36, 0.038)",
           whiteSpace: "nowrap",
           pointerEvents: "none",
           zIndex: 1,
@@ -265,532 +337,49 @@ export default function HeroArtwork() {
         CAREER
       </div>
 
-      {/* 2. Left Side: Code Editor Visual */}
+      {/* 2. Main Centerpiece: Realistic Moss-Covered Looping Branch */}
       <div
-        className="hero-code-editor"
         style={{
           position: "relative",
-          zIndex: 3,
-          width: "min(330px, 30vw)",
-          minWidth: "260px",
-          background: "#12151B",
-          borderRadius: "14px",
-          border: "1px solid rgba(255, 255, 255, 0.08)",
-          boxShadow:
-            "0 20px 40px -10px rgba(16, 35, 74, 0.24), 0 8px 16px -6px rgba(0, 0, 0, 0.2)",
-          overflow: "hidden",
-          flexShrink: 0,
-        }}
-      >
-        {/* Editor Chrome Bar */}
-        <div
-          style={{
-            height: "36px",
-            background: "#181C24",
-            borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
-            display: "flex",
-            alignItems: "center",
-            padding: "0 12px",
-            justifyContent: "space-between",
-          }}
-        >
-          {/* Window control dots */}
-          <div style={{ display: "flex", gap: "6px" }}>
-            <span
-              style={{
-                width: "9px",
-                height: "9px",
-                borderRadius: "50%",
-                background: "#EF4444",
-                opacity: 0.85,
-              }}
-            />
-            <span
-              style={{
-                width: "9px",
-                height: "9px",
-                borderRadius: "50%",
-                background: "#F59E0B",
-                opacity: 0.85,
-              }}
-            />
-            <span
-              style={{
-                width: "9px",
-                height: "9px",
-                borderRadius: "50%",
-                background: "#10B981",
-                opacity: 0.85,
-              }}
-            />
-          </div>
-
-          {/* Active Tab */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              background: "#12151B",
-              padding: "4px 10px",
-              borderRadius: "6px 6px 0 0",
-              borderTop: "2px solid #245DFF",
-              fontSize: "11px",
-              color: "#E2E8F0",
-              fontFamily: "monospace",
-            }}
-          >
-            <span style={{ color: "#60A5FA" }}>⚡</span>
-            calibrator.ts
-          </div>
-
-          <div style={{ width: "28px" }} />
-        </div>
-
-        {/* Floating Dark GitHub Pill Badge */}
-        <div
-          style={{
-            position: "absolute",
-            top: "28px",
-            right: "-20px",
-            zIndex: 10,
-            background: "rgba(18, 21, 27, 0.94)",
-            backdropFilter: "blur(12px)",
-            border: "1px solid rgba(255, 255, 255, 0.12)",
-            borderRadius: "10px",
-            padding: "8px 12px",
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            boxShadow: "0 12px 28px rgba(0, 0, 0, 0.4)",
-            maxWidth: "200px",
-          }}
-        >
-          <svg
-            height="18"
-            viewBox="0 0 16 16"
-            width="18"
-            fill="#FFFFFF"
-            style={{ flexShrink: 0 }}
-          >
-            <path d="M8 0c4.42 0 8 3.58 8 8a8.01 8.01 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z" />
-          </svg>
-          <div>
-            <div style={{ fontSize: "11px", fontWeight: 700, color: "#FFFFFF" }}>
-              GitHub
-            </div>
-            <div
-              style={{
-                fontSize: "9px",
-                color: "#94A3B8",
-                lineHeight: "1.2",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              Analyze repo & commits
-            </div>
-          </div>
-        </div>
-
-        {/* Code Editor Body */}
-        <div
-          style={{
-            display: "flex",
-            padding: "12px 10px",
-            fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
-            fontSize: "11px",
-            lineHeight: "1.65",
-            color: "#CBD5E1",
-          }}
-        >
-          {/* Mini Sidebar file list */}
-          <div
-            style={{
-              width: "74px",
-              borderRight: "1px solid rgba(255, 255, 255, 0.05)",
-              paddingRight: "8px",
-              marginRight: "8px",
-              fontSize: "9.5px",
-              color: "#64748B",
-            }}
-          >
-            <div style={{ color: "#94A3B8", marginBottom: "4px" }}>▸ src</div>
-            <div style={{ paddingLeft: "8px", color: "#60A5FA" }}>• app.ts</div>
-            <div style={{ paddingLeft: "8px" }}>• sync.ts</div>
-            <div style={{ paddingLeft: "8px" }}>• parse.ts</div>
-            <div style={{ marginTop: "6px" }}>package.json</div>
-          </div>
-
-          {/* Code Area */}
-          <div style={{ flex: 1, overflow: "hidden" }}>
-            <div>
-              <span style={{ color: "#F43F5E" }}>import </span>
-              <span style={{ color: "#38BDF8" }}>{"{ scan }"} </span>
-              <span style={{ color: "#F43F5E" }}>from </span>
-              <span style={{ color: "#FBBF24" }}>&quot;@github/core&quot;</span>;
-            </div>
-            <div style={{ height: "4px" }} />
-            <div>
-              <span style={{ color: "#A855F7" }}>const </span>
-              <span style={{ color: "#38BDF8" }}>profile </span>
-              <span style={{ color: "#A855F7" }}>= </span>
-              <span style={{ color: "#F43F5E" }}>await </span>
-              <span style={{ color: "#38BDF8" }}>scan</span>();
-            </div>
-            <div>
-              <span style={{ color: "#64748B" }}>// Extracting skills</span>
-            </div>
-            <div>
-              <span style={{ color: "#38BDF8" }}>profile</span>.
-              <span style={{ color: "#10B981" }}>detectStack</span>();
-            </div>
-            <div>
-              <span style={{ color: "#38BDF8" }}>profile</span>.
-              <span style={{ color: "#10B981" }}>generateBullets</span>();
-            </div>
-            <div>
-              <span style={{ color: "#A855F7" }}>return </span>
-              <span style={{ color: "#38BDF8" }}>exportToATS</span>();
-            </div>
-          </div>
-        </div>
-
-        {/* Emitters from code editor right border */}
-        <div
-          style={{
-            position: "absolute",
-            right: "0",
-            top: "48%",
-            width: "6px",
-            height: "12px",
-            background: "#245DFF",
-            borderRadius: "4px 0 0 4px",
-            boxShadow: "0 0 12px #245DFF",
-          }}
-        />
-      </div>
-
-      {/* 3. Center: Dynamic Flow Layer (SVG Lines, Tech Pills, Mini Preview Cards & Canvas) */}
-      <div
-        className="hero-flow-zone"
-        style={{
-          position: "relative",
-          flex: 1,
-          height: "360px",
-          margin: "0 10px",
+          width: "100%",
+          maxWidth: "1560px",
           zIndex: 2,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "0 clamp(0px, 2vw, 32px)",
         }}
       >
-        {/* Interactive Particle Canvas */}
-        <canvas
-          ref={canvasRef}
+        <img
+          ref={imgRef}
+          src="/images/moss_branch.png?v=3"
+          alt="Sculptural organic moss-covered branch forming a central loop"
+          onLoad={() => setImageLoaded(true)}
           style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
             width: "100%",
-            height: "100%",
+            height: "auto",
+            maxHeight: "460px",
+            objectFit: "contain",
+            display: "block",
             pointerEvents: "none",
-            zIndex: 4,
+            filter: "drop-shadow(0 20px 30px rgba(16, 35, 74, 0.07))",
           }}
         />
-
-        {/* SVG Curved Connection Flow Lines */}
-        <svg
-          viewBox="0 0 400 300"
-          preserveAspectRatio="none"
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            pointerEvents: "none",
-            zIndex: 2,
-          }}
-        >
-          <defs>
-            <linearGradient id="flowGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#245DFF" stopOpacity="0.8" />
-              <stop offset="50%" stopColor="#4F8CFF" stopOpacity="0.6" />
-              <stop offset="100%" stopColor="#245DFF" stopOpacity="0.8" />
-            </linearGradient>
-            <linearGradient id="flowGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#93C5FD" stopOpacity="0.4" />
-              <stop offset="100%" stopColor="#245DFF" stopOpacity="0.7" />
-            </linearGradient>
-          </defs>
-
-          {/* Main Flow Lines */}
-          <path
-            d="M 0 145 C 80 145, 120 70, 240 70 C 310 70, 350 135, 400 135"
-            fill="none"
-            stroke="url(#flowGrad1)"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-          />
-          <path
-            d="M 0 145 C 100 145, 180 140, 260 140 C 330 140, 360 140, 400 140"
-            fill="none"
-            stroke="url(#flowGrad1)"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-          <path
-            d="M 0 145 C 70 145, 110 225, 230 225 C 310 225, 350 145, 400 145"
-            fill="none"
-            stroke="url(#flowGrad2)"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-
-          {/* Node Rings */}
-          <circle cx="120" cy="145" r="8" fill="#FFFFFF" stroke="#245DFF" strokeWidth="2.5" />
-          <circle cx="120" cy="145" r="3.5" fill="#245DFF" />
-          <circle cx="210" cy="70" r="4" fill="#245DFF" />
-          <circle cx="210" cy="225" r="4" fill="#60A5FA" />
-          <circle cx="360" cy="140" r="6" fill="#FFFFFF" stroke="#245DFF" strokeWidth="2" />
-        </svg>
-
-        {/* Floating Technology Pills */}
-        <div
-          style={{
-            position: "absolute",
-            top: "14%",
-            left: "48%",
-            transform: "translateX(-50%)",
-            display: "flex",
-            gap: "8px",
-            zIndex: 5,
-          }}
-        >
-          {/* React Pill */}
-          <div
-            style={{
-              background: "#E8EEFF",
-              border: "1px solid #CFD9FF",
-              borderRadius: "100px",
-              padding: "4px 10px",
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-              fontSize: "11px",
-              fontWeight: 700,
-              color: "#1E40AF",
-              boxShadow: "0 4px 12px rgba(36, 93, 255, 0.1)",
-            }}
-          >
-            <span style={{ color: "#0284C7" }}>⚛</span> React
-          </div>
-
-          {/* Python Pill */}
-          <div
-            style={{
-              background: "#E8EEFF",
-              border: "1px solid #CFD9FF",
-              borderRadius: "100px",
-              padding: "4px 10px",
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-              fontSize: "11px",
-              fontWeight: 700,
-              color: "#1E40AF",
-              boxShadow: "0 4px 12px rgba(36, 93, 255, 0.1)",
-            }}
-          >
-            <span style={{ color: "#EAB308" }}>🐍</span> Python
-          </div>
-
-          {/* API Design Pill */}
-          <div
-            style={{
-              background: "#E8EEFF",
-              border: "1px solid #CFD9FF",
-              borderRadius: "100px",
-              padding: "4px 10px",
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-              fontSize: "11px",
-              fontWeight: 700,
-              color: "#1E40AF",
-              boxShadow: "0 4px 12px rgba(36, 93, 255, 0.1)",
-            }}
-          >
-            API Design
-          </div>
-        </div>
-
-        {/* Floating Preview Card 1: React card preview */}
-        <div
-          style={{
-            position: "absolute",
-            top: "32%",
-            left: "52%",
-            width: "110px",
-            background: "#181C24",
-            borderRadius: "8px",
-            border: "1px solid rgba(255, 255, 255, 0.12)",
-            padding: "6px 8px",
-            boxShadow: "0 10px 24px rgba(0, 0, 0, 0.18)",
-            zIndex: 5,
-          }}
-        >
-          <div style={{ height: "4px", width: "40%", background: "#60A5FA", borderRadius: "2px", marginBottom: "4px" }} />
-          <div style={{ height: "3px", width: "80%", background: "rgba(255,255,255,0.2)", borderRadius: "2px", marginBottom: "3px" }} />
-          <div style={{ height: "3px", width: "60%", background: "rgba(255,255,255,0.15)", borderRadius: "2px", marginBottom: "6px" }} />
-          <div style={{ fontSize: "8.5px", color: "#94A3B8", fontWeight: 600 }}>React card preview</div>
-        </div>
-
-        {/* Floating Preview Card 2: Project card preview */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: "12%",
-            left: "64%",
-            width: "120px",
-            background: "#181C24",
-            borderRadius: "8px",
-            border: "1px solid rgba(255, 255, 255, 0.12)",
-            padding: "6px 8px",
-            boxShadow: "0 10px 24px rgba(0, 0, 0, 0.18)",
-            zIndex: 5,
-          }}
-        >
-          <div style={{ height: "4px", width: "50%", background: "#10B981", borderRadius: "2px", marginBottom: "4px" }} />
-          <div style={{ height: "3px", width: "85%", background: "rgba(255,255,255,0.2)", borderRadius: "2px", marginBottom: "3px" }} />
-          <div style={{ height: "3px", width: "65%", background: "rgba(255,255,255,0.15)", borderRadius: "2px", marginBottom: "6px" }} />
-          <div style={{ fontSize: "8.5px", color: "#94A3B8", fontWeight: 600 }}>Project card preview</div>
-        </div>
       </div>
 
-      {/* 4. Right Side: Stacked Paper Resume Preview Document */}
-      <div
-        className="hero-resume-card"
+      {/* 3. Real Cursor-Responsive Particle Interaction Canvas Overlay */}
+      <canvas
+        ref={canvasRef}
         style={{
-          position: "relative",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          pointerEvents: "none",
           zIndex: 3,
-          width: "min(270px, 24vw)",
-          minWidth: "230px",
-          background: "#FFFFFF",
-          borderRadius: "14px",
-          border: "1px solid #E2E5EB",
-          padding: "14px 14px",
-          color: "#151A24",
-          boxShadow:
-            "0 16px 36px -8px rgba(16, 35, 74, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04)",
-          flexShrink: 0,
         }}
-      >
-        {/* Physical Stacked Paper Effect below card */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: "-6px",
-            left: "8px",
-            right: "8px",
-            height: "8px",
-            background: "#F8FAFC",
-            border: "1px solid #E2E5EB",
-            borderRadius: "0 0 12px 12px",
-            zIndex: -1,
-            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.05)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            bottom: "-11px",
-            left: "16px",
-            right: "16px",
-            height: "8px",
-            background: "#F1F5F9",
-            border: "1px solid #E2E5EB",
-            borderRadius: "0 0 10px 10px",
-            zIndex: -2,
-          }}
-        />
-
-        {/* Resume Header */}
-        <div style={{ marginBottom: "8px", borderBottom: "1px solid #F1F5F9", paddingBottom: "6px" }}>
-          <div style={{ fontSize: "14px", fontWeight: 800, letterSpacing: "-0.02em", color: "#0F172A" }}>
-            Resume
-          </div>
-          <div style={{ fontSize: "8.5px", color: "#64748B", marginTop: "1px" }}>
-            AI resume platform to accelerate career growth
-          </div>
-        </div>
-
-        {/* Experience Section */}
-        <div style={{ marginBottom: "8px" }}>
-          <div style={{ fontSize: "9.5px", fontWeight: 800, color: "#1E293B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "3px" }}>
-            Experience
-          </div>
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "8.5px", fontWeight: 700, color: "#334155" }}>
-            <span>• Developer Experience</span>
-            <span style={{ color: "#94A3B8", fontWeight: 500 }}>2023 – Present</span>
-          </div>
-          <div style={{ fontSize: "7.5px", color: "#64748B", paddingLeft: "6px", margin: "1px 0 4px" }}>
-            - Architected modular design system & microservices
-          </div>
-
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "8.5px", fontWeight: 700, color: "#334155" }}>
-            <span>• Production Scale Project</span>
-            <span style={{ color: "#94A3B8", fontWeight: 500 }}>2021 – 2023</span>
-          </div>
-          <div style={{ fontSize: "7.5px", color: "#64748B", paddingLeft: "6px", marginTop: "1px" }}>
-            - Delivered recruiter-ready resume intelligence
-          </div>
-        </div>
-
-        {/* Projects Section */}
-        <div style={{ marginBottom: "8px" }}>
-          <div style={{ fontSize: "9.5px", fontWeight: 800, color: "#1E293B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "3px" }}>
-            Projects
-          </div>
-          <div style={{ fontSize: "8.5px", color: "#334155", fontWeight: 600 }}>
-            • Distributed Pipeline & Real-Time Sync
-          </div>
-          <div style={{ fontSize: "7.5px", color: "#64748B", paddingLeft: "6px" }}>
-            - Reduced ATS parsing friction by 74%
-          </div>
-        </div>
-
-        {/* Career / Impact Sparkline Graph */}
-        <div style={{ background: "#F8FAFC", borderRadius: "8px", padding: "6px 8px", border: "1px solid #F1F5F9" }}>
-          <div style={{ fontSize: "8.5px", fontWeight: 700, color: "#475569", marginBottom: "2px" }}>
-            Career / Impact
-          </div>
-          <svg viewBox="0 0 160 36" style={{ width: "100%", height: "26px", overflow: "visible" }}>
-            <defs>
-              <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#245DFF" stopOpacity="0.3" />
-                <stop offset="100%" stopColor="#245DFF" stopOpacity="0.0" />
-              </linearGradient>
-            </defs>
-            <path
-              d="M 0 28 Q 35 26, 65 20 T 115 12 T 160 4 L 160 36 L 0 36 Z"
-              fill="url(#chartGrad)"
-            />
-            <path
-              d="M 0 28 Q 35 26, 65 20 T 115 12 T 160 4"
-              fill="none"
-              stroke="#245DFF"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "7px", color: "#94A3B8", marginTop: "1px" }}>
-            <span>2019</span>
-            <span>2021</span>
-            <span>2023</span>
-            <span>2024</span>
-          </div>
-        </div>
-      </div>
+      />
     </div>
   );
 }

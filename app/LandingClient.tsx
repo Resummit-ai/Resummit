@@ -669,11 +669,12 @@ export function LandingClient({
         }
 
         .landing-body .hero {
-          min-height: 100vh;
+          min-height: auto;
           display: flex;
+          flex-direction: column;
           align-items: center;
-          padding-top: 100px;
-          padding-bottom: 100px;
+          padding-top: 84px;
+          padding-bottom: 60px;
           position: relative;
           overflow: hidden;
         }
@@ -2494,14 +2495,15 @@ export function LandingClient({
         </nav>
 
         {/* Hero Section — Redesigned to match the reference */}
-        <section className="hero" style={{ minHeight: "auto", paddingTop: "96px", paddingBottom: "40px", position: "relative", overflow: "hidden" }}>
+        <section className="hero" style={{ minHeight: "auto", display: "flex", flexDirection: "column", width: "100%", paddingTop: "84px", paddingBottom: "48px", position: "relative", overflow: "hidden" }}>
           <div ref={glowRef} className="glow" style={{ top: "-220px", right: "-220px", willChange: "transform" }}></div>
           
-          <div className="container" style={{ width: "min(92%, 1280px)", margin: "0 auto", position: "relative", zIndex: 2 }}>
-            {/* Top Stage: Code Editor -> Connection Particle Flow -> Stacked Paper Resume */}
-            <div>
-              <HeroArtwork />
-            </div>
+          {/* Top Stage: Living Moss-Covered Branch stretching across the hero */}
+          <div style={{ width: "100%", position: "relative", zIndex: 2, overflow: "hidden" }}>
+            <HeroArtwork />
+          </div>
+
+          <div className="container" style={{ width: "min(92%, 1280px)", margin: "0 auto", position: "relative", zIndex: 5, marginTop: "-18px" }}>
 
             {/* Bottom Area: Lower-Left Narrative & Lower-Right Compact Product-Detail Cards */}
             <div
