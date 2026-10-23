@@ -62,7 +62,7 @@ export function FeaturePillarsSection() {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#111114] via-transparent to-black/20 pointer-events-none" />
 
                 {/* Floating pill in sky */}
-                <div className="absolute bottom-3 left-4 right-4 z-10 flex items-center justify-between rounded-lg bg-neutral-900/90 backdrop-blur-md px-3 py-1.5 border border-white/10 text-[11px] font-mono text-neutral-300">
+                <div className="absolute bottom-3 left-4 right-4 z-10 flex items-center justify-between rounded-lg bg-neutral-900/90 backdrop-blur-md px-3 py-1.5 border border-neutral-800 text-[11px] font-mono text-neutral-300">
                   <div className="flex items-center gap-2">
                     <span className="h-2 w-2 rounded-full bg-emerald-400" />
                     <span className="truncate">{pillar.subHeader}</span>

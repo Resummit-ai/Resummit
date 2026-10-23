@@ -82,7 +82,7 @@ export function RoleVersionsSection() {
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <Link
                 href={LANDING_CONFIG.brand.primaryCta.href}
-                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-neutral-800 hover:border-white/40 shadow-sm"
+                className="inline-flex items-center gap-2 rounded-full border border-neutral-800 bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-neutral-800 hover:border-neutral-700 shadow-sm"
               >
                 <span>Browse all roles</span>
                 <ArrowRight className="h-4 w-4" />
@@ -98,7 +98,7 @@ export function RoleVersionsSection() {
 
           {/* Right: Role Card with Vertical Icon Rail (Exact match to reference) */}
           <div className="lg:col-span-7">
-            <div className="rounded-2xl border border-white/10 bg-[#0e0e12] overflow-hidden flex shadow-2xl">
+            <div className="rounded-2xl border border-neutral-800/80 bg-[#0e0e12] overflow-hidden flex shadow-2xl">
               {/* Vertical Icon Rail */}
               <div className="w-14 shrink-0 border-r border-neutral-800 bg-[#121217] p-2 flex flex-col items-center gap-3">
                 {roles.map((role, idx) => {

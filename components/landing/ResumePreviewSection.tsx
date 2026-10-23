@@ -1,176 +1,175 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from "next/link";
-import { Check, ArrowRight, Download, Cpu, FileCheck2, Sparkles, Sliders } from "lucide-react";
-import { LANDING_CONFIG } from "@/lib/landing-config";
+import React from "react";
+import { Cpu, FileCheck, Check, ArrowRight } from "lucide-react";
 
 export function ResumePreviewSection() {
-  const [activeTab, setActiveTab] = useState<"full" | "experience" | "projects">("full");
-
   return (
-    <section id="preview-resume" className="scroll-mt-12 bg-[#09090b] text-white py-24 sm:py-32 border-t border-neutral-900">
+    <section id="interactive-resume" className="scroll-mt-16 bg-[#09090b] text-white py-24 sm:py-32 border-t border-neutral-900">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Left: Rendered Single-Page Resume of Alex Developer */}
+          {/* Left: Rendered Single-Page Resume of Alex Developer (Matches Screenshot 1) */}
           <div className="lg:col-span-7">
-            <div className="rounded-2xl border border-neutral-700 bg-white text-neutral-900 shadow-2xl overflow-hidden p-6 sm:p-8 font-sans text-xs">
-              {/* Resume Header */}
-              <div className="border-b border-neutral-300 pb-4 text-center">
-                <h3 className="text-xl font-bold tracking-tight text-neutral-950 uppercase font-sans">
-                  Alex Developer
+            <div className="rounded-2xl border border-neutral-800 bg-[#fbfbfb] text-neutral-900 shadow-[0_25px_60px_rgba(0,0,0,0.6)] p-6 sm:p-9 font-serif text-[11px] leading-relaxed select-text">
+              {/* Header */}
+              <div className="text-center pb-3 border-b-[1.5px] border-neutral-900">
+                <h3 className="text-xl sm:text-2xl font-bold tracking-wider text-neutral-950 uppercase font-serif">
+                  ALEX DEVELOPER
                 </h3>
-                <p className="mt-1 text-[11px] text-neutral-600 font-mono">
-                  San Francisco, CA (Open to Remote) · alex.dev@email.com · github.com/alex-dev · linkedin.com/in/alex-developer
+                <p className="mt-1 text-[10.5px] text-neutral-700">
+                  Jalandhar, Punjab, India (Open to Remote) · alex.developer@email.com · +91 98765 43210 ·{" "}
+                  <span className="text-blue-700 underline cursor-pointer">github.com/alex-dev</span> ·{" "}
+                  <span className="text-blue-700 underline cursor-pointer">linkedin.com/in/alex-developer</span>
                 </p>
               </div>
 
               {/* Technical Summary */}
-              <div className="mt-4">
-                <h4 className="text-[11px] font-bold uppercase tracking-wider text-neutral-900 border-b border-neutral-200 pb-1">
-                  Technical Summary
-                </h4>
-                <p className="mt-1.5 text-[11px] text-neutral-700 leading-relaxed">
-                  Innovative Full-Stack Software Engineer expert in building high-throughput distributed systems and AI capabilities. Proficient in TypeScript, Next.js, Go, PostgreSQL, Redis, and AWS. Adept at transforming complex data streams into production-grade applications that drive business value.
+              <div className="mt-3.5">
+                <div className="text-[11.5px] font-bold uppercase tracking-wider text-neutral-950 border-b border-neutral-900 pb-0.5 mb-1.5 font-serif">
+                  TECHNICAL SUMMARY
+                </div>
+                <p className="text-[10.5px] text-neutral-800 leading-normal">
+                  Innovative Full Stack Software Engineer expert in building high throughput distributed systems and AI capabilities. Proficient in Python, JavaScript, and TypeScript with deep hands-on expertise in Next.js, Node.js, Flask, Prisma, and AWS. Adept at transforming complex data streams and model inference into clean, production-grade applications that drive business value.
                 </p>
               </div>
 
               {/* Technical Skills */}
-              <div className="mt-4">
-                <h4 className="text-[11px] font-bold uppercase tracking-wider text-neutral-900 border-b border-neutral-200 pb-1">
-                  Technical Skills
-                </h4>
-                <div className="mt-1.5 space-y-1 text-[11px] text-neutral-700">
-                  <p><strong>Languages:</strong> TypeScript, JavaScript, Python, Go, SQL</p>
-                  <p><strong>Frameworks:</strong> Next.js 15, React, Node.js, Express, Tailwind CSS, Prisma</p>
-                  <p><strong>Infrastructure & Tools:</strong> AWS, PostgreSQL, Redis, Docker, Git, GitHub Actions, Vercel</p>
+              <div className="mt-3.5">
+                <div className="text-[11.5px] font-bold uppercase tracking-wider text-neutral-950 border-b border-neutral-900 pb-0.5 mb-1.5 font-serif">
+                  TECHNICAL SKILLS
+                </div>
+                <div className="text-[10.5px] text-neutral-800 space-y-0.5">
+                  <p><strong>Languages:</strong> Python, JavaScript, TypeScript</p>
+                  <p><strong>Frameworks:</strong> Next.js, Node.js, React, Express, Flask, Django</p>
+                  <p><strong>Tools & Platforms:</strong> AWS, PostgreSQL, Git, Docker, TensorFlow, OpenCV, Prisma, Redis, MongoDB, Jupyter, Slack, Bolt.io</p>
                 </div>
               </div>
 
               {/* Professional Experience */}
-              <div className="mt-4">
-                <h4 className="text-[11px] font-bold uppercase tracking-wider text-neutral-900 border-b border-neutral-200 pb-1">
-                  Professional Experience
-                </h4>
-                <div className="mt-2 space-y-2.5">
-                  <div>
-                    <div className="flex items-center justify-between font-semibold text-[11px] text-neutral-900">
-                      <span>Software Engineer · Core Systems</span>
-                      <span className="font-mono text-[10px] text-neutral-500">2024 — Present</span>
-                    </div>
-                    <ul className="mt-1 space-y-1 text-[11px] text-neutral-700 list-disc list-inside">
-                      <li>Architected an asynchronous event-streaming pipeline in TypeScript & Redis, handling 14k+ daily mutations with 99.9% uptime.</li>
-                      <li>Engineered optimistic UI mutation cache with Server Actions, cutting user-perceived latency by 45%.</li>
-                    </ul>
+              <div className="mt-3.5">
+                <div className="text-[11.5px] font-bold uppercase tracking-wider text-neutral-950 border-b border-neutral-900 pb-0.5 mb-1.5 font-serif">
+                  PROFESSIONAL EXPERIENCE
+                </div>
+                
+                {/* Job 1 */}
+                <div className="mb-2">
+                  <div className="flex justify-between items-baseline font-bold text-[11px] text-neutral-950">
+                    <span>Software &amp; AI Engineer Intern</span>
+                    <span className="font-sans font-medium text-[10px] text-neutral-700">Mar 2026 — Present</span>
                   </div>
+                  <div className="text-[10px] italic text-neutral-600 mb-1">AI Innovation Labs (Remote)</div>
+                  <ul className="list-disc list-outside ml-4 space-y-0.5 text-[10.5px] text-neutral-800">
+                    <li>Designed AI-powered customer support chatbot systems using Python and TensorFlow, increasing support ticket resolution efficiency by 34%.</li>
+                    <li>Implemented classification algorithms in Python for predictive modeling of user engagement patterns, yielding a 12% boost in retention.</li>
+                    <li>Automated functional QA scripts using Selenium WebDriver, cutting regression test duration by 60%.</li>
+                  </ul>
+                </div>
 
-                  <div>
-                    <div className="flex items-center justify-between font-semibold text-[11px] text-neutral-900">
-                      <span>Full-Stack Developer Intern · AI Labs</span>
-                      <span className="font-mono text-[10px] text-neutral-500">2023 — 2024</span>
-                    </div>
-                    <ul className="mt-1 space-y-1 text-[11px] text-neutral-700 list-disc list-inside">
-                      <li>Integrated LLM document retrieval with pgvector embeddings, improving semantic answer relevancy by 32%.</li>
-                      <li>Refactored Postgres indexing and connection pools, eliminating database deadlock incidents during traffic peaks.</li>
-                    </ul>
+                {/* Job 2 */}
+                <div>
+                  <div className="flex justify-between items-baseline font-bold text-[11px] text-neutral-950">
+                    <span>Junior Software Engineer</span>
+                    <span className="font-sans font-medium text-[10px] text-neutral-700">Jun 2025 — Aug 2025</span>
                   </div>
+                  <div className="text-[10px] italic text-neutral-600 mb-1">Grow AI Solutions</div>
+                  <ul className="list-disc list-outside ml-4 space-y-0.5 text-[10.5px] text-neutral-800">
+                    <li>Engineered and scaled a Node.js/Express backend serving 15,000+ active concurrent users with 99.9% uptime, reducing server response latency by 28%.</li>
+                    <li>Built and documented a high-performance RESTful Django API for microservices, increasing data sync speeds by 40%.</li>
+                    <li>Integrated automated integration tests using Pytest and Behave, boosting pipeline code coverage to 92%.</li>
+                  </ul>
                 </div>
               </div>
 
               {/* Technical Projects */}
-              <div className="mt-4">
-                <h4 className="text-[11px] font-bold uppercase tracking-wider text-neutral-900 border-b border-neutral-200 pb-1">
-                  Featured Projects (from GitHub)
-                </h4>
-                <div className="mt-2 space-y-2 text-[11px] text-neutral-700">
-                  <div>
-                    <div className="flex items-center justify-between font-semibold text-neutral-900">
-                      <span>weather-intelligence-platform · github.com/alex-dev/weather-app</span>
-                      <span className="font-mono text-[10px] text-neutral-500">Next.js, Redis, Prisma</span>
-                    </div>
-                    <p className="mt-0.5 text-neutral-600">
-                      Real-time forecasting platform with distributed caching. Automated fallback workers cut external API costs by 40%.
-                    </p>
+              <div className="mt-3.5">
+                <div className="text-[11.5px] font-bold uppercase tracking-wider text-neutral-950 border-b border-neutral-900 pb-0.5 mb-1.5 font-serif">
+                  TECHNICAL PROJECTS
+                </div>
+
+                {/* Project 1 */}
+                <div className="mb-2">
+                  <div className="flex justify-between items-baseline font-bold text-[11px] text-neutral-950">
+                    <span>Nexio</span>
+                    <span className="font-sans font-medium text-[10px] text-neutral-700">Python, TensorFlow</span>
                   </div>
+                  <p className="text-[10px] text-neutral-600 italic">
+                    Nexio is a high-density, multi-tenant AI ecosystem designed for hyper-growth sales teams, combining professional CRM capabilities with a distributed Neural Persona engine.
+                  </p>
+                  <ul className="list-disc list-outside ml-4 space-y-0.5 text-[10.5px] text-neutral-800 mt-0.5">
+                    <li>Automated intent scoring using TensorFlow and asynchronous workers results in sub 500ms response times for lead intake.</li>
+                    <li>Distributed idempotency ensured through Redis-backed locking and atomic MongoDB logic, preventing re-execution during retry storms.</li>
+                  </ul>
+                </div>
+
+                {/* Project 2 */}
+                <div>
+                  <div className="flex justify-between items-baseline font-bold text-[11px] text-neutral-950">
+                    <span>Biliq</span>
+                    <span className="font-sans font-medium text-[10px] text-neutral-700">Next.js, Prisma</span>
+                  </div>
+                  <p className="text-[10px] text-neutral-600 italic">
+                    Biliq is an intelligent, hardware-free POS and digital billing platform that sends instant receipts via WhatsApp, manages kitchen workflows with a real-time KDS, and uses transaction data for automated customer marketing.
+                  </p>
+                  <ul className="list-disc list-outside ml-4 space-y-0.5 text-[10.5px] text-neutral-800 mt-0.5">
+                    <li>Utilizes Prisma ORM to manage database schema and Next.js App Router for server-side rendering, enabling seamless integration of real-time analytics with the POS system.</li>
+                    <li>Leverages Server-Sent Events (SSE) to deliver instant receipts via WhatsApp without requiring app installs, improving customer satisfaction and reducing support queries.</li>
+                  </ul>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right: ATS Audit Score & Feature Breakdown */}
-          <div className="lg:col-span-5 space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full border border-sky-500/20 bg-sky-500/10 px-3.5 py-1 text-xs font-medium text-sky-400">
-              <span>✳</span>
-              <span>Interactive Output</span>
+          {/* Right Column: Copy & Micro-Features (Matches Screenshot 1) */}
+          <div className="lg:col-span-5 space-y-8 text-left">
+            <div>
+              <div className="text-xs sm:text-sm font-bold uppercase tracking-wider text-blue-500 mb-3">
+                INTERACTIVE OUTPUT
+              </div>
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.08] mb-5">
+                Recruiter-Ready.<br />
+                ATS-Optimized.
+              </h2>
+              <p className="text-base sm:text-lg text-neutral-400 leading-relaxed font-normal">
+                Here is a real resume generated from developer commits. It uses professional formatting, clean sections, and is fully optimized for Applicant Tracking Systems (ATS).
+              </p>
             </div>
 
-            <h2 className="text-3xl sm:text-5xl font-medium tracking-tight text-white leading-[1.12]">
-              Recruiter-Ready. ATS-Optimized.
-            </h2>
-
-            <p className="text-base text-neutral-400 leading-relaxed">
-              Here is a real resume generated from developer commits. It uses professional formatting, clean hierarchy, and is certified for corporate Applicant Tracking Systems.
-            </p>
-
-            {/* ATS Score Meter Card */}
-            <div className="rounded-2xl border border-neutral-800 bg-[#121217] p-6 space-y-4 shadow-xl">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-xs font-semibold text-neutral-400">ATS Pass Certification</div>
-                  <div className="text-2xl font-bold font-mono text-emerald-400">98 / 100 Score</div>
-                </div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                  <Check className="h-6 w-6" strokeWidth={2.5} />
-                </div>
+            {/* Feature Item 1 */}
+            <div className="flex items-start gap-4">
+              <div className="p-3.5 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 shrink-0">
+                <Cpu size={24} />
               </div>
-
-              {/* Progress bars */}
-              <div className="space-y-3 pt-2">
-                <div>
-                  <div className="flex justify-between text-xs font-medium text-neutral-300 mb-1">
-                    <span>ATS Layout & Hierarchy</span>
-                    <span className="font-mono text-emerald-400">100%</span>
-                  </div>
-                  <div className="h-1.5 w-full rounded-full bg-neutral-800 overflow-hidden">
-                    <div className="h-full bg-emerald-400 w-full" />
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex justify-between text-xs font-medium text-neutral-300 mb-1">
-                    <span>Google XYZ Impact Metrics</span>
-                    <span className="font-mono text-emerald-400">96%</span>
-                  </div>
-                  <div className="h-1.5 w-full rounded-full bg-neutral-800 overflow-hidden">
-                    <div className="h-full bg-emerald-400 w-[96%]" />
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex justify-between text-xs font-medium text-neutral-300 mb-1">
-                    <span>Technical Keyword Density</span>
-                    <span className="font-mono text-emerald-400">94%</span>
-                  </div>
-                  <div className="h-1.5 w-full rounded-full bg-neutral-800 overflow-hidden">
-                    <div className="h-full bg-emerald-400 w-[94%]" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-neutral-800/80 flex items-center justify-between text-[11px] font-mono text-neutral-500">
-                <span>Greenhouse · Lever · Workday</span>
-                <span className="text-emerald-400">Certified Compatible</span>
+              <div>
+                <h4 className="text-lg font-bold text-white mb-1">AI Bullets Generation</h4>
+                <p className="text-sm text-neutral-400 leading-relaxed">
+                  Parses your GitHub commits to write structured, accomplishment-focused resume points automatically.
+                </p>
               </div>
             </div>
 
-            <div className="pt-2">
-              <Link
-                href={LANDING_CONFIG.brand.primaryCta.href}
-                className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-neutral-950 transition-all hover:bg-neutral-200 shadow-md"
-              >
-                <span>Generate your CV like this</span>
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+            {/* Feature Item 2 */}
+            <div className="flex items-start gap-4">
+              <div className="p-3.5 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 shrink-0">
+                <FileCheck size={24} />
+              </div>
+              <div>
+                <h4 className="text-lg font-bold text-white mb-1">ATS Parser Certified</h4>
+                <p className="text-sm text-neutral-400 leading-relaxed">
+                  Conforms strictly to single-page PDF structures, typography limits, and machine-readable content rules.
+                </p>
+              </div>
+            </div>
+
+            {/* Live ATS Scorecard Badge */}
+            <div className="rounded-xl border border-neutral-800 bg-[#121318] p-5 flex items-center justify-between">
+              <div>
+                <div className="text-xs text-neutral-400 font-medium">ATS Compliance Score</div>
+                <div className="text-xl font-bold font-mono text-emerald-400 mt-0.5">98% Match Rate</div>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-mono text-neutral-400">
+                <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                Greenhouse · Lever · Workday
+              </div>
             </div>
           </div>
         </div>

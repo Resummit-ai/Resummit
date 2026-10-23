@@ -76,7 +76,7 @@ export function WorkflowCanvas() {
             <button
               type="button"
               onClick={connectAll}
-              className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-neutral-900 px-4 py-1.5 text-xs font-medium text-white hover:bg-neutral-800 transition-colors shadow-sm"
+              className="inline-flex items-center gap-1.5 rounded-full border border-neutral-800 bg-neutral-900 px-4 py-1.5 text-xs font-medium text-white hover:bg-neutral-800 transition-colors shadow-sm"
             >
               <Zap className="h-3 w-3 text-amber-400" />
               <span>Connect all</span>
@@ -85,7 +85,7 @@ export function WorkflowCanvas() {
         </div>
 
         {/* Workflow Node Canvas with Subtle Grid & Animated Connecting Beams */}
-        <div className="mt-12 relative rounded-3xl border border-white/10 bg-[#0c0c0e] p-6 sm:p-10 overflow-hidden shadow-2xl">
+        <div className="mt-12 relative rounded-3xl border border-neutral-800/80 bg-[#0c0c0e] p-6 sm:p-10 overflow-hidden shadow-2xl">
           {/* Subtle grid background */}
           <div
             className="absolute inset-0 opacity-[0.03] pointer-events-none"

@@ -51,7 +51,7 @@ export function CommitStreamSection() {
             <div>
               <Link
                 href={LANDING_CONFIG.brand.primaryCta.href}
-                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-neutral-800 hover:border-white/40 shadow-sm"
+                className="inline-flex items-center gap-2 rounded-full border border-neutral-800 bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-neutral-800 hover:border-neutral-700 shadow-sm"
               >
                 <span>See sample resume</span>
                 <ArrowRight className="h-4 w-4" />
@@ -78,7 +78,7 @@ export function CommitStreamSection() {
             </div>
 
             {/* Matrix Card */}
-            <div className="relative rounded-2xl border border-white/10 bg-[#0e0e11] p-6 sm:p-8 overflow-hidden min-h-[320px] flex flex-col justify-between">
+            <div className="relative rounded-2xl border border-neutral-800/80 bg-[#0e0e11] p-6 sm:p-8 overflow-hidden min-h-[320px] flex flex-col justify-between">
               {/* Subtle Dotted Grid World */}
               <div
                 className="absolute inset-0 opacity-[0.12] pointer-events-none"

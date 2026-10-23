@@ -1,393 +1,222 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Link from "next/link";
-import { LANDING_CONFIG } from "@/lib/landing-config";
+import { GitBranch, Check, Sparkles, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-import {
-  FileText,
-  GitBranch,
-  Layers,
-  Sparkles,
-  ArrowRight,
-  Search,
-  CheckCircle2,
-  TrendingUp,
-  Download,
-  Star,
-  Bell,
-  Plus,
-  Check,
-  ChevronDown,
-} from "lucide-react";
-import { GithubIcon } from "./Icons";
+import RotatingText from "@/components/ui/RotatingText";
 
-export function Hero() {
-  const [atsScore, setAtsScore] = useState(0);
-  const [activeRange, setActiveRange] = useState<"1h" | "24h" | "7d">("24h");
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setAtsScore(94);
-    }, 400);
-    return () => clearTimeout(timer);
-  }, []);
-
+export function Hero({ hasSession = false }: { hasSession?: boolean }) {
   return (
-    <section className="relative isolate pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden bg-[#09090b] text-white">
+    <section className="relative pt-28 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
       {/* Background ambient lighting */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
-      >
-        <div
-          style={{
-            clipPath:
-              "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-          }}
-          className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-blue-700/20 to-neutral-700/20 opacity-40 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
-        />
-      </div>
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-blue-600/10 blur-[130px] pointer-events-none rounded-full" />
 
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="mx-auto max-w-4xl text-center"
-        >
-          {/* Reference pill */}
-          <div className="inline-flex items-center">
-            <div className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 py-1 px-3.5 text-xs sm:text-sm text-neutral-300 backdrop-blur-sm hover:bg-white/10 transition-colors">
-              <span className="rounded-full bg-blue-600 px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm">
-                New
-              </span>
-              <span>Tailor your CV to any job in seconds</span>
+      {/* Main Hero Card Container - matches localhost:3000 FairweatherHero card */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="relative rounded-[28px] border border-neutral-800/80 bg-[#0d0e12] overflow-hidden shadow-2xl"
+      >
+        {/* Top Sky Artwork Panel */}
+        <div className="relative h-[340px] sm:h-[400px] w-full overflow-visible bg-[#1a365d]">
+          <img
+            src="/images/fairweather_sky.jpg"
+            alt="Pixel-art sky landscape"
+            className="w-full h-full object-cover object-[center_30%] block pixelated"
+            style={{ imageRendering: "pixelated" }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-transparent to-black/60 pointer-events-none" />
+
+          {/* Floating Product Preview Window rising out of the sky */}
+          <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-[94%] max-w-[840px] bg-[#121318]/95 backdrop-blur-xl border border-neutral-800 rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.6)] z-10 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-neutral-700">
+            {/* Window Header */}
+            <div className="px-4 py-3 bg-[#181920]/90 border-b border-neutral-800/80 flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
+              </div>
+              <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/25 px-2.5 py-0.5 rounded-full">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse" />
+                <span className="font-mono text-[10px] sm:text-xs font-bold text-emerald-400 tracking-wider">
+                  3 REPOS SYNCED · ATS READY
+                </span>
+              </div>
+              <div className="font-mono text-[10px] text-neutral-400 font-medium">
+                DEV PREVIEW
+              </div>
+            </div>
+
+            {/* Window Body: Authentic Developer GitHub to Resume Preview */}
+            <div className="grid grid-cols-1 md:grid-cols-2 p-4 sm:p-5 gap-3 sm:gap-4 bg-[#0e0f14]/90 text-left">
+              {/* Left Panel: GitHub Repository Analysis */}
+              <div className="bg-[#14151c] border border-neutral-800/70 rounded-xl p-3.5 sm:p-4 flex flex-col justify-between gap-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" className="text-neutral-300">
+                      <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                    </svg>
+                    <span className="font-semibold text-xs sm:text-sm text-neutral-100 font-mono">weather-app</span>
+                    <span className="text-[10px] text-neutral-400 bg-neutral-800 px-1.5 py-0.5 rounded font-mono">public</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-[11px] text-neutral-400 bg-neutral-800/80 px-2 py-0.5 rounded font-mono">
+                    <GitBranch size={11} className="text-neutral-400" />
+                    <span>main</span>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5 font-mono text-[11px]">
+                  <div className="flex items-center gap-2">
+                    <span className="text-blue-400 font-bold">a3f2c1e</span>
+                    <span className="text-neutral-300 truncate">feat: add real-time weather api integration</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-blue-400 font-bold">c9a1b3d</span>
+                    <span className="text-neutral-300 truncate">perf: cache layer with Redis & async workers</span>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {["Next.js 15", "TypeScript", "Prisma", "Redis"].map((chip) => (
+                    <span
+                      key={chip}
+                      className="text-[10px] font-mono font-medium bg-neutral-800/90 text-neutral-300 border border-neutral-700/60 px-2 py-0.5 rounded-md"
+                    >
+                      {chip}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right Panel: Recruiter-Ready Resume Output */}
+              <div className="bg-[#14151c] border border-neutral-800/70 rounded-xl p-3.5 sm:p-4 flex flex-col justify-between gap-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-bold text-xs sm:text-sm text-neutral-100">Alex Carter</div>
+                    <div className="text-[11px] text-neutral-400">Software Engineer</div>
+                  </div>
+                  <div className="flex items-center gap-1 text-[11px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full font-mono">
+                    <Check size={11} strokeWidth={3} />
+                    <span>ATS 98%</span>
+                  </div>
+                </div>
+
+                <div className="space-y-2 text-[11px] leading-relaxed text-neutral-300">
+                  <div className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1 shrink-0" />
+                    <p>
+                      Architected an asynchronous <strong className="text-neutral-100 font-semibold">weather intelligence platform</strong> using Next.js and TypeScript, serving 12k+ daily requests with 99.9% uptime.
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1 shrink-0" />
+                    <p>
+                      Engineered a <strong className="text-neutral-100 font-semibold">Redis caching layer</strong> for external API calls, cutting response latency by 42% and eliminating rate-limited errors.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+        </div>
 
-          {/* Heading matching reference font weight and tracking */}
-          <h1 className="mt-8 text-5xl font-normal sm:font-medium tracking-tight text-white sm:text-7xl leading-[1.08]">
-            Your CV that updates itself.
+        {/* Lower Hero Content: Editorial Resummit Content */}
+        <div className="pt-28 sm:pt-32 pb-14 px-6 sm:px-12 text-center max-w-4xl mx-auto">
+          {/* Badge Pill */}
+          <div className="inline-flex items-center gap-2 bg-neutral-900/90 border border-neutral-800 px-3.5 py-1.5 rounded-full mb-6">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-xs font-medium text-neutral-300">GitHub-powered resume intelligence</span>
+          </div>
+
+          {/* Dynamic Headline with RotatingText */}
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.15] mb-6">
+            Your GitHub already proves <br className="hidden sm:inline" />
+            your experience in{" "}
+            <span className="inline-block mt-1 sm:mt-0">
+              <RotatingText
+                texts={[
+                  "Full-Stack Systems",
+                  "Cloud Infrastructure",
+                  "Distributed Systems",
+                  "High-Scale APIs",
+                  "AI & Machine Learning",
+                  "Modern Web Apps",
+                ]}
+                color="#ffffff"
+                badgeBackground="#181920"
+                badgeRadius={14}
+                badgePaddingX={18}
+                badgePaddingY={4}
+                font={{
+                  fontFamily: "Inter, system-ui, sans-serif",
+                  fontWeight: 800,
+                  fontSize: "clamp(1.5rem, 3.4vw, 2.5rem)",
+                  letterSpacing: "-0.03em",
+                  lineHeight: "1.2",
+                }}
+              />
+            </span>
           </h1>
 
-          {/* Subtext */}
-          <p className="mx-auto mt-6 max-w-xl text-base sm:text-lg text-neutral-400 leading-relaxed">
-            Connect GitHub, paste a target job description, and get an ATS-optimized CV tailored to that role. No manual writing, no broken templates.
+          {/* Subheading */}
+          <p className="text-base sm:text-lg text-neutral-400 max-w-2xl mx-auto mb-8 leading-relaxed font-normal">
+            Resummit analyzes repositories, commits, technologies, and project structures
+            to generate clean, recruiter-ready resumes from the work you already built.
           </p>
 
-          {/* Call to action & social rating */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-6">
+          {/* Action Buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
             <Link
-              href={LANDING_CONFIG.brand.primaryCta.href}
-              className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-2.5 text-sm font-medium text-neutral-950 transition-all hover:bg-neutral-200 shadow-[0_4px_14px_rgba(255,255,255,0.15)] group"
+              href={hasSession ? "/dashboard" : "/login"}
+              className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-semibold text-black transition-all hover:bg-neutral-200 shadow-md group"
             >
-              <span>{LANDING_CONFIG.brand.primaryCta.label}</span>
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+              <span>{hasSession ? "Go to Dashboard" : "Start for free"}</span>
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
 
-            <div className="flex items-center gap-2 text-left">
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500/10 text-amber-400">
-                <Star className="h-4 w-4 fill-amber-400" />
-              </div>
-              <div>
-                <p className="text-xs font-semibold text-white">4.9 average</p>
-                <p className="text-[11px] text-neutral-400">Used by 31 developers</p>
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => {
+                const element = document.getElementById("interactive-resume");
+                element?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="inline-flex items-center rounded-full border border-neutral-800 bg-neutral-900/80 px-6 py-3 text-sm font-medium text-neutral-300 hover:text-white hover:bg-neutral-800 transition-colors"
+            >
+              See how it works
+            </button>
           </div>
-        </motion.div>
 
-        {/* Product Mockup Container — Featuring Our Real Resummit Dashboard */}
-        <motion.div
-          initial={{ opacity: 0, y: 36 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-16 mx-auto max-w-6xl rounded-t-3xl border-t border-x border-white/15 bg-[#fbfbfb] text-neutral-900 shadow-2xl overflow-hidden"
-        >
-          {/* Top Browser Bar */}
-          <div className="flex h-11 items-center justify-between border-b border-neutral-200/80 bg-neutral-100/70 px-4">
-            <div className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-full bg-red-400/80" />
-              <span className="h-3 w-3 rounded-full bg-amber-400/80" />
-              <span className="h-3 w-3 rounded-full bg-emerald-400/80" />
-              <span className="ml-2 font-mono text-xs text-neutral-500">
-                resummit.app/dashboard
-              </span>
+          {/* Verified Resummit Specs Metrics Line */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8 border-t border-neutral-800/80 text-center">
+            <div className="space-y-1">
+              <div className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">94%</div>
+              <div className="text-xs text-neutral-400">Median ATS parse rate across tech recruiters</div>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 border border-emerald-500/20">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                3 REPOS SYNCED · ATS READY
-              </span>
+            <div className="space-y-1 border-t md:border-t-0 md:border-x border-neutral-800/80 pt-4 md:pt-0">
+              <div className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">&lt;60s</div>
+              <div className="text-xs text-neutral-400">Average generation time from public repos</div>
+            </div>
+            <div className="space-y-1 border-t md:border-t-0 border-neutral-800/80 pt-4 md:pt-0">
+              <div className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">100%</div>
+              <div className="text-xs text-neutral-400">Read-only GitHub access · Never writes to repos</div>
             </div>
           </div>
 
-          {/* Inner Dashboard Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[560px]">
-            {/* Left Mockup Sidebar */}
-            <div className="hidden lg:flex lg:col-span-3 flex-col justify-between border-r border-neutral-200/80 p-4 bg-neutral-50">
-              <div className="space-y-4">
-                {/* Workspace Title */}
-                <div className="flex items-center gap-2.5 px-1">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-600 text-white font-bold text-xs">
-                    R
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold text-neutral-900">Resummit</p>
-                    <p className="text-[10px] text-neutral-500">Developer Workspace</p>
-                  </div>
-                </div>
-
-                {/* ⌘K Search Input */}
-                <div className="flex items-center justify-between rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-xs text-neutral-500 shadow-xs">
-                  <div className="flex items-center gap-1.5">
-                    <Search className="h-3.5 w-3.5 text-neutral-400" />
-                    <span>Search skills, repos...</span>
-                  </div>
-                  <kbd className="rounded bg-neutral-100 px-1.5 py-0.5 font-mono text-[10px] text-neutral-500">
-                    ⌘K
-                  </kbd>
-                </div>
-
-                {/* Nav Items */}
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2.5 rounded-lg bg-neutral-900 px-3 py-2 text-xs font-medium text-white shadow-xs">
-                    <FileText className="h-4 w-4" />
-                    <span>Master CV</span>
-                  </div>
-                  <div className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-neutral-600 hover:bg-neutral-100 transition-colors">
-                    <Layers className="h-4 w-4 text-neutral-400" />
-                    <span>Tailored versions</span>
-                    <span className="ml-auto rounded-full bg-neutral-200 px-1.5 py-0.2 text-[10px] font-semibold text-neutral-700">
-                      2
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-neutral-600 hover:bg-neutral-100 transition-colors">
-                    <Sparkles className="h-4 w-4 text-neutral-400" />
-                    <span>AI suggestions</span>
-                    <span className="ml-auto rounded-full bg-blue-100 px-1.5 py-0.2 text-[10px] font-semibold text-blue-700">
-                      3 new
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-neutral-600 hover:bg-neutral-100 transition-colors">
-                    <GitBranch className="h-4 w-4 text-neutral-400" />
-                    <span>GitHub sync</span>
-                  </div>
-                  <div className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-neutral-600 hover:bg-neutral-100 transition-colors">
-                    <Download className="h-4 w-4 text-neutral-400" />
-                    <span>Export PDF</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* User Profile Card at Sidebar Bottom */}
-              <div className="rounded-xl border border-neutral-200 bg-white p-3 shadow-xs space-y-2">
-                <div className="flex items-center gap-2.5">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-xs">
-                    <GithubIcon className="h-3.5 w-3.5" />
-                  </div>
-                  <div className="truncate">
-                    <p className="text-xs font-semibold text-neutral-900 truncate">Alex Carter</p>
-                    <p className="text-[10px] text-neutral-500 truncate">alex.dev@github</p>
-                  </div>
-                </div>
-                <div className="flex items-center justify-around rounded-lg bg-neutral-100 p-1 text-[10px] text-neutral-600 font-medium">
-                  <span className="rounded bg-white px-2 py-0.5 text-neutral-900 shadow-xs">Light</span>
-                  <span>Dark</span>
-                  <span>System</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Main Area: Resummit Real Dashboard View */}
-            <div className="lg:col-span-9 p-4 sm:p-6 space-y-6 bg-white overflow-hidden">
-              {/* Top Banner with Fairweather Mountain Sky Artwork */}
-              <div className="relative rounded-2xl overflow-hidden border border-neutral-200 shadow-xs min-h-[170px] p-6 flex flex-col justify-between">
-                <img
-                  src="/images/fairweather_sky.jpg"
-                  alt="Atmospheric clouds artwork"
-                  className="absolute inset-0 h-full w-full object-cover object-center"
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/85 to-transparent pointer-events-none" />
-
-                <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div>
-                    <span className="text-[11px] font-semibold tracking-wider text-blue-700 uppercase">
-                      Active Resume Profile
-                    </span>
-                    <h2 className="mt-1 text-2xl font-bold tracking-tight text-neutral-950">
-                      Senior Software Engineer
-                    </h2>
-                    <p className="text-xs text-neutral-600">
-                      Auto-synced from 8 public repositories across 1,420 commits.
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <button className="flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-xs border border-neutral-200 hover:bg-neutral-50">
-                      <Bell className="h-3.5 w-3.5 text-neutral-600" />
-                    </button>
-                    <button className="flex items-center gap-1.5 rounded-lg bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white shadow-xs hover:bg-neutral-800 transition-colors">
-                      <Plus className="h-3.5 w-3.5" />
-                      <span>New tailored version</span>
-                    </button>
-                  </div>
-                </div>
-
-                <div className="relative z-10 flex items-center gap-3 pt-3">
-                  <button className="flex items-center gap-1.5 rounded-lg bg-neutral-900 px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs">
-                    <span>Deploy to job application</span>
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
-                  <button className="flex items-center gap-1.5 rounded-lg border border-neutral-300 bg-white/90 px-3.5 py-1.5 text-xs font-medium text-neutral-800 shadow-xs hover:bg-white">
-                    <span>Preview PDF</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Real Resummit Git-to-Resume Preview Split (matching original localhost 3000) */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Left: GitHub Repository Analysis */}
-                <div className="rounded-xl border border-neutral-200 bg-neutral-50/80 p-4 space-y-3">
-                  <div className="flex items-center justify-between border-b border-neutral-200/80 pb-2.5">
-                    <div className="flex items-center gap-2">
-                      <GithubIcon className="h-4 w-4 text-neutral-800" />
-                      <span className="font-semibold text-xs text-neutral-900">weather-app</span>
-                      <span className="rounded bg-neutral-200 px-1.5 py-0.2 text-[10px] font-mono text-neutral-600">
-                        public
-                      </span>
-                    </div>
-                    <span className="text-[11px] font-mono text-neutral-500">main</span>
-                  </div>
-
-                  <div className="space-y-1.5 font-mono text-[11px]">
-                    <div className="flex items-center gap-2 text-neutral-700">
-                      <span className="text-blue-600 font-semibold">a3f2c1e</span>
-                      <span className="truncate">feat: add real-time weather api integration</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-neutral-700">
-                      <span className="text-blue-600 font-semibold">c9a1b3d</span>
-                      <span className="truncate">perf: cache layer with Redis & async workers</span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {["Next.js 15", "TypeScript", "Prisma", "Redis"].map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-md border border-neutral-200 bg-white px-2 py-0.5 text-[10px] font-medium text-neutral-700"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Right: Real Synthesized ATS Resume Output */}
-                <div className="rounded-xl border border-neutral-200 bg-white p-4 space-y-3 shadow-xs">
-                  <div className="flex items-center justify-between border-b border-neutral-200/80 pb-2.5">
-                    <div>
-                      <div className="font-bold text-xs text-neutral-900">Alex Carter</div>
-                      <div className="text-[10px] text-neutral-500">Software Engineer</div>
-                    </div>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">
-                      <Check className="h-3 w-3" />
-                      ATS 98%
-                    </span>
-                  </div>
-
-                  <div className="space-y-2 text-xs text-neutral-700 leading-relaxed font-sans">
-                    <p className="flex items-start gap-1.5">
-                      <span className="h-1.5 w-1.5 rounded-full bg-blue-600 shrink-0 mt-1.5" />
-                      <span>
-                        Architected an asynchronous <strong>weather intelligence platform</strong> using Next.js and TypeScript, serving 12k+ daily requests with 99.9% uptime.
-                      </span>
-                    </p>
-                    <p className="flex items-start gap-1.5">
-                      <span className="h-1.5 w-1.5 rounded-full bg-blue-600 shrink-0 mt-1.5" />
-                      <span>
-                        Engineered a <strong>Redis caching layer</strong> for external API calls, cutting response latency by 42% and eliminating rate-limited errors.
-                      </span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Lower Live Metrics Row (from Aceternity & Resummit dashboard) */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-                {/* Metric 1: ATS Score with Live SVG sparkline */}
-                <div className="rounded-xl border border-neutral-200 bg-neutral-50/50 p-4">
-                  <div className="flex items-center justify-between text-xs text-neutral-500">
-                    <span>ATS Rating</span>
-                    <span className="text-emerald-600 font-semibold">+12% vs standard</span>
-                  </div>
-                  <div className="mt-2 flex items-baseline gap-1">
-                    <span className="text-3xl font-bold font-mono text-neutral-900">
-                      {atsScore}
-                    </span>
-                    <span className="text-xs text-neutral-500">/ 100</span>
-                  </div>
-                  {/* Sparkline curve */}
-                  <div className="mt-3 h-8 w-full">
-                    <svg viewBox="0 0 100 24" className="w-full h-full overflow-visible">
-                      <path
-                        d="M 0,18 Q 20,20 40,16 T 70,8 T 100,6"
-                        fill="none"
-                        stroke="#2563eb"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                      />
-                      <circle cx="100" cy="6" r="3" fill="#2563eb" />
-                    </svg>
-                  </div>
-                </div>
-
-                {/* Metric 2: Bullets Synthesized */}
-                <div className="rounded-xl border border-neutral-200 bg-neutral-50/50 p-4">
-                  <div className="flex items-center justify-between text-xs text-neutral-500">
-                    <span>Bullets Synthesized</span>
-                    <span className="text-blue-600 font-semibold font-mono">14.8/s</span>
-                  </div>
-                  <div className="mt-2 flex items-baseline gap-1">
-                    <span className="text-3xl font-bold font-mono text-neutral-900">24</span>
-                    <span className="text-xs text-neutral-500">statements</span>
-                  </div>
-                  {/* Bar indicators */}
-                  <div className="mt-4 flex items-end gap-1.5 h-6">
-                    {[40, 55, 35, 70, 60, 85, 95, 100].map((h, i) => (
-                      <div
-                        key={i}
-                        style={{ height: `${h}%` }}
-                        className={`flex-1 rounded-t-xs ${
-                          i >= 6 ? "bg-neutral-900" : "bg-neutral-300"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                {/* Metric 3: Real Sync Status */}
-                <div className="rounded-xl border border-neutral-200 bg-neutral-50/50 p-4 flex flex-col justify-between">
-                  <div>
-                    <div className="text-xs text-neutral-500">Continuous Sync</div>
-                    <div className="mt-2 text-sm font-semibold text-neutral-900">
-                      8 Repositories Active
-                    </div>
-                    <p className="mt-1 text-[11px] text-neutral-500 leading-normal">
-                      Webhook listening for GitHub pushes. Edits never overwritten.
-                    </p>
-                  </div>
-                  <div className="pt-3 border-t border-neutral-200/80 flex items-center justify-between text-[11px] font-mono text-emerald-600 font-medium">
-                    <span>Strict read-only</span>
-                    <span>100% active</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+          {/* Trust Guarantees */}
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-neutral-400">
+            <span className="inline-flex items-center gap-1.5">
+              <Check size={14} className="text-emerald-400" />
+              Free to start · No credit card required
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <Check size={14} className="text-emerald-400" />
+              Read-only GitHub OAuth · Zero write permissions
+            </span>
           </div>
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
     </section>
   );
 }
