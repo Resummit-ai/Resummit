@@ -319,23 +319,10 @@ export function AITextTransform({
 
         {/* Status Chip */}
         <span className="ai-status-chip no-print">
-          <svg className="w-3.5 h-3.5 text-cyan-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+          <svg className="w-3.5 h-3.5 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M7.5 5.6L10 0l2.5 5.6L18 8l-5.5 2.4L10 16 7.5 10.4 2 8l5.5-2.4zm12 9.4l1.5-3.4 1.5 3.4 3.5 1.5-3.5 1.5-1.5 3.4-1.5-3.4-3.5-1.5 3.5-1.5z" />
           </svg>
-          Improved by AI
-        </span>
-
-        {/* Floating Particles staggered along the sweep progress */}
-        <span className="ai-particle ai-particle-1 no-print" style={{ background: "#4f8cff" }} />
-        <span className="ai-particle ai-particle-2 no-print" style={{ background: "#06b6d4" }} />
-        <span className="ai-particle ai-particle-3 no-print" style={{ background: "#a78bfa" }} />
-        <span className="ai-particle ai-particle-4 no-print" style={{ background: "#06b6d4" }} />
-
-        {/* Sparkle pop at the end of the text */}
-        <span className="ai-sparkle no-print">
-          <svg className="w-4 h-4 text-cyan-300" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0V6H3a1 1 0 110-2h1V3a1 1 0 011-1zm8 10a1 1 0 011-1h1v-1a1 1 0 112 0v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1h-1a1 1 0 01-1-1zM4 12a1 1 0 011-1h1v-1a1 1 0 112 0v1h1a1 1 0 110 2H9v1a1 1 0 11-2 0v-1H5a1 1 0 01-1-1z" clipRule="evenodd" />
-          </svg>
+          Refining text...
         </span>
       </span>
     );
@@ -414,35 +401,35 @@ export function AITextTransform({
         <span className="ai-cv-floating-toolbar no-print">
           {success ? (
             <span className="ai-cv-toolbar-success">
-              <svg className="w-3.5 h-3.5 text-emerald-400 ai-success-checkmark-pop" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              <svg className="w-3.5 h-3.5 text-[#137333] ai-success-checkmark-pop" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
               </svg>
-              ✨ AI Improvements Applied
+              Revision applied
             </span>
           ) : (
             <>
               <span className="ai-cv-toolbar-chip">
-                <svg className="w-3 h-3 text-cyan-300 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0V6H3a1 1 0 110-2h1V3a1 1 0 011-1zm8 10a1 1 0 011-1h1v-1a1 1 0 112 0v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1h-1a1 1 0 01-1-1zM4 12a1 1 0 011-1h1v-1a1 1 0 112 0v1h1a1 1 0 110 2H9v1a1 1 0 11-2 0v-1H5a1 1 0 01-1-1z" clipRule="evenodd" />
+                <svg className="w-3 h-3 text-[#1A73E8]" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M7.5 5.6L10 0l2.5 5.6L18 8l-5.5 2.4L10 16 7.5 10.4 2 8l5.5-2.4zm12 9.4l1.5-3.4 1.5 3.4 3.5 1.5-3.5 1.5-1.5 3.4-1.5-3.4-3.5-1.5 3.5-1.5z" />
                 </svg>
-                Suggested by Resummit AI
+                Suggested revision
               </span>
               <button
                 onClick={handleAcceptClick}
                 className="ai-cv-btn-accept cursor-pointer"
-                title="Accept Changes"
+                title="Accept revision"
               >
-                <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
                 </svg>
               </button>
               <button
                 onClick={handleDiscardClick}
                 className="ai-cv-btn-discard cursor-pointer"
-                title="Keep Original"
+                title="Discard revision"
               >
-                <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
                 </svg>
               </button>
             </>

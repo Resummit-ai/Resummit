@@ -2107,11 +2107,11 @@ export function EditorClient({
                         type="button"
                         onClick={autoFill}
                         disabled={!parsed.url?.trim() || achFetching[idx]}
-                        className="flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border border-blue-500/30 text-blue-400 hover:bg-blue-500/10 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                        className="flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full border border-[#DADCE0] dark:border-neutral-700 text-[#1A73E8] hover:bg-[#1A73E8]/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
                       >
                         {achFetching[idx]
                           ? <><Loader2 className="w-3 h-3 animate-spin" /> Fetching…</>
-                          : <><Sparkles className="w-3 h-3" /> Auto-fill</>}
+                          : <>Auto-fill</>}
                       </button>
                     </div>
                     <InlineEdit
@@ -2124,7 +2124,7 @@ export function EditorClient({
                         {achNote[idx]}
                       </p>
                     ) : parsed.url?.trim() ? (
-                      <p className="mt-1 text-[10px] text-neutral-600">Tap ✨ Auto-fill to extract title &amp; date from this link.</p>
+                      <p className="mt-1 text-[11px] text-neutral-500">Tap Auto-fill to extract title &amp; date from this link.</p>
                     ) : null}
                   </div>
                 </div>
@@ -2944,7 +2944,7 @@ export function EditorClient({
     { id: "experience", label: "Experience", icon: <Briefcase className="w-4 h-4" /> },
     { id: "projects", label: "Projects", icon: <Code2 className="w-4 h-4" /> },
     { id: "education", label: "Education", icon: <GraduationCap className="w-4 h-4" /> },
-    { id: "tailor", label: "Match Job", icon: <Sparkles className="w-4 h-4" /> },
+    { id: "tailor", label: "Match Job", icon: <Target className="w-4 h-4" /> },
   ];
 
   // ─────────────────────────────────────────────
@@ -3114,9 +3114,9 @@ export function EditorClient({
                 <button
                   onClick={() => setAtsPanelOpen(true)}
                   className="p-1.5 rounded-lg border border-[#DADCE0] dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-[#1A73E8] transition-all cursor-pointer shrink-0"
-                  title="ATS Scoring & AI Audit"
+                  title="ATS Scoring & Audit"
                 >
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <Activity className="w-3.5 h-3.5" />
                 </button>
 
                 <button
@@ -3605,7 +3605,7 @@ export function EditorClient({
             <form onSubmit={handleTailorNewJobSubmit} className="space-y-5">
               <div>
                 <h3 className="font-extrabold text-xl tracking-tight text-[var(--sclade-text-primary)] font-outfit mb-1 flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-[var(--sclade-primary)] stroke-[2.5]" />
+                  <Target className="w-5 h-5 text-[var(--sclade-primary)] stroke-[2.5]" />
                   Tailor for New Job
                 </h3>
                 <p className="text-[var(--sclade-text-muted)] text-[12px] font-medium leading-normal">
