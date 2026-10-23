@@ -435,6 +435,62 @@ Rules:
   return raw.replace(/^"|"$/g, '').trim();
 }
 
+export async function rewriteSelection(
+  text: string,
+  action: "improve" | "shorten" | "verbs" | "tone",
+  targetRole: string = "Software Engineer"
+): Promise<string> {
+  let instructions = "";
+  switch (action) {
+    case "improve":
+      instructions = `Rewrite to maximize ATS impact and recruiter signal for a ${targetRole} role. Use active voice, clear context, and quantifiable results where implied. No buzzwords.`;
+      break;
+    case "shorten":
+      instructions = `Make concise and punchy without losing technical details, metrics, or technologies. Remove fluff and redundant phrases.`;
+      break;
+    case "verbs":
+      instructions = `Strengthen with high-signal, past-tense action verbs (e.g., Architected, Engineered, Optimized, Automated, Accelerated, Spearheaded). Avoid weak phrasing like 'helped with', 'worked on', 'responsible for'.`;
+      break;
+    case "tone":
+      instructions = `Elevate to an executive, polished, and confident tone suitable for modern tech roles. Eliminate casual phrasing.`;
+      break;
+  }
+
+  const prompt = `You are an expert resume writer and editor for a ${targetRole}.
+Task: ${instructions}
+
+Original Text:
+"${text}"
+
+Rules:
+- Preserve the underlying facts, technologies, and metrics.
+- Do NOT fabricate false claims or companies.
+- Return ONLY valid JSON in this format:
+{
+  "rewritten": "the updated text"
+}`;
+
+  let raw = "";
+  try {
+    raw = await callAI(prompt, { feature: `rewrite_${action}` });
+  } catch (error: any) {
+    const isLimit = error?.message === "AI_DAILY_LIMIT_EXCEEDED" || error?.message === "AI_QUOTA_EXCEEDED";
+    logger.warn("ai", "fallback_used", { fn: "rewriteSelection", reason: isLimit ? "AI_DAILY_LIMIT_EXCEEDED" : (error?.message || "FAILED") });
+    throw new AIUnavailableError(isLimit ? "LIMIT" : "FAILED");
+  }
+
+  try {
+    const parsed = safeParseJSON(raw);
+    if (parsed && typeof parsed.rewritten === "string" && parsed.rewritten.trim()) {
+      return parsed.rewritten.trim();
+    }
+  } catch {
+    const cleaned = raw.replace(/^```json\s*|```$/gi, "").replace(/^"|"$/g, "").trim();
+    if (cleaned) return cleaned;
+  }
+  return text;
+}
+
 export interface StrengthScore {
   score: number
   breakdown: {

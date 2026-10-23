@@ -5,8 +5,30 @@ import Link from "next/link";
 import { Download, GripVertical, Plus, Trash2, RotateCcw, Link as LinkIcon, CheckCircle2, Activity, Eye, Sparkles, Target, X, Loader2, User, Briefcase, Code2, GraduationCap, Zap, AlertTriangle, AlertCircle, ChevronDown, ChevronUp, Save, Wifi, WifiOff, ArrowUp, ArrowDown, ExternalLink, Rocket, Cpu, Code, Terminal, GitBranch, Lock, Sun, Moon, RefreshCw, History, FileText, ArrowLeft, ChevronRight, Maximize2, Minimize2, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, ChevronLeft } from "lucide-react";
 import type { CVData, ProjectData, CVSkills, CVExperience, CVEducation, SaveStatus, EditorTab } from "@/lib/types";
 import { ResumePreview } from "@/components/editor/ResumePreview";
+import { SelectionMenu } from "@/components/editor/SelectionMenu";
 import { normalizeAndDedupeSkills } from "@/lib/skills-data";
 import { DashboardControls } from "@/components/dashboard/DashboardControls";
+
+function replaceTextInString(source: string, target: string, replacement: string): string | null {
+  if (!source || !target) return null;
+  if (source.includes(target)) {
+    return source.replace(target, replacement);
+  }
+  const cleanTarget = target.trim();
+  if (source.includes(cleanTarget)) {
+    return source.replace(cleanTarget, replacement);
+  }
+  try {
+    const escaped = cleanTarget.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+');
+    const regex = new RegExp(escaped);
+    if (regex.test(source)) {
+      return source.replace(regex, replacement);
+    }
+  } catch {
+    /* ignore regex error */
+  }
+  return null;
+}
 
 // ─────────────────────────────────────────────
 // Sub-components
@@ -952,6 +974,173 @@ export function EditorClient({
       });
     }
   };
+
+  // ── In-App Text Selection AI Apply Handler ──
+  const handleApplyTextSelection = useCallback((originalText: string, newText: string) => {
+    const cleanOrig = originalText.trim();
+    if (!cleanOrig) return;
+
+    // 1. Try Summary
+    if (typeof summary === "string") {
+      const updated = replaceTextInString(summary, originalText, newText);
+      if (updated !== null) {
+        setSummary(updated);
+        return;
+      }
+    }
+
+    // 2. Try Experience
+    let expChanged = false;
+    const newExp = experience.map((item) => {
+      if (expChanged) return item;
+      const newTitle = replaceTextInString(item.title, originalText, newText);
+      if (newTitle !== null) {
+        expChanged = true;
+        return { ...item, title: newTitle };
+      }
+      const newComp = replaceTextInString(item.company, originalText, newText);
+      if (newComp !== null) {
+        expChanged = true;
+        return { ...item, company: newComp };
+      }
+      if (item.bullets && item.bullets.length > 0) {
+        let bChanged = false;
+        const newBullets = item.bullets.map((b) => {
+          if (bChanged) return b;
+          const uB = replaceTextInString(b, originalText, newText);
+          if (uB !== null) {
+            bChanged = true;
+            return uB;
+          }
+          return b;
+        });
+        if (bChanged) {
+          expChanged = true;
+          return { ...item, bullets: newBullets };
+        }
+      }
+      return item;
+    });
+    if (expChanged) {
+      setExperience(newExp);
+      return;
+    }
+
+    // 3. Try Projects
+    let projChanged = false;
+    const newProj = projects.map((proj) => {
+      if (projChanged) return proj;
+      const newTitle = replaceTextInString(proj.title, originalText, newText);
+      if (newTitle !== null) {
+        projChanged = true;
+        return { ...proj, title: newTitle };
+      }
+      const newDesc = replaceTextInString(proj.description, originalText, newText);
+      if (newDesc !== null) {
+        projChanged = true;
+        return { ...proj, description: newDesc };
+      }
+      if (proj.highlights && proj.highlights.length > 0) {
+        let hlChanged = false;
+        const newHL = proj.highlights.map((h) => {
+          if (hlChanged) return h;
+          const uH = replaceTextInString(h, originalText, newText);
+          if (uH !== null) {
+            hlChanged = true;
+            return uH;
+          }
+          return h;
+        });
+        if (hlChanged) {
+          projChanged = true;
+          return { ...proj, highlights: newHL };
+        }
+      }
+      return proj;
+    });
+    if (projChanged) {
+      setProjects(newProj);
+      return;
+    }
+
+    // 4. Try Achievements
+    let achChanged = false;
+    const newAch = achievements.map((ach) => {
+      if (achChanged) return ach;
+      const updated = replaceTextInString(ach, originalText, newText);
+      if (updated !== null) {
+        achChanged = true;
+        return updated;
+      }
+      return ach;
+    });
+    if (achChanged) {
+      setAchievements(newAch);
+      return;
+    }
+
+    // 5. Try Education
+    let eduChanged = false;
+    const newEdu = education.map((edu) => {
+      if (eduChanged) return edu;
+      const newDeg = replaceTextInString(edu.degree, originalText, newText);
+      if (newDeg !== null) {
+        eduChanged = true;
+        return { ...edu, degree: newDeg };
+      }
+      const newSchool = replaceTextInString(edu.school, originalText, newText);
+      if (newSchool !== null) {
+        eduChanged = true;
+        return { ...edu, school: newSchool };
+      }
+      return edu;
+    });
+    if (eduChanged) {
+      setEducation(newEdu);
+      return;
+    }
+
+    // 6. Try Skills
+    if (skills) {
+      let skillChanged = false;
+      const newSkills = { ...skills };
+      (["languages", "frameworks", "tools"] as const).forEach((cat) => {
+        if (skillChanged || !Array.isArray(newSkills[cat])) return;
+        const list = newSkills[cat];
+        const idx = list.findIndex((s) => replaceTextInString(s, originalText, newText) !== null);
+        if (idx !== -1) {
+          skillChanged = true;
+          const updated = [...list];
+          updated[idx] = newText.trim();
+          newSkills[cat] = updated;
+        }
+      });
+      if (skillChanged) {
+        setSkills(newSkills);
+        return;
+      }
+    }
+
+    // 7. Try Personal Info
+    if (personalInfo) {
+      let piChanged = false;
+      const newPI = { ...personalInfo };
+      for (const [key, val] of Object.entries(newPI)) {
+        if (typeof val === "string") {
+          const updated = replaceTextInString(val, originalText, newText);
+          if (updated !== null) {
+            piChanged = true;
+            (newPI as any)[key] = updated;
+            break;
+          }
+        }
+      }
+      if (piChanged) {
+        setPersonalInfo(newPI);
+        return;
+      }
+    }
+  }, [summary, experience, projects, achievements, education, skills, personalInfo]);
 
   // ── AI Experience Bullet Generation ──
   const handleGenerateExpBullets = async (i: number) => {
@@ -3150,6 +3339,13 @@ export function EditorClient({
                 />
               </div>
             </div>
+
+            {/* In-App Selection Floating Menu for Live AI Rewrite & Refinement */}
+            <SelectionMenu
+              containerRef={previewContainerRef}
+              targetRole={jobTitle || "Software Engineer"}
+              onApplyText={handleApplyTextSelection}
+            />
           </div>
         </div>
 
