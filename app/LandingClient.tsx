@@ -7,14 +7,14 @@ import { signOut } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import ArrowRevealButton from "@/components/ui/ArrowRevealButton";
 import RotatingText from "@/components/ui/RotatingText";
-import HeroArtwork from "@/components/landing/HeroArtwork";
+import FairweatherHero from "@/components/landing/FairweatherHero";
 
 const TECH_LOGOS = [
   {
     name: "Next.js",
     logo: (
       <svg viewBox="0 0 180 180" width="18" height="18" fill="currentColor">
-        <path d="M90 0a90 90 0 1 0 90 90A90 90 0 0 0 90 0zM141 143l-45-58v58H84V57h12l42 55V57h12v86h-9z" fillRule="evenodd"/>
+        <path d="M90 0a90 90 0 1 0 90 90A90 90 0 0 0 90 0zM141 143l-45-58v58H84V57h12l42 55V57h12v86h-9z" fillRule="evenodd" />
       </svg>
     )
   },
@@ -22,11 +22,11 @@ const TECH_LOGOS = [
     name: "React",
     logo: (
       <svg viewBox="-11.5 -10.23174 23 20.46348" width="18" height="18" stroke="currentColor" strokeWidth="1.5" fill="none">
-        <circle cx="0" cy="0" r="2.05" fill="currentColor"/>
+        <circle cx="0" cy="0" r="2.05" fill="currentColor" />
         <g stroke="currentColor">
-          <ellipse rx="11" ry="4.2"/>
-          <ellipse rx="11" ry="4.2" transform="rotate(60)"/>
-          <ellipse rx="11" ry="4.2" transform="rotate(120)"/>
+          <ellipse rx="11" ry="4.2" />
+          <ellipse rx="11" ry="4.2" transform="rotate(60)" />
+          <ellipse rx="11" ry="4.2" transform="rotate(120)" />
         </g>
       </svg>
     )
@@ -35,7 +35,7 @@ const TECH_LOGOS = [
     name: "TypeScript",
     logo: (
       <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-        <rect width="20" height="20" x="2" y="2" rx="3" fill="none" stroke="currentColor" strokeWidth="2"/>
+        <rect width="20" height="20" x="2" y="2" rx="3" fill="none" stroke="currentColor" strokeWidth="2" />
         <text x="5" y="16" fontFamily="'Inter', sans-serif" fontWeight="900" fontSize="11px" fill="currentColor">TS</text>
       </svg>
     )
@@ -44,7 +44,7 @@ const TECH_LOGOS = [
     name: "GitHub",
     logo: (
       <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
       </svg>
     )
   },
@@ -52,7 +52,7 @@ const TECH_LOGOS = [
     name: "TensorFlow",
     logo: (
       <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-        <path d="M12 2L2 7.5v11L12 24l10-5.5v-11L12 2zm-1 18.8l-7-3.8V9.2l7 3.8v7.8zm1-9L5 8l7-3.8 7 3.8-7 3.8zm8 5.8l-7 3.8v-7.8l7-3.8v7.8z"/>
+        <path d="M12 2L2 7.5v11L12 24l10-5.5v-11L12 2zm-1 18.8l-7-3.8V9.2l7 3.8v7.8zm1-9L5 8l7-3.8 7 3.8-7 3.8zm8 5.8l-7 3.8v-7.8l7-3.8v7.8z" />
       </svg>
     )
   },
@@ -60,9 +60,9 @@ const TECH_LOGOS = [
     name: "PostgreSQL",
     logo: (
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <ellipse cx="12" cy="5" rx="9" ry="3"/>
-        <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
-        <path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/>
+        <ellipse cx="12" cy="5" rx="9" ry="3" />
+        <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+        <path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3" />
       </svg>
     )
   },
@@ -70,10 +70,10 @@ const TECH_LOGOS = [
     name: "Node.js",
     logo: (
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2L2 7v10l10 5 10-5V7L12 2z"/>
-        <path d="M12 22V12"/>
-        <path d="M12 12L2 7"/>
-        <path d="M12 12l10-5"/>
+        <path d="M12 2L2 7v10l10 5 10-5V7L12 2z" />
+        <path d="M12 22V12" />
+        <path d="M12 12L2 7" />
+        <path d="M12 12l10-5" />
       </svg>
     )
   },
@@ -81,7 +81,7 @@ const TECH_LOGOS = [
     name: "Python",
     logo: (
       <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-        <path d="M11.927 0C5.39 0 5.626 2.833 5.626 2.833v2.946h6.42v.907H4.077S0 6.223 0 12.062c0 5.839 3.55 5.632 3.55 5.632h2.122v-2.986c0-3.267 2.658-5.633 5.925-5.633h6.42V6.13S18.257 0 11.927 0zM12.073 24c6.537 0 6.301-2.833 6.301-2.833v-2.946h-6.42v-.907h7.969s4.077.463 4.077-5.376c0-5.839-3.55-5.632-3.55-5.632h-2.122v2.986c0 3.267-2.658 5.633-5.925 5.633h-6.42v2.945S5.743 24 12.073 24zm2.148-20.732a.823.823 0 1 1 0 1.646.823.823 0 0 1 0-1.646zm-4.442 17.464a.823.823 0 1 1 0-1.646.823.823 0 0 1 0 1.646z"/>
+        <path d="M11.927 0C5.39 0 5.626 2.833 5.626 2.833v2.946h6.42v.907H4.077S0 6.223 0 12.062c0 5.839 3.55 5.632 3.55 5.632h2.122v-2.986c0-3.267 2.658-5.633 5.925-5.633h6.42V6.13S18.257 0 11.927 0zM12.073 24c6.537 0 6.301-2.833 6.301-2.833v-2.946h-6.42v-.907h7.969s4.077.463 4.077-5.376c0-5.839-3.55-5.632-3.55-5.632h-2.122v2.986c0 3.267-2.658 5.633-5.925 5.633h-6.42v2.945S5.743 24 12.073 24zm2.148-20.732a.823.823 0 1 1 0 1.646.823.823 0 0 1 0-1.646zm-4.442 17.464a.823.823 0 1 1 0-1.646.823.823 0 0 1 0 1.646z" />
       </svg>
     )
   },
@@ -89,7 +89,7 @@ const TECH_LOGOS = [
     name: "Docker",
     logo: (
       <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-        <path d="M13.983 11.078h2.119c.102 0 .186-.084.186-.186V8.773c0-.102-.084-.186-.186-.186h-2.119c-.102 0-.186.084-.186.186v2.119c0 .102.084.186.186.186zM11.266 11.078h2.119c.102 0 .186-.084.186-.186V8.773c0-.102-.084-.186-.186-.186h-2.119c-.102 0-.186.084-.186.186v2.119c0 .102.084.186.186.186zM11.266 8.361h2.119c.102 0 .186-.084.186-.186V6.056c0-.102-.084-.186-.186-.186h-2.119c-.102 0-.186.084-.186.186v2.119c0 .102.084.186.186.186zM8.577 11.078h2.119c.102 0 .186-.084.186-.186V8.773c0-.102-.084-.186-.186-.186H8.577c-.102 0-.186.084-.186.186v2.119c0 .102.084.186.186.186zM8.577 8.361h2.119c.102 0 .186-.084.186-.186V6.056c0-.102-.084-.186-.186-.186H8.577c-.102 0-.186.084-.186.186v2.119c0 .102.084.186.186.186zM5.888 11.078h2.119c.102 0 .186-.084.186-.186V8.773c0-.102-.084-.186-.186-.186H5.888c-.102 0-.186.084-.186.186v2.119c0 .102.084.186.186.186zM13.983 8.361h2.119c.102 0 .186-.084.186-.186V6.056c0-.102-.084-.186-.186-.186h-2.119c-.102 0-.186.084-.186.186v2.119c0 .102.084.186.186.186zM16.672 11.078h2.119c.102 0 .186-.084.186-.186V8.773c0-.102-.084-.186-.186-.186h-2.119c-.102 0-.186.084-.186.186v2.119c0 .102.084.186.186.186zM23.99 12.18c-.287-.852-.942-1.57-2.128-1.57a.186.186 0 0 0-.186.186c.01.218-.01.442-.064.664-.176.719-.664 1.341-1.341 1.764a.186.186 0 0 0-.084.22c.488 1.157 1.391 1.83 2.502 1.83.102 0 .186-.084.186-.186v-.218c-.005-.333.049-.664.161-.981.282-.821.84-1.637.954-2.603zM2.164 12.871H20.48c.102 0 .186-.084.186-.186v-.59c0-3.333-2.113-6.056-5.839-6.056-1.127 0-2.138.25-3.036.759a.186.186 0 0 0-.084.22c.245 1.025.437 2.113.437 3.255 0 2.215-.815 4.38-2.222 5.92A.186.186 0 0 0 9.8 16.48c-1.283-1.428-2.036-3.286-2.036-5.267 0-1.142.22-2.23.664-3.255a.186.186 0 0 0-.084-.22C7.446 7.23 6.435 6.98 5.308 6.98 1.583 6.98 0 9.703 0 13.036v.59c0 .102.084.186.186.186h1.792c.102 0 .186-.084.186-.186V12.87zM.186 14.542a.186.186 0 0 0-.186.186v.218c0 3.333 3.661 6.056 8.17 6.056 4.51 0 8.17-2.723 8.17-6.056v-.218a.186.186 0 0 0-.186-.186H.186z"/>
+        <path d="M13.983 11.078h2.119c.102 0 .186-.084.186-.186V8.773c0-.102-.084-.186-.186-.186h-2.119c-.102 0-.186.084-.186.186v2.119c0 .102.084.186.186.186zM11.266 11.078h2.119c.102 0 .186-.084.186-.186V8.773c0-.102-.084-.186-.186-.186h-2.119c-.102 0-.186.084-.186.186v2.119c0 .102.084.186.186.186zM11.266 8.361h2.119c.102 0 .186-.084.186-.186V6.056c0-.102-.084-.186-.186-.186h-2.119c-.102 0-.186.084-.186.186v2.119c0 .102.084.186.186.186zM8.577 11.078h2.119c.102 0 .186-.084.186-.186V8.773c0-.102-.084-.186-.186-.186H8.577c-.102 0-.186.084-.186.186v2.119c0 .102.084.186.186.186zM8.577 8.361h2.119c.102 0 .186-.084.186-.186V6.056c0-.102-.084-.186-.186-.186H8.577c-.102 0-.186.084-.186.186v2.119c0 .102.084.186.186.186zM5.888 11.078h2.119c.102 0 .186-.084.186-.186V8.773c0-.102-.084-.186-.186-.186H5.888c-.102 0-.186.084-.186.186v2.119c0 .102.084.186.186.186zM13.983 8.361h2.119c.102 0 .186-.084.186-.186V6.056c0-.102-.084-.186-.186-.186h-2.119c-.102 0-.186.084-.186.186v2.119c0 .102.084.186.186.186zM16.672 11.078h2.119c.102 0 .186-.084.186-.186V8.773c0-.102-.084-.186-.186-.186h-2.119c-.102 0-.186.084-.186.186v2.119c0 .102.084.186.186.186zM23.99 12.18c-.287-.852-.942-1.57-2.128-1.57a.186.186 0 0 0-.186.186c.01.218-.01.442-.064.664-.176.719-.664 1.341-1.341 1.764a.186.186 0 0 0-.084.22c.488 1.157 1.391 1.83 2.502 1.83.102 0 .186-.084.186-.186v-.218c-.005-.333.049-.664.161-.981.282-.821.84-1.637.954-2.603zM2.164 12.871H20.48c.102 0 .186-.084.186-.186v-.59c0-3.333-2.113-6.056-5.839-6.056-1.127 0-2.138.25-3.036.759a.186.186 0 0 0-.084.22c.245 1.025.437 2.113.437 3.255 0 2.215-.815 4.38-2.222 5.92A.186.186 0 0 0 9.8 16.48c-1.283-1.428-2.036-3.286-2.036-5.267 0-1.142.22-2.23.664-3.255a.186.186 0 0 0-.084-.22C7.446 7.23 6.435 6.98 5.308 6.98 1.583 6.98 0 9.703 0 13.036v.59c0 .102.084.186.186.186h1.792c.102 0 .186-.084.186-.186V12.87zM.186 14.542a.186.186 0 0 0-.186.186v.218c0 3.333 3.661 6.056 8.17 6.056 4.51 0 8.17-2.723 8.17-6.056v-.218a.186.186 0 0 0-.186-.186H.186z" />
       </svg>
     )
   },
@@ -97,9 +97,9 @@ const TECH_LOGOS = [
     name: "Prisma",
     logo: (
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2L2 22h20L12 2z"/>
-        <path d="M12 2v20"/>
-        <path d="M2 22l10-10L22 22"/>
+        <path d="M12 2L2 22h20L12 2z" />
+        <path d="M12 2v20" />
+        <path d="M2 22l10-10L22 22" />
       </svg>
     )
   },
@@ -107,7 +107,7 @@ const TECH_LOGOS = [
     name: "Redis",
     logo: (
       <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5-10-5-10 5zM2 12l10 5 10-5-10-5-10 5z"/>
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5-10-5-10 5zM2 12l10 5 10-5-10-5-10 5z" />
       </svg>
     )
   },
@@ -115,8 +115,8 @@ const TECH_LOGOS = [
     name: "AWS",
     logo: (
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M17.5 19A3.5 3.5 0 0 0 21 15.5c0-2.79-2.54-4.5-5-4.5-.48 0-.96.06-1.42.17A6 6 0 0 0 4 14c0 2.76 2.24 5 5 5h8.5z"/>
-        <path d="M9 19h6"/>
+        <path d="M17.5 19A3.5 3.5 0 0 0 21 15.5c0-2.79-2.54-4.5-5-4.5-.48 0-.96.06-1.42.17A6 6 0 0 0 4 14c0 2.76 2.24 5 5 5h8.5z" />
+        <path d="M9 19h6" />
       </svg>
     )
   }
@@ -150,14 +150,14 @@ const rightItemVariants = {
   }
 };
 
-export function LandingClient({ 
-  hasSession, 
-  userName = "", 
-  userEmail = "" 
-}: { 
-  hasSession?: boolean; 
-  userName?: string; 
-  userEmail?: string; 
+export function LandingClient({
+  hasSession,
+  userName = "",
+  userEmail = ""
+}: {
+  hasSession?: boolean;
+  userName?: string;
+  userEmail?: string;
 }) {
   const [theme, setTheme] = useState<"dark" | "light">("light");
   const [resumeScale, setResumeScale] = useState(1);
@@ -411,7 +411,8 @@ export function LandingClient({
       <div ref={scrollBarRef} style={{ position: "fixed", top: 0, left: 0, height: "3px", width: "0%", background: "linear-gradient(90deg, #4f8cff, #a78bfa, #06b6d4)", backgroundSize: "200% 100%", zIndex: 9999, willChange: "width", boxShadow: "0 0 8px rgba(79,140,255,0.5)" }} />
 
       {/* Exact style block from your HTML */}
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         :root {
           --radius: 24px;
           --transition: 0.35s cubic-bezier(.22,.61,.36,1);
@@ -449,47 +450,48 @@ export function LandingClient({
         }
 
         [data-theme="light"] {
-          --bg: #F5F4F0;
+          --bg: #F5F5F3;
           --surface: #FFFFFF;
-          --surface-2: #EFEFEA;
-          --text: #151A24;
-          --muted: #626D7C;
-          --border: #E2E5EB;
+          --surface-2: #F7F7F6;
+          --text: #171717;
+          --muted: #707070;
+          --border: #E5E5E5;
           --primary: #245DFF;
-          --pale-blue: #E8EEFF;
-          --deep-navy: #10234A;
-          --shadow: rgba(16, 35, 74, 0.04);
-          --nav: rgba(245, 244, 240, 0.92);
-          --logo-doc-body: #E8EEFF;
+          --status-green: #18B95A;
+          --shadow: rgba(0, 0, 0, 0.03);
+          --nav: rgba(245, 245, 243, 0.88);
+          --logo-doc-body: #E7EDFF;
           --logo-doc-fold: #CFD9FF;
           --logo-doc-lines: #245DFF;
           --logo-flag-pole: #245DFF;
           --logo-flag-banner: #245DFF;
-          --logo-text: #151A24;
-          --logo-tagline: #626D7C;
+          --logo-text: #171717;
+          --logo-tagline: #707070;
           
           /* Cards Theme variables */
           --card-bg: #FFFFFF;
-          --card-border: #E2E5EB;
+          --card-border: #E5E5E5;
           --card-hover-bg: #FFFFFF;
-          --card-hover-border: #CFD9FF;
-          --card-number-color: rgba(21, 26, 36, 0.06);
-          --card-icon-bg: #E8EEFF;
-          --card-icon-border: #CFD9FF;
-          --card-shadow: 0 4px 12px rgba(16, 35, 74, 0.04);
-          --card-hover-shadow: 0 12px 28px rgba(36, 93, 255, 0.08);
+          --card-hover-border: #D4D4D4;
+          --card-number-color: rgba(23, 23, 23, 0.08);
+          --card-icon-bg: #F5F5F3;
+          --card-icon-border: #E5E5E5;
+          --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.02);
+          --card-hover-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
         }
 
         .landing-body * {
           margin: 0;
           padding: 0;
           box-sizing: border-box;
-          font-family: 'Inter', sans-serif !important;
+          font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
         }
 
         .landing-body {
-          font-family: 'Inter', sans-serif !important;
-          background: var(--bg);
+          font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+          background-color: var(--bg);
+          background-image: radial-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+          background-size: 20px 20px;
           color: var(--text);
           transition: background var(--transition), color var(--transition);
           line-height: 1.6;
@@ -669,12 +671,11 @@ export function LandingClient({
         }
 
         .landing-body .hero {
-          min-height: auto;
+          min-height: 100vh;
           display: flex;
-          flex-direction: column;
           align-items: center;
-          padding-top: 84px;
-          padding-bottom: 60px;
+          padding-top: 100px;
+          padding-bottom: 100px;
           position: relative;
           overflow: hidden;
         }
@@ -1104,6 +1105,28 @@ export function LandingClient({
           border-color: rgba(255, 255, 255, 0.2) !important;
         }
 
+        [data-theme="light"] .pricing-card.premium-theme {
+          background: #FFFFFF !important;
+          border-color: #E5E5E5 !important;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+          color: #171717 !important;
+        }
+        [data-theme="light"] .pricing-card.premium-theme .pricing-price {
+          color: #171717 !important;
+        }
+        [data-theme="light"] .pricing-card.premium-theme .pricing-feature {
+          color: #525252 !important;
+        }
+        [data-theme="light"] .pricing-card.premium-theme .secondary-btn {
+          background: #FFFFFF !important;
+          border-color: #E5E5E5 !important;
+          color: #171717 !important;
+        }
+        [data-theme="light"] .pricing-card.premium-theme .secondary-btn:hover {
+          background: #F7F7F6 !important;
+          border-color: #D4D4D4 !important;
+        }
+
 
         /* FAQ */
         .faq-split-grid {
@@ -1202,19 +1225,18 @@ export function LandingClient({
         }
 
         .landing-body .hero h1 {
-          font-size: clamp(2.2rem, 3.8vw, 3.4rem) !important;
-          line-height: 1.15 !important;
-          letter-spacing: -0.035em !important;
-          margin-bottom: 16px;
-          max-width: 720px !important;
+          font-size: clamp(3.2rem, 7.2vw, 9.5rem) !important;
+          line-height: 0.95 !important;
+          letter-spacing: -0.06em !important;
+          margin-bottom: 24px;
+          max-width: 1000px !important;
         }
 
         .landing-body .hero p {
-          max-width: 540px !important;
-          font-size: clamp(1rem, 1.25vw, 1.15rem) !important;
-          line-height: 1.6 !important;
+          max-width: 750px !important;
+          font-size: clamp(1.08rem, 1.6vw, 1.4rem) !important;
           color: var(--muted);
-          margin-bottom: 24px;
+          margin-bottom: 34px;
         }
 
         .landing-body .hero-actions {
@@ -1850,26 +1872,9 @@ export function LandingClient({
 
         @media(max-width:980px) {
           .landing-body .hero-grid,
-          .landing-body .hero-content-grid,
           .landing-body .cards,
           .landing-body .workflow {
-            grid-template-columns: 1fr !important;
-          }
-
-          .landing-body .hero-artwork-stage {
-            flex-direction: column !important;
-            gap: 20px !important;
-            min-height: auto !important;
-          }
-
-          .landing-body .hero-flow-zone {
-            display: none !important;
-          }
-
-          .landing-body .hero-code-editor,
-          .landing-body .hero-resume-card {
-            width: 100% !important;
-            max-width: 480px !important;
+            grid-template-columns: 1fr;
           }
 
           .landing-body .nav-links {
@@ -2369,6 +2374,509 @@ export function LandingClient({
             font-size: 0.7rem;
           }
         }
+
+        /* ================= Fairweather Design System ================= */
+        .fairweather-hero-section {
+          padding: 110px 0 60px 0;
+          position: relative;
+        }
+
+        .fairweather-hero-card {
+          background: var(--card-bg);
+          border: 1px solid var(--border);
+          border-radius: 28px;
+          overflow: hidden;
+          box-shadow: 0 10px 32px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02);
+          transition: box-shadow 0.3s ease;
+        }
+
+        .fairweather-sky-band {
+          position: relative;
+          height: 400px;
+          width: 100%;
+          overflow: visible;
+          background: #388bfd;
+          border-radius: 27px 27px 0 0;
+        }
+
+        .fairweather-sky-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center 30%;
+          display: block;
+          border-radius: 27px 27px 0 0;
+          image-rendering: pixelated;
+        }
+
+        .fairweather-sky-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.12) 100%);
+          border-radius: 27px 27px 0 0;
+          pointer-events: none;
+        }
+
+        /* Floating Product Preview Window rising out of the sky */
+        .fairweather-floating-window {
+          position: absolute;
+          bottom: -64px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: min(92%, 840px);
+          background: #FFFFFF;
+          border: 1px solid var(--border);
+          border-radius: 20px;
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.09), 0 4px 12px rgba(0, 0, 0, 0.04);
+          z-index: 10;
+          overflow: hidden;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .fairweather-floating-window:hover {
+          transform: translateX(-50%) translateY(-2px);
+          box-shadow: 0 24px 60px rgba(0, 0, 0, 0.12), 0 6px 16px rgba(0, 0, 0, 0.05);
+        }
+
+        .fairweather-window-header {
+          padding: 12px 18px;
+          background: #FAFAFA;
+          border-bottom: 1px solid #EEEEEC;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .fairweather-window-dots {
+          display: flex;
+          gap: 6px;
+        }
+
+        .window-dot {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+        }
+        .window-dot.red { background: #FF5F56; }
+        .window-dot.yellow { background: #FFBD2E; }
+        .window-dot.green { background: #27C93F; }
+
+        .fairweather-status-pill {
+          display: flex;
+          align-items: center;
+          gap: 7px;
+          background: rgba(24, 185, 90, 0.08);
+          border: 1px solid rgba(24, 185, 90, 0.22);
+          padding: 3px 10px;
+          border-radius: 100px;
+        }
+
+        .status-indicator-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #18B95A;
+          box-shadow: 0 0 6px rgba(24, 185, 90, 0.6);
+        }
+
+        .status-indicator-text {
+          font-family: monospace !important;
+          font-size: 0.72rem;
+          font-weight: 700;
+          color: #12803e;
+          letter-spacing: 0.06em;
+        }
+
+        .window-mode-pill {
+          font-family: monospace !important;
+          font-size: 0.68rem;
+          color: #8C8C8C;
+          font-weight: 600;
+        }
+
+        .fairweather-window-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          padding: 20px;
+          gap: 16px;
+          background: #FFFFFF;
+        }
+
+        .fairweather-panel {
+          background: #F9F9F8;
+          border: 1px solid #EFEFEF;
+          border-radius: 14px;
+          padding: 16px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          text-align: left;
+        }
+
+        .panel-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .repo-badge {
+          display: flex;
+          align-items: center;
+          gap: 7px;
+          font-size: 0.82rem;
+          font-weight: 700;
+          color: #171717;
+        }
+
+        .repo-tag {
+          font-size: 0.68rem;
+          color: #707070;
+          background: #EEEEEC;
+          padding: 1px 6px;
+          border-radius: 4px;
+          font-weight: 500;
+        }
+
+        .branch-tag {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 0.72rem;
+          color: #707070;
+          background: #EEEEEC;
+          padding: 2px 7px;
+          border-radius: 6px;
+        }
+
+        .commit-row {
+          display: flex;
+          gap: 8px;
+          font-size: 0.76rem;
+          margin-bottom: 6px;
+          line-height: 1.4;
+        }
+
+        .commit-hash {
+          font-family: monospace !important;
+          color: #245DFF;
+          font-weight: 600;
+        }
+
+        .commit-title {
+          color: #404040;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .tech-chips {
+          display: flex;
+          gap: 6px;
+          flex-wrap: wrap;
+          margin-top: 4px;
+        }
+
+        .chip {
+          font-size: 0.68rem;
+          font-weight: 600;
+          background: #FFFFFF;
+          border: 1px solid #E5E5E5;
+          color: #171717;
+          padding: 2px 8px;
+          border-radius: 6px;
+        }
+
+        .candidate-name {
+          font-size: 0.88rem;
+          font-weight: 700;
+          color: #171717;
+        }
+
+        .candidate-role {
+          font-size: 0.72rem;
+          color: #707070;
+        }
+
+        .ats-grade-chip {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 0.72rem;
+          font-weight: 700;
+          color: #12803e;
+          background: rgba(24, 185, 90, 0.1);
+          padding: 2px 8px;
+          border-radius: 100px;
+        }
+
+        .resume-bullet-preview {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        .bullet-item {
+          display: flex;
+          gap: 8px;
+          font-size: 0.77rem;
+          color: #333333;
+          line-height: 1.45;
+        }
+
+        .bullet-dot {
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: #245DFF;
+          margin-top: 6px;
+          flex-shrink: 0;
+        }
+
+        /* Lower Hero Content */
+        .fairweather-hero-content {
+          padding: 108px 32px 54px 32px;
+          text-align: center;
+          max-width: 900px;
+          margin: 0 auto;
+        }
+
+        .fairweather-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: #EEEEEC;
+          border: 1px solid #E5E5E5;
+          padding: 6px 14px;
+          border-radius: 100px;
+          font-size: 0.78rem;
+          font-weight: 600;
+          color: #171717;
+          margin-bottom: 24px;
+        }
+
+        .fairweather-badge-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #18B95A;
+          box-shadow: 0 0 5px rgba(24, 185, 90, 0.5);
+        }
+
+        .fairweather-hero-headline {
+          font-size: clamp(2.4rem, 5.2vw, 4.4rem) !important;
+          font-weight: 800 !important;
+          line-height: 1.08 !important;
+          letter-spacing: -0.04em !important;
+          color: var(--text) !important;
+          margin-bottom: 20px;
+        }
+
+        .fairweather-rotating-slot {
+          display: inline-block;
+          vertical-align: middle;
+          margin-top: 4px;
+        }
+
+        .fairweather-hero-desc {
+          font-size: clamp(1.05rem, 1.8vw, 1.25rem) !important;
+          color: var(--muted) !important;
+          max-width: 680px;
+          margin: 0 auto 34px auto;
+          line-height: 1.6;
+        }
+
+        .fairweather-hero-actions {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 16px;
+          flex-wrap: wrap;
+          margin-bottom: 48px;
+        }
+
+        .fairweather-secondary-btn {
+          padding: 12px 24px;
+          border-radius: 12px;
+          background: #FFFFFF;
+          border: 1px solid #E5E5E5;
+          color: #171717;
+          font-weight: 600;
+          font-size: 0.92rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+
+        .fairweather-secondary-btn:hover {
+          background: #F7F7F6;
+          border-color: #D4D4D4;
+          transform: translateY(-1px);
+        }
+
+        .fairweather-hero-metrics {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 36px;
+          padding-top: 32px;
+          border-top: 1px solid #EFEFEF;
+          margin-bottom: 24px;
+          flex-wrap: wrap;
+        }
+
+        .metric-item {
+          text-align: left;
+        }
+
+        .metric-val {
+          font-size: 1.8rem;
+          font-weight: 800;
+          color: var(--text);
+          line-height: 1;
+          margin-bottom: 4px;
+          font-family: 'Inter', system-ui, sans-serif !important;
+        }
+
+        .metric-lbl {
+          font-size: 0.78rem;
+          color: var(--muted);
+          max-width: 180px;
+          line-height: 1.4;
+        }
+
+        .metric-sep {
+          width: 1px;
+          height: 38px;
+          background: #E5E5E5;
+        }
+
+        .fairweather-trust-row {
+          display: flex;
+          justify-content: center;
+          gap: 24px;
+          flex-wrap: wrap;
+        }
+
+        .trust-pill {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 0.8rem;
+          color: var(--muted);
+        }
+
+        /* Fairweather Feature Cards */
+        .fairweather-feature-cards {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 24px;
+        }
+
+        .fairweather-feature-card {
+          background: var(--card-bg);
+          border: 1px solid var(--border);
+          border-radius: 22px;
+          overflow: hidden;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .fairweather-feature-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 14px 32px rgba(0, 0, 0, 0.06);
+        }
+
+        .feature-sky-banner {
+          position: relative;
+          height: 160px;
+          background: #388bfd;
+          overflow: hidden;
+        }
+
+        .feature-sky-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          image-rendering: pixelated;
+        }
+
+        .feature-mini-window {
+          position: absolute;
+          bottom: -18px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 86%;
+          background: #FFFFFF;
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          padding: 8px 12px;
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07);
+        }
+
+        .feature-card-body {
+          padding: 34px 24px 28px 24px;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          text-align: left;
+        }
+
+        .feature-status-tag {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          font-family: monospace !important;
+          font-size: 0.72rem;
+          font-weight: 700;
+          color: #12803e;
+          margin-bottom: 12px;
+          letter-spacing: 0.05em;
+        }
+
+        .feature-card-body h3 {
+          font-size: 1.25rem !important;
+          font-weight: 800 !important;
+          color: var(--text);
+          margin-bottom: 8px;
+          letter-spacing: -0.02em;
+        }
+
+        .feature-card-body p {
+          font-size: 0.92rem;
+          color: var(--muted);
+          line-height: 1.6;
+        }
+
+        @media (max-width: 980px) {
+          .fairweather-feature-cards {
+            grid-template-columns: 1fr;
+            gap: 20px;
+          }
+          .fairweather-window-grid {
+            grid-template-columns: 1fr;
+          }
+          .fairweather-hero-metrics {
+            gap: 20px;
+          }
+          .metric-sep {
+            display: none;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .fairweather-sky-band {
+            height: 280px;
+          }
+          .fairweather-floating-window {
+            bottom: -40px;
+            width: 95%;
+          }
+          .fairweather-hero-content {
+            padding: 70px 16px 36px 16px;
+          }
+        }
       ` }} />
 
       <div className="landing-body">
@@ -2398,14 +2906,14 @@ export function LandingClient({
             </div>
 
             <div className="nav-actions" style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-              <button 
-                className="theme-switch" 
-                onClick={toggleTheme} 
+              <button
+                className="theme-switch"
+                onClick={toggleTheme}
                 aria-label="Toggle theme"
               >
-                <span 
-                  className="theme-switch-indicator" 
-                  style={{ transform: theme === 'dark' ? 'translateX(24px)' : 'translateX(0px)' }} 
+                <span
+                  className="theme-switch-indicator"
+                  style={{ transform: theme === 'dark' ? 'translateX(24px)' : 'translateX(0px)' }}
                 />
                 <div className="theme-switch-icon sun-icon" style={{ opacity: theme === 'light' ? 1 : 0.35 }}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
@@ -2424,26 +2932,27 @@ export function LandingClient({
                   <ArrowRevealButton
                     label="Go to Dashboard"
                     link="/dashboard"
-                    rounded={100}
-                    padding="8px 12px 8px 16px"
-                    gap={10}
+                    rounded={10}
+                    padding="7px 12px 7px 16px"
+                    gap={8}
                     colors={{
-                      fill: theme === "dark" ? "#181b20" : "#ffffff",
-                      textColor: theme === "dark" ? "#f3f4f6" : "#20252e",
+                      fill: theme === "dark" ? "#181b20" : "#171717",
+                      textColor: "#ffffff",
+                      hoverFill: "#262626",
                       hoverTextColor: "#ffffff",
                     }}
                     border={{
-                      borderColor: theme === "dark" ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.08)",
+                      borderColor: theme === "dark" ? "rgba(255,255,255,0.12)" : "#171717",
                       borderWidth: 1,
                       borderStyle: "solid",
                     }}
                     icon={{
                       side: "right",
                       type: "arrow",
-                      background: "#5473D1",
+                      background: "#262626",
                       color: "#FFFFFF",
-                      size: 13,
-                      padding: 6,
+                      size: 11,
+                      padding: 5,
                       direction: "right",
                       restAngle: 0,
                       hoverAngle: -45,
@@ -2464,26 +2973,27 @@ export function LandingClient({
                 <ArrowRevealButton
                   label="Sign In"
                   link="/login"
-                  rounded={100}
-                  padding="8px 12px 8px 16px"
-                  gap={10}
+                  rounded={10}
+                  padding="7px 12px 7px 16px"
+                  gap={8}
                   colors={{
-                    fill: theme === "dark" ? "#181b20" : "#ffffff",
-                    textColor: theme === "dark" ? "#f3f4f6" : "#20252e",
+                    fill: theme === "dark" ? "#181b20" : "#171717",
+                    textColor: "#ffffff",
+                    hoverFill: "#262626",
                     hoverTextColor: "#ffffff",
                   }}
                   border={{
-                    borderColor: theme === "dark" ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.08)",
+                    borderColor: theme === "dark" ? "rgba(255,255,255,0.12)" : "#171717",
                     borderWidth: 1,
                     borderStyle: "solid",
                   }}
                   icon={{
                     side: "right",
                     type: "arrow",
-                    background: "#5473D1",
+                    background: "#262626",
                     color: "#FFFFFF",
-                    size: 13,
-                    padding: 6,
+                    size: 11,
+                    padding: 5,
                     direction: "right",
                     restAngle: 0,
                     hoverAngle: -45,
@@ -2494,261 +3004,23 @@ export function LandingClient({
           </div>
         </nav>
 
-        {/* Hero Section — Redesigned to match the reference */}
-        <section className="hero" style={{ minHeight: "auto", display: "flex", flexDirection: "column", width: "100%", paddingTop: "84px", paddingBottom: "48px", position: "relative", overflow: "hidden" }}>
-          <div ref={glowRef} className="glow" style={{ top: "-220px", right: "-220px", willChange: "transform" }}></div>
-          
-          {/* Top Stage: Living Moss-Covered Branch stretching across the hero */}
-          <div style={{ width: "100%", position: "relative", zIndex: 2, overflow: "hidden" }}>
-            <HeroArtwork />
-          </div>
-
-          <div className="container" style={{ width: "min(92%, 1280px)", margin: "0 auto", position: "relative", zIndex: 5, marginTop: "-18px" }}>
-
-            {/* Bottom Area: Lower-Left Narrative & Lower-Right Compact Product-Detail Cards */}
-            <div
-              className="hero-content-grid"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1.2fr 0.8fr",
-                gap: "32px",
-                alignItems: "flex-end",
-                marginTop: "0px",
-              }}
-            >
-              {/* Lower-Left: Eyebrow, Primary Headline, Supporting Description, CTAs */}
-              <div>
-                {/* Eyebrow */}
-                <div
-                  style={{
-                    fontSize: "0.8rem",
-                    fontWeight: 700,
-                    letterSpacing: "0.14em",
-                    color: "var(--muted)",
-                    textTransform: "uppercase",
-                    marginBottom: "12px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                  }}
-                >
-                  <span
-                    style={{
-                      width: "6px",
-                      height: "6px",
-                      borderRadius: "50%",
-                      background: "var(--primary)",
-                    }}
-                  />
-                  YOUR COMMITS. YOUR CAREER.
-                </div>
-
-                {/* Primary Headline */}
-                <h1
-                  style={{
-                    fontSize: "clamp(2rem, 3.6vw, 3.2rem)",
-                    fontWeight: 800,
-                    lineHeight: 1.15,
-                    letterSpacing: "-0.04em",
-                    color: "var(--text)",
-                    marginBottom: "16px",
-                  }}
-                >
-                  Your GitHub already proves <br />
-                  your experience in{" "}
-                  <RotatingText
-                    texts={[
-                      "Full-Stack Systems",
-                      "Cloud Infrastructure",
-                      "Distributed Systems",
-                      "High-Scale APIs",
-                      "AI & Machine Learning",
-                      "Modern Web Apps",
-                    ]}
-                    color="#FFFFFF"
-                    badgeBackground="#245DFF"
-                    badgeRadius={14}
-                    badgePaddingX={18}
-                    badgePaddingY={4}
-                    font={{
-                      fontFamily: "Inter, system-ui, sans-serif",
-                      fontWeight: 800,
-                      fontSize: "clamp(1.3rem, 2.5vw, 1.95rem)",
-                      letterSpacing: "-0.02em",
-                      lineHeight: "1.2",
-                    }}
-                  />
-                </h1>
-
-                {/* Supporting Description */}
-                <p
-                  style={{
-                    maxWidth: "520px",
-                    fontSize: "clamp(0.95rem, 1.2vw, 1.1rem)",
-                    lineHeight: 1.55,
-                    color: "var(--muted)",
-                    marginBottom: "22px",
-                  }}
-                >
-                  Resummit analyzes repositories, commits, technologies, and project structures
-                  to generate clean, recruiter-ready resumes from the work you already built.
-                </p>
-
-                {/* Action Buttons */}
-                <div
-                  className="hero-actions"
-                  style={{
-                    display: "flex",
-                    gap: "14px",
-                    alignItems: "center",
-                    flexWrap: "wrap",
-                    marginBottom: "20px",
-                  }}
-                >
-                  <ArrowRevealButton
-                    label={hasSession ? "Go to Dashboard" : "Sign In to Start"}
-                    link={hasSession ? "/dashboard" : "/login"}
-                    rounded={100}
-                    padding="12px 18px 12px 24px"
-                    gap={14}
-                    colors={{
-                      fill: "var(--primary)",
-                      textColor: "#FFFFFF",
-                      hoverTextColor: "#FFFFFF",
-                    }}
-                    icon={{
-                      side: "right",
-                      type: "arrow",
-                      background: "rgba(255,255,255,0.2)",
-                      color: "#FFFFFF",
-                      size: 15,
-                      padding: 7,
-                      direction: "right",
-                      restAngle: 0,
-                      hoverAngle: -45,
-                    }}
-                  />
-                  <button 
-                    onClick={() => {
-                      const element = document.getElementById("preview-section");
-                      element?.scrollIntoView({ behavior: "smooth" });
-                    }}
-                    className="secondary-btn"
-                    style={{
-                      cursor: "pointer",
-                      padding: "12px 22px",
-                      borderRadius: "100px",
-                      border: "1px solid var(--border)",
-                      background: "transparent",
-                      color: "var(--text)",
-                      fontWeight: 600,
-                      fontSize: "0.95rem",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "6px",
-                      transition: "all 0.25s ease",
-                    }}
-                  >
-                    See Resume Preview <span>→</span>
-                  </button>
-                </div>
-
-                {/* Trust line */}
-                <div style={{ display: "flex", alignItems: "center", gap: "18px", marginTop: "8px", flexWrap: "wrap" }}>
-                  <span style={{ fontSize: "0.82rem", color: "var(--muted)", display: "flex", alignItems: "center", gap: "6px" }}>
-                    <svg viewBox="0 0 20 20" fill="currentColor" style={{ width: "14px", height: "14px", color: "#10b981", flexShrink: 0 }}><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
-                    Free to start · No credit card required
-                  </span>
-                  <span style={{ fontSize: "0.82rem", color: "var(--muted)", display: "flex", alignItems: "center", gap: "6px" }}>
-                    <svg viewBox="0 0 20 20" fill="currentColor" style={{ width: "14px", height: "14px", color: "#10b981", flexShrink: 0 }}><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
-                    Read-only GitHub access · Never writes to your repos
-                  </span>
-                </div>
-
-                {/* Social proof badge */}
-                <div style={{ display: "inline-flex", alignItems: "center", gap: "10px", marginTop: "18px", padding: "8px 16px", borderRadius: "100px", background: "rgba(36,93,255,0.06)", border: "1px solid rgba(36,93,255,0.15)" }}>
-                  <div style={{ display: "flex", gap: "-6px" }}>
-                    {["🧑‍💻","👩‍💻","🧑‍🎓"].map((e, i) => (
-                      <span key={i} style={{ fontSize: "1rem", marginLeft: i > 0 ? "-4px" : 0 }}>{e}</span>
-                    ))}
-                  </div>
-                  <span style={{ fontSize: "0.82rem", color: "var(--muted)", fontWeight: 600 }}>
-                    Joined by <span style={{ color: "var(--primary)", fontWeight: 700 }}>developers</span> from 10+ countries since launch
-                  </span>
-                </div>
-              </div>
-
-              {/* Lower-Right: Two Compact Product-Detail Cards (from the reference) */}
-              <div
-                style={{
-                  display: "flex",
-                  gap: "16px",
-                  justifyContent: "flex-end",
-                  flexWrap: "wrap",
-                }}
-              >
-                {/* Card 1: GitHub */}
-                <div
-                  style={{
-                    background: "var(--surface)",
-                    border: "1px solid var(--border)",
-                    borderRadius: "14px",
-                    padding: "20px 22px",
-                    boxShadow: "0 6px 20px var(--shadow)",
-                    minWidth: "160px",
-                    maxWidth: "220px",
-                    flex: "1 1 160px",
-                    transition: "transform 0.25s ease, box-shadow 0.25s ease",
-                  }}
-                >
-                  <div style={{ fontSize: "1.15rem", fontWeight: 800, color: "var(--text)", marginBottom: "4px" }}>
-                    GitHub
-                  </div>
-                  <div style={{ fontSize: "0.88rem", color: "var(--muted)", lineHeight: 1.35 }}>
-                    Your work, understood
-                  </div>
-                </div>
-
-                {/* Card 2: Resume */}
-                <div
-                  style={{
-                    background: "var(--surface)",
-                    border: "1px solid var(--border)",
-                    borderRadius: "14px",
-                    padding: "20px 22px",
-                    boxShadow: "0 6px 20px var(--shadow)",
-                    minWidth: "160px",
-                    maxWidth: "220px",
-                    flex: "1 1 160px",
-                    transition: "transform 0.25s ease, box-shadow 0.25s ease",
-                  }}
-                >
-                  <div style={{ fontSize: "1.15rem", fontWeight: 800, color: "var(--text)", marginBottom: "4px" }}>
-                    Resume
-                  </div>
-                  <div style={{ fontSize: "0.88rem", color: "var(--muted)", lineHeight: 1.35 }}>
-                    Your skills, clearly presented
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* Fairweather Hero Section */}
+        <FairweatherHero hasSession={hasSession} theme={theme} />
 
         {/* Resume Preview Section */}
         <section className="section" id="preview-section" style={{ background: "var(--surface-2)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", padding: "100px 0 130px 0" }}>
           <div className="container preview-grid-container" ref={resumeContainerRef}>
-            
+
             {/* Left Column: Interactive CV Preview */}
             <div className="reveal preview-left-column">
-              <div 
+              <div
                 className="resume-preview-wrapper"
                 style={isMounted ? {
                   width: `${794 * resumeScale}px`,
                   height: `${1123 * resumeScale}px`,
                 } : {}}
               >
-                <div 
+                <div
                   className="resume-preview-sheet"
                   style={isMounted ? {
                     transform: `scale(${resumeScale})`,
@@ -2828,7 +3100,7 @@ export function LandingClient({
                     }}>
                       PROFESSIONAL EXPERIENCE
                     </div>
-                    
+
                     <div style={{ marginBottom: "6px" }}>
                       <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0f172a", fontSize: "11.5px", marginBottom: "2px", fontFamily: "'Times New Roman', Georgia, serif" }}>
                         <span>Software &amp; AI Engineer Intern</span>
@@ -2871,7 +3143,7 @@ export function LandingClient({
                     }}>
                       TECHNICAL PROJECTS
                     </div>
-                    
+
                     <div style={{ marginBottom: "6px" }}>
                       <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0f172a", fontSize: "11.5px", marginBottom: "2px", fontFamily: "'Times New Roman', Georgia, serif" }}>
                         <span>Nexio</span>
@@ -2930,7 +3202,7 @@ export function LandingClient({
                     }}>
                       EDUCATION
                     </div>
-                    
+
                     <div style={{ marginBottom: "3px" }}>
                       <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0f172a", fontSize: "11.5px", marginBottom: "2px", fontFamily: "'Times New Roman', Georgia, serif" }}>
                         <span>B.Tech Computer Science AI &amp; ML</span>
@@ -3009,7 +3281,7 @@ export function LandingClient({
                     <p style={{ color: "var(--muted)", fontSize: "1.06rem", lineHeight: "1.6" }}>Parses your GitHub commits to write structured, accomplishment-focused resume points automatically.</p>
                   </div>
                 </div>
-                
+
                 <div style={{ display: "flex", gap: "18px", alignItems: "flex-start" }}>
                   <div style={{ background: "rgba(79, 140, 255, 0.1)", color: "var(--primary)", padding: "14px", borderRadius: "12px", display: "flex", flexShrink: 0 }}>
                     <FileCheck size={26} />
@@ -3091,7 +3363,7 @@ export function LandingClient({
               <div className="stat-label-title">Resumes Generated</div>
               <div className="stat-sublabel-desc">Crafted by developers to secure interviews at top tech companies.</div>
             </div>
-            
+
             <div className="stat-item reveal" style={{ transitionDelay: "100ms" }}>
               <div className="stat-badge-row">
                 <div className="stat-number">{count2}+</div>
@@ -3102,7 +3374,7 @@ export function LandingClient({
               <div className="stat-label-title">Countries Reached</div>
               <div className="stat-sublabel-desc">Helping engineers build global careers across multiple continents.</div>
             </div>
-            
+
             <div className="stat-item reveal" style={{ transitionDelay: "200ms" }}>
               <div className="stat-badge-row">
                 <div className="stat-number">&lt;{count3}s</div>
@@ -3113,7 +3385,7 @@ export function LandingClient({
               <div className="stat-label-title">Generation Time</div>
               <div className="stat-sublabel-desc">Instantly parsed from public repository commit histories.</div>
             </div>
-            
+
             <div className="stat-item reveal" style={{ transitionDelay: "300ms" }}>
               <div className="stat-badge-row">
                 <div className="stat-number">100%</div>
@@ -3156,8 +3428,8 @@ export function LandingClient({
             <div className="magic-grid">
 
               {/* Before: Realistic GitHub Commits Widget */}
-              <motion.div 
-                className="github-magic-card reveal" 
+              <motion.div
+                className="github-magic-card reveal"
                 animate={{
                   borderColor: magicStep === 0 || magicStep === 3 ? "rgba(79, 140, 255, 0.35)" : "rgba(240, 246, 252, 0.1)",
                   opacity: magicStep === 2 ? 0.65 : 1
@@ -3189,7 +3461,7 @@ export function LandingClient({
 
                   <div className="github-commit-box">
                     {/* Commit 1 */}
-                    <motion.div 
+                    <motion.div
                       className="github-commit-row"
                       variants={leftItemVariants}
                       custom={0.1}
@@ -3209,16 +3481,16 @@ export function LandingClient({
                       <div className="github-commit-right">
                         <span className="github-hash-btn">a3f2c1e</span>
                         <span className="github-action-icon">
-                          <svg viewBox="0 0 16 16" width="11" height="11" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                          <svg viewBox="0 0 16 16" width="11" height="11" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z" /><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z" /></svg>
                         </span>
                         <span className="github-action-icon">
-                          <svg viewBox="0 0 16 16" width="11" height="11" fill="currentColor"><path d="m11.28 3.22 4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L13.94 8l-3.72-3.72a.75.75 0 0 1 1.06-1.06Zm-6.56 0a.75.75 0 0 1 0 1.06L1.06 8l3.72 3.72a.75.75 0 1 1-1.06 1.06L-.53 8.53a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z"/></svg>
+                          <svg viewBox="0 0 16 16" width="11" height="11" fill="currentColor"><path d="m11.28 3.22 4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L13.94 8l-3.72-3.72a.75.75 0 0 1 1.06-1.06Zm-6.56 0a.75.75 0 0 1 0 1.06L1.06 8l3.72 3.72a.75.75 0 1 1-1.06 1.06L-.53 8.53a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z" /></svg>
                         </span>
                       </div>
                     </motion.div>
 
                     {/* Commit 2 */}
-                    <motion.div 
+                    <motion.div
                       className="github-commit-row"
                       variants={leftItemVariants}
                       custom={0.4}
@@ -3238,16 +3510,16 @@ export function LandingClient({
                       <div className="github-commit-right">
                         <span className="github-hash-btn">b8e4d2f</span>
                         <span className="github-action-icon">
-                          <svg viewBox="0 0 16 16" width="11" height="11" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                          <svg viewBox="0 0 16 16" width="11" height="11" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z" /><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z" /></svg>
                         </span>
                         <span className="github-action-icon">
-                          <svg viewBox="0 0 16 16" width="11" height="11" fill="currentColor"><path d="m11.28 3.22 4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L13.94 8l-3.72-3.72a.75.75 0 0 1 1.06-1.06Zm-6.56 0a.75.75 0 0 1 0 1.06L1.06 8l3.72 3.72a.75.75 0 1 1-1.06 1.06L-.53 8.53a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z"/></svg>
+                          <svg viewBox="0 0 16 16" width="11" height="11" fill="currentColor"><path d="m11.28 3.22 4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L13.94 8l-3.72-3.72a.75.75 0 0 1 1.06-1.06Zm-6.56 0a.75.75 0 0 1 0 1.06L1.06 8l3.72 3.72a.75.75 0 1 1-1.06 1.06L-.53 8.53a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z" /></svg>
                         </span>
                       </div>
                     </motion.div>
 
                     {/* Commit 3 */}
-                    <motion.div 
+                    <motion.div
                       className="github-commit-row"
                       variants={leftItemVariants}
                       custom={0.7}
@@ -3267,10 +3539,10 @@ export function LandingClient({
                       <div className="github-commit-right">
                         <span className="github-hash-btn">c9a1b3d</span>
                         <span className="github-action-icon">
-                          <svg viewBox="0 0 16 16" width="11" height="11" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                          <svg viewBox="0 0 16 16" width="11" height="11" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z" /><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z" /></svg>
                         </span>
                         <span className="github-action-icon">
-                          <svg viewBox="0 0 16 16" width="11" height="11" fill="currentColor"><path d="m11.28 3.22 4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L13.94 8l-3.72-3.72a.75.75 0 0 1 1.06-1.06Zm-6.56 0a.75.75 0 0 1 0 1.06L1.06 8l3.72 3.72a.75.75 0 1 1-1.06 1.06L-.53 8.53a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z"/></svg>
+                          <svg viewBox="0 0 16 16" width="11" height="11" fill="currentColor"><path d="m11.28 3.22 4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L13.94 8l-3.72-3.72a.75.75 0 0 1 1.06-1.06Zm-6.56 0a.75.75 0 0 1 0 1.06L1.06 8l3.72 3.72a.75.75 0 1 1-1.06 1.06L-.53 8.53a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z" /></svg>
                         </span>
                       </div>
                     </motion.div>
@@ -3280,9 +3552,9 @@ export function LandingClient({
 
               {/* Arrow / AI Synth Engine */}
               <div className="magic-arrow-container">
-                <motion.div 
+                <motion.div
                   className={`ai-pulse-core ${magicStep === 1 ? 'processing' : ''}`}
-                  animate={magicStep === 1 ? { 
+                  animate={magicStep === 1 ? {
                     scale: [1, 1.12, 1],
                     boxShadow: ["0 0 15px rgba(79,140,255,0.3)", "0 0 35px rgba(167,139,250,0.8)", "0 0 15px rgba(79,140,255,0.3)"]
                   } : {}}
@@ -3290,7 +3562,7 @@ export function LandingClient({
                 >
                   <Sparkles size={22} style={{ color: "white" }} />
                 </motion.div>
-                <motion.span 
+                <motion.span
                   animate={magicStep === 1 ? { color: ["var(--primary)", "#a78bfa", "var(--primary)"] } : {}}
                   transition={{ duration: 1.2, repeat: Infinity }}
                   style={{ fontSize: "0.72rem", color: "var(--primary)", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.12em", textAlign: "center", whiteSpace: "nowrap", marginTop: "4px" }}
@@ -3300,21 +3572,21 @@ export function LandingClient({
               </div>
 
               {/* After: Professional Resume Preview */}
-              <motion.div 
-                className="resume-magic-card reveal" 
+              <motion.div
+                className="resume-magic-card reveal"
                 animate={{
                   opacity: magicStep === 2 || magicStep === 3 ? 1 : 0.25,
                   filter: magicStep === 2 || magicStep === 3 ? "none" : "blur(1.5px)",
                   borderColor: magicStep === 2 || magicStep === 3 ? "#cbd5e1" : "#e2e8f0",
-                  boxShadow: magicStep === 3 
-                    ? "0 20px 40px rgba(0, 0, 0, 0.15), 0 0 30px rgba(16, 185, 129, 0.1)" 
+                  boxShadow: magicStep === 3
+                    ? "0 20px 40px rgba(0, 0, 0, 0.15), 0 0 30px rgba(16, 185, 129, 0.1)"
                     : "0 10px 25px rgba(0, 0, 0, 0.08)"
                 }}
                 transition={{ duration: 0.5 }}
               >
                 {/* Floating ATS Badge */}
                 {magicStep === 3 && (
-                  <motion.div 
+                  <motion.div
                     className="ats-badge-hud"
                     initial={{ scale: 0, y: 15 }}
                     animate={{ scale: 1, y: 0 }}
@@ -3339,7 +3611,7 @@ export function LandingClient({
                 </div>
 
                 {/* Bullet 1 */}
-                <motion.div 
+                <motion.div
                   className="resume-bullet-point"
                   variants={rightItemVariants}
                   custom={0.1}
@@ -3349,7 +3621,7 @@ export function LandingClient({
                 </motion.div>
 
                 {/* Bullet 2 */}
-                <motion.div 
+                <motion.div
                   className="resume-bullet-point"
                   variants={rightItemVariants}
                   custom={0.5}
@@ -3359,7 +3631,7 @@ export function LandingClient({
                 </motion.div>
 
                 {/* Bullet 3 */}
-                <motion.div 
+                <motion.div
                   className="resume-bullet-point"
                   variants={rightItemVariants}
                   custom={0.9}
@@ -3419,62 +3691,120 @@ export function LandingClient({
               </div>
             </div>
 
-            <div className="cards">
-              <motion.div className="card reveal" whileHover="hover">
-                <div className="card-icon-wrapper">
-                  <motion.div 
-                    className="card-icon-container"
-                    variants={{
-                      hover: { scale: 1.15, rotate: 8 }
-                    }}
-                    transition={{ type: "spring", stiffness: 400, damping: 12 }}
-                  >
-                    <GitBranch className="icon-style" />
-                  </motion.div>
+            <div className="fairweather-feature-cards">
+              {/* Feature 1: GitHub Sync */}
+              <motion.div className="fairweather-feature-card reveal" whileHover={{ y: -4 }}>
+                <div className="feature-sky-banner">
+                  <img
+                    src="/images/fairweather_sky.jpg"
+                    alt="GitHub Sync Fairweather Sky"
+                    className="feature-sky-img"
+                  />
+                  <div className="feature-mini-window">
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+                      <div style={{ display: "flex", gap: "4px" }}>
+                        <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#FF5F56", display: "inline-block" }} />
+                        <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#FFBD2E", display: "inline-block" }} />
+                        <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#27C93F", display: "inline-block" }} />
+                      </div>
+                      <span style={{ fontSize: "0.68rem", color: "#707070", fontFamily: "monospace", display: "flex", alignItems: "center", gap: "3px" }}>
+                        <GitBranch size={10} /> main
+                      </span>
+                    </div>
+                    <div style={{ fontSize: "0.74rem", fontWeight: 700, color: "#171717", display: "flex", alignItems: "center", gap: "6px" }}>
+                      <GitBranch size={12} className="text-blue-600" />
+                      <span>weather-app</span>
+                      <span style={{ fontSize: "0.64rem", color: "#707070", background: "#EEEEEC", padding: "1px 5px", borderRadius: "4px" }}>142 commits</span>
+                    </div>
+                  </div>
                 </div>
-                <h3>GitHub Sync</h3>
-                <p>
-                  Secure OAuth integration that reads repositories, commits,
-                  README files, and technologies automatically.
-                </p>
+                <div className="feature-card-body">
+                  <div className="feature-status-tag">
+                    <span className="status-indicator-dot" />
+                    <span>GITHUB INTEGRATION</span>
+                  </div>
+                  <h3>GitHub Sync</h3>
+                  <p>
+                    Secure OAuth integration that reads repositories, commits,
+                    README files, and technologies automatically.
+                  </p>
+                </div>
               </motion.div>
 
-              <motion.div className="card reveal" whileHover="hover">
-                <div className="card-icon-wrapper">
-                  <motion.div 
-                    className="card-icon-container"
-                    variants={{
-                      hover: { scale: 1.15, rotate: 8 }
-                    }}
-                    transition={{ type: "spring", stiffness: 400, damping: 12 }}
-                  >
-                    <Brain className="icon-style" />
-                  </motion.div>
+              {/* Feature 2: AI Resume Writing */}
+              <motion.div className="fairweather-feature-card reveal" whileHover={{ y: -4 }}>
+                <div className="feature-sky-banner">
+                  <img
+                    src="/images/fairweather_sky.jpg"
+                    alt="AI Resume Writing Fairweather Sky"
+                    className="feature-sky-img"
+                  />
+                  <div className="feature-mini-window">
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+                      <div style={{ display: "flex", gap: "4px" }}>
+                        <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#FF5F56", display: "inline-block" }} />
+                        <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#FFBD2E", display: "inline-block" }} />
+                        <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#27C93F", display: "inline-block" }} />
+                      </div>
+                      <span style={{ fontSize: "0.68rem", color: "#18B95A", fontFamily: "monospace", fontWeight: 700 }}>
+                        98% ATS MATCH
+                      </span>
+                    </div>
+                    <div style={{ fontSize: "0.74rem", fontWeight: 700, color: "#171717", display: "flex", alignItems: "center", gap: "6px" }}>
+                      <Brain size={12} className="text-purple-600" />
+                      <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Raw Commits → Executive Bullets</span>
+                    </div>
+                  </div>
                 </div>
-                <h3>AI Resume Writing</h3>
-                <p>
-                  Generate recruiter-friendly resume bullets from the systems,
-                  projects, and workflows you've actually built.
-                </p>
+                <div className="feature-card-body">
+                  <div className="feature-status-tag">
+                    <span className="status-indicator-dot" />
+                    <span>AI RESUME WRITING</span>
+                  </div>
+                  <h3>AI Resume Writing</h3>
+                  <p>
+                    Generate recruiter-friendly resume bullets from the systems,
+                    projects, and workflows you've actually built.
+                  </p>
+                </div>
               </motion.div>
 
-              <motion.div className="card reveal" whileHover="hover">
-                <div className="card-icon-wrapper">
-                  <motion.div 
-                    className="card-icon-container"
-                    variants={{
-                      hover: { scale: 1.15, rotate: 8 }
-                    }}
-                    transition={{ type: "spring", stiffness: 400, damping: 12 }}
-                  >
-                    <FileDown className="icon-style" />
-                  </motion.div>
+              {/* Feature 3: PDF Export */}
+              <motion.div className="fairweather-feature-card reveal" whileHover={{ y: -4 }}>
+                <div className="feature-sky-banner">
+                  <img
+                    src="/images/fairweather_sky.jpg"
+                    alt="PDF Export Fairweather Sky"
+                    className="feature-sky-img"
+                  />
+                  <div className="feature-mini-window">
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+                      <div style={{ display: "flex", gap: "4px" }}>
+                        <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#FF5F56", display: "inline-block" }} />
+                        <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#FFBD2E", display: "inline-block" }} />
+                        <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#27C93F", display: "inline-block" }} />
+                      </div>
+                      <span style={{ fontSize: "0.68rem", color: "#707070", fontFamily: "monospace" }}>
+                        1-PAGE FORMAT
+                      </span>
+                    </div>
+                    <div style={{ fontSize: "0.74rem", fontWeight: 700, color: "#171717", display: "flex", alignItems: "center", gap: "6px" }}>
+                      <FileDown size={12} className="text-emerald-600" />
+                      <span>Single-Page PDF · ATS Standard</span>
+                    </div>
+                  </div>
                 </div>
-                <h3>PDF Export</h3>
-                <p>
-                  Export clean, professional resumes with consistent formatting
-                  and ATS-friendly layouts.
-                </p>
+                <div className="feature-card-body">
+                  <div className="feature-status-tag">
+                    <span className="status-indicator-dot" />
+                    <span>ATS EXPORT ENGINE</span>
+                  </div>
+                  <h3>PDF Export</h3>
+                  <p>
+                    Export clean, professional resumes with consistent formatting
+                    and ATS-friendly layouts.
+                  </p>
+                </div>
               </motion.div>
             </div>
 
@@ -3490,13 +3820,13 @@ export function LandingClient({
             </div>
 
             <div className="workflow">
-              <motion.div 
-                className="workflow-step-card reveal" 
+              <motion.div
+                className="workflow-step-card reveal"
                 whileHover="hover"
               >
                 <div className="step-badge-row">
                   <span className="step-number">01</span>
-                  <motion.div 
+                  <motion.div
                     className="step-icon-container"
                     variants={{ hover: { scale: 1.1, rotate: 360 } }}
                     transition={{ type: "spring", stiffness: 300, damping: 15 }}
@@ -3508,13 +3838,13 @@ export function LandingClient({
                 <p>Connect GitHub securely using OAuth authentication.</p>
               </motion.div>
 
-              <motion.div 
-                className="workflow-step-card reveal" 
+              <motion.div
+                className="workflow-step-card reveal"
                 whileHover="hover"
               >
                 <div className="step-badge-row">
                   <span className="step-number">02</span>
-                  <motion.div 
+                  <motion.div
                     className="step-icon-container"
                     variants={{ hover: { scale: 1.1, y: -2 } }}
                     transition={{ type: "spring", stiffness: 300, damping: 15 }}
@@ -3526,13 +3856,13 @@ export function LandingClient({
                 <p>Repositories and technologies are analyzed automatically.</p>
               </motion.div>
 
-              <motion.div 
-                className="workflow-step-card reveal" 
+              <motion.div
+                className="workflow-step-card reveal"
                 whileHover="hover"
               >
                 <div className="step-badge-row">
                   <span className="step-number">03</span>
-                  <motion.div 
+                  <motion.div
                     className="step-icon-container"
                     variants={{ hover: { scale: 1.1, rotate: 15 } }}
                     transition={{ type: "spring", stiffness: 300, damping: 15 }}
@@ -3544,13 +3874,13 @@ export function LandingClient({
                 <p>AI generates structured professional resume content.</p>
               </motion.div>
 
-              <motion.div 
-                className="workflow-step-card reveal" 
+              <motion.div
+                className="workflow-step-card reveal"
                 whileHover="hover"
               >
                 <div className="step-badge-row">
                   <span className="step-number">04</span>
-                  <motion.div 
+                  <motion.div
                     className="step-icon-container"
                     variants={{ hover: { scale: 1.1, y: 3 } }}
                     transition={{ type: "spring", stiffness: 300, damping: 15 }}
@@ -3617,7 +3947,7 @@ export function LandingClient({
         <section className="section" style={{ background: "var(--surface-2)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", padding: "220px 0 140px 0" }}>
           <div className="container">
             <div className="pricing-split-grid">
-              
+
               {/* Left Column: The Pricing Card */}
               <div className="reveal pricing-split-card-col">
                 <div className="pricing-card featured premium-theme" style={{ maxWidth: "480px", width: "100%", padding: "40px", position: "relative", overflow: "visible" }}>
@@ -3625,7 +3955,7 @@ export function LandingClient({
                   <div style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--primary)", fontWeight: 700, marginBottom: "16px", textAlign: "center" }}>Early Access</div>
                   <div className="pricing-price" style={{ textAlign: "center", marginBottom: "8px" }}>$0<span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--muted)", marginLeft: "4px" }}>/ limited time</span></div>
                   <div style={{ fontSize: "0.85rem", color: "var(--muted)", marginBottom: "32px", textAlign: "center" }}>No credit card required. Full access to all features during beta.</div>
-                  
+
                   <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "32px" }}>
                     <ArrowRevealButton
                       label={hasSession ? "Go to Dashboard" : "Sign In to Start"}
@@ -3658,7 +3988,7 @@ export function LandingClient({
                     />
                     <a href="https://github.com/Resummit-ai/Resummit" target="_blank" rel="noopener noreferrer" className="secondary-btn" style={{ width: "100%", display: "flex", justifyContent: "center", padding: "14px", gap: "8px" }}>
                       <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
                       </svg>
                       Star on GitHub
                     </a>
@@ -3716,7 +4046,7 @@ export function LandingClient({
               {/* Sleek Interactive Feedback Form — open to all visitors */}
               <div className="feedback-form-container">
                 {feedbackSubmitted ? (
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     style={{ textAlign: "center", padding: "20px 0" }}
@@ -3728,7 +4058,7 @@ export function LandingClient({
                     </div>
                     <h3 style={{ color: "white" }}>Thank you for your feedback!</h3>
                     <p style={{ fontSize: "0.88rem", color: "var(--muted)", margin: "8px 0 20px 0" }}>Your inputs have been received and help us build a better workspace for engineers.</p>
-                    <button 
+                    <button
                       onClick={() => setFeedbackSubmitted(false)}
                       className="primary-btn"
                       style={{ cursor: "pointer", width: "auto", display: "inline-flex", padding: "10px 20px", fontSize: "0.8rem", borderRadius: "12px", border: "none" }}
@@ -3740,11 +4070,11 @@ export function LandingClient({
                   <form onSubmit={handleFeedbackSubmit} className="space-y-4" style={{ display: "flex", flexDirection: "column" }}>
                     <h3>Share Your Feedback</h3>
                     <p>Help us improve Resummit. We read every message.</p>
- 
+
                     <div className="feedback-form-group">
                       <label>Full Name</label>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         required
                         value={feedbackName}
                         onChange={(e) => setFeedbackName(e.target.value)}
@@ -3752,11 +4082,11 @@ export function LandingClient({
                         className="feedback-input"
                       />
                     </div>
- 
+
                     <div className="feedback-form-group">
                       <label>Email Address</label>
-                      <input 
-                        type="email" 
+                      <input
+                        type="email"
                         required
                         value={feedbackEmail}
                         onChange={(e) => setFeedbackEmail(e.target.value)}
@@ -3764,7 +4094,7 @@ export function LandingClient({
                         className="feedback-input"
                       />
                     </div>
- 
+
                     <div className="feedback-form-group">
                       <label>Rating</label>
                       <div className="rating-buttons">
@@ -3780,10 +4110,10 @@ export function LandingClient({
                         ))}
                       </div>
                     </div>
- 
+
                     <div className="feedback-form-group">
                       <label>Your Message</label>
-                      <textarea 
+                      <textarea
                         required
                         value={feedbackMsg}
                         onChange={(e) => setFeedbackMsg(e.target.value)}
@@ -3791,9 +4121,9 @@ export function LandingClient({
                         className="feedback-input feedback-textarea"
                       />
                     </div>
- 
-                    <button 
-                      type="submit" 
+
+                    <button
+                      type="submit"
                       disabled={feedbackSubmitting}
                       className="feedback-submit-btn"
                     >
@@ -3825,7 +4155,7 @@ export function LandingClient({
                     Have questions about security, how the AI parses your GitHub data, or exporting? Here are the details.
                   </p>
                 </div>
-                
+
                 <div className="faq-list" style={{ marginTop: 0, width: "100%", maxWidth: "100%" }}>
                   {[
                     { q: "Does Resummit write to or modify my GitHub repos?", a: "Never. Resummit requests read-only access to your public repositories. It reads your code, commits, and README files to understand what you built — it cannot push, edit, or delete anything on your GitHub account." },
