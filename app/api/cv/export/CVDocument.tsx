@@ -4,7 +4,8 @@ import type { CVData, ProjectData } from "@/lib/types";
 import { normalizeAndDedupeSkills, formatLinkedIn, formatGitHub } from "@/lib/skills-data";
 
 // Standard Times-Roman styles matching the FormalTemplate in ResumePreview.tsx perfectly
-const getDynamicStyles = (score: number) => {
+// Dynamic styling configurations matching the FormalTemplate in ResumePreview.tsx
+const getDynamicConfig = (score: number) => {
   let fontSizeBody = 8.2;
   let fontSizeSecTitle = 9.2;
   let fontSizeSummary = 8.5;
@@ -50,7 +51,7 @@ const getDynamicStyles = (score: number) => {
     entryGap = 2.5;
     bulletMarginBottom = 0.5;
     skillLineMarginBottom = 0.5;
-  } else if (score >= 30) {
+  } else if (score >= 32) {
     // Standard full resume (e.g. 2-3 jobs, 2-3 projects with multiple bullets)
     fontSizeBody = 7.8;
     fontSizeSecTitle = 8.8;
@@ -73,48 +74,73 @@ const getDynamicStyles = (score: number) => {
     entryGap = 3.5;
     bulletMarginBottom = 1;
     skillLineMarginBottom = 0.8;
-  } else if (score < 20) {
-    // Light content: expand slightly so it nicely fills the page without leaving an awkward blank void
-    fontSizeBody = 8.6;
-    fontSizeSecTitle = 9.6;
-    fontSizeSummary = 9;
-    fontSizeEntryHeader = 9.6;
-    fontSizeSub = 8.8;
-    fontSizePeriod = 8.6;
-    fontSizeName = 22;
+  } else if (score < 22) {
+    // Light content: expand slightly so it nicely breathes without cramped voids
+    fontSizeBody = 8.5;
+    fontSizeSecTitle = 9.5;
+    fontSizeSummary = 8.8;
+    fontSizeEntryHeader = 9.5;
+    fontSizeSub = 8.6;
+    fontSizePeriod = 8.4;
+    fontSizeName = 21;
 
-    lineHeightBody = 1.35;
-    lineHeightSummary = 1.35;
-    lineHeightSkills = 1.4;
+    lineHeightBody = 1.32;
+    lineHeightSummary = 1.32;
+    lineHeightSkills = 1.35;
 
-    paddingHorizontal = 32;
-    paddingVertical = 25;
-    marginHeader = 8;
-    marginSection = 8;
+    paddingHorizontal = 28;
+    paddingVertical = 22;
+    marginHeader = 7;
+    marginSection = 7;
     sectionTitlePaddingTop = 2.5;
     sectionTitleMarginBottom = 3.5;
-    entryGap = 6;
-    bulletMarginBottom = 2;
-    skillLineMarginBottom = 1.5;
+    entryGap = 5.5;
+    bulletMarginBottom = 1.8;
+    skillLineMarginBottom = 1.2;
   }
 
+  return {
+    score,
+    fontSizeBody,
+    fontSizeSecTitle,
+    fontSizeSummary,
+    fontSizeEntryHeader,
+    fontSizeSub,
+    fontSizePeriod,
+    fontSizeName,
+    lineHeightBody,
+    lineHeightSummary,
+    lineHeightSkills,
+    paddingHorizontal,
+    paddingVertical,
+    marginHeader,
+    marginSection,
+    sectionTitlePaddingTop,
+    sectionTitleMarginBottom,
+    entryGap,
+    bulletMarginBottom,
+    skillLineMarginBottom,
+  };
+};
+
+const getDynamicStyles = (config: ReturnType<typeof getDynamicConfig>) => {
   return StyleSheet.create({
     page: {
       flexDirection: "column",
       fontFamily: "Times-Roman",
       backgroundColor: "#ffffff",
-      fontSize: fontSizeBody,
+      fontSize: config.fontSizeBody,
       color: "#2d3748",
-      paddingHorizontal,
-      paddingVertical,
+      paddingHorizontal: config.paddingHorizontal,
+      paddingVertical: config.paddingVertical,
     },
     // ── Header ──
     header: {
       textAlign: "center",
-      marginBottom: marginHeader,
+      marginBottom: config.marginHeader,
     },
     name: {
-      fontSize: fontSizeName,
+      fontSize: config.fontSizeName,
       fontFamily: "Times-Bold",
       color: "#1a202c",
       marginBottom: 3,
@@ -123,49 +149,49 @@ const getDynamicStyles = (score: number) => {
       flexDirection: "row",
       justifyContent: "center",
       flexWrap: "wrap",
-      fontSize: score > 48 ? 7.5 : 8,
+      fontSize: config.score > 48 ? 7.5 : 8,
       color: "#4a5568",
     },
     contactText: {
-      fontSize: score > 48 ? 7.5 : 8,
+      fontSize: config.score > 48 ? 7.5 : 8,
       fontFamily: "Times-Roman",
       color: "#4a5568",
     },
     contactSep: {
-      fontSize: score > 48 ? 7.5 : 8,
+      fontSize: config.score > 48 ? 7.5 : 8,
       color: "#4a5568",
       marginHorizontal: 4,
     },
     // ── Section Container ──
     section: {
-      marginBottom: marginSection,
+      marginBottom: config.marginSection,
     },
     sectionTitle: {
-      fontSize: fontSizeSecTitle,
+      fontSize: config.fontSizeSecTitle,
       fontFamily: "Times-Bold",
       textTransform: "uppercase",
       letterSpacing: 0.5,
       color: "#1a202c",
       borderTopWidth: 1.5,
       borderTopColor: "#1a202c",
-      paddingTop: sectionTitlePaddingTop,
-      marginBottom: sectionTitleMarginBottom,
+      paddingTop: config.sectionTitlePaddingTop,
+      marginBottom: config.sectionTitleMarginBottom,
     },
     // ── Professional Summary ──
     summaryText: {
-      fontSize: fontSizeSummary,
+      fontSize: config.fontSizeSummary,
       fontFamily: "Times-Roman",
-      lineHeight: lineHeightSummary,
+      lineHeight: config.lineHeightSummary,
       color: "#2d3748",
     },
     // ── Skills ──
     skillsContainer: {
-      fontSize: fontSizeBody,
-      lineHeight: lineHeightSkills,
+      fontSize: config.fontSizeBody,
+      lineHeight: config.lineHeightSkills,
     },
     skillLine: {
       flexDirection: "row",
-      marginBottom: skillLineMarginBottom,
+      marginBottom: config.skillLineMarginBottom,
     },
     skillLabel: {
       fontFamily: "Times-Bold",
@@ -178,7 +204,7 @@ const getDynamicStyles = (score: number) => {
     },
     // ── Generic Entry Row (Experience, Projects, Education) ──
     entry: {
-      marginBottom: entryGap,
+      marginBottom: config.entryGap,
     },
     entryHeader: {
       flexDirection: "row",
@@ -186,41 +212,41 @@ const getDynamicStyles = (score: number) => {
       alignItems: "baseline",
     },
     entryTitleLeft: {
-      fontSize: fontSizeEntryHeader,
+      fontSize: config.fontSizeEntryHeader,
       fontFamily: "Times-Bold",
       color: "#1a202c",
       flex: 1,
     },
     entryTimeRight: {
-      fontSize: fontSizePeriod,
+      fontSize: config.fontSizePeriod,
       fontFamily: "Times-Bold",
       color: "#1a202c",
       textAlign: "right",
       marginLeft: 10,
     },
     entryTimeRightItalic: {
-      fontSize: score > 48 ? 7.5 : 8,
+      fontSize: config.score > 48 ? 7.5 : 8,
       fontFamily: "Times-Italic",
       color: "#4a5568",
       textAlign: "right",
       marginLeft: 10,
     },
     entrySubtitle: {
-      fontSize: fontSizeSub,
+      fontSize: config.fontSizeSub,
       fontFamily: "Times-Roman",
       color: "#4a5568",
-      marginBottom: score > 35 ? 1 : 3,
+      marginBottom: config.score > 35 ? 1 : 3,
     },
     entryDescriptionItalic: {
-      fontSize: fontSizeBody,
+      fontSize: config.fontSizeBody,
       fontFamily: "Times-Roman",
       color: "#2d3748",
-      marginBottom: score > 35 ? 1 : 3,
+      marginBottom: config.score > 35 ? 1 : 3,
     },
     // ── Bullet Lists ──
     bulletRow: {
       flexDirection: "row",
-      marginBottom: bulletMarginBottom,
+      marginBottom: config.bulletMarginBottom,
       paddingLeft: 12,
     },
     bulletDot: {
@@ -233,9 +259,9 @@ const getDynamicStyles = (score: number) => {
     },
     bulletText: {
       flex: 1,
-      fontSize: fontSizeBody,
+      fontSize: config.fontSizeBody,
       fontFamily: "Times-Roman",
-      lineHeight: lineHeightBody,
+      lineHeight: config.lineHeightBody,
       color: "#2d3748",
     },
   });
@@ -292,7 +318,6 @@ function parseAchievementString(str: string) {
   return { title, date, url };
 }
 
-
 const parseAndRenderPdfText = (text: string) => {
   const urlRegex = /(https?:\/\/[^\s]+|(?:credly\.com|coursera\.org|github\.com|linkedin\.com|devpost\.com|credly\.com\/badges)\/[^\s]+)/gi;
   const parts = text.split(urlRegex);
@@ -329,6 +354,151 @@ const BulletList = ({ bullets, styles }: { bullets: string[]; styles: any }) => 
   </View>
 );
 
+// Accurately estimates the rendered content height of the resume to dynamically size the PDF
+function estimateContentHeight(
+  cv: CVData,
+  cleanExperience: any[],
+  includedProjects: any[],
+  skills: { languages: string[]; frameworks: string[]; tools: string[] },
+  displaySummary: string,
+  config: ReturnType<typeof getDynamicConfig>,
+  lastSection: string
+): number {
+  const printableWidth = 595.28 - config.paddingHorizontal * 2;
+  let totalHeight = 0;
+
+  // 1. Header: Name
+  totalHeight += config.fontSizeName * 1.15 + 3;
+
+  // Contact row
+  const contactParts: string[] = [];
+  if (cv.location) contactParts.push(cv.location);
+  if (cv.email) contactParts.push(cv.email);
+  if (cv.phone) contactParts.push(cv.phone);
+  if (cv.github) contactParts.push(formatGitHub(cv.github));
+  if (cv.linkedin) contactParts.push(formatLinkedIn(cv.linkedin));
+  if (contactParts.length > 0) {
+    const contactStr = contactParts.join(" • ");
+    const contactLines = Math.max(1, Math.ceil((contactStr.length * 4.4) / printableWidth));
+    totalHeight += contactLines * (config.score > 48 ? 7.5 : 8) * 1.35;
+  }
+  totalHeight += config.marginHeader;
+
+  const secTitleHeight =
+    config.fontSizeSecTitle + config.sectionTitlePaddingTop + config.sectionTitleMarginBottom + 1.5;
+
+  // 2. Summary
+  if (displaySummary && displaySummary.trim().length > 0) {
+    totalHeight += secTitleHeight;
+    const charWidth = 0.46 * config.fontSizeSummary;
+    const charsPerLine = Math.floor(printableWidth / charWidth);
+    const summaryLines = Math.max(1, Math.ceil(displaySummary.length / Math.max(charsPerLine * 0.88, 1)));
+    totalHeight += summaryLines * (config.fontSizeSummary * config.lineHeightSummary);
+    if (lastSection !== "summary") totalHeight += config.marginSection;
+  }
+
+  // 3. Technical Skills
+  const hasSkills =
+    (skills.languages || []).length > 0 ||
+    (skills.frameworks || []).length > 0 ||
+    (skills.tools || []).length > 0;
+  if (hasSkills) {
+    totalHeight += secTitleHeight;
+    const charWidth = 0.46 * config.fontSizeBody;
+    const charsPerLine = Math.floor(printableWidth / charWidth);
+
+    if ((skills.languages || []).length > 0) {
+      const lineStr = `Languages: ${skills.languages.join(", ")}`;
+      const lines = Math.max(1, Math.ceil(lineStr.length / Math.max(charsPerLine * 0.88, 1)));
+      totalHeight += lines * (config.fontSizeBody * config.lineHeightSkills) + config.skillLineMarginBottom;
+    }
+    if ((skills.frameworks || []).length > 0) {
+      const lineStr = `Frameworks: ${skills.frameworks.join(", ")}`;
+      const lines = Math.max(1, Math.ceil(lineStr.length / Math.max(charsPerLine * 0.88, 1)));
+      totalHeight += lines * (config.fontSizeBody * config.lineHeightSkills) + config.skillLineMarginBottom;
+    }
+    if ((skills.tools || []).length > 0) {
+      const lineStr = `Tools & Cloud: ${skills.tools.join(", ")}`;
+      const lines = Math.max(1, Math.ceil(lineStr.length / Math.max(charsPerLine * 0.88, 1)));
+      totalHeight += lines * (config.fontSizeBody * config.lineHeightSkills) + config.skillLineMarginBottom;
+    }
+    if (lastSection !== "skills") totalHeight += config.marginSection;
+  }
+
+  // 4. Professional Experience
+  if (cleanExperience.length > 0) {
+    totalHeight += secTitleHeight;
+    const bulletPrintableWidth = printableWidth - 21;
+    const bulletCharWidth = 0.46 * config.fontSizeBody;
+    const bulletCharsPerLine = Math.floor(bulletPrintableWidth / bulletCharWidth);
+
+    for (const exp of cleanExperience) {
+      totalHeight += Math.max(config.fontSizeEntryHeader, config.fontSizePeriod) * 1.25;
+      totalHeight += config.fontSizeSub * 1.25 + (config.score > 35 ? 1 : 3);
+
+      for (const bullet of exp.bullets || []) {
+        const lines = Math.max(1, Math.ceil(bullet.length / Math.max(bulletCharsPerLine * 0.88, 1)));
+        totalHeight += lines * (config.fontSizeBody * config.lineHeightBody) + config.bulletMarginBottom;
+      }
+      totalHeight += config.entryGap;
+    }
+    if (lastSection !== "experience") totalHeight += config.marginSection;
+  }
+
+  // 5. Technical Projects
+  if (includedProjects.length > 0) {
+    totalHeight += secTitleHeight;
+    const highlightPrintableWidth = printableWidth - 21;
+    const highlightCharWidth = 0.46 * config.fontSizeBody;
+    const highlightCharsPerLine = Math.floor(highlightPrintableWidth / highlightCharWidth);
+
+    for (const project of includedProjects) {
+      totalHeight += config.fontSizeEntryHeader * 1.25;
+      if (project.description && project.description.trim()) {
+        const charWidth = 0.46 * config.fontSizeBody;
+        const charsPerLine = Math.floor(printableWidth / charWidth);
+        const lines = Math.max(1, Math.ceil(project.description.length / Math.max(charsPerLine * 0.9, 1)));
+        totalHeight += lines * (config.fontSizeBody * 1.2) + (config.score > 35 ? 1 : 3);
+      }
+      for (const highlight of project.highlights || []) {
+        const lines = Math.max(1, Math.ceil(highlight.length / Math.max(highlightCharsPerLine * 0.88, 1)));
+        totalHeight += lines * (config.fontSizeBody * config.lineHeightBody) + config.bulletMarginBottom;
+      }
+      totalHeight += config.entryGap;
+    }
+    if (lastSection !== "projects") totalHeight += config.marginSection;
+  }
+
+  // 6. Education
+  const education = typeof cv.education === "string" ? JSON.parse(cv.education as any) : cv.education;
+  if (education && education.length > 0) {
+    totalHeight += secTitleHeight;
+    for (const edu of education) {
+      totalHeight += config.fontSizeEntryHeader * 1.25;
+      totalHeight += config.fontSizeSub * 1.25;
+      totalHeight += config.entryGap;
+    }
+    if (lastSection !== "education") totalHeight += config.marginSection;
+  }
+
+  // 7. Achievements
+  const achievements = (cv.achievements || []).filter((a: string) => a && a.trim()).slice(0, 4);
+  if (achievements.length > 0) {
+    totalHeight += secTitleHeight;
+    for (const ach of achievements) {
+      const { title } = parseAchievementString(ach);
+      const lines = Math.max(1, Math.ceil(title.length / 85));
+      totalHeight += lines * (config.fontSizeBody * 1.3) + 3.5;
+    }
+    if (lastSection !== "achievements") totalHeight += config.marginSection;
+  }
+
+  // Top & bottom page padding
+  totalHeight += config.paddingVertical * 2;
+
+  return totalHeight;
+}
+
 export const CVDocument = ({ cv, projects }: { cv: CVData; projects: ProjectData[] }) => {
   // Gracefully parse and normalize skills properties
   const rawSkills = typeof cv.skills === "string" ? JSON.parse(cv.skills as any) : cv.skills;
@@ -352,18 +522,6 @@ export const CVDocument = ({ cv, projects }: { cv: CVData; projects: ProjectData
       .filter((b: string) => b.trim() && b !== "Achieved X by implementing Y resulting in Z% growth.")
       .slice(0, 3),
   }));
-
-  // Render centered contact parts
-  const contactParts: string[] = [];
-  if (cv.location) contactParts.push(cv.location);
-  if (cv.email) contactParts.push(cv.email);
-  if (cv.phone) contactParts.push(cv.phone);
-  if (cv.github) {
-    contactParts.push(formatGitHub(cv.github));
-  }
-  if (cv.linkedin) {
-    contactParts.push(formatLinkedIn(cv.linkedin));
-  }
 
   // Parse summary display
   let displaySummary = "";
@@ -389,13 +547,58 @@ export const CVDocument = ({ cv, projects }: { cv: CVData; projects: ProjectData
   const achCount = (cv.achievements || []).filter((a: string) => a.trim()).slice(0, 4).length;
   const summaryLength = displaySummary ? displaySummary.length : 0;
 
-  const score = expCount * 3 + expBullets * 1 + projCount * 3 + projBullets * 1 + eduCount * 2 + achCount * 1.5 + (summaryLength > 200 ? Math.ceil(summaryLength / 80) : 2);
+  const score =
+    expCount * 3 +
+    expBullets * 1 +
+    projCount * 3 +
+    projBullets * 1 +
+    eduCount * 2 +
+    achCount * 1.5 +
+    (summaryLength > 200 ? Math.ceil(summaryLength / 80) : 2);
 
-  const styles = getDynamicStyles(score);
+  const config = getDynamicConfig(score);
+  const styles = getDynamicStyles(config);
+
+  // Identify the last rendered section so we can remove trailing section margin
+  // for perfectly symmetrical top & bottom padding without empty bottom space.
+  const hasAchievements = cv.achievements && cv.achievements.some((a: string) => a.trim());
+  const hasEducation = education && education.length > 0;
+  const hasProjects = includedProjects.length > 0;
+  const hasExperience = cleanExperience.length > 0;
+  const hasSkills =
+    (skills.languages || []).length > 0 ||
+    (skills.frameworks || []).length > 0 ||
+    (skills.tools || []).length > 0;
+  const hasSummary = Boolean(displaySummary && displaySummary.trim());
+
+  let lastSection = "achievements";
+  if (hasAchievements) lastSection = "achievements";
+  else if (hasEducation) lastSection = "education";
+  else if (hasProjects) lastSection = "projects";
+  else if (hasExperience) lastSection = "experience";
+  else if (hasSkills) lastSection = "skills";
+  else if (hasSummary) lastSection = "summary";
+
+  // Calculate dynamic content-fit height:
+  // Standard A4 dimensions: Width = 595.28pt, Height = 841.89pt.
+  // If content is less than A4, page height is fitted cleanly to the content
+  // so the downloaded PDF has ZERO blank bottom space.
+  // If content is full, page height caps at 841.89pt (A4) to strictly enforce 1 page.
+  const estimatedHeight = estimateContentHeight(
+    cv,
+    cleanExperience,
+    includedProjects,
+    skills,
+    displaySummary,
+    config,
+    lastSection
+  );
+
+  const pageHeight = Math.min(841.89, Math.max(340, Math.ceil(estimatedHeight + 12)));
 
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
+      <Page size={[595.28, pageHeight]} style={styles.page}>
         
         {/* Centered Header */}
         <View style={styles.header}>
@@ -442,16 +645,16 @@ export const CVDocument = ({ cv, projects }: { cv: CVData; projects: ProjectData
         </View>
 
         {/* Professional Summary */}
-        {displaySummary && (
-          <View style={styles.section}>
+        {hasSummary && (
+          <View style={lastSection === "summary" ? [styles.section, { marginBottom: 0 }] : styles.section}>
             <Text style={styles.sectionTitle}>{cv.targetRole ? "Technical Summary" : "Professional Summary"}</Text>
             <Text style={styles.summaryText}>{displaySummary}</Text>
           </View>
         )}
 
         {/* Technical Skills */}
-        {((skills.languages || []).length > 0 || (skills.frameworks || []).length > 0 || (skills.tools || []).length > 0) && (
-          <View style={styles.section}>
+        {hasSkills && (
+          <View style={lastSection === "skills" ? [styles.section, { marginBottom: 0 }] : styles.section}>
             <Text style={styles.sectionTitle}>Technical Skills</Text>
             <View style={styles.skillsContainer}>
               {(skills.languages || []).length > 0 && (
@@ -477,8 +680,8 @@ export const CVDocument = ({ cv, projects }: { cv: CVData; projects: ProjectData
         )}
 
         {/* Professional Experience */}
-        {cleanExperience.length > 0 && (
-          <View style={styles.section}>
+        {hasExperience && (
+          <View style={lastSection === "experience" ? [styles.section, { marginBottom: 0 }] : styles.section}>
             <Text style={styles.sectionTitle}>Professional Experience</Text>
             {cleanExperience.map((exp: any, idx: number) => (
               <View key={idx} style={styles.entry}>
@@ -494,8 +697,8 @@ export const CVDocument = ({ cv, projects }: { cv: CVData; projects: ProjectData
         )}
 
         {/* Technical Projects */}
-        {includedProjects.length > 0 && (
-          <View style={styles.section}>
+        {hasProjects && (
+          <View style={lastSection === "projects" ? [styles.section, { marginBottom: 0 }] : styles.section}>
             <Text style={styles.sectionTitle}>Technical Projects</Text>
             {includedProjects.map((project: any, idx: number) => {
               const techStr = Array.isArray(project.techStack)
@@ -530,8 +733,8 @@ export const CVDocument = ({ cv, projects }: { cv: CVData; projects: ProjectData
         )}
 
         {/* Education */}
-        {education && education.length > 0 && (
-          <View style={styles.section}>
+        {hasEducation && (
+          <View style={lastSection === "education" ? [styles.section, { marginBottom: 0 }] : styles.section}>
             <Text style={styles.sectionTitle}>Education</Text>
             {education.map((edu: any, idx: number) => (
               <View key={idx} style={styles.entry}>
@@ -560,10 +763,10 @@ export const CVDocument = ({ cv, projects }: { cv: CVData; projects: ProjectData
         )}
 
         {/* Achievements & Certifications */}
-        {cv.achievements && cv.achievements.some((a: string) => a.trim()) && (
-          <View style={styles.section}>
+        {hasAchievements && (
+          <View style={lastSection === "achievements" ? [styles.section, { marginBottom: 0 }] : styles.section}>
             <Text style={styles.sectionTitle}>Achievements &amp; Certifications</Text>
-            {cv.achievements
+            {(cv.achievements || [])
               .filter((a: string) => a.trim())
               .slice(0, 4)
               .map((ach: string, idx: number) => {

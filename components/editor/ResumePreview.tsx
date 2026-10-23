@@ -260,7 +260,7 @@ function FormalTemplate({
     entryGap = "2.5px";
     bulletMarginBottom = "0.5px";
     skillLineMarginBottom = "0.5px";
-  } else if (score >= 30) {
+  } else if (score >= 32) {
     // Standard full resume (e.g. 2-3 jobs, 2-3 projects with multiple bullets)
     fontSizeBody = "7.8pt";
     fontSizeSecTitle = "8.8pt";
@@ -282,28 +282,28 @@ function FormalTemplate({
     entryGap = "3.5px";
     bulletMarginBottom = "1px";
     skillLineMarginBottom = "0.8px";
-  } else if (score < 20) {
-    // Light content: expand slightly so it nicely fills the page without leaving an awkward blank void
-    fontSizeBody = "8.6pt";
-    fontSizeSecTitle = "9.6pt";
-    fontSizeSummary = "9pt";
-    fontSizeEntryHeader = "9.6pt";
-    fontSizeSub = "8.8pt";
-    fontSizePeriod = "8.6pt";
-    fontSizeName = "22pt";
+  } else if (score < 22) {
+    // Light content: expand slightly so it nicely breathes without cramped voids
+    fontSizeBody = "8.5pt";
+    fontSizeSecTitle = "9.5pt";
+    fontSizeSummary = "8.8pt";
+    fontSizeEntryHeader = "9.5pt";
+    fontSizeSub = "8.6pt";
+    fontSizePeriod = "8.4pt";
+    fontSizeName = "21pt";
     
-    lineHeightBody = 1.35;
-    lineHeightSummary = 1.35;
-    lineHeightSkills = 1.4;
+    lineHeightBody = 1.32;
+    lineHeightSummary = 1.32;
+    lineHeightSkills = 1.35;
     
-    paddingPage = "9mm 11.5mm";
-    marginHeader = "8px";
-    marginSection = "8px";
+    paddingPage = "8mm 10mm";
+    marginHeader = "7px";
+    marginSection = "7px";
     sectionTitlePaddingTop = "2.5px";
     sectionTitleMarginBottom = "3.5px";
-    entryGap = "6px";
-    bulletMarginBottom = "2px";
-    skillLineMarginBottom = "1.5px";
+    entryGap = "5.5px";
+    bulletMarginBottom = "1.8px";
+    skillLineMarginBottom = "1.2px";
   }
 
   return (
