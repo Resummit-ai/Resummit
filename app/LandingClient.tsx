@@ -7,6 +7,7 @@ import { signOut } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import ArrowRevealButton from "@/components/ui/ArrowRevealButton";
 import RotatingText from "@/components/ui/RotatingText";
+import HeroArtwork from "@/components/landing/HeroArtwork";
 
 const TECH_LOGOS = [
   {
@@ -448,33 +449,35 @@ export function LandingClient({
         }
 
         [data-theme="light"] {
-          --bg: #F5F6F8;
+          --bg: #F5F4F0;
           --surface: #FFFFFF;
-          --surface-2: #F0F3F8;
-          --text: #20252E;
+          --surface-2: #EFEFEA;
+          --text: #151A24;
           --muted: #626D7C;
-          --border: #E1E5EB;
-          --primary: #5473D1;
-          --shadow: rgba(0, 0, 0, 0.04);
-          --nav: rgba(245, 246, 248, 0.85);
-          --logo-doc-body: #E7EDFF;
+          --border: #E2E5EB;
+          --primary: #245DFF;
+          --pale-blue: #E8EEFF;
+          --deep-navy: #10234A;
+          --shadow: rgba(16, 35, 74, 0.04);
+          --nav: rgba(245, 244, 240, 0.92);
+          --logo-doc-body: #E8EEFF;
           --logo-doc-fold: #CFD9FF;
-          --logo-doc-lines: #5473D1;
-          --logo-flag-pole: #5473D1;
-          --logo-flag-banner: #5473D1;
-          --logo-text: #20252E;
+          --logo-doc-lines: #245DFF;
+          --logo-flag-pole: #245DFF;
+          --logo-flag-banner: #245DFF;
+          --logo-text: #151A24;
           --logo-tagline: #626D7C;
           
           /* Cards Theme variables */
           --card-bg: #FFFFFF;
-          --card-border: #E1E5EB;
+          --card-border: #E2E5EB;
           --card-hover-bg: #FFFFFF;
           --card-hover-border: #CFD9FF;
-          --card-number-color: rgba(32, 37, 46, 0.08);
-          --card-icon-bg: #F0F3F8;
-          --card-icon-border: #E1E5EB;
-          --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-          --card-hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+          --card-number-color: rgba(21, 26, 36, 0.06);
+          --card-icon-bg: #E8EEFF;
+          --card-icon-border: #CFD9FF;
+          --card-shadow: 0 4px 12px rgba(16, 35, 74, 0.04);
+          --card-hover-shadow: 0 12px 28px rgba(36, 93, 255, 0.08);
         }
 
         .landing-body * {
@@ -1198,18 +1201,19 @@ export function LandingClient({
         }
 
         .landing-body .hero h1 {
-          font-size: clamp(3.2rem, 7.2vw, 9.5rem) !important;
-          line-height: 0.95 !important;
-          letter-spacing: -0.06em !important;
-          margin-bottom: 24px;
-          max-width: 1000px !important;
+          font-size: clamp(2.2rem, 3.8vw, 3.4rem) !important;
+          line-height: 1.15 !important;
+          letter-spacing: -0.035em !important;
+          margin-bottom: 16px;
+          max-width: 720px !important;
         }
 
         .landing-body .hero p {
-          max-width: 750px !important;
-          font-size: clamp(1.08rem, 1.6vw, 1.4rem) !important;
+          max-width: 540px !important;
+          font-size: clamp(1rem, 1.25vw, 1.15rem) !important;
+          line-height: 1.6 !important;
           color: var(--muted);
-          margin-bottom: 34px;
+          margin-bottom: 24px;
         }
 
         .landing-body .hero-actions {
@@ -1845,9 +1849,26 @@ export function LandingClient({
 
         @media(max-width:980px) {
           .landing-body .hero-grid,
+          .landing-body .hero-content-grid,
           .landing-body .cards,
           .landing-body .workflow {
-            grid-template-columns: 1fr;
+            grid-template-columns: 1fr !important;
+          }
+
+          .landing-body .hero-artwork-stage {
+            flex-direction: column !important;
+            gap: 20px !important;
+            min-height: auto !important;
+          }
+
+          .landing-body .hero-flow-zone {
+            display: none !important;
+          }
+
+          .landing-body .hero-code-editor,
+          .landing-body .hero-resume-card {
+            width: 100% !important;
+            max-width: 480px !important;
           }
 
           .landing-body .nav-links {
@@ -2472,20 +2493,67 @@ export function LandingClient({
           </div>
         </nav>
 
-        {/* Hero Section */}
-        <section className="hero">
+        {/* Hero Section — Redesigned to match the reference */}
+        <section className="hero" style={{ minHeight: "auto", paddingTop: "96px", paddingBottom: "40px", position: "relative", overflow: "hidden" }}>
           <div ref={glowRef} className="glow" style={{ top: "-220px", right: "-220px", willChange: "transform" }}></div>
-          <div className="container hero-grid">
-            <div className="reveal">
-              <div className="badge">
-                <div className="dot"></div>
-                GitHub-powered resume intelligence
-              </div>
+          
+          <div className="container" style={{ width: "min(92%, 1280px)", margin: "0 auto", position: "relative", zIndex: 2 }}>
+            {/* Top Stage: Code Editor -> Connection Particle Flow -> Stacked Paper Resume */}
+            <div>
+              <HeroArtwork />
+            </div>
 
-              <h1>
-                Your GitHub already proves <br />
-                your experience in{" "}
-                <span style={{ display: "inline-block", verticalAlign: "middle", marginTop: "4px" }}>
+            {/* Bottom Area: Lower-Left Narrative & Lower-Right Compact Product-Detail Cards */}
+            <div
+              className="hero-content-grid"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1.2fr 0.8fr",
+                gap: "32px",
+                alignItems: "flex-end",
+                marginTop: "0px",
+              }}
+            >
+              {/* Lower-Left: Eyebrow, Primary Headline, Supporting Description, CTAs */}
+              <div>
+                {/* Eyebrow */}
+                <div
+                  style={{
+                    fontSize: "0.8rem",
+                    fontWeight: 700,
+                    letterSpacing: "0.14em",
+                    color: "var(--muted)",
+                    textTransform: "uppercase",
+                    marginBottom: "12px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
+                  <span
+                    style={{
+                      width: "6px",
+                      height: "6px",
+                      borderRadius: "50%",
+                      background: "var(--primary)",
+                    }}
+                  />
+                  YOUR COMMITS. YOUR CAREER.
+                </div>
+
+                {/* Primary Headline */}
+                <h1
+                  style={{
+                    fontSize: "clamp(2rem, 3.6vw, 3.2rem)",
+                    fontWeight: 800,
+                    lineHeight: 1.15,
+                    letterSpacing: "-0.04em",
+                    color: "var(--text)",
+                    marginBottom: "16px",
+                  }}
+                >
+                  Your GitHub already proves <br />
+                  your experience in{" "}
                   <RotatingText
                     texts={[
                       "Full-Stack Systems",
@@ -2496,110 +2564,169 @@ export function LandingClient({
                       "Modern Web Apps",
                     ]}
                     color="#FFFFFF"
-                    badgeBackground="#5473D1"
+                    badgeBackground="#245DFF"
                     badgeRadius={14}
-                    badgePaddingX={20}
-                    badgePaddingY={5}
+                    badgePaddingX={18}
+                    badgePaddingY={4}
                     font={{
                       fontFamily: "Inter, system-ui, sans-serif",
                       fontWeight: 800,
-                      fontSize: "clamp(1.6rem, 3.4vw, 2.5rem)",
+                      fontSize: "clamp(1.3rem, 2.5vw, 1.95rem)",
                       letterSpacing: "-0.02em",
-                      lineHeight: "1.15",
+                      lineHeight: "1.2",
                     }}
                   />
-                </span>
-              </h1>
+                </h1>
 
-              <p>
-                Resummit analyzes repositories, commits, technologies, and project structures
-                to generate clean, recruiter-ready resumes from the work you already built.
-              </p>
-
-              <div className="hero-actions">
-                <ArrowRevealButton
-                  label={hasSession ? "Go to Dashboard" : "Sign In to Start"}
-                  link={hasSession ? "/dashboard" : "/login"}
-                  rounded={100}
-                  padding="12px 16px 12px 22px"
-                  gap={14}
-                  colors={{
-                    fill: theme === "dark" ? "#181b20" : "#ffffff",
-                    textColor: theme === "dark" ? "#f3f4f6" : "#20252e",
-                    hoverTextColor: "#ffffff",
+                {/* Supporting Description */}
+                <p
+                  style={{
+                    maxWidth: "520px",
+                    fontSize: "clamp(0.95rem, 1.2vw, 1.1rem)",
+                    lineHeight: 1.55,
+                    color: "var(--muted)",
+                    marginBottom: "22px",
                   }}
-                  border={{
-                    borderColor: theme === "dark" ? "rgba(255,255,255,0.14)" : "rgba(0,0,0,0.1)",
-                    borderWidth: 1,
-                    borderStyle: "solid",
-                  }}
-                  icon={{
-                    side: "right",
-                    type: "arrow",
-                    background: "#5473D1",
-                    color: "#FFFFFF",
-                    size: 15,
-                    padding: 7,
-                    direction: "right",
-                    restAngle: 0,
-                    hoverAngle: -45,
-                  }}
-                />
-                <button 
-                  onClick={() => {
-                    const element = document.getElementById("preview-section");
-                    element?.scrollIntoView({ behavior: "smooth" });
-                  }}
-                  className="secondary-btn"
-                  style={{ cursor: "pointer" }}
                 >
-                  See Resume Preview
-                </button>
-              </div>
+                  Resummit analyzes repositories, commits, technologies, and project structures
+                  to generate clean, recruiter-ready resumes from the work you already built.
+                </p>
 
-              {/* Trust line */}
-              <div style={{ display: "flex", alignItems: "center", gap: "18px", marginTop: "8px", flexWrap: "wrap" }}>
-                <span style={{ fontSize: "0.82rem", color: "var(--muted)", display: "flex", alignItems: "center", gap: "6px" }}>
-                  <svg viewBox="0 0 20 20" fill="currentColor" style={{ width: "14px", height: "14px", color: "#10b981", flexShrink: 0 }}><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
-                  Free to start · No credit card required
-                </span>
-                <span style={{ fontSize: "0.82rem", color: "var(--muted)", display: "flex", alignItems: "center", gap: "6px" }}>
-                  <svg viewBox="0 0 20 20" fill="currentColor" style={{ width: "14px", height: "14px", color: "#10b981", flexShrink: 0 }}><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
-                  Read-only GitHub access · Never writes to your repos
-                </span>
-              </div>
-
-              {/* Social proof badge */}
-              <div style={{ display: "inline-flex", alignItems: "center", gap: "10px", marginTop: "20px", padding: "10px 18px", borderRadius: "100px", background: "rgba(79,140,255,0.08)", border: "1px solid rgba(79,140,255,0.2)" }}>
-                <div style={{ display: "flex", gap: "-6px" }}>
-                  {["🧑‍💻","👩‍💻","🧑‍🎓"].map((e, i) => (
-                    <span key={i} style={{ fontSize: "1.1rem", marginLeft: i > 0 ? "-4px" : 0 }}>{e}</span>
-                  ))}
+                {/* Action Buttons */}
+                <div
+                  className="hero-actions"
+                  style={{
+                    display: "flex",
+                    gap: "14px",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                    marginBottom: "20px",
+                  }}
+                >
+                  <ArrowRevealButton
+                    label={hasSession ? "Go to Dashboard" : "Sign In to Start"}
+                    link={hasSession ? "/dashboard" : "/login"}
+                    rounded={100}
+                    padding="12px 18px 12px 24px"
+                    gap={14}
+                    colors={{
+                      fill: "var(--primary)",
+                      textColor: "#FFFFFF",
+                      hoverTextColor: "#FFFFFF",
+                    }}
+                    icon={{
+                      side: "right",
+                      type: "arrow",
+                      background: "rgba(255,255,255,0.2)",
+                      color: "#FFFFFF",
+                      size: 15,
+                      padding: 7,
+                      direction: "right",
+                      restAngle: 0,
+                      hoverAngle: -45,
+                    }}
+                  />
+                  <button 
+                    onClick={() => {
+                      const element = document.getElementById("preview-section");
+                      element?.scrollIntoView({ behavior: "smooth" });
+                    }}
+                    className="secondary-btn"
+                    style={{
+                      cursor: "pointer",
+                      padding: "12px 22px",
+                      borderRadius: "100px",
+                      border: "1px solid var(--border)",
+                      background: "transparent",
+                      color: "var(--text)",
+                      fontWeight: 600,
+                      fontSize: "0.95rem",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "6px",
+                      transition: "all 0.25s ease",
+                    }}
+                  >
+                    See Resume Preview <span>→</span>
+                  </button>
                 </div>
-                <span style={{ fontSize: "0.82rem", color: "var(--muted)", fontWeight: 600 }}>
-                  Joined by <span style={{ color: "var(--primary)", fontWeight: 700 }}>developers</span> from 10+ countries since launch
-                </span>
-              </div>
-            </div>
 
-            <div className="preview reveal">
-              <div className="preview-header">
-                <strong>Live Resume Generation</strong>
-                <span style={{ color: "var(--muted)" }}>Real project analysis</span>
+                {/* Trust line */}
+                <div style={{ display: "flex", alignItems: "center", gap: "18px", marginTop: "8px", flexWrap: "wrap" }}>
+                  <span style={{ fontSize: "0.82rem", color: "var(--muted)", display: "flex", alignItems: "center", gap: "6px" }}>
+                    <svg viewBox="0 0 20 20" fill="currentColor" style={{ width: "14px", height: "14px", color: "#10b981", flexShrink: 0 }}><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                    Free to start · No credit card required
+                  </span>
+                  <span style={{ fontSize: "0.82rem", color: "var(--muted)", display: "flex", alignItems: "center", gap: "6px" }}>
+                    <svg viewBox="0 0 20 20" fill="currentColor" style={{ width: "14px", height: "14px", color: "#10b981", flexShrink: 0 }}><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                    Read-only GitHub access · Never writes to your repos
+                  </span>
+                </div>
+
+                {/* Social proof badge */}
+                <div style={{ display: "inline-flex", alignItems: "center", gap: "10px", marginTop: "18px", padding: "8px 16px", borderRadius: "100px", background: "rgba(36,93,255,0.06)", border: "1px solid rgba(36,93,255,0.15)" }}>
+                  <div style={{ display: "flex", gap: "-6px" }}>
+                    {["🧑‍💻","👩‍💻","🧑‍🎓"].map((e, i) => (
+                      <span key={i} style={{ fontSize: "1rem", marginLeft: i > 0 ? "-4px" : 0 }}>{e}</span>
+                    ))}
+                  </div>
+                  <span style={{ fontSize: "0.82rem", color: "var(--muted)", fontWeight: 600 }}>
+                    Joined by <span style={{ color: "var(--primary)", fontWeight: 700 }}>developers</span> from 10+ countries since launch
+                  </span>
+                </div>
               </div>
 
-              <div className="preview-body">
-                <div className="code">
-                  {"$ resummit analyze github/dragon486\n\n"}
-                  {"→ Reading repositories\n"}
-                  {"→ Detecting frameworks & languages\n"}
-                  {"→ Parsing project structures\n"}
-                  {"→ Generating professional resume bullets\n\n"}
-                  {"✓ Resume generated successfully\n\n"}
-                  {"• Built AI-based sentiment analysis systems\n"}
-                  {"• Developed scalable Next.js applications\n"}
-                  {"• Integrated Redis caching infrastructure\n"}
-                  {"• Automated meeting summarization workflows"}
+              {/* Lower-Right: Two Compact Product-Detail Cards (from the reference) */}
+              <div
+                style={{
+                  display: "flex",
+                  gap: "16px",
+                  justifyContent: "flex-end",
+                  flexWrap: "wrap",
+                }}
+              >
+                {/* Card 1: GitHub */}
+                <div
+                  style={{
+                    background: "var(--surface)",
+                    border: "1px solid var(--border)",
+                    borderRadius: "14px",
+                    padding: "20px 22px",
+                    boxShadow: "0 6px 20px var(--shadow)",
+                    minWidth: "160px",
+                    maxWidth: "220px",
+                    flex: "1 1 160px",
+                    transition: "transform 0.25s ease, box-shadow 0.25s ease",
+                  }}
+                >
+                  <div style={{ fontSize: "1.15rem", fontWeight: 800, color: "var(--text)", marginBottom: "4px" }}>
+                    GitHub
+                  </div>
+                  <div style={{ fontSize: "0.88rem", color: "var(--muted)", lineHeight: 1.35 }}>
+                    Your work, understood
+                  </div>
+                </div>
+
+                {/* Card 2: Resume */}
+                <div
+                  style={{
+                    background: "var(--surface)",
+                    border: "1px solid var(--border)",
+                    borderRadius: "14px",
+                    padding: "20px 22px",
+                    boxShadow: "0 6px 20px var(--shadow)",
+                    minWidth: "160px",
+                    maxWidth: "220px",
+                    flex: "1 1 160px",
+                    transition: "transform 0.25s ease, box-shadow 0.25s ease",
+                  }}
+                >
+                  <div style={{ fontSize: "1.15rem", fontWeight: 800, color: "var(--text)", marginBottom: "4px" }}>
+                    Resume
+                  </div>
+                  <div style={{ fontSize: "0.88rem", color: "var(--muted)", lineHeight: 1.35 }}>
+                    Your skills, clearly presented
+                  </div>
                 </div>
               </div>
             </div>
