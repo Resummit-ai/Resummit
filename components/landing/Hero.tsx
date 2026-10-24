@@ -147,20 +147,27 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
               See sample resume →
             </button>
 
-            <div className="inline-flex items-center gap-2 text-xs text-neutral-700 dark:text-[#f2efe9]/80 font-normal ml-2">
-              <span className="text-amber-500 dark:text-amber-400 text-sm">★</span>
-              <span className="font-bold text-neutral-900 dark:text-[#f2efe9]">{LANDING_CONFIG.realStats.userCountText}</span>
+            <div className="inline-flex items-center gap-2 text-xs font-normal ml-2">
+              <span className="text-amber-400 text-sm drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">★</span>
+              <span className="font-semibold text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.85)]">
+                <EncryptedText
+                  text={LANDING_CONFIG.realStats.userCountText}
+                  encryptedClassName="text-white/45 font-mono"
+                  revealedClassName="text-white font-semibold font-sans drop-shadow-[0_1px_3px_rgba(0,0,0,0.85)]"
+                  revealDelayMs={35}
+                />
+              </span>
             </div>
           </div>
 
           {/* Trust Guarantees */}
-          <div className="flex flex-wrap items-center gap-6 text-xs text-neutral-900 dark:text-[#f2efe9]/85 font-semibold drop-shadow-[0_1px_1px_rgba(255,255,255,0.85)] dark:drop-shadow-none mb-14">
+          <div className="flex flex-wrap items-center gap-6 text-xs text-white/90 font-medium drop-shadow-[0_1px_3px_rgba(0,0,0,0.85)] mb-14">
             <span className="inline-flex items-center gap-1.5">
-              <Check size={14} className="text-emerald-700 dark:text-emerald-400 stroke-[2.5]" />
+              <Check size={14} className="text-emerald-400 stroke-[2.5]" />
               Free developer preview · No credit card required
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <Check size={14} className="text-emerald-700 dark:text-emerald-400 stroke-[2.5]" />
+              <Check size={14} className="text-emerald-400 stroke-[2.5]" />
               Read-only access to your public repos
             </span>
           </div>
