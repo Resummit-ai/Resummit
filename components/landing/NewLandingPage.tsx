@@ -76,6 +76,7 @@ const Footer = dynamic(
 );
 import { SectionReveal } from "@/components/ui/SectionReveal";
 import { SmoothScrollProvider } from "@/components/ui/SmoothScrollProvider";
+import { BackToTopButton } from "@/components/ui/BackToTopButton";
 
 export function NewLandingPage() {
   const scrollBarRef = useRef<HTMLDivElement>(null);
@@ -302,6 +303,9 @@ export function NewLandingPage() {
 
         <Footer />
       </SmoothScrollProvider>
+
+      {/* Floating Back to Top button */}
+      <BackToTopButton />
     </div>
   );
 }

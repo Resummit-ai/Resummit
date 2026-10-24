@@ -7,7 +7,6 @@ export function ResumePreviewSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
   const [resumeScale, setResumeScale] = useState(0.72);
-  const [sheetHeight, setSheetHeight] = useState(960);
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -17,18 +16,10 @@ export function ResumePreviewSection() {
         const s = Math.min(0.85, Math.max(0.36, (w - 16) / 794));
         setResumeScale(s);
       }
-      if (sheetRef.current) {
-        setSheetHeight(sheetRef.current.scrollHeight);
-      }
     };
     updateDimensions();
-    // Run after a tick to ensure font renders
-    const timer = setTimeout(updateDimensions, 100);
     window.addEventListener("resize", updateDimensions);
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener("resize", updateDimensions);
-    };
+    return () => window.removeEventListener("resize", updateDimensions);
   }, []);
 
   return (
@@ -70,24 +61,25 @@ export function ResumePreviewSection() {
 
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          {/* Left: Rendered Single-Page Resume of Alex Developer with zero bottom blank space */}
+          {/* Left: Rendered Single-Page Resume of Alex Developer with strict A4 proportions (1:1.414) */}
           <div className="lg:col-span-7 flex justify-center items-center">
             <div ref={containerRef} className="w-full flex justify-center items-center overflow-hidden py-2">
               <div
                 className="resume-preview-wrapper relative rounded-lg overflow-hidden bg-white shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.6)] border border-[#E5E5E5] dark:border-[#27272a] transition-all duration-300"
                 style={{
                   width: `${Math.round(794 * resumeScale)}px`,
-                  height: `${Math.round((sheetHeight || 960) * resumeScale)}px`,
+                  height: `${Math.round(1123 * resumeScale)}px`,
                 }}
               >
                 <div
                   ref={sheetRef}
-                  className="resume-preview-sheet resume-paper bg-white select-text text-left"
+                  className="resume-preview-sheet resume-paper bg-white select-text text-left flex flex-col justify-between"
                   style={{
                     width: "794px",
+                    height: "1123px",
                     transform: `scale(${resumeScale})`,
                     transformOrigin: "top left",
-                    padding: "36px 42px 32px 42px",
+                    padding: "40px 44px 38px 44px",
                     boxSizing: "border-box",
                     position: "absolute",
                     top: 0,

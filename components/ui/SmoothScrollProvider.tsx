@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useEffect, useRef, ReactNode } from "react";
+import React, { useEffect, ReactNode } from "react";
+import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ScrollSmoother } from "gsap/ScrollSmoother";
 
-// Register GSAP plugins
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
+  gsap.registerPlugin(ScrollTrigger);
 }
 
 interface SmoothScrollProviderProps {
@@ -15,38 +14,29 @@ interface SmoothScrollProviderProps {
 }
 
 export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    if (typeof window === "undefined" || !wrapperRef.current || !contentRef.current) return;
+    if (typeof window === "undefined") return;
 
-    let smoother: any = null;
-    try {
-      smoother = ScrollSmoother.create({
-        wrapper: wrapperRef.current,
-        content: contentRef.current,
-        smooth: 1.15,
-        effects: false,
-        smoothTouch: 0.1,
-      });
-    } catch (err) {
-      // Fallback gracefully if hardware doesn't support
-      console.warn("ScrollSmoother setup:", err);
-    }
+    const lenis = new Lenis({
+      duration: 1.15,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+    });
+
+    lenis.on("scroll", ScrollTrigger.update);
+
+    const tickerCallback = (time: number) => {
+      lenis.raf(time * 1000);
+    };
+
+    gsap.ticker.add(tickerCallback);
+    gsap.ticker.lagSmoothing(0);
 
     return () => {
-      if (smoother && typeof smoother.kill === "function") {
-        smoother.kill();
-      }
+      gsap.ticker.remove(tickerCallback);
+      lenis.destroy();
     };
   }, []);
 
-  return (
-    <div id="smooth-wrapper" ref={wrapperRef} className="w-full overflow-hidden">
-      <div id="smooth-content" ref={contentRef} className="w-full">
-        {children}
-      </div>
-    </div>
-  );
+  return <div className="w-full">{children}</div>;
 }

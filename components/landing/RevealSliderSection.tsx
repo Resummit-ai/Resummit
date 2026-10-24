@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useCallback } from "react";
-import { AlertCircle, CheckCircle2, ChevronLeft, ChevronRight, Sparkles, SlidersHorizontal } from "lucide-react";
+import { AlertCircle, CheckCircle2, ChevronLeft, ChevronRight, SlidersHorizontal, Sparkles } from "lucide-react";
 import { SectionReveal } from "@/components/ui/SectionReveal";
 
 export function RevealSliderSection() {
@@ -46,11 +46,11 @@ export function RevealSliderSection() {
             Before &amp; After AI Synthesis
           </h2>
           <p className="text-base sm:text-lg text-slate-700 dark:text-neutral-300 font-normal leading-relaxed">
-            Drag the comparison slider to reveal how Resummit transforms raw, uncalibrated GitHub commits into high-converting, ATS-certified achievement bullets.
+            Drag the comparison slider to reveal how Resummit transforms raw, uncalibrated developer commits into an ATS-certified, recruiter-ready resume.
           </p>
         </SectionReveal>
 
-        {/* Comparison Slider Container */}
+        {/* Realistic Resume Comparison Slider */}
         <SectionReveal delay={1}>
           <div
             ref={containerRef}
@@ -60,115 +60,171 @@ export function RevealSliderSection() {
             onMouseDown={() => setIsDragging(true)}
             onMouseUp={() => setIsDragging(false)}
             onMouseLeave={() => setIsDragging(false)}
-            className="relative w-full max-w-5xl mx-auto h-[540px] sm:h-[480px] rounded-3xl overflow-hidden border border-[#E5E5E5] dark:border-[#27272a] shadow-2xl bg-white dark:bg-[#141417] select-none cursor-ew-resize"
+            className="relative w-full max-w-5xl mx-auto h-[620px] sm:h-[580px] rounded-3xl overflow-hidden border border-[#E5E5E5] dark:border-[#27272a] shadow-2xl bg-white dark:bg-[#141417] select-none cursor-ew-resize"
           >
-            {/* 1. AFTER Panel (Right / Full Background Layer) */}
-            <div className="absolute inset-0 w-full h-full p-6 sm:p-10 flex flex-col justify-between bg-gradient-to-br from-white via-white to-blue-50/20 dark:from-[#141417] dark:via-[#141417] dark:to-[#0099ff]/5">
-              <div>
-                {/* Header Badge */}
-                <div className="flex items-center justify-between mb-6">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/25 text-xs font-bold font-mono">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    AFTER: RESUMMIT AI SYNTHESIS
-                  </div>
-                  <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 text-xs font-bold border border-emerald-200 dark:border-emerald-800">
-                    <CheckCircle2 size={14} />
-                    <span>98% ATS Match Rate</span>
-                  </div>
+            {/* 1. AFTER Panel: Recruiter-Ready ATS Resume (Full Underlayer) */}
+            <div className="absolute inset-0 w-full h-full p-6 sm:p-10 flex flex-col justify-between bg-white dark:bg-[#141417] text-[#0f172a] dark:text-[#f2efe9]">
+              {/* Floating Top Badge */}
+              <div className="flex items-center justify-between mb-4 border-b border-emerald-500/20 pb-3">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/25 text-xs font-bold font-mono">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  AFTER: RESUMMIT AI SYNTHESIS
+                </div>
+                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-xs font-bold border border-emerald-500/20">
+                  <CheckCircle2 size={14} />
+                  <span>98% ATS Match Rate · Recruiter Certified</span>
+                </div>
+              </div>
+
+              {/* Realistic Resume Sheet Content (After) */}
+              <div className="space-y-4 font-serif text-[12px] sm:text-[13px] leading-relaxed">
+                {/* Header */}
+                <div className="text-center pb-2 border-b-[1.5px] border-[#0f172a] dark:border-[#f2efe9]">
+                  <h3 className="text-xl sm:text-2xl font-bold tracking-wider text-[#0f172a] dark:text-[#f2efe9]">
+                    ALEX DEVELOPER
+                  </h3>
+                  <p className="text-[11px] text-[#475569] dark:text-neutral-400 mt-1 font-sans">
+                    San Francisco, CA (Open to Remote) · alex@developer.com · github.com/alex-dev · linkedin.com/in/alex-dev
+                  </p>
                 </div>
 
-                {/* Achievement Bullets */}
-                <div className="space-y-4">
-                  <div className="p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.03] dark:bg-emerald-500/[0.05]">
-                    <div className="flex items-center gap-2 text-xs font-bold text-emerald-800 dark:text-emerald-300 mb-1">
-                      <Sparkles size={14} />
-                      <span>Google XYZ Formula · Quantified Impact</span>
-                    </div>
-                    <p className="text-sm font-medium text-slate-800 dark:text-neutral-100 leading-relaxed font-sans">
-                      &ldquo;Architected high-throughput Redis caching layer with optimistic cache warming, cutting database read latency by 42% across 12,000+ daily events.&rdquo;
-                    </p>
+                {/* Summary */}
+                <div>
+                  <div className="font-bold text-[11px] uppercase tracking-wider border-b border-[#0f172a] dark:border-[#f2efe9] pb-0.5 mb-1.5 text-[#0f172a] dark:text-[#f2efe9] font-sans">
+                    TECHNICAL SUMMARY
                   </div>
+                  <p className="text-[11.5px] text-[#334155] dark:text-neutral-200">
+                    Full-Stack Software Engineer with expertise in distributed backend systems and high-throughput TypeScript architectures. Proven track record transforming GitHub commits into measurable, production-grade business outcomes.
+                  </p>
+                </div>
 
-                  <div className="p-4 rounded-xl border border-blue-500/20 bg-blue-500/[0.03] dark:bg-blue-500/[0.05]">
-                    <div className="flex items-center gap-2 text-xs font-bold text-blue-800 dark:text-[#0099ff] mb-1">
-                      <CheckCircle2 size={14} />
-                      <span>ATS Parser Certified · Zero Parse Errors</span>
+                {/* Experience */}
+                <div>
+                  <div className="font-bold text-[11px] uppercase tracking-wider border-b border-[#0f172a] dark:border-[#f2efe9] pb-0.5 mb-2 text-[#0f172a] dark:text-[#f2efe9] font-sans">
+                    PROFESSIONAL EXPERIENCE
+                  </div>
+                  <div className="space-y-3">
+                    <div>
+                      <div className="flex justify-between font-bold text-[12px] text-[#0f172a] dark:text-[#f2efe9]">
+                        <span>Senior Full-Stack Engineer — TechScale Systems</span>
+                        <span>2024 — Present</span>
+                      </div>
+                      <ul className="list-disc ml-5 space-y-1 mt-1 text-[11.5px] text-[#334155] dark:text-neutral-200">
+                        <li>
+                          <strong className="text-emerald-700 dark:text-emerald-400 font-semibold">[Google XYZ]</strong> Architected high-throughput Redis caching layer with optimistic cache warming, cutting database read latency by 42% across 12,000+ daily events.
+                        </li>
+                        <li>
+                          Implemented Next.js 15 App Router server actions with optimistic UI mutations, lowering overall TTFB to 180ms.
+                        </li>
+                        <li>
+                          Automated GitHub Actions CI/CD workflows conforming to strict WCAG 2.1 AA standards, shortening release cycle times from 35m to 8m.
+                        </li>
+                      </ul>
                     </div>
-                    <p className="text-sm font-medium text-slate-800 dark:text-neutral-100 leading-relaxed font-sans">
-                      &ldquo;Automated GitHub Actions CI/CD workflows conforming to WCAG 2.1 AA standards, shortening deployment cycle times from 35m to 8m.&rdquo;
-                    </p>
                   </div>
                 </div>
               </div>
 
-              {/* Bottom Telemetry Footer */}
-              <div className="pt-4 border-t border-[#E5E5E5] dark:border-[#27272a] flex flex-wrap items-center justify-between text-xs text-slate-600 dark:text-neutral-400">
+              {/* Bottom Footer Telemetry */}
+              <div className="pt-3 border-t border-[#E5E5E5] dark:border-[#27272a] flex flex-wrap items-center justify-between text-xs text-slate-600 dark:text-neutral-400 font-sans">
                 <span className="font-semibold text-emerald-700 dark:text-emerald-400">Greenhouse · Lever · Workday Certified</span>
-                <span className="font-mono">100% Parsed</span>
+                <span className="font-mono text-emerald-600 dark:text-emerald-400">0 Formatting Errors · 100% Parsed</span>
               </div>
             </div>
 
-            {/* 2. BEFORE Panel (Left / Clipped Layer) */}
+            {/* 2. BEFORE Panel: Realistic Rejected Draft Resume (Clipped Overlayer) */}
             <div
-              className="absolute inset-0 h-full overflow-hidden bg-neutral-100 dark:bg-[#0c0c0e] p-6 sm:p-10 flex flex-col justify-between"
+              className="absolute inset-0 h-full overflow-hidden bg-[#fafafa] dark:bg-[#111113] p-6 sm:p-10 flex flex-col justify-between text-neutral-800 dark:text-neutral-300"
               style={{ width: `${sliderPosition}%` }}
             >
               <div style={{ width: containerRef.current ? `${containerRef.current.clientWidth}px` : "100%" }}>
-                {/* Header Badge */}
-                <div className="flex items-center justify-between mb-6 pr-10">
+                {/* Floating Top Badge */}
+                <div className="flex items-center justify-between mb-4 border-b border-red-500/20 pb-3 pr-10">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 text-red-700 dark:text-red-400 border border-red-500/25 text-xs font-bold font-mono">
                     <span className="w-2 h-2 rounded-full bg-red-500" />
-                    BEFORE: RAW COMMITS &amp; DRAFT
+                    BEFORE: UNCALIBRATED DRAFT
                   </div>
                   <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-400 text-xs font-bold border border-red-200 dark:border-red-800">
                     <AlertCircle size={14} />
-                    <span>34% ATS Match (Rejected)</span>
+                    <span>34% ATS Match (Rejected by Filters)</span>
                   </div>
                 </div>
 
-                {/* Raw Commits & Weak Bullets */}
-                <div className="space-y-4 max-w-xl">
-                  <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/[0.04]">
-                    <div className="flex items-center gap-2 text-xs font-bold text-red-700 dark:text-red-400 mb-1">
-                      <AlertCircle size={14} />
-                      <span>Unquantified · Passive Verbs · No Metrics</span>
-                    </div>
-                    <p className="text-sm font-normal text-slate-600 dark:text-neutral-400 leading-relaxed font-sans line-through decoration-red-400">
-                      &ldquo;Worked on backend stuff using Node.js and Redis to make the API faster for users.&rdquo;
+                {/* Realistic Messy Resume Sheet Content (Before) */}
+                <div className="space-y-4 font-sans text-[12px] sm:text-[13px] leading-relaxed max-w-4xl opacity-80">
+                  {/* Header */}
+                  <div className="text-center pb-2 border-b border-red-300 dark:border-red-900/50">
+                    <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-700 dark:text-neutral-400 line-through decoration-red-400">
+                      Alex Developer
+                    </h3>
+                    <p className="text-[11px] text-neutral-500 mt-1">
+                      Alex&apos;s Resume | Email: alex@gmail.com | Phone: 555-0192 | Portfolio: (wip)
                     </p>
                   </div>
 
-                  <div className="p-4 rounded-xl border border-amber-500/20 bg-amber-500/[0.04]">
-                    <div className="flex items-center gap-2 text-xs font-bold text-amber-700 dark:text-amber-400 mb-1">
-                      <AlertCircle size={14} />
-                      <span>Missing Action Verbs · Flagged by Lever Filters</span>
+                  {/* Summary */}
+                  <div>
+                    <div className="font-bold text-[11px] uppercase tracking-wider text-red-600 dark:text-red-400 pb-0.5 mb-1.5 flex items-center gap-2">
+                      <span>Objective</span>
+                      <span className="text-[10px] font-normal px-2 py-0.5 rounded bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300">
+                        ⚠️ Objective statements are obsolete
+                      </span>
                     </div>
-                    <p className="text-sm font-normal text-slate-600 dark:text-neutral-400 leading-relaxed font-sans line-through decoration-amber-400">
-                      &ldquo;Helped team fix bugs in CI/CD pipeline and updated some CSS components.&rdquo;
+                    <p className="text-[11.5px] text-neutral-600 dark:text-neutral-400 line-through decoration-red-400">
+                      Hardworking software engineer looking to learn new technologies and contribute to a fast-paced team environment.
                     </p>
+                  </div>
+
+                  {/* Experience */}
+                  <div>
+                    <div className="font-bold text-[11px] uppercase tracking-wider text-red-600 dark:text-red-400 pb-0.5 mb-2 flex items-center gap-2">
+                      <span>Experience</span>
+                      <span className="text-[10px] font-normal px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300">
+                        ⚠️ Missing business impact &amp; metrics
+                      </span>
+                    </div>
+                    <div className="space-y-3">
+                      <div>
+                        <div className="flex justify-between font-medium text-[12px] text-neutral-700 dark:text-neutral-400">
+                          <span>Developer at TechScale Systems</span>
+                          <span>2024 — Present</span>
+                        </div>
+                        <ul className="list-disc ml-5 space-y-1 mt-1 text-[11.5px] text-neutral-500 dark:text-neutral-400 line-through decoration-red-300">
+                          <li>
+                            Worked on backend stuff using Node.js and Redis to make the API faster for users.
+                          </li>
+                          <li>
+                            Helped team fix bugs in authentication and database queries when needed.
+                          </li>
+                          <li>
+                            Responsible for writing unit tests and deploying code to AWS servers.
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Bottom Telemetry Footer */}
+              {/* Bottom Footer Telemetry */}
               <div
-                className="pt-4 border-t border-neutral-300 dark:border-neutral-800 flex items-center justify-between text-xs text-red-600 dark:text-red-400"
+                className="pt-3 border-t border-red-200 dark:border-red-900/40 flex items-center justify-between text-xs text-red-600 dark:text-red-400 font-sans"
                 style={{ width: containerRef.current ? `${containerRef.current.clientWidth - 80}px` : "100%" }}
               >
-                <span>Filtered by Applicant Tracking Systems</span>
-                <span className="font-mono">Parse Score: 34%</span>
+                <span>Flagged by Greenhouse &amp; Lever ATS Parsers</span>
+                <span className="font-mono">Match Score: 34% (Failed)</span>
               </div>
             </div>
 
             {/* 3. Slider Divider & Drag Handle */}
             <div
-              className="absolute top-0 bottom-0 w-0.5 bg-blue-500 shadow-[0_0_12px_rgba(0,119,255,0.8)] z-30"
+              className="absolute top-0 bottom-0 w-0.5 bg-blue-500 shadow-[0_0_14px_rgba(0,119,255,0.9)] z-30 pointer-events-none"
               style={{ left: `${sliderPosition}%` }}
             >
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white dark:bg-[#171717] border-2 border-blue-500 shadow-xl flex items-center justify-center text-blue-600 dark:text-[#0099ff]">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white dark:bg-[#171717] border-2 border-blue-500 shadow-2xl flex items-center justify-center text-blue-600 dark:text-[#0099ff] pointer-events-auto cursor-grab active:cursor-grabbing">
                 <div className="flex items-center -space-x-1">
-                  <ChevronLeft size={16} />
-                  <ChevronRight size={16} />
+                  <ChevronLeft size={18} />
+                  <ChevronRight size={18} />
                 </div>
               </div>
             </div>
