@@ -148,7 +148,7 @@ export default async function DashboardPage() {
             </div>
           </div>
           <div className="flex items-center">
-            <DashboardControls user={dbUser} />
+            <DashboardControls user={dbUser} isAdmin={isSystemAdmin} />
           </div>
         </div>
       </nav>

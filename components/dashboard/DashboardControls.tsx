@@ -12,6 +12,7 @@ interface DashboardControlsProps {
     email?: string | null;
     image?: string | null;
   };
+  isAdmin?: boolean;
 }
 
 interface NotificationItem {
@@ -25,7 +26,7 @@ interface NotificationItem {
 
 const DEFAULT_NOTIFICATIONS: NotificationItem[] = [];
 
-export function DashboardControls({ user }: DashboardControlsProps) {
+export function DashboardControls({ user, isAdmin }: DashboardControlsProps) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -462,6 +463,15 @@ export function DashboardControls({ user }: DashboardControlsProps) {
 
                 {/* Dropdown Items */}
                 <div className="space-y-0.5">
+                  {(isAdmin || user.email === "adelmuhammed786@gmail.com") && (
+                    <a
+                      href="/admin"
+                      className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-blue-600 dark:text-[#0099ff] hover:bg-blue-50 dark:hover:bg-blue-950/20 rounded-lg transition-colors cursor-pointer text-left"
+                    >
+                      <Shield className="w-4 h-4 text-blue-500" />
+                      Admin Control Panel
+                    </a>
+                  )}
                   <a
                     href="/editor"
                     className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-[var(--sclade-subtle-bg)] rounded-lg transition-colors cursor-pointer text-left"
