@@ -151,7 +151,12 @@ export function Footer() {
           </div>
 
           <div className="flex items-center gap-6 font-mono text-[11px]">
-            <span>{LANDING_CONFIG.realStats.bulletsWritten.toLocaleString()} bullets written</span>
+            {LANDING_CONFIG.realStats.bulletsWritten !== null && (
+              <span>{LANDING_CONFIG.realStats.bulletsWritten.toLocaleString()} bullets written</span>
+            )}
+            {LANDING_CONFIG.realStats.userCountText && (
+              <span>{LANDING_CONFIG.realStats.userCountText}</span>
+            )}
             <span>{LANDING_CONFIG.footer.copyright}</span>
           </div>
         </div>
