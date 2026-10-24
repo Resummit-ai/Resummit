@@ -5,20 +5,30 @@ import { Cpu, FileCheck } from "lucide-react";
 
 export function ResumePreviewSection() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const sheetRef = useRef<HTMLDivElement>(null);
   const [resumeScale, setResumeScale] = useState(0.72);
+  const [sheetHeight, setSheetHeight] = useState(960);
 
   useEffect(() => {
-    const updateScale = () => {
+    const updateDimensions = () => {
       if (containerRef.current) {
         const w = containerRef.current.clientWidth;
-        // 794px is base A4 width. Scale smoothly to fit column while maintaining exact 794x1123 A4 ratio
+        // 794px is base A4 width. Scale smoothly to fit column while maintaining exact ratio
         const s = Math.min(0.85, Math.max(0.36, (w - 16) / 794));
         setResumeScale(s);
       }
+      if (sheetRef.current) {
+        setSheetHeight(sheetRef.current.scrollHeight);
+      }
     };
-    updateScale();
-    window.addEventListener("resize", updateScale);
-    return () => window.removeEventListener("resize", updateScale);
+    updateDimensions();
+    // Run after a tick to ensure font renders
+    const timer = setTimeout(updateDimensions, 100);
+    window.addEventListener("resize", updateDimensions);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("resize", updateDimensions);
+    };
   }, []);
 
   return (
@@ -60,24 +70,24 @@ export function ResumePreviewSection() {
 
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          {/* Left: Rendered Single-Page Resume of Alex Developer with authentic A4 proportions */}
+          {/* Left: Rendered Single-Page Resume of Alex Developer with zero bottom blank space */}
           <div className="lg:col-span-7 flex justify-center items-center">
             <div ref={containerRef} className="w-full flex justify-center items-center overflow-hidden py-2">
               <div
                 className="resume-preview-wrapper relative rounded-lg overflow-hidden bg-white shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.6)] border border-[#E5E5E5] dark:border-[#27272a] transition-all duration-300"
                 style={{
                   width: `${Math.round(794 * resumeScale)}px`,
-                  height: `${Math.round(1123 * resumeScale)}px`,
+                  height: `${Math.round((sheetHeight || 960) * resumeScale)}px`,
                 }}
               >
                 <div
+                  ref={sheetRef}
                   className="resume-preview-sheet resume-paper bg-white select-text text-left"
                   style={{
                     width: "794px",
-                    height: "1123px",
                     transform: `scale(${resumeScale})`,
                     transformOrigin: "top left",
-                    padding: "36px 42px",
+                    padding: "36px 42px 32px 42px",
                     boxSizing: "border-box",
                     position: "absolute",
                     top: 0,
@@ -128,7 +138,7 @@ export function ResumePreviewSection() {
                   </div>
 
                   {/* Technical Summary */}
-                  <div style={{ marginBottom: "10px" }}>
+                  <div style={{ marginBottom: "12px" }}>
                     <div
                       style={{
                         fontSize: "11.5px",
@@ -159,7 +169,7 @@ export function ResumePreviewSection() {
                   </div>
 
                   {/* Technical Skills */}
-                  <div style={{ marginBottom: "10px" }}>
+                  <div style={{ marginBottom: "12px" }}>
                     <div
                       style={{
                         fontSize: "11.5px",
@@ -185,19 +195,19 @@ export function ResumePreviewSection() {
                       }}
                     >
                       <div style={{ margin: "2px 0" }}>
-                        <strong>Languages:</strong> TypeScript, JavaScript, Python, Go, SQL
+                        <strong>Languages:</strong> TypeScript, JavaScript, Python, Go, SQL, Bash
                       </div>
                       <div style={{ margin: "2px 0" }}>
-                        <strong>Frameworks:</strong> Next.js, React, Node.js, Express, Flask, Tailwind CSS
+                        <strong>Frameworks:</strong> Next.js, React, Node.js, Express, Flask, Fastify, Tailwind CSS
                       </div>
                       <div style={{ margin: "2px 0" }}>
-                        <strong>Tools &amp; Platforms:</strong> AWS, Docker, Redis, PostgreSQL, Prisma, Git, GitHub Actions, Linux
+                        <strong>Tools &amp; Platforms:</strong> AWS (ECS, S3, RDS), Docker, Redis, PostgreSQL, Prisma, Git, GitHub Actions, Linux
                       </div>
                     </div>
                   </div>
 
                   {/* Professional Experience */}
-                  <div style={{ marginBottom: "10px" }}>
+                  <div style={{ marginBottom: "12px" }}>
                     <div
                       style={{
                         fontSize: "11.5px",
@@ -214,7 +224,7 @@ export function ResumePreviewSection() {
                       PROFESSIONAL EXPERIENCE
                     </div>
 
-                    <div style={{ marginBottom: "8px" }}>
+                    <div style={{ marginBottom: "9px" }}>
                       <div
                         style={{
                           display: "flex",
@@ -255,7 +265,7 @@ export function ResumePreviewSection() {
                       </ul>
                     </div>
 
-                    <div style={{ marginBottom: "8px" }}>
+                    <div style={{ marginBottom: "9px" }}>
                       <div
                         style={{
                           display: "flex",
@@ -295,7 +305,7 @@ export function ResumePreviewSection() {
                   </div>
 
                   {/* Technical Projects */}
-                  <div style={{ marginBottom: "10px" }}>
+                  <div style={{ marginBottom: "12px" }}>
                     <div
                       style={{
                         fontSize: "11.5px",
@@ -312,7 +322,7 @@ export function ResumePreviewSection() {
                       TECHNICAL PROJECTS
                     </div>
 
-                    <div style={{ marginBottom: "6px" }}>
+                    <div style={{ marginBottom: "7px" }}>
                       <div
                         style={{
                           display: "flex",
@@ -346,7 +356,7 @@ export function ResumePreviewSection() {
                       </ul>
                     </div>
 
-                    <div style={{ marginBottom: "6px" }}>
+                    <div style={{ marginBottom: "7px" }}>
                       <div
                         style={{
                           display: "flex",
@@ -379,10 +389,44 @@ export function ResumePreviewSection() {
                         </li>
                       </ul>
                     </div>
+
+                    <div style={{ marginBottom: "7px" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          fontWeight: "bold",
+                          color: "#0f172a",
+                          fontSize: "11.5px",
+                          marginBottom: "2px",
+                          fontFamily: "'Times New Roman', Georgia, serif",
+                        }}
+                      >
+                        <span>neural-persona-pipeline (github.com/alex-dev/neural-pipeline)</span>
+                        <span style={{ fontStyle: "italic", fontWeight: "normal", color: "#475569", fontSize: "10.5px" }}>
+                          Python, FastAPI, Redis
+                        </span>
+                      </div>
+                      <ul
+                        style={{
+                          margin: "0 0 0 14px",
+                          padding: 0,
+                          listStyleType: "disc",
+                          color: "#334155",
+                          fontSize: "10.5px",
+                          lineHeight: "1.4",
+                          fontFamily: "'Times New Roman', Georgia, serif",
+                        }}
+                      >
+                        <li style={{ marginBottom: "2px" }}>
+                          Deployed asynchronous FastAPI inference worker with Redis task queue, processing 400 requests/sec under 80ms latency.
+                        </li>
+                      </ul>
+                    </div>
                   </div>
 
                   {/* Education */}
-                  <div>
+                  <div style={{ marginBottom: "12px" }}>
                     <div
                       style={{
                         fontSize: "11.5px",
@@ -413,6 +457,35 @@ export function ResumePreviewSection() {
                     </div>
                     <div style={{ fontSize: "10.5px", color: "#475569", fontStyle: "italic", fontFamily: "'Times New Roman', Georgia, serif" }}>
                       National Institute of Technology · CGPA: 8.9 / 10.0
+                    </div>
+                  </div>
+
+                  {/* Achievements & Certifications */}
+                  <div>
+                    <div
+                      style={{
+                        fontSize: "11.5px",
+                        fontWeight: "bold",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.5px",
+                        borderTop: "1.5px solid #0f172a",
+                        paddingTop: "4px",
+                        marginBottom: "4px",
+                        color: "#0f172a",
+                        fontFamily: "'Times New Roman', Georgia, serif",
+                      }}
+                    >
+                      ACHIEVEMENTS &amp; CERTIFICATIONS
+                    </div>
+                    <div style={{ fontSize: "10.5px", color: "#334155", lineHeight: "1.45", fontFamily: "'Times New Roman', Georgia, serif" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "2px" }}>
+                        <span>• Cloud Integration Specialist Certification (AWS Credly)</span>
+                        <span style={{ fontWeight: "bold" }}>2025</span>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "2px" }}>
+                        <span>• Open-Source Hackathon 1st Place — Distributed Systems Track</span>
+                        <span style={{ fontWeight: "bold" }}>2024</span>
+                      </div>
                     </div>
                   </div>
                 </div>
