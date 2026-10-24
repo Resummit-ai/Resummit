@@ -66,10 +66,16 @@ const FinalCtaSection = dynamic(
   () => import("./FinalCtaSection").then((m) => m.FinalCtaSection),
   { ssr: true }
 );
+const RevealSliderSection = dynamic(
+  () => import("./RevealSliderSection").then((m) => m.RevealSliderSection),
+  { ssr: true }
+);
 const Footer = dynamic(
   () => import("./Footer").then((m) => m.Footer),
   { ssr: true }
 );
+import { SectionReveal } from "@/components/ui/SectionReveal";
+import { SmoothScrollProvider } from "@/components/ui/SmoothScrollProvider";
 
 export function NewLandingPage() {
   const scrollBarRef = useRef<HTMLDivElement>(null);
@@ -212,57 +218,90 @@ export function NewLandingPage() {
 
       <Navbar />
 
-      <main>
-        {/* 1. Hero Section: Editorial headline with RotatingText at top, real developer dashboard card below */}
-        <Hero />
+      <SmoothScrollProvider>
+        <main>
+          {/* 1. Hero Section: Editorial headline with RotatingText at top, real developer dashboard card below */}
+          <Hero />
 
-        {/* 2. Tech Stack Marquee (Serving developers shipping code at...) */}
-        <MarqueeSection />
+          {/* 2. Tech Stack Marquee (Serving developers shipping code at...) */}
+          <MarqueeSection />
 
-        {/* 3. Pipeline Architecture: Everything between your commits and your next offer (4 interactive tabs) */}
-        <PipelineSection />
+          {/* 3. Pipeline Architecture: Everything between your commits and your next offer (4 interactive tabs) */}
+          <SectionReveal>
+            <PipelineSection />
+          </SectionReveal>
 
-        {/* 4. Interactive Workflow Canvas: Wire up your resume in a minute (Connect all + animated laser beams) */}
-        <WorkflowCanvas />
+          {/* 4. Interactive Workflow Canvas: Wire up your resume in a minute (Connect all + animated laser beams) */}
+          <SectionReveal>
+            <WorkflowCanvas />
+          </SectionReveal>
 
-        {/* 5. Global Commit Stream: Real-time throughput & World Matrix */}
-        <CommitStreamSection />
+          {/* 5. Global Commit Stream: Real-time throughput & World Matrix */}
+          <SectionReveal>
+            <CommitStreamSection />
+          </SectionReveal>
 
-        {/* 6. Code Demo Section: Paste one repo. Generate in seconds (Interactive Run streaming code runner) */}
-        <EditorDemoSection />
+          {/* 6. Code Demo Section: Paste one repo. Generate in seconds (Interactive Run streaming code runner) */}
+          <SectionReveal>
+            <EditorDemoSection />
+          </SectionReveal>
 
-        {/* 7. The Magic: Raw commit to recruiter bullet (Continuous 4-phase looping transformation) */}
-        <MagicSection />
+          {/* 7. The Magic: Raw commit to recruiter bullet (Continuous 4-phase looping transformation) */}
+          <SectionReveal>
+            <MagicSection />
+          </SectionReveal>
 
-        {/* 8. Role Catalog with Vertical Icon Rail (Tailored versions for every tech stack) */}
-        <RoleVersionsSection />
+          {/* 8. Role Catalog with Vertical Icon Rail (Tailored versions for every tech stack) */}
+          <SectionReveal>
+            <RoleVersionsSection />
+          </SectionReveal>
 
-        {/* 9. Interactive Resume Output (Alex Developer single-page resume + ATS audit score 98%) */}
-        <ResumePreviewSection />
+          {/* 9. Interactive Resume Output (Alex Developer single-page resume + ATS audit score 98%) */}
+          <SectionReveal>
+            <ResumePreviewSection />
+          </SectionReveal>
 
-        {/* 10. Design Statement Quote ("Create meaningful digital experiences where every line unfolds...") */}
-        <DesignStatementSection />
+          {/* 10. Interactive Before/After Reveal Comparison Slider */}
+          <RevealSliderSection />
 
-        {/* 11. Stats Strip (50+ Resumes Generated, 10+ Countries, <60s Generation, 100% Free with animated counters) */}
-        <StatsStripSection />
+          {/* 11. Design Statement Quote ("Create meaningful digital experiences where every line unfolds...") */}
+          <SectionReveal>
+            <DesignStatementSection />
+          </SectionReveal>
 
-        {/* 12. Feature Pillars: Built for developers (3 cards with sky headers) */}
-        <FeaturePillarsSection />
+          {/* 12. Stats Strip (50+ Resumes Generated, 10+ Countries, <60s Generation, 100% Free with animated counters) */}
+          <SectionReveal>
+            <StatsStripSection />
+          </SectionReveal>
 
-        {/* 13. Pricing Matrix with animated sliding Monthly/Annual toggle */}
-        <PricingSection />
+          {/* 13. Feature Pillars: Built for developers (3 cards with sky headers) */}
+          <SectionReveal>
+            <FeaturePillarsSection />
+          </SectionReveal>
 
-        {/* 14. FAQ Accordion */}
-        <FaqSection />
+          {/* 14. Pricing Matrix with animated sliding Monthly/Annual toggle */}
+          <SectionReveal>
+            <PricingSection />
+          </SectionReveal>
 
-        {/* 15. Feedback Form submitting to /api/feedback + Adel Muhammed attribution */}
-        <FeedbackSection />
+          {/* 15. FAQ Accordion */}
+          <SectionReveal>
+            <FaqSection />
+          </SectionReveal>
 
-        {/* 16. Mountain Landscape Final CTA Banner */}
-        <FinalCtaSection />
-      </main>
+          {/* 16. Feedback Form submitting to /api/feedback + Adel Muhammed attribution */}
+          <SectionReveal>
+            <FeedbackSection />
+          </SectionReveal>
 
-      <Footer />
+          {/* 17. Mountain Landscape Final CTA Banner */}
+          <SectionReveal>
+            <FinalCtaSection />
+          </SectionReveal>
+        </main>
+
+        <Footer />
+      </SmoothScrollProvider>
     </div>
   );
 }
