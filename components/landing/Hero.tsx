@@ -46,12 +46,15 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
           imageSrc="/images/hero_mountain_bg.jpg"
           theme={theme}
           pixelSize={3}
-          className="opacity-90 dark:opacity-75 transition-opacity duration-700"
+          className="opacity-100 dark:opacity-80 transition-opacity duration-700"
         />
-        {/* Soft vignette preserving rich mountain colors while easing transitions */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#F5F5F3]/30 via-transparent to-[#F5F5F3] dark:from-[#0a0a0a]/75 dark:via-[#0a0a0a]/30 dark:to-[#0a0a0a] pointer-events-none transition-colors duration-300" />
-        {/* Smooth horizontal gradient to maintain high contrast readability for left-aligned text while allowing mountain landscape to shine */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#F5F5F3]/75 via-[#F5F5F3]/25 to-transparent dark:from-[#0a0a0a]/80 dark:via-[#0a0a0a]/25 dark:to-transparent pointer-events-none" />
+
+        {/* Ambient atmospheric color glow in light mode to bring vibrant sky and alpine warmth */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-sky-500/10 to-blue-600/15 dark:hidden pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-sky-400/10 via-transparent to-[#F5F5F3] dark:from-[#0a0a0a]/75 dark:via-[#0a0a0a]/30 dark:to-[#0a0a0a] pointer-events-none transition-colors duration-300" />
+
+        {/* Soft horizontal gradient focused on the left to preserve text readability while letting the colorful mountains shine on the right */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#F5F5F3]/85 via-[#F5F5F3]/40 via-45% to-transparent dark:from-[#0a0a0a]/80 dark:via-[#0a0a0a]/25 dark:to-transparent pointer-events-none" />
       </div>
 
       {/* 2. Main Container with Left-Aligned Content */}
