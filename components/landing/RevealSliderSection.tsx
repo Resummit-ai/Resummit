@@ -69,6 +69,52 @@ export function RevealSliderSection() {
       id="comparison-reveal"
       className="scroll-mt-24 bg-[#F5F5F3] dark:bg-[#0a0a0a] text-[#171717] dark:text-[#f2efe9] py-24 sm:py-32 border-t border-[#E5E5E5] dark:border-[#27272a] transition-colors duration-300"
     >
+      {/* Scoped CSS to enforce high-contrast black ink on white CV paper in both light & dark modes */}
+      <style>{`
+        .cv-sheet-paper,
+        .cv-sheet-paper * {
+          color: #0f172a !important;
+          -webkit-text-fill-color: #0f172a !important;
+        }
+        .cv-sheet-paper .cv-heading {
+          color: #000000 !important;
+          -webkit-text-fill-color: #000000 !important;
+        }
+        .cv-sheet-paper .cv-subheading {
+          color: #1e293b !important;
+          -webkit-text-fill-color: #1e293b !important;
+        }
+        .cv-sheet-paper .cv-muted {
+          color: #475569 !important;
+          -webkit-text-fill-color: #475569 !important;
+        }
+        .cv-sheet-paper .cv-link {
+          color: #1d4ed8 !important;
+          -webkit-text-fill-color: #1d4ed8 !important;
+        }
+        .cv-sheet-paper .cv-red-text {
+          color: #dc2626 !important;
+          -webkit-text-fill-color: #dc2626 !important;
+        }
+        .cv-sheet-paper .cv-red-badge {
+          background-color: #fee2e2 !important;
+          color: #991b1b !important;
+          -webkit-text-fill-color: #991b1b !important;
+          border-color: #fca5a5 !important;
+        }
+        .cv-sheet-paper .cv-green-badge {
+          background-color: #dcfce7 !important;
+          color: #166534 !important;
+          -webkit-text-fill-color: #166534 !important;
+          border-color: #86efac !important;
+        }
+        .cv-sheet-paper .cv-strike {
+          text-decoration: line-through !important;
+          text-decoration-color: #ef4444 !important;
+          color: #475569 !important;
+          -webkit-text-fill-color: #475569 !important;
+        }
+      `}</style>
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         {/* Section Header */}
         <SectionReveal className="text-center max-w-3xl mx-auto mb-12">
@@ -161,13 +207,13 @@ export function RevealSliderSection() {
               className="relative w-full min-h-[640px] sm:min-h-[660px] bg-white rounded-lg overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.12),0_1px_4px_rgba(0,0,0,0.06)] border border-neutral-200 select-none cursor-ew-resize touch-none"
             >
               {/* 1. UNDERLAYER: Recruiter-Ready ATS Resume Paper (Full 100% Width & Height) */}
-              <div className="absolute inset-0 w-full h-full bg-white text-[#0f172a] p-6 sm:p-10 md:p-12 flex flex-col justify-between font-serif select-text">
+              <div className="cv-sheet-paper absolute inset-0 w-full h-full bg-white text-[#0f172a] p-6 sm:p-10 md:p-12 flex flex-col justify-between font-serif select-text">
                 {/* Top Recruiter Verification Pill */}
                 <div className="flex items-center justify-between pb-2 border-b border-neutral-200 font-sans">
-                  <span className="text-[10px] font-mono font-bold tracking-wider text-neutral-500 uppercase">
+                  <span className="cv-muted text-[10px] font-mono font-bold tracking-wider uppercase">
                     RESUMMIT SYNTHESIS ENGINE · V2.4
                   </span>
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-300 text-[11px] font-bold font-sans">
+                  <span className="cv-green-badge inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold font-sans">
                     <CheckCircle2 size={13} className="text-emerald-600" />
                     <span>98% ATS MATCH · RECRUITER CERTIFIED</span>
                   </span>
@@ -178,15 +224,15 @@ export function RevealSliderSection() {
                   {/* CV Header */}
                   <div className="text-center pb-2 border-b-[1.5px] border-[#0f172a]">
                     <h3
-                      className="text-2xl font-bold tracking-wider text-[#0f172a] uppercase"
+                      className="cv-heading text-2xl font-bold tracking-wider uppercase"
                       style={{ letterSpacing: "1.5px" }}
                     >
                       ALEX M. DEVELOPER
                     </h3>
-                    <p className="text-[11px] text-[#475569] mt-1 font-sans">
+                    <p className="cv-muted text-[11px] mt-1 font-sans">
                       San Francisco, CA (Open to Remote) · alex@developer.com · +1 (555) 019-2834 ·{" "}
-                      <span className="text-blue-700 underline">github.com/alex-dev</span> ·{" "}
-                      <span className="text-blue-700 underline">linkedin.com/in/alex-dev</span>
+                      <span className="cv-link underline">github.com/alex-dev</span> ·{" "}
+                      <span className="cv-link underline">linkedin.com/in/alex-dev</span>
                     </p>
                   </div>
 
@@ -254,7 +300,7 @@ export function RevealSliderSection() {
 
               {/* 2. OVERLAYER: Rejected Draft Paper (Clipped with polygon) */}
               <div
-                className="absolute inset-0 w-full h-full bg-[#FAF9F5] text-[#334155] p-6 sm:p-10 md:p-12 flex flex-col justify-between font-sans select-text pointer-events-none"
+                className="cv-sheet-paper absolute inset-0 w-full h-full bg-[#FAF9F5] text-[#334155] p-6 sm:p-10 md:p-12 flex flex-col justify-between font-sans select-text pointer-events-none"
                 style={{
                   clipPath:
                     sliderPosition <= 0
@@ -271,11 +317,11 @@ export function RevealSliderSection() {
               >
                 {/* Top Rejection Badge */}
                 <div className="flex items-center justify-between pb-2 border-b border-red-200">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-100 text-red-800 border border-red-300 text-[11px] font-bold">
+                  <span className="cv-red-badge inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-[11px] font-bold">
                     <AlertTriangle size={13} className="text-red-600" />
                     <span>34% ATS MATCH · HIGH REJECTION RISK</span>
                   </span>
-                  <span className="text-[10px] font-mono text-red-700 font-bold">
+                  <span className="cv-red-text text-[10px] font-mono font-bold">
                     FLAGGED BY APPLICANT TRACKERS
                   </span>
                 </div>
@@ -284,52 +330,52 @@ export function RevealSliderSection() {
                 <div className="space-y-4 text-[12px] sm:text-[13px] leading-relaxed">
                   {/* Draft Header */}
                   <div className="text-center pb-2 border-b border-red-300">
-                    <h3 className="text-2xl font-bold tracking-tight text-neutral-800 line-through decoration-red-400">
+                    <h3 className="cv-heading cv-strike text-2xl font-bold tracking-tight">
                       Alex Developer
                     </h3>
-                    <p className="text-[11px] text-neutral-500 mt-1">
+                    <p className="cv-muted text-[11px] mt-1">
                       Alex&apos;s Resume | Email: alex@gmail.com | Phone: 555-0192 | Portfolio: (in progress)
                     </p>
                   </div>
 
                   {/* Draft Objective */}
                   <div>
-                    <div className="font-bold text-[11px] uppercase tracking-wider text-red-600 pb-0.5 mb-1.5 flex items-center justify-between">
-                      <span>CAREER OBJECTIVE</span>
-                      <span className="text-[10px] font-normal px-1.5 py-0.5 rounded bg-red-100 text-red-700">
+                    <div className="font-bold text-[11px] uppercase tracking-wider cv-red-text pb-0.5 mb-1.5 flex items-center justify-between">
+                      <span className="cv-red-text">CAREER OBJECTIVE</span>
+                      <span className="text-[10px] font-normal px-1.5 py-0.5 rounded cv-red-badge">
                         ❌ Obsolete format (waste of resume space)
                       </span>
                     </div>
-                    <p className="text-[11.5px] text-neutral-600 line-through decoration-red-400">
+                    <p className="cv-strike text-[11.5px]">
                       Hardworking software engineer looking for an opportunity to learn new technologies and help the company grow while gaining experience.
                     </p>
                   </div>
 
                   {/* Draft Experience */}
                   <div>
-                    <div className="font-bold text-[11px] uppercase tracking-wider text-red-600 pb-0.5 mb-2 flex items-center justify-between">
-                      <span>EXPERIENCE</span>
-                      <span className="text-[10px] font-normal px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">
+                    <div className="font-bold text-[11px] uppercase tracking-wider cv-red-text pb-0.5 mb-2 flex items-center justify-between">
+                      <span className="cv-red-text">EXPERIENCE</span>
+                      <span className="text-[10px] font-normal px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300">
                         ⚠️ 0 quantifiable business metrics
                       </span>
                     </div>
                     <div className="space-y-3">
                       <div>
                         <div className="flex justify-between font-medium text-[12px] text-neutral-800">
-                          <span>Developer at TechScale Systems</span>
-                          <span>2024 — Present</span>
+                          <span className="cv-subheading">Developer at TechScale Systems</span>
+                          <span className="cv-muted">2024 — Present</span>
                         </div>
-                        <div className="text-[10.5px] text-neutral-400 italic mb-1">
+                        <div className="text-[10.5px] cv-muted italic mb-1">
                           Backend stuff
                         </div>
-                        <ul className="list-disc ml-5 space-y-1 text-[11.5px] text-neutral-600 line-through decoration-red-400">
-                          <li>
+                        <ul className="list-disc ml-5 space-y-1 text-[11.5px]">
+                          <li className="cv-strike">
                             Worked on backend stuff using Node.js and Redis to make the API faster for users.
                           </li>
-                          <li>
+                          <li className="cv-strike">
                             Helped team fix bugs in authentication and database queries when needed.
                           </li>
-                          <li>
+                          <li className="cv-strike">
                             Responsible for writing unit tests and deploying code to AWS servers.
                           </li>
                         </ul>
@@ -339,13 +385,13 @@ export function RevealSliderSection() {
 
                   {/* Draft Skills */}
                   <div>
-                    <div className="font-bold text-[11px] uppercase tracking-wider text-red-600 pb-0.5 mb-1 flex items-center justify-between">
-                      <span>SKILLS</span>
-                      <span className="text-[10px] font-normal px-1.5 py-0.5 rounded bg-red-100 text-red-700">
+                    <div className="font-bold text-[11px] uppercase tracking-wider cv-red-text pb-0.5 mb-1 flex items-center justify-between">
+                      <span className="cv-red-text">SKILLS</span>
+                      <span className="text-[10px] font-normal px-1.5 py-0.5 rounded cv-red-badge">
                         ⚠️ Low keyword density (fails parser filter)
                       </span>
                     </div>
-                    <p className="text-[11px] text-neutral-600 line-through decoration-red-400">
+                    <p className="cv-strike text-[11px]">
                       Node.js, React, CSS, Git, whatever tools the team is using
                     </p>
                   </div>
