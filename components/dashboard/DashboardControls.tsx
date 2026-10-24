@@ -107,24 +107,24 @@ export function DashboardControls({ user }: DashboardControlsProps) {
   };
 
   return (
-    <div className="relative flex items-center gap-3">
+    <div className="relative flex items-center gap-2 sm:gap-3">
       {/* ── Theme Switcher ── */}
       <button
         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        className="p-2 rounded-lg border border-[var(--sclade-card-border)] bg-[var(--sclade-card-bg)] hover:bg-[#E7EDFF] hover:border-[#CFD9FF] hover:text-[#5473D1] transition-all text-[var(--sclade-text-secondary)] cursor-pointer relative"
+        className="p-1.5 sm:p-2 rounded-lg border border-[var(--sclade-card-border)] bg-[var(--sclade-card-bg)] hover:bg-[#E7EDFF] hover:border-[#CFD9FF] hover:text-[#5473D1] transition-all text-[var(--sclade-text-secondary)] cursor-pointer relative shrink-0"
         title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
       >
         {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
       </button>
 
       {/* ── Notification Trigger ── */}
-      <div className="relative">
+      <div className="relative shrink-0">
         <button
           onClick={() => {
             setShowNotifications(!showNotifications);
             setShowSettings(false);
           }}
-          className={`p-2 rounded-lg border border-[var(--sclade-card-border)] bg-[var(--sclade-card-bg)] hover:bg-[#E7EDFF] hover:border-[#CFD9FF] hover:text-[#5473D1] transition-all text-[var(--sclade-text-secondary)] cursor-pointer relative ${
+          className={`p-1.5 sm:p-2 rounded-lg border border-[var(--sclade-card-border)] bg-[var(--sclade-card-bg)] hover:bg-[#E7EDFF] hover:border-[#CFD9FF] hover:text-[#5473D1] transition-all text-[var(--sclade-text-secondary)] cursor-pointer relative ${
             showNotifications ? "bg-[#E7EDFF] text-[#5473D1] border-[#CFD9FF]" : ""
           }`}
         >
@@ -393,7 +393,7 @@ export function DashboardControls({ user }: DashboardControlsProps) {
           setShowNotifications(false);
           setShowUserMenu(false);
         }}
-        className={`p-2 rounded-lg border border-[var(--sclade-card-border)] bg-[var(--sclade-card-bg)] hover:bg-[#E7EDFF] hover:border-[#CFD9FF] hover:text-[#5473D1] transition-all text-[var(--sclade-text-secondary)] cursor-pointer ${
+        className={`p-1.5 sm:p-2 rounded-lg border border-[var(--sclade-card-border)] bg-[var(--sclade-card-bg)] hover:bg-[#E7EDFF] hover:border-[#CFD9FF] hover:text-[#5473D1] transition-all text-[var(--sclade-text-secondary)] cursor-pointer shrink-0 ${
           showSettings ? "bg-[#E7EDFF] text-[#5473D1] border-[#CFD9FF]" : ""
         }`}
         title="Settings"
@@ -402,7 +402,7 @@ export function DashboardControls({ user }: DashboardControlsProps) {
       </button>
 
       {/* ── User Avatar & Dropdown Menu ── */}
-      <div className="relative">
+      <div className="relative shrink-0">
         <button
           onClick={() => {
             setShowUserMenu(!showUserMenu);
@@ -413,7 +413,7 @@ export function DashboardControls({ user }: DashboardControlsProps) {
           aria-label="User profile menu"
         >
           {user.image ? (
-            <div className="w-9 h-9 rounded-full overflow-hidden border border-[var(--sclade-card-border)] shadow-xs">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden border border-[var(--sclade-card-border)] shadow-xs">
               <img
                 src={user.image}
                 alt={user.name || "User profile"}
@@ -421,7 +421,7 @@ export function DashboardControls({ user }: DashboardControlsProps) {
               />
             </div>
           ) : (
-            <div className="w-9 h-9 rounded-full bg-[#E1E5EB] dark:bg-neutral-800 border border-[var(--sclade-card-border)] flex items-center justify-center text-xs font-bold text-[var(--sclade-text-secondary)] shadow-xs">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#E1E5EB] dark:bg-neutral-800 border border-[var(--sclade-card-border)] flex items-center justify-center text-xs font-bold text-[var(--sclade-text-secondary)] shadow-xs">
               {initials}
             </div>
           )}

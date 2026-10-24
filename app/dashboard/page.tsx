@@ -120,9 +120,9 @@ export default async function DashboardPage() {
       />
 
       {/* Top Nav matching Landing Page Theme */}
-      <nav className="relative z-50 border-b border-[#E5E5E5] dark:border-[#27272a] bg-[#F5F5F3]/85 dark:bg-[#0a0a0a]/85 backdrop-blur-xl sticky top-0 transition-colors duration-200 px-4 sm:px-6 md:px-8 py-3.5">
+      <nav className="relative z-50 border-b border-[#E5E5E5] dark:border-[#27272a] bg-[#F5F5F3]/85 dark:bg-[#0a0a0a]/85 backdrop-blur-xl sticky top-0 transition-colors duration-200 px-3.5 sm:px-6 md:px-8 py-3">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-10">
+          <div className="flex items-center gap-4 sm:gap-10">
             <Link
               href="/"
               className="logo scale-90 origin-left cursor-pointer hover:opacity-90 transition-opacity"
@@ -136,7 +136,7 @@ export default async function DashboardPage() {
               </svg>
               <div className="logo-text-group">
                 <div className="logo-wordmark">RESUMMIT</div>
-                <div className="logo-tagline">YOUR CAREER. YOUR CONTROL.</div>
+                <div className="logo-tagline hidden sm:block">YOUR CAREER. YOUR CONTROL.</div>
               </div>
             </Link>
             <div className="hidden md:flex items-center gap-8 text-[11px] font-bold uppercase tracking-widest text-slate-600 dark:text-neutral-400">
@@ -147,14 +147,7 @@ export default async function DashboardPage() {
               )}
             </div>
           </div>
-          <div className="flex items-center gap-2.5 sm:gap-3">
-            <Link
-              href="/editor"
-              className="md:hidden inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-xs"
-            >
-              <FileText className="w-3.5 h-3.5" />
-              <span>Editor</span>
-            </Link>
+          <div className="flex items-center">
             <DashboardControls user={dbUser} />
           </div>
         </div>
@@ -171,14 +164,14 @@ export default async function DashboardPage() {
               Orchestrate your professional impact and career logic.
             </p>
           </div>
-          {/* Quick jump to editor button for easy mobile access */}
+          {/* Quick jump to editor button for easy mobile and tablet access */}
           <Link
             href="/editor"
-            className="sm:hidden inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-xs transition-colors"
+            className="md:hidden inline-flex items-center justify-center gap-2 w-full sm:w-auto py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-xs transition-colors shrink-0"
           >
             <FileText className="w-4 h-4" />
             <span>Open Resume Editor</span>
-            <ChevronRight className="w-4 h-4 ml-auto" />
+            <ChevronRight className="w-4 h-4 ml-auto sm:ml-0" />
           </Link>
         </header>
 
