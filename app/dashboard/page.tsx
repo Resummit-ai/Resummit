@@ -164,21 +164,21 @@ export default async function DashboardPage() {
           </div>
         </header>
 
-        {/* Pixel Graphics Banner with the authentic Resume ATS Score Card inside */}
+        {/* Pixel Graphics Canvas Container hosting the ENTIRE dashboard cards */}
         <DashboardPixelBanner>
-          <ATSScoreCard
-            storedScore={mainVersion?.atsScore ?? 0}
-            versionId={mainVersion?.id}
-            resumeName={mainResume?.name || "My Professional Resume"}
-            versionName={mainVersion?.versionName || "Main"}
-          />
-        </DashboardPixelBanner>
-
-        <SmartUpdateCenter
-          initialSuggestions={dbUser.suggestions}
-          lastSyncAt={dbUser.githubData?.lastSyncedAt?.toISOString() || null}
-          accessToken={session?.user ? (session.user as any).accessToken : null}
-          rightSlot={
+          <SmartUpdateCenter
+            initialSuggestions={dbUser.suggestions}
+            lastSyncAt={dbUser.githubData?.lastSyncedAt?.toISOString() || null}
+            accessToken={session?.user ? (session.user as any).accessToken : null}
+            topSlot={
+              <ATSScoreCard
+                storedScore={mainVersion?.atsScore ?? 0}
+                versionId={mainVersion?.id}
+                resumeName={mainResume?.name || "My Professional Resume"}
+                versionName={mainVersion?.versionName || "Main"}
+              />
+            }
+            rightSlot={
             <>
               {/* Quick Operations */}
               <div className="p-6 md:p-7 rounded-2xl bg-white dark:bg-[#141417] border border-[#E5E5E5] dark:border-[#27272a] shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:shadow-2xl transition-colors duration-200">
@@ -281,6 +281,7 @@ export default async function DashboardPage() {
             </>
           }
         />
+        </DashboardPixelBanner>
       </main>
     </div>
   );

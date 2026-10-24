@@ -466,24 +466,24 @@ export function SmartUpdateCenter({
     return (
       <div 
         key={suggestion.id}
-        className="group relative bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] hover:border-[#CFD9FF] rounded-2xl p-4 md:p-5 transition-all shadow-xs flex items-center justify-between gap-4"
+        className="group relative bg-white dark:bg-[#18181c] border border-neutral-200/90 dark:border-neutral-800 hover:border-blue-500 rounded-2xl p-4 md:p-5 transition-all shadow-sm flex items-center justify-between gap-4"
       >
         <div className="flex items-start gap-3.5 min-w-0">
           <div className="w-10 h-10 rounded-full bg-neutral-900 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
             <GithubIcon className="w-5 h-5 text-white" />
           </div>
           <div className="min-w-0 flex-1">
-            <h5 className="text-xs font-bold text-[var(--sclade-text-primary)] truncate tracking-tight">
+            <h5 className="text-xs font-bold text-neutral-900 dark:text-white truncate tracking-tight">
               {rawTitle}
             </h5>
-            <p className="text-xs text-[var(--sclade-text-secondary)] mt-1 line-clamp-2 leading-relaxed">
+            <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2 leading-relaxed">
               {suggestion.description}
             </p>
             <div className="flex items-center gap-2 mt-2.5">
-              <span className="text-xs font-medium text-[#137333] bg-[#E6F4EA] dark:bg-[#137333]/20 border border-[#CEEAD6] dark:border-[#137333]/30 px-2.5 py-0.5 rounded-full">
+              <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 px-2.5 py-0.5 rounded-full">
                 {Math.round(suggestion.confidence * 100)}% match
               </span>
-              <span className="text-xs text-[var(--sclade-text-muted)]">
+              <span className="text-xs text-neutral-500 dark:text-neutral-400">
                 · {timeFormatted}
               </span>
             </div>
@@ -492,7 +492,7 @@ export function SmartUpdateCenter({
 
         <button
           onClick={() => setReviewing(suggestion)}
-          className="px-3 py-1.5 rounded-lg border border-[#DADCE0] dark:border-neutral-700 hover:bg-[#F1F3F4] dark:hover:bg-neutral-800 text-[#1A73E8] text-xs font-medium flex items-center gap-1 transition-colors cursor-pointer shrink-0"
+          className="px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-blue-600 dark:text-[#0099ff] text-xs font-medium flex items-center gap-1 transition-colors cursor-pointer shrink-0"
         >
           Review <ChevronRight className="w-3.5 h-3.5" />
         </button>
@@ -508,24 +508,24 @@ export function SmartUpdateCenter({
     return (
       <div 
         key={suggestion.id}
-        className="group relative bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] hover:border-[#CFD9FF] rounded-2xl p-4 md:p-5 transition-all shadow-xs flex items-center justify-between gap-4"
+        className="group relative bg-white dark:bg-[#18181c] border border-neutral-200/90 dark:border-neutral-800 hover:border-blue-500 rounded-2xl p-4 md:p-5 transition-all shadow-sm flex items-center justify-between gap-4"
       >
         <div className="flex items-start gap-3.5 min-w-0">
-          <div className="w-10 h-10 rounded-xl bg-[#E7EDFF] text-[#5473D1] flex items-center justify-center font-mono font-bold text-xs shrink-0 mt-0.5 border border-[#CFD9FF]/40 shadow-xs">
+          <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-[#0099ff] flex items-center justify-center font-mono font-bold text-xs shrink-0 mt-0.5 border border-blue-500/20 shadow-xs">
             &lt;/&gt;
           </div>
           <div className="min-w-0 flex-1">
-            <h5 className="text-xs font-bold text-[var(--sclade-text-primary)] truncate tracking-tight">
+            <h5 className="text-xs font-bold text-neutral-900 dark:text-white truncate tracking-tight">
               {skillName}
             </h5>
-            <p className="text-xs text-[var(--sclade-text-secondary)] mt-1 line-clamp-2 leading-relaxed">
+            <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2 leading-relaxed">
               {suggestion.description}
             </p>
             <div className="flex items-center gap-2 mt-2.5">
-              <span className="text-xs font-medium text-[#137333] bg-[#E6F4EA] dark:bg-[#137333]/20 border border-[#CEEAD6] dark:border-[#137333]/30 px-2.5 py-0.5 rounded-full">
+              <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 px-2.5 py-0.5 rounded-full">
                 {Math.round(suggestion.confidence * 100)}% match
               </span>
-              <span className="text-xs text-[var(--sclade-text-muted)]">
+              <span className="text-xs text-neutral-500 dark:text-neutral-400">
                 · {timeFormatted}
               </span>
             </div>
@@ -534,7 +534,7 @@ export function SmartUpdateCenter({
 
         <button
           onClick={() => setReviewing(suggestion)}
-          className="px-3 py-1.5 rounded-lg border border-[#DADCE0] dark:border-neutral-700 hover:bg-[#F1F3F4] dark:hover:bg-neutral-800 text-[#1A73E8] text-xs font-medium flex items-center gap-1 transition-colors cursor-pointer shrink-0"
+          className="px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-blue-600 dark:text-[#0099ff] text-xs font-medium flex items-center gap-1 transition-colors cursor-pointer shrink-0"
         >
           Review <ChevronRight className="w-3.5 h-3.5" />
         </button>
@@ -592,15 +592,15 @@ export function SmartUpdateCenter({
           {topSlot}
 
           {/* Engineering Insights Card */}
-          <div className="p-6 md:p-7 rounded-2xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] shadow-xs transition-colors">
+          <div className="p-6 md:p-7 rounded-2xl bg-white/95 dark:bg-[#141417]/95 backdrop-blur-md border border-white/60 dark:border-white/10 shadow-2xl text-neutral-900 dark:text-[#f2efe9] transition-colors">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div className="flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-[#E7EDFF] flex items-center justify-center text-[#5473D1] shrink-0 border border-[#CFD9FF]/40">
+                <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-600 dark:text-[#0099ff] shrink-0 border border-blue-500/20">
                   <Cpu className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-[var(--sclade-text-primary)]">Engineering Insights</h4>
-                  <p className="text-xs text-[var(--sclade-text-secondary)] mt-0.5">
+                  <h4 className="text-sm font-bold text-neutral-900 dark:text-white">Engineering Insights</h4>
+                  <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-0.5">
                     Run a sync to generate insights from your GitHub activity and profile data.
                   </p>
                 </div>
@@ -608,7 +608,7 @@ export function SmartUpdateCenter({
               <button
                 onClick={handleScan}
                 disabled={isCurrentlySyncing}
-                className="px-4 py-2 bg-[#5473D1] hover:bg-[#4261C0] active:scale-[0.99] text-white rounded-xl text-xs font-semibold transition-all shadow-xs cursor-pointer flex items-center gap-2 self-start sm:self-auto shrink-0 disabled:opacity-60"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 active:scale-[0.99] text-white rounded-xl text-xs font-semibold transition-all shadow-xs cursor-pointer flex items-center gap-2 self-start sm:self-auto shrink-0 disabled:opacity-60"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${isCurrentlySyncing ? "animate-spin" : ""}`} />
                 {isCurrentlySyncing ? "Syncing..." : "Sync GitHub"}
@@ -616,14 +616,14 @@ export function SmartUpdateCenter({
             </div>
 
             {/* Bottom Tab Row */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-[var(--sclade-card-border)]/60">
-              <div className="flex items-center gap-1.5 p-1 bg-[var(--sclade-btn-secondary-bg)] border border-[var(--sclade-card-border)] rounded-xl self-start">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-neutral-200/80 dark:border-neutral-800">
+              <div className="flex items-center gap-1.5 p-1 bg-neutral-100 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700 rounded-xl self-start">
                 <button
                   onClick={() => setActiveTab("all")}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                     activeTab === "all"
-                      ? "bg-[#5473D1] text-white shadow-xs"
-                      : "text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-[#E7EDFF]/40"
+                      ? "bg-blue-600 dark:bg-[#0099ff] text-white shadow-xs"
+                      : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200/50 dark:hover:bg-neutral-700/50"
                   }`}
                 >
                   All ({displaySuggestions.length})
@@ -632,8 +632,8 @@ export function SmartUpdateCenter({
                   onClick={() => setActiveTab("projects")}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                     activeTab === "projects"
-                      ? "bg-[#5473D1] text-white shadow-xs"
-                      : "text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-[#E7EDFF]/40"
+                      ? "bg-blue-600 dark:bg-[#0099ff] text-white shadow-xs"
+                      : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200/50 dark:hover:bg-neutral-700/50"
                   }`}
                 >
                   Projects ({projectSuggestions.length})
@@ -642,8 +642,8 @@ export function SmartUpdateCenter({
                   onClick={() => setActiveTab("skills")}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                     activeTab === "skills"
-                      ? "bg-[#5473D1] text-white shadow-xs"
-                      : "text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-[#E7EDFF]/40"
+                      ? "bg-blue-600 dark:bg-[#0099ff] text-white shadow-xs"
+                      : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200/50 dark:hover:bg-neutral-700/50"
                   }`}
                 >
                   Skills ({skillSuggestions.length})
@@ -660,18 +660,18 @@ export function SmartUpdateCenter({
       </div>
 
       {/* Lower Section: Full-Width Discoveries Card */}
-      <div id="discoveries" className="p-6 md:p-7 rounded-2xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] shadow-xs transition-colors">
+      <div id="discoveries" className="p-6 md:p-7 rounded-2xl bg-white/95 dark:bg-[#141417]/95 backdrop-blur-md border border-white/60 dark:border-white/10 shadow-2xl text-neutral-900 dark:text-[#f2efe9] transition-colors">
         {/* Header */}
-        <div className="flex items-center justify-between pb-5 border-b border-[var(--sclade-card-border)]/60 mb-6">
+        <div className="flex items-center justify-between pb-5 border-b border-neutral-200/80 dark:border-neutral-800 mb-6">
           <div className="flex items-center gap-2">
-            <FolderGit2 className="w-4 h-4 text-[#5473D1]" />
-            <h3 className="text-sm font-bold text-[var(--sclade-text-primary)] tracking-tight">
+            <FolderGit2 className="w-4 h-4 text-blue-600 dark:text-[#0099ff]" />
+            <h3 className="text-sm font-bold text-neutral-900 dark:text-white tracking-tight">
               Discoveries
             </h3>
           </div>
           <a
             href="#discoveries"
-            className="text-xs font-bold text-[#5473D1] hover:text-[#4261C0] flex items-center gap-1 transition-colors"
+            className="text-xs font-bold text-blue-600 dark:text-[#0099ff] hover:underline flex items-center gap-1 transition-colors"
           >
             View all <ArrowRight className="w-3.5 h-3.5" />
           </a>
