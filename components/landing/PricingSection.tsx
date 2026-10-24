@@ -9,20 +9,20 @@ import ArrowRevealButton from "@/components/ui/ArrowRevealButton";
 export function PricingSection() {
   const earlyAccessFeatures = [
     {
-      title: "Full GitHub Ingestion",
-      desc: "Connect your profile to analyze commits, dependencies, and architecture across public and private repositories.",
+      title: "Public GitHub Ingestion",
+      desc: "Connect your profile with read-only access to analyze commits and READMEs across your public repositories.",
     },
     {
-      title: "Google XYZ Impact Formula",
-      desc: "Synthesize accomplishments into proven engineering impact: Accomplished [X], measured by [Y], by doing [Z].",
+      title: "Tailor CV to Job Descriptions",
+      desc: "Paste any target job description to emphasize matching technologies, frameworks, and project accomplishments.",
     },
     {
-      title: "5 Targeted Role Variants",
-      desc: "Instantly generate tailored versions for Full-Stack, Backend, Frontend, DevOps, and Data/ML engineering roles.",
+      title: "Targeted Role Variants",
+      desc: "Instantly generate tailored versions for Full-Stack, Backend, Frontend, and DevOps engineering roles.",
     },
     {
-      title: "Recruiter ATS Compliance",
-      desc: "Automated keyword and format verification calibrated against Greenhouse, Lever, and Workday parsing engines.",
+      title: "ATS-Friendly Format",
+      desc: "Single-column, clean typography and standard section hierarchy designed for automated applicant tracking systems.",
     },
     {
       title: "Single-Page PDF Engine",
@@ -30,22 +30,22 @@ export function PricingSection() {
     },
     {
       title: "Read-Only Security Guarantee",
-      desc: "Strict read-only authentication. We never modify code, create branches, or push commits to your repositories.",
+      desc: "We read repository metadata, READMEs and commit messages to write your resume. We do not modify your repositories.",
     },
   ];
 
   const honestFaqs = [
     {
-      q: "Why is Resummit available at no cost during public beta?",
-      a: "We are actively tuning our AST parsers and bullet point synthesis algorithms with real developer workflows. Public preview enables continuous benchmarking against production repositories.",
+      q: "Why is Resummit available at no cost during public preview?",
+      a: "We are actively tuning our parsers and resume synthesis algorithms with real developer workflows and public repositories.",
     },
     {
       q: "Is a payment method or credit card required?",
-      a: "No payment information or credit card is required. Authenticate directly with read-only GitHub OAuth for immediate access.",
+      a: "No credit card or payment information is required. Authenticate directly with read-only GitHub OAuth for immediate access.",
     },
     {
       q: "Will my generated resumes remain accessible?",
-      a: "Yes. All resumes and role variants generated during public preview remain permanently accessible in your account with unlimited PDF re-exports.",
+      a: "Yes. All resumes and tailored versions created during preview remain saved in your account with clean PDF export support.",
     },
   ];
 
@@ -68,15 +68,13 @@ export function PricingSection() {
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/20 bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-mono font-semibold tracking-wider uppercase mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-blue-400 animate-pulse" />
-            Developer Access · Public Beta
+            Developer Access · Free Preview
           </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold sm:font-bold tracking-tight text-neutral-950 dark:text-[#f2efe9] leading-[1.15] mb-4">
-            Full platform capabilities.
-            <br />
-            Available at no cost during preview.
+            Pricing
           </h2>
           <p className="text-base sm:text-lg text-neutral-600 dark:text-[#f2efe9]/70 leading-relaxed font-normal max-w-2xl mx-auto">
-            Connect your GitHub profile to analyze repositories, synthesize bullet points with the Google XYZ formula, and export recruiter-grade single-page resumes.
+            Free to start during early preview. Connect your public GitHub repositories, tailor your CV to any job description, and export recruiter-ready resumes.
           </p>
         </motion.div>
 
