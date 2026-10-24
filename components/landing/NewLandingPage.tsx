@@ -6,20 +6,12 @@ import { Navbar } from "./Navbar";
 import { Hero } from "./Hero";
 
 // Below-the-fold dynamic imports
-const MarqueeSection = dynamic(
-  () => import("./MarqueeSection").then((m) => m.MarqueeSection),
-  { ssr: true }
-);
 const PipelineSection = dynamic(
   () => import("./PipelineSection").then((m) => m.PipelineSection),
   { ssr: true }
 );
 const WorkflowCanvas = dynamic(
   () => import("./WorkflowCanvas").then((m) => m.WorkflowCanvas),
-  { ssr: true }
-);
-const CommitStreamSection = dynamic(
-  () => import("./CommitStreamSection").then((m) => m.CommitStreamSection),
   { ssr: true }
 );
 const EditorDemoSection = dynamic(
@@ -36,14 +28,6 @@ const RoleVersionsSection = dynamic(
 );
 const ResumePreviewSection = dynamic(
   () => import("./ResumePreviewSection").then((m) => m.ResumePreviewSection),
-  { ssr: true }
-);
-const DesignStatementSection = dynamic(
-  () => import("./DesignStatementSection").then((m) => m.DesignStatementSection),
-  { ssr: true }
-);
-const StatsStripSection = dynamic(
-  () => import("./StatsStripSection").then((m) => m.StatsStripSection),
   { ssr: true }
 );
 const FeaturePillarsSection = dynamic(
@@ -221,61 +205,43 @@ export function NewLandingPage() {
 
       <SmoothScrollProvider>
         <main>
-          {/* 1. Hero Section: Editorial headline with RotatingText at top, real developer dashboard card below */}
+          {/* 1. Hero Section: Editorial headline, static SEO H1, developer dashboard preview */}
           <Hero />
 
-          {/* 2. Tech Stack Marquee (Serving developers shipping code at...) */}
-          <MarqueeSection />
-
-          {/* 3. Pipeline Architecture: Everything between your commits and your next offer (4 interactive tabs) */}
+          {/* 2. Pipeline Architecture: Everything between your commits and your next offer (4 interactive tabs) */}
           <SectionReveal>
             <PipelineSection />
           </SectionReveal>
 
-          {/* 4. Interactive Workflow Canvas: Wire up your resume in a minute (Connect all + animated laser beams) */}
+          {/* 3. Interactive Workflow Canvas: Wire up your resume in a minute */}
           <SectionReveal>
             <WorkflowCanvas />
           </SectionReveal>
 
-          {/* 5. Global Commit Stream: Real-time throughput & World Matrix */}
-          <SectionReveal>
-            <CommitStreamSection />
-          </SectionReveal>
-
-          {/* 6. Code Demo Section: Paste one repo. Generate in seconds (Interactive Run streaming code runner) */}
+          {/* 4. Code Demo Section: Commit -> bullet example */}
           <SectionReveal>
             <EditorDemoSection />
           </SectionReveal>
 
-          {/* 7. The Magic: Raw commit to recruiter bullet (Continuous 4-phase looping transformation) */}
+          {/* 5. The Magic: Raw commit to recruiter bullet */}
           <SectionReveal>
             <MagicSection />
           </SectionReveal>
 
-          {/* 8. Role Catalog with Vertical Icon Rail (Tailored versions for every tech stack) */}
+          {/* 6. Role Catalog with Vertical Icon Rail: One CV per job */}
           <SectionReveal>
             <RoleVersionsSection />
           </SectionReveal>
 
-          {/* 9. Interactive Resume Output (Alex Developer single-page resume + ATS audit score 98%) */}
+          {/* 7. Interactive Resume Output: Alex Developer single-page resume */}
           <SectionReveal>
             <ResumePreviewSection />
           </SectionReveal>
 
-          {/* 10. Interactive Before/After Reveal Comparison Slider */}
+          {/* 8. Interactive Before/After Reveal Comparison Slider */}
           <RevealSliderSection />
 
-          {/* 11. Design Statement Quote ("Create meaningful digital experiences where every line unfolds...") */}
-          <SectionReveal>
-            <DesignStatementSection />
-          </SectionReveal>
-
-          {/* 12. Stats Strip (50+ Resumes Generated, 10+ Countries, <60s Generation, 100% Free with animated counters) */}
-          <SectionReveal>
-            <StatsStripSection />
-          </SectionReveal>
-
-          {/* 13. Feature Pillars: Built for developers (3 cards with sky headers) */}
+          {/* 9. Feature Pillars: Built for developers */}
           <SectionReveal>
             <FeaturePillarsSection />
           </SectionReveal>
