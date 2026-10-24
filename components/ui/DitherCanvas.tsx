@@ -82,17 +82,34 @@ export function DitherCanvas({
       const data = imgData.data;
 
       const isLight = theme === "light";
-      // Apply Bayer 8x8 ordered dithering across color channels to preserve rich mountain tones
-      const spread = isLight ? 36 : 44;
-      const steps = isLight ? 8 : 6; // 8 tonal quantization levels for light mode
+      // Apply Bayer 8x8 ordered dithering across color channels while preserving rich natural colors
+      const spread = isLight ? 22 : 36;
+      const steps = isLight ? 18 : 10;
       const stepSize = 255 / (steps - 1);
 
       for (let y = 0; y < lowH; y++) {
         for (let x = 0; x < lowW; x++) {
           const idx = (y * lowW + x) * 4;
-          const r = data[idx];
-          const g = data[idx + 1];
-          const b = data[idx + 2];
+          let r = data[idx];
+          let g = data[idx + 1];
+          let b = data[idx + 2];
+
+          // Color boost in light mode to bring out the natural rich sapphire skies and deep forest greens
+          if (isLight) {
+            const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+            const satMultiplier = 1.45; // 45% saturation boost
+            r = Math.max(0, Math.min(255, gray + (r - gray) * satMultiplier));
+            g = Math.max(0, Math.min(255, gray + (g - gray) * satMultiplier));
+            b = Math.max(0, Math.min(255, gray + (b - gray) * satMultiplier));
+
+            // Subtle color temperature enhancement: enrich sky blues and emerald pines
+            if (b > r) {
+              b = Math.min(255, b * 1.08); // +8% sky blue pop
+            }
+            if (g > r && g > 60) {
+              g = Math.min(255, g * 1.06); // +6% pine green pop
+            }
+          }
 
           const dither = (BAYER_8X8[y % 8][x % 8] / 64 - 0.5) * spread;
 
