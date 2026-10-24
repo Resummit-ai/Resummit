@@ -7,6 +7,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import RotatingText from "@/components/ui/RotatingText";
 import ArrowRevealButton from "@/components/ui/ArrowRevealButton";
 import { DitherCanvas } from "@/components/ui/DitherCanvas";
+import { EncryptedText } from "@/components/ui/encrypted-text";
 import { LANDING_CONFIG } from "@/lib/landing-config";
 
 export function Hero({ hasSession = false }: { hasSession?: boolean }) {
@@ -98,13 +99,15 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
             </span>
           </h1>
 
-          {/* Left-Aligned Subtitle with frosted glass contrast backdrop */}
-          <div className="relative inline-block max-w-2xl mb-8">
-            <div className="absolute -inset-2.5 rounded-2xl bg-white/75 dark:bg-black/50 backdrop-blur-md border border-white/80 dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.04)] -z-10 pointer-events-none" />
-            <p className="hero-subtitle text-base sm:text-lg text-neutral-950 dark:text-[#f2efe9] leading-relaxed font-medium px-2 py-0.5">
-              Resummit analyzes your public repositories and commits to build a clean, ATS-friendly resume. Paste a job description to tailor your CV in seconds.
-            </p>
-          </div>
+          {/* Left-Aligned Subtitle with Aceternity EncryptedText - clean, no blur background */}
+          <p className="hero-subtitle text-base sm:text-lg max-w-2xl mb-8 leading-relaxed font-mono">
+            <EncryptedText
+              text="Resummit analyzes your public repositories and commits to build a clean, ATS-friendly resume. Paste a job description to tailor your CV in seconds."
+              encryptedClassName="text-neutral-500/80 dark:text-neutral-400 font-mono"
+              revealedClassName="text-black dark:text-white font-semibold font-sans drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
+              revealDelayMs={25}
+            />
+          </p>
 
           {/* Left-Aligned Action Buttons with ArrowRevealButton */}
           <div className="flex flex-wrap items-center gap-4 mb-8">
