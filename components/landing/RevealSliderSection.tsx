@@ -7,8 +7,6 @@ import {
   SlidersHorizontal,
   CheckCircle2,
   AlertTriangle,
-  FileText,
-  Sparkles,
 } from "lucide-react";
 import { SectionReveal } from "@/components/ui/SectionReveal";
 
@@ -130,82 +128,16 @@ export function RevealSliderSection() {
           </p>
         </SectionReveal>
 
-        {/* Preset Controls & Quick Switch Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-6 max-w-4xl mx-auto px-2">
-          <div className="flex items-center gap-2 text-xs font-semibold text-neutral-600 dark:text-neutral-400">
-            <SlidersHorizontal size={14} className="text-blue-500" />
-            <span>Drag slider horizontally or tap presets:</span>
-          </div>
-          <div className="flex items-center gap-1.5 p-1 bg-neutral-200/80 dark:bg-neutral-800/80 rounded-xl text-xs font-medium">
-            <button
-              type="button"
-              onClick={() => setSliderPosition(100)}
-              className={`px-3 py-1.5 rounded-lg transition-all ${
-                sliderPosition >= 95
-                  ? "bg-white dark:bg-neutral-900 text-red-600 dark:text-red-400 shadow-sm font-bold"
-                  : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
-              }`}
-            >
-              Draft CV (34%)
-            </button>
-            <button
-              type="button"
-              onClick={() => setSliderPosition(50)}
-              className={`px-3 py-1.5 rounded-lg transition-all ${
-                sliderPosition > 10 && sliderPosition < 90
-                  ? "bg-white dark:bg-neutral-900 text-blue-600 dark:text-blue-400 shadow-sm font-bold"
-                  : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
-              }`}
-            >
-              50 / 50 Split
-            </button>
-            <button
-              type="button"
-              onClick={() => setSliderPosition(0)}
-              className={`px-3 py-1.5 rounded-lg transition-all ${
-                sliderPosition <= 5
-                  ? "bg-white dark:bg-neutral-900 text-emerald-600 dark:text-emerald-400 shadow-sm font-bold"
-                  : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
-              }`}
-            >
-              Synthesized CV (98%)
-            </button>
-          </div>
-        </div>
-
-        {/* Realistic Studio Desk Surface */}
+        {/* The Authentic Resume Paper Sheet Container */}
         <SectionReveal delay={1}>
-          <div className="w-full max-w-4xl mx-auto bg-[#EBEBE8] dark:bg-[#131316] p-3 sm:p-6 md:p-8 rounded-3xl border border-neutral-300 dark:border-neutral-800/80 shadow-2xl">
-            {/* Document Header Bar */}
-            <div className="flex items-center justify-between pb-3 px-2 text-xs text-neutral-500 dark:text-neutral-400 font-mono">
-              <div className="flex items-center gap-2">
-                <FileText size={14} className="text-neutral-400" />
-                <span className="font-semibold text-neutral-700 dark:text-neutral-300">
-                  alex_developer_resume.pdf
-                </span>
-                <span className="hidden sm:inline text-neutral-400">· 8.5&quot; × 11&quot; Standard Document</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-500/10 text-red-600 dark:text-red-400 text-[10px] font-bold">
-                  34% Draft
-                </span>
-                <span className="text-neutral-400">vs</span>
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold">
-                  <Sparkles size={10} />
-                  98% Optimized
-                </span>
-              </div>
-            </div>
-
-            {/* The Authentic Resume Paper Sheet Container */}
-            <div
-              ref={containerRef}
-              onPointerDown={handlePointerDown}
-              onPointerMove={handlePointerMove}
-              onPointerUp={handlePointerUp}
-              onPointerCancel={handlePointerUp}
-              className="relative w-full min-h-[640px] sm:min-h-[660px] bg-white rounded-lg overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.12),0_1px_4px_rgba(0,0,0,0.06)] border border-neutral-200 select-none cursor-ew-resize touch-none"
-            >
+          <div
+            ref={containerRef}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
+            className="relative w-full max-w-4xl mx-auto min-h-[640px] sm:min-h-[660px] bg-white rounded-2xl overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_25px_60px_rgba(0,0,0,0.6)] border border-[#E5E5E5] dark:border-[#27272a] select-none cursor-ew-resize touch-none"
+          >
               {/* 1. UNDERLAYER: Recruiter-Ready ATS Resume Paper (Full 100% Width & Height) */}
               <div className="cv-sheet-paper absolute inset-0 w-full h-full bg-white text-[#0f172a] p-6 sm:p-10 md:p-12 flex flex-col justify-between font-serif select-text">
                 {/* Top Recruiter Verification Pill */}
@@ -430,7 +362,6 @@ export function RevealSliderSection() {
                 </div>
               </div>
             </div>
-          </div>
         </SectionReveal>
       </div>
     </section>
