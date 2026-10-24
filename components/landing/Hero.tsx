@@ -99,12 +99,12 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
             </span>
           </h1>
 
-          {/* Left-Aligned Subtitle with Aceternity EncryptedText - clean, no blur background */}
+          {/* Left-Aligned Subtitle with Aceternity EncryptedText - crisp white matching reference */}
           <p className="hero-subtitle text-base sm:text-lg max-w-2xl mb-8 leading-relaxed font-mono">
             <EncryptedText
               text="Resummit analyzes your public repositories and commits to build a clean, ATS-friendly resume. Paste a job description to tailor your CV in seconds."
-              encryptedClassName="text-neutral-500/80 dark:text-neutral-400 font-mono"
-              revealedClassName="text-black dark:text-white font-semibold font-sans drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
+              encryptedClassName="text-white/45 dark:text-white/40 font-mono"
+              revealedClassName="text-white font-medium font-sans drop-shadow-[0_1px_3px_rgba(0,0,0,0.85)]"
               revealDelayMs={25}
             />
           </p>
