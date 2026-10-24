@@ -62,8 +62,8 @@ export function StatsStripSection() {
     {
       number: "100%",
       icon: <KeyRound className="w-5 h-5 text-[#171717] dark:text-[#f2efe9]/70" />,
-      title: "Free Developer Access",
-      desc: "Authenticate with GitHub to access the full builder without a credit card.",
+      title: "Developer Preview",
+      desc: "Authenticate with GitHub to access the full platform without a credit card.",
     },
   ];
 
@@ -89,7 +89,7 @@ export function StatsStripSection() {
             </div>
             <div>
               <h3 className="text-base font-bold sm:font-medium text-[#171717] dark:text-[#f2efe9] mb-1">{s.title}</h3>
-              <p className="text-xs text-[#707070] dark:text-[#f2efe9]/60 leading-relaxed">{s.desc}</p>
+              <p className="text-xs text-neutral-600 dark:text-[#f2efe9]/60 leading-relaxed font-normal">{s.desc}</p>
             </div>
           </motion.div>
         ))}

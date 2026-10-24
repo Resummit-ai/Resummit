@@ -137,7 +137,7 @@ export function CommitStreamSection() {
                 {feat.icon}
               </div>
               <h3 className="text-sm font-bold text-[#171717] dark:text-white tracking-tight">{feat.title}</h3>
-              <p className="text-xs text-[#707070] dark:text-neutral-400 leading-relaxed">{feat.desc}</p>
+              <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed font-normal">{feat.desc}</p>
             </div>
           ))}
         </div>

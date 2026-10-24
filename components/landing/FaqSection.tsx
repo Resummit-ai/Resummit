@@ -21,7 +21,7 @@ export function FaqSection() {
           <h2 className="text-4xl font-extrabold sm:font-bold tracking-tight text-[#171717] dark:text-white sm:text-5xl leading-[1.15]">
             Frequently asked questions
           </h2>
-          <p className="mt-4 text-base text-[#707070] dark:text-neutral-400">
+          <p className="mt-4 text-base text-neutral-600 dark:text-neutral-400 font-normal">
             Clear, transparent answers about code privacy, GitHub permissions, and ATS compliance.
           </p>
         </div>
@@ -49,7 +49,7 @@ export function FaqSection() {
                   />
                 </button>
                 {isOpen && (
-                  <div className="px-5 pb-5 text-xs sm:text-sm text-[#52525b] dark:text-neutral-400 leading-relaxed border-t border-[#E5E5E5] dark:border-neutral-800/50 pt-3">
+                  <div className="px-5 pb-5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed border-t border-[#E5E5E5] dark:border-neutral-800/50 pt-3 font-normal">
                     {item.answer}
                   </div>
                 )}

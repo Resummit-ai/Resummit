@@ -53,7 +53,7 @@ export function FeedbackSection() {
               <h2 className="text-4xl sm:text-5xl font-extrabold sm:font-bold tracking-tight text-[#171717] dark:text-white leading-[1.12]">
                 Built from your work. Not from templates.
               </h2>
-              <p className="text-base text-[#707070] dark:text-neutral-400 leading-relaxed">
+              <p className="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed font-normal">
                 Resummit turns real engineering work into professional resumes developers can confidently share with recruiters and hiring teams. Designed, developed, and maintained by{" "}
                 <span className="font-semibold text-[#171717] dark:text-white">Adel Muhammed</span>.
               </p>
@@ -92,7 +92,7 @@ export function FeedbackSection() {
               <div className="rounded-2xl border border-[#E5E5E5] dark:border-neutral-800/80 bg-[#F7F7F6] dark:bg-[#141419] p-6 sm:p-8 space-y-5">
                 <div>
                   <h3 className="text-xl font-bold text-[#171717] dark:text-white">Share Your Feedback</h3>
-                  <p className="mt-1 text-xs text-[#707070] dark:text-neutral-400">
+                  <p className="mt-1 text-xs text-neutral-600 dark:text-neutral-400 font-normal">
                     Help us improve Resummit. We read every message.
                   </p>
                 </div>

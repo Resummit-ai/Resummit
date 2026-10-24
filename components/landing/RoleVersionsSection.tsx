@@ -148,7 +148,7 @@ export function RoleVersionsSection() {
                   <h3 className="text-xl sm:text-2xl font-bold text-[#171717] dark:text-white mt-1">
                     {currentRole.name}
                   </h3>
-                  <p className="text-xs sm:text-sm text-[#707070] dark:text-neutral-400 mt-1 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 mt-1 leading-relaxed">
                     {currentRole.tagline}
                   </p>
                 </div>
@@ -158,7 +158,7 @@ export function RoleVersionsSection() {
                   {currentRole.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-md border border-[#E5E5E5] dark:border-neutral-800 bg-[#F7F7F6] dark:bg-neutral-900 px-2.5 py-1 text-[11px] font-mono text-[#171717] dark:text-neutral-300"
+                      className="rounded-md border border-[#E5E5E5] dark:border-neutral-800 bg-[#F7F7F6] dark:bg-neutral-900 px-2.5 py-1 text-[11px] font-mono text-[#171717] dark:text-neutral-300 font-medium"
                     >
                       {tag}
                     </span>
@@ -167,12 +167,12 @@ export function RoleVersionsSection() {
 
                 {/* Highlighted Bullets */}
                 <div className="space-y-3 pt-2">
-                  <p className="text-xs font-mono font-semibold text-[#707070] dark:text-neutral-400">
+                  <p className="text-xs font-mono font-semibold text-neutral-600 dark:text-neutral-400">
                     {currentRole.prompt}
                   </p>
                   <div className="space-y-2.5">
                     {currentRole.bullets.map((b, i) => (
-                      <div key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-[#52525b] dark:text-neutral-300 leading-relaxed">
+                      <div key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-neutral-800 dark:text-neutral-200 leading-relaxed font-normal">
                         <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
                         <span>{b}</span>
                       </div>

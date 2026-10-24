@@ -85,10 +85,10 @@ export function WorkflowCanvas() {
         </div>
 
         {/* Workflow Node Canvas with Subtle Grid & Animated Connecting Beams */}
-        <div className="mt-12 relative rounded-3xl border border-[#E5E5E5] dark:border-neutral-800/80 bg-white dark:bg-[#0c0c0e] p-6 sm:p-10 overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:shadow-2xl transition-colors duration-300">
+        <div className="mt-12 relative rounded-3xl border border-neutral-800 bg-[#0e0e12] text-white p-6 sm:p-10 overflow-hidden shadow-2xl">
           {/* Subtle grid background */}
           <div
-            className="absolute inset-0 opacity-[0.03] pointer-events-none"
+            className="absolute inset-0 opacity-[0.05] pointer-events-none"
             style={{
               backgroundImage:
                 "linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)",

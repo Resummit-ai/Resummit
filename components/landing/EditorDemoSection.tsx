@@ -136,7 +136,7 @@ console.log(\`Audit Score: \${audit.score}/100 - Certified ATS Safe\`);`
         </div>
 
         {/* 5 Horizontal Tabs with Active Top Line */}
-        <div className="mt-16 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 border-b border-[#27272a] pb-4">
+        <div className="mt-16 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 border-b border-[#E5E5E5] dark:border-[#27272a] pb-4">
           {tabs.map((tab, idx) => {
             const isActive = activeTab === idx;
             return (
@@ -151,13 +151,15 @@ console.log(\`Audit Score: \${audit.score}/100 - Certified ATS Safe\`);`
               >
                 <div
                   className={`h-[2px] w-full transition-all duration-300 ${
-                    isActive ? "bg-[#0099ff]" : "bg-transparent group-hover:bg-neutral-800"
+                    isActive ? "bg-[#0099ff]" : "bg-transparent group-hover:bg-neutral-300 dark:group-hover:bg-neutral-800"
                   }`}
                 />
                 <div className="mt-3 flex items-center gap-2">
                   <span
-                    className={`text-sm font-medium transition-colors ${
-                      isActive ? "text-[#f2efe9]" : "text-[#f2efe9]/60 group-hover:text-[#f2efe9]"
+                    className={`text-sm font-semibold transition-colors ${
+                      isActive
+                        ? "text-[#171717] dark:text-[#f2efe9]"
+                        : "text-[#707070] dark:text-[#f2efe9]/60 group-hover:text-black dark:group-hover:text-[#f2efe9]"
                     }`}
                   >
                     {tab.name}
@@ -166,15 +168,15 @@ console.log(\`Audit Score: \${audit.score}/100 - Certified ATS Safe\`);`
                     <span
                       className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${
                         tab.badge === "50% off"
-                          ? "bg-sky-500/20 text-sky-400"
-                          : "bg-blue-500/20 text-blue-400"
+                          ? "bg-sky-500/15 text-sky-600 dark:text-sky-400 border border-sky-500/20"
+                          : "bg-blue-500/15 text-blue-600 dark:text-blue-400 border border-blue-500/20"
                       }`}
                     >
                       {tab.badge}
                     </span>
                   )}
                 </div>
-                <p className="mt-1 text-xs text-[#f2efe9]/50">{tab.desc}</p>
+                <p className="mt-1 text-xs text-[#52525b] dark:text-[#f2efe9]/60">{tab.desc}</p>
               </button>
             );
           })}
