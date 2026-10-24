@@ -13,63 +13,59 @@ export function EditorDemoSection() {
 
   const tabs = [
     { name: "Commit diffs", desc: "Parsed line-by-line" },
-    { name: "Pull requests", desc: "PR descriptions & issues" },
-    { name: "Batch import", badge: "50% off", desc: "Sync entire GitHub orgs" },
-    { name: "Role tuning", desc: "Weight for target job" },
-    { name: "ATS report", badge: "New", desc: "Greenhouse & Lever pass" },
+    { name: "Repo README", desc: "Architecture & tech stack" },
+    { name: "Multiple repos", badge: "Included", desc: "Sync all your public repositories" },
+    { name: "Role tuning", desc: "Tailored to job description" },
+    { name: "ATS format", badge: "Clean", desc: "Standard single column" },
   ];
 
   const codeSnippets = [
-    `// 1. Point to your GitHub repo and commit SHA
-import { ResummitClient } from "@resummit/sdk";
+    `// Example: Commit & README synthesis
+const input = {
+  repository: "github.com/alex-dev/weather-app",
+  commit: "feat: add redis cache layer to reduce external api latency",
+  languages: ["TypeScript", "Next.js", "Redis"],
+};
 
-const client = new ResummitClient({
-  auth: "github_oauth_read_only",
-});
+// Resulting ATS-friendly bullet:
+// "Architected Redis caching layer for weather API calls, cutting response latency by 42% and eliminating rate-limited errors."`,
 
-// Auto-synthesize commit diff into recruiter-ready bullet
-const bullet = await client.bullets.synthesize({
-  repo: "github.com/developer/weather-app",
-  commit: "a3f2c1e",
-  framework: "google-xyz",
-  targetRole: "Full-Stack Software Engineer",
-});
+    `// Example: README & Architecture extraction
+const input = {
+  repository: "github.com/alex-dev/d-runner",
+  readme: "Lightweight distributed task runner in Go with worker queue and retries.",
+  languages: ["Go", "Docker", "gRPC"],
+};
 
-console.log(bullet.output);`,
+// Resulting ATS-friendly bullet:
+// "Built worker queue with automatic retry policies and Prometheus metrics, orchestrating 50 concurrent jobs."`,
 
-    `// 2. Import merged Pull Requests & architecture decisions
-const prAnalysis = await client.pullRequests.extract({
-  repo: "github.com/developer/weather-app",
-  prNumber: 42,
-  includeReviews: true,
-  impactMetric: "latency-reduction",
-});
+    `// Example: Public repository import
+const input = {
+  user: "alex-carter",
+  publicRepositories: 6,
+  techStackDetected: ["TypeScript", "Python", "Go", "PostgreSQL", "Redis"],
+};
 
-console.log(prAnalysis.quantifiedResults);`,
+// Resulting ATS-friendly bullet:
+// "Integrated multi-service PostgreSQL database layer with connection pooling, handling concurrent user queries."`,
 
-    `// 3. Batch process entire public GitHub portfolio
-const portfolio = await client.portfolio.syncAll({
-  username: "alex-developer",
-  filterForks: false,
-  minStars: 0,
-});
+    `// Example: Tailor to a job description
+const targetRole = "Backend Software Engineer";
+const jobRequirements = ["Distributed Systems", "Redis", "TypeScript", "High Availability"];
 
-console.log(\`Generated \${portfolio.bulletsCount} ATS bullets\`);`,
+// Resulting tailored bullet:
+// "Engineered asynchronous task queues with Redis, supporting high-throughput background processing with zero drop rate."`,
 
-    `// 4. Role-based weighting & ATS keyword injection
-const tailored = await client.roles.tune({
-  role: "Distributed Systems Engineer",
-  level: "Senior",
-  keywords: ["Redis", "PostgreSQL", "Kafka", "High Throughput"],
-});`,
+    `// Example: ATS compliance verification
+const documentChecks = {
+  columnLayout: "Single column",
+  headings: "Standard ATS (Experience, Projects, Education, Skills)",
+  textSelectable: true,
+  tableFormatting: "None (ATS clean)",
+};
 
-    `// 5. Automated Applicant Tracking System (ATS) Audit
-const audit = await client.ats.evaluate({
-  resumeFile: "alex-developer-cv.pdf",
-  parsers: ["Greenhouse", "Lever", "Workday"],
-});
-
-console.log(\`Audit Score: \${audit.score}/100 - Certified ATS Safe\`);`
+// Verified: Single-column PDF ready for recruiter review`
   ];
 
   const handleCopy = () => {
@@ -79,11 +75,11 @@ console.log(\`Audit Score: \${audit.score}/100 - Certified ATS Safe\`);`
   };
 
   const fullResponseTexts = [
-    "Architected an asynchronous weather intelligence platform using Next.js and TypeScript, serving 12k+ daily requests with 99.9% uptime. Engineered a Redis caching layer for external API calls, cutting response latency by 42% and eliminating rate-limited errors.",
-    "Spearheaded multi-tenant Redis architecture across 4 microservices, reducing cross-service payload serialization overhead by 38% and eliminating socket connection starvation during peak traffic.",
-    "Parsed 1,420 commits across 18 public repositories. Extracted 42 quantifiable achievements with validated metrics, achieving 98% ATS pass score across Greenhouse and Lever engines.",
-    "Optimized resume weighting for Distributed Systems roles: elevated distributed transactions, idempotency patterns, and concurrent workers to the primary summary section.",
-    "Certified ATS Score: 98/100. Formatting verified: single column, standard system fonts, zero inaccessible tables, 100% parseable skills matrix for Greenhouse and Workday ATS."
+    "Architected an asynchronous weather intelligence platform using Next.js and TypeScript, serving daily requests with high availability. Engineered a Redis caching layer for external API calls, cutting response latency by 42% and eliminating rate-limited errors.",
+    "Built a distributed worker queue in Go with Prometheus metrics and retry policies, processing concurrent background jobs reliably under variable system loads.",
+    "Integrated PostgreSQL database schemas with optimized indices and connection pooling across 6 public repositories, improving response consistency.",
+    "Tailored resume bullet points for Backend roles: elevated distributed systems, caching patterns, and concurrency metrics to the top project sections.",
+    "Formatted resume into single-column layout with standard section headings and selectable text for recruiter ATS compatibility."
   ];
 
   const handleRun = () => {
@@ -187,7 +183,7 @@ console.log(\`Audit Score: \${audit.score}/100 - Certified ATS Safe\`);`
             <div className="px-4 py-3 border-b border-[#27272a] bg-[#16161a] flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Terminal className="h-4 w-4 text-[#0099ff]" />
-                <span className="text-xs font-mono text-[#f2efe9]/70">resummit.config.ts</span>
+                <span className="text-xs font-mono text-[#f2efe9]/70">example.ts</span>
               </div>
               <div className="flex items-center gap-2">
                 <button
@@ -219,9 +215,9 @@ console.log(\`Audit Score: \${audit.score}/100 - Certified ATS Safe\`);`
             <div className="px-6 py-3 border-t border-[#27272a] bg-[#141417] flex items-center justify-between text-[11px] font-mono text-[#f2efe9]/50">
               <div className="flex items-center gap-2">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                <span>Node.js v20 · @resummit/sdk v2.4</span>
+                <span>Example · Commit-to-bullet generation</span>
               </div>
-              <span>Click "Run" to test live</span>
+              <span>Click &quot;Run&quot; to test example</span>
             </div>
           </div>
 
@@ -232,10 +228,10 @@ console.log(\`Audit Score: \${audit.score}/100 - Certified ATS Safe\`);`
               <div className="flex items-center justify-between pb-3 border-b border-[#27272a]">
                 <div className="flex items-center gap-2">
                   <Zap className="h-4 w-4 text-[#0099ff]" />
-                  <span className="text-xs font-mono font-medium text-[#f2efe9]">Real-Time Synthesis</span>
+                  <span className="text-xs font-mono font-medium text-[#f2efe9]">Synthesis Output (Example)</span>
                 </div>
                 <span className="font-mono text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
-                  LIVE STREAM
+                  EXAMPLE
                 </span>
               </div>
 
@@ -249,7 +245,7 @@ console.log(\`Audit Score: \${audit.score}/100 - Certified ATS Safe\`);`
                 </div>
 
                 <div className="text-[11px] text-[#f2efe9]/60 font-sans">
-                  Formula: <strong className="text-[#f2efe9] font-medium">Google XYZ Framework</strong> [Accomplished X, as measured by Y, by doing Z].
+                  Formula: <strong className="text-[#f2efe9] font-medium">Accomplishment-focused format</strong> [What you built + Technical context + Impact].
                 </div>
               </div>
             </div>
@@ -257,16 +253,16 @@ console.log(\`Audit Score: \${audit.score}/100 - Certified ATS Safe\`);`
             {/* Output Metrics Bar */}
             <div className="mt-6 pt-4 border-t border-[#27272a] grid grid-cols-3 gap-2 text-center font-mono">
               <div>
-                <span className="block text-[10px] text-[#f2efe9]/50 uppercase">Latency</span>
-                <span className="text-sm font-medium text-[#f2efe9]">42ms</span>
+                <span className="block text-[10px] text-[#f2efe9]/50 uppercase">Time (Example)</span>
+                <span className="text-sm font-medium text-[#f2efe9]">~1 min</span>
               </div>
               <div>
-                <span className="block text-[10px] text-[#f2efe9]/50 uppercase">Throughput</span>
-                <span className="text-sm font-medium text-[#f2efe9]">48.2 tok/s</span>
+                <span className="block text-[10px] text-[#f2efe9]/50 uppercase">Match (Example)</span>
+                <span className="text-sm font-medium text-[#f2efe9]">92%</span>
               </div>
               <div>
-                <span className="block text-[10px] text-[#f2efe9]/50 uppercase">Cost</span>
-                <span className="text-sm font-medium text-emerald-400">$0.00</span>
+                <span className="block text-[10px] text-[#f2efe9]/50 uppercase">Bullets (Example)</span>
+                <span className="text-sm font-medium text-emerald-400">2</span>
               </div>
             </div>
           </div>

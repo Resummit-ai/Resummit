@@ -42,28 +42,28 @@ export function StatsStripSection() {
 
   const stats = [
     {
-      number: `${count1}+`,
+      number: "Free",
       icon: <FileCheck className="w-5 h-5 text-[#171717] dark:text-[#f2efe9]/70" />,
-      title: "Resumes Generated",
-      desc: "Crafted by developers to secure interviews at top tech companies.",
+      title: "Public Beta",
+      desc: "Access resume generation and tailoring features without a credit card.",
     },
     {
-      number: `${count2}+`,
+      number: "Read-only",
       icon: <Globe className="w-5 h-5 text-[#171717] dark:text-[#f2efe9]/70" />,
-      title: "Countries Reached",
-      desc: "Helping engineers build global careers across multiple continents.",
+      title: "GitHub Access",
+      desc: "Strictly read permissions to public repos. We never modify code.",
     },
     {
-      number: `<${count3}s`,
+      number: "Your edits",
       icon: <Sparkles className="w-5 h-5 text-[#171717] dark:text-[#f2efe9]/70" />,
-      title: "Generation Time",
-      desc: "Instantly parsed from public repository commit histories.",
+      title: "Never Overwritten",
+      desc: "Custom bullets and personal edits are preserved across all syncs.",
     },
     {
-      number: "100%",
+      number: "Tailored",
       icon: <KeyRound className="w-5 h-5 text-[#171717] dark:text-[#f2efe9]/70" />,
-      title: "Developer Preview",
-      desc: "Authenticate with GitHub to access the full platform without a credit card.",
+      title: "To Any Job",
+      desc: "Paste any job description to match your real projects to the role.",
     },
   ];
 

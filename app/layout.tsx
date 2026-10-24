@@ -22,11 +22,13 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
+import { LANDING_CONFIG } from "@/lib/landing-config";
+
 const BASE_URL = "https://resummit.vercel.app";
 
 export const metadata: Metadata = {
-  title: "Resummit — Generate Your Resume from GitHub | Free AI Resume Builder",
-  description: "Connect your GitHub and get a recruiter-ready resume built from your real projects in minutes. AI reads your repos, writes your bullets, exports a clean PDF. Free.",
+  title: "Resummit – AI Resume Builder from GitHub | ATS-Friendly CV",
+  description: "Connect GitHub and get an ATS-friendly resume from your real projects. Paste a job description to tailor it in seconds. Free to start.",
   keywords: [
     "github resume builder",
     "generate resume from github",
@@ -43,34 +45,47 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
   alternates: { canonical: BASE_URL },
   openGraph: {
-    title: "Resummit — Generate Your Resume from GitHub",
-    description: "AI reads your GitHub repos and writes your resume bullets. Free to start.",
+    title: "Resummit – AI Resume Builder from GitHub | ATS-Friendly CV",
+    description: "Connect GitHub and get an ATS-friendly resume from your real projects. Paste a job description to tailor it in seconds. Free to start.",
     url: BASE_URL,
     siteName: "Resummit",
-    images: [{ url: "/icon.png", width: 512, height: 512, alt: "Resummit" }],
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Resummit – AI Resume Builder from GitHub" }],
     type: "website",
-    locale: "en_US",
+    locale: "en_IN",
   },
   twitter: {
-    card: "summary",
-    title: "Resummit — Generate Your Resume from GitHub",
-    description: "AI reads your repos and writes your resume. Free to start.",
-    images: ["/icon.png"],
+    card: "summary_large_image",
+    title: "Resummit – AI Resume Builder from GitHub | ATS-Friendly CV",
+    description: "Connect GitHub and get an ATS-friendly resume from your real projects. Paste a job description to tailor it in seconds. Free to start.",
+    images: ["/og.png"],
   },
   icons: { icon: "/icon.png", apple: "/icon.png" },
   category: "technology",
 };
 
-const structuredData = {
+const softwareApplicationData = {
   "@context": "https://schema.org",
-  "@type": "WebApplication",
+  "@type": "SoftwareApplication",
   name: "Resummit",
   url: BASE_URL,
-  description: "AI-powered resume builder that reads your GitHub repositories and generates ATS-optimized resumes automatically.",
-  applicationCategory: "DeveloperApplication",
+  description: "Connect GitHub and get an ATS-friendly resume from your real projects. Paste a job description to tailor it in seconds. Free to start.",
+  applicationCategory: "BusinessApplication",
   operatingSystem: "Web",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
   author: { "@type": "Person", name: "Adel Muhammed", url: "https://github.com/dragon486" },
+};
+
+const faqPageData = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: LANDING_CONFIG.faq.map((item) => ({
+    "@type": "Question",
+    name: item.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: item.answer,
+    },
+  })),
 };
 
 const siteNameStructuredData = {
@@ -85,7 +100,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${inter.variable} ${geistMono.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareApplicationData) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPageData) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteNameStructuredData) }} />
         <Script id="theme-loader" strategy="beforeInteractive">
           {`try{const t=localStorage.getItem('sclade-theme');if(t==='dark'){document.documentElement.classList.add('dark');document.documentElement.classList.remove('light')}else{document.documentElement.classList.add('light');document.documentElement.classList.remove('dark')}}catch(_){}`}

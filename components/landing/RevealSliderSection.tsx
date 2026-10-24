@@ -118,13 +118,13 @@ export function RevealSliderSection() {
         <SectionReveal className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-[#0099ff] border border-blue-500/20 text-xs font-bold uppercase tracking-wider mb-4">
             <SlidersHorizontal size={14} />
-            <span>Interactive Resume Audit</span>
+            <span>Interactive Resume Audit · Illustrative Example</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#171717] dark:text-[#f2efe9] leading-[1.12] mb-4">
             Before &amp; After AI Synthesis
           </h2>
           <p className="text-base sm:text-lg text-slate-700 dark:text-neutral-300 font-normal leading-relaxed">
-            Drag the comparison slider across the CV to reveal how Resummit transforms a rejected, uncalibrated developer draft into a 98% ATS-optimized recruiter resume.
+            Drag the comparison slider across the CV to reveal how Resummit transforms an uncalibrated developer draft into an ATS-friendly, accomplishment-focused resume.
           </p>
         </SectionReveal>
 
@@ -143,11 +143,11 @@ export function RevealSliderSection() {
               {/* Top Recruiter Verification Pill */}
               <div className="flex items-center justify-between pb-2 border-b border-neutral-200 font-sans">
                 <span className="cv-muted text-[10px] font-mono font-bold tracking-wider uppercase">
-                  RESUMMIT SYNTHESIS ENGINE · V2.4
+                  RESUMMIT SYNTHESIS ENGINE · SAMPLE
                 </span>
                 <span className="cv-green-badge inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold font-sans">
                   <CheckCircle2 size={13} className="text-emerald-600" />
-                  <span>98% ATS MATCH · RECRUITER CERTIFIED</span>
+                  <span>ATS-FRIENDLY FORMAT · SAMPLE</span>
                 </span>
               </div>
 
@@ -159,12 +159,12 @@ export function RevealSliderSection() {
                     className="cv-heading text-2xl font-bold tracking-wider uppercase"
                     style={{ letterSpacing: "1.5px" }}
                   >
-                    ALEX M. DEVELOPER
+                    ALEX CARTER
                   </h3>
                   <p className="cv-muted text-[11px] mt-1 font-sans">
-                    San Francisco, CA (Open to Remote) · alex@developer.com · +1 (555) 019-2834 ·{" "}
-                    <span className="cv-link underline">github.com/alex-dev</span> ·{" "}
-                    <span className="cv-link underline">linkedin.com/in/alex-dev</span>
+                    Bengaluru, India (Open to Remote) · alex@example.com · +91 98765 43210 ·{" "}
+                    <span className="cv-link underline">github.com/alex-carter</span> ·{" "}
+                    <span className="cv-link underline">linkedin.com/in/alex-carter</span>
                   </p>
                 </div>
 
@@ -174,7 +174,7 @@ export function RevealSliderSection() {
                     PROFESSIONAL SUMMARY
                   </div>
                   <p className="text-[11.5px] text-[#334155] leading-relaxed">
-                    High-impact Full-Stack Software Engineer with deep expertise in distributed backend systems and high-throughput TypeScript architectures. Proven track record turning production GitHub commits into measurable, high-concurrency business outcomes, cutting p99 read latency by 42% and automating mission-critical deployment pipelines.
+                    Full-Stack Software Engineer with expertise in distributed backend systems and TypeScript architectures. Track record turning production GitHub commits into measurable technical outcomes, reducing database latency and automating deployment pipelines.
                   </p>
                 </div>
 
@@ -186,21 +186,21 @@ export function RevealSliderSection() {
                   <div className="space-y-3">
                     <div>
                       <div className="flex justify-between font-bold text-[12px] text-[#0f172a]">
-                        <span>TechScale Systems — Senior Full-Stack Engineer</span>
+                        <span>TechScale Systems — Full-Stack Engineer</span>
                         <span>2024 — Present</span>
                       </div>
                       <div className="text-[10.5px] text-[#475569] italic mb-1 font-sans">
-                        Core Platform Engineering · San Francisco, CA
+                        Platform Engineering · Bengaluru, India
                       </div>
                       <ul className="list-disc ml-5 space-y-1 text-[11.5px] text-[#334155] leading-snug">
                         <li>
-                          <strong className="text-emerald-800 font-semibold">[Google XYZ]</strong> Architected distributed Redis caching layer with optimistic cache warming, cutting database read latency by 42% across 14,000+ daily events.
+                          <strong className="text-emerald-800 font-semibold">[Accomplishment]</strong> Architected distributed Redis caching layer with cache warming, reducing database read latency by 42% across API services.
                         </li>
                         <li>
-                          Automated GitHub Actions CI/CD workflows conforming to strict WCAG 2.1 AA standards, shortening release cycle times from 35m to 8m (77% speedup).
+                          Automated GitHub Actions CI/CD workflows conforming to strict accessibility standards, shortening release cycle times from 35m to 8m.
                         </li>
                         <li>
-                          Implemented Next.js 15 App Router server actions with optimistic UI mutations, lowering overall TTFB to 180ms.
+                          Implemented Next.js App Router server actions with optimistic UI mutations, lowering overall time-to-first-byte.
                         </li>
                       </ul>
                     </div>
@@ -222,10 +222,10 @@ export function RevealSliderSection() {
               {/* Bottom Telemetry Footer */}
               <div className="pt-2.5 border-t border-neutral-200 flex items-center justify-between text-[11px] text-[#475569] font-sans">
                 <span className="text-emerald-800 font-semibold">
-                  ✓ Greenhouse · Lever · Workday ATS Parser Certified
+                  ✓ ATS-friendly format: single column, standard headings, selectable text
                 </span>
                 <span className="font-mono text-emerald-800 font-bold">
-                  0 Formatting Errors · 100% Parsed
+                  Standard Format · ATS-Friendly
                 </span>
               </div>
             </div>
@@ -251,10 +251,10 @@ export function RevealSliderSection() {
               <div className="flex items-center justify-between pb-2 border-b border-red-200">
                 <span className="cv-red-badge inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-[11px] font-bold">
                   <AlertTriangle size={13} className="text-red-600" />
-                  <span>34% ATS MATCH · HIGH REJECTION RISK</span>
+                  <span>UNOPTIMIZED DRAFT · ILLUSTRATIVE EXAMPLE</span>
                 </span>
                 <span className="cv-red-text text-[10px] font-mono font-bold">
-                  FLAGGED BY APPLICANT TRACKERS
+                  NEEDS STRUCTURE &amp; METRICS
                 </span>
               </div>
 
@@ -263,10 +263,10 @@ export function RevealSliderSection() {
                 {/* Draft Header */}
                 <div className="text-center pb-2 border-b border-red-300">
                   <h3 className="cv-heading cv-strike text-2xl font-bold tracking-tight">
-                    Alex Developer
+                    Alex Carter
                   </h3>
                   <p className="cv-muted text-[11px] mt-1">
-                    Alex&apos;s Resume | Email: alex@gmail.com | Phone: 555-0192 | Portfolio: (in progress)
+                    Alex&apos;s Draft | Email: alex@example.com | GitHub: alex-carter | Status: Draft
                   </p>
                 </div>
 
@@ -332,10 +332,10 @@ export function RevealSliderSection() {
               {/* Draft Telemetry Footer */}
               <div className="pt-2.5 border-t border-red-200 flex items-center justify-between text-[11px] text-red-700">
                 <span className="font-semibold">
-                  Rejected by Greenhouse &amp; Lever ATS Parsers
+                  Unstructured format with generic bullets
                 </span>
                 <span className="font-mono font-bold">
-                  Match Score: 34% (Failed)
+                  Draft Status: Needs Optimization
                 </span>
               </div>
             </div>

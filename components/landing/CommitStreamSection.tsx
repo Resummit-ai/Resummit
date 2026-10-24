@@ -8,23 +8,23 @@ import { LANDING_CONFIG } from "@/lib/landing-config";
 export function CommitStreamSection() {
   const features = [
     {
-      title: "One link, all repositories",
-      desc: "Connect once. Resummit tracks your public and private repositories, auto-updating achievements whenever you push.",
+      title: "Public repository sync",
+      desc: "Connect once. Re-sync your GitHub in one click and review new suggestions before adding them to your master resume.",
       icon: <Globe className="h-4 w-4 text-blue-600 dark:text-sky-400" />,
     },
     {
-      title: "Automated impact metrics",
-      desc: "Diffs and PR descriptions are converted into Google XYZ-style quantified bullet points with real performance numbers.",
+      title: "Accomplishment-focused bullets",
+      desc: "Repo descriptions, READMEs, and commit messages are converted into structured bullets highlighting what you built and the result.",
       icon: <GitFork className="h-4 w-4 text-blue-600 dark:text-sky-400" />,
     },
     {
       title: "Strict code privacy",
-      desc: "Strict read-only metadata access. Your proprietary business logic and code secrets are never indexed or retained.",
+      desc: "We read repository details like names, languages, READMEs and commit messages to write your resume. We never change your repositories.",
       icon: <ShieldCheck className="h-4 w-4 text-blue-600 dark:text-sky-400" />,
     },
     {
-      title: "ATS scored on every sync",
-      desc: "We validate every bullet against real corporate applicant tracking filters before exporting your PDF.",
+      title: "ATS-friendly structure",
+      desc: "Single-column format, standard section headings, and clean selectable text calibrated for recruiter ATS filters.",
       icon: <Activity className="h-4 w-4 text-blue-600 dark:text-sky-400" />,
     },
   ];
@@ -37,7 +37,7 @@ export function CommitStreamSection() {
           <div className="lg:col-span-5 space-y-6">
             <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-xs font-semibold text-blue-600 dark:text-sky-400">
               <span>✳</span>
-              <span>Git Activity Matrix</span>
+              <span>Commit-to-bullet preview</span>
             </div>
 
             <h2 className="text-4xl font-extrabold sm:font-bold tracking-tight text-[#171717] dark:text-white sm:text-5xl leading-[1.15]">
@@ -45,7 +45,7 @@ export function CommitStreamSection() {
             </h2>
 
             <p className="text-base text-[#707070] dark:text-neutral-400 leading-relaxed">
-              Resummit continuously tracks your GitHub activity across organizations, converting daily engineering output into interview-ready proof.
+              Resummit reads your public GitHub activity, converting real project commits into interview-ready resume bullets.
             </p>
 
             <div>
@@ -65,15 +65,15 @@ export function CommitStreamSection() {
             <div className="flex items-center justify-end gap-8 mb-4 pr-4">
               <div className="text-right">
                 <span className="block text-[11px] font-mono text-[#707070] dark:text-neutral-400 uppercase tracking-wider">
-                  Bullets / sec
+                  Public Beta
                 </span>
-                <span className="text-2xl font-bold font-mono text-[#171717] dark:text-white">14.8</span>
+                <span className="text-2xl font-bold font-mono text-[#171717] dark:text-white">Free</span>
               </div>
               <div className="text-right">
                 <span className="block text-[11px] font-mono text-[#707070] dark:text-neutral-400 uppercase tracking-wider">
-                  Repos live
+                  GitHub
                 </span>
-                <span className="text-2xl font-bold font-mono text-[#171717] dark:text-white">1,420</span>
+                <span className="text-2xl font-bold font-mono text-[#171717] dark:text-white">Read-only</span>
               </div>
             </div>
 
@@ -90,11 +90,11 @@ export function CommitStreamSection() {
 
               {/* Glowing Nodes / Commit Points */}
               <div className="relative z-10 flex items-center justify-between text-xs text-[#707070] dark:text-neutral-400">
-                <span className="font-mono text-[11px] text-[#707070] dark:text-neutral-500">RESUMMIT GLOBAL SYNC</span>
+                <span className="font-mono text-[11px] text-[#707070] dark:text-neutral-500">COMMIT-TO-BULLET (EXAMPLE)</span>
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-blue-600 dark:bg-sky-400 animate-ping" />
                   <span className="font-mono text-[11px] text-blue-600 dark:text-sky-400 font-semibold">
-                    GITHUB 42 MS
+                    EXAMPLE
                   </span>
                 </div>
               </div>
@@ -104,26 +104,26 @@ export function CommitStreamSection() {
                 <div className="rounded-xl border border-[#E5E5E5] dark:border-neutral-800 bg-[#F7F7F6] dark:bg-[#16161c]/80 p-3 flex items-center justify-between text-xs">
                   <div className="flex items-center gap-3">
                     <span className="h-2 w-2 rounded-full bg-blue-600 dark:bg-sky-400" />
-                    <span className="font-mono text-[#171717] dark:text-neutral-300 font-medium">git push origin main</span>
+                    <span className="font-mono text-[#171717] dark:text-neutral-300 font-medium">git commit -m &quot;feat: cache layer with Redis &amp; async workers&quot;</span>
                   </div>
-                  <span className="text-[11px] font-mono text-[#707070] dark:text-neutral-500">api/v2 8f3a1c2</span>
+                  <span className="text-[11px] font-mono text-[#707070] dark:text-neutral-500">weather-app</span>
                 </div>
 
                 <div className="rounded-xl border border-blue-500/30 bg-blue-500/[0.08] p-3 flex items-center justify-between text-xs">
                   <div className="flex items-center gap-3">
                     <span className="h-2 w-2 rounded-full bg-emerald-500" />
                     <span className="text-[#171717] dark:text-neutral-200 font-medium">
-                      Auto-synthesized: "Reduced API response times by 42% via Redis cache..."
+                      Engineered a Redis caching layer for external API calls, reducing response latency.
                     </span>
                   </div>
-                  <span className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-bold">ATS 98%</span>
+                  <span className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-bold">ATS score: sample</span>
                 </div>
               </div>
 
               {/* Bottom Tag */}
               <div className="relative z-10 flex items-center justify-between text-[11px] font-mono text-[#707070] dark:text-neutral-500 pt-3 border-t border-[#E5E5E5] dark:border-neutral-800/80">
-                <span>Active Webhooks: 4 organizations</span>
-                <span>Latency p95: 84ms</span>
+                <span>Read-only public repo access</span>
+                <span>Tailored to any job description</span>
               </div>
             </div>
           </div>

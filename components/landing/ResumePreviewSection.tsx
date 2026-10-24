@@ -100,7 +100,7 @@ export function ResumePreviewSection() {
                         letterSpacing: "1px",
                       }}
                     >
-                      ALEX DEVELOPER
+                      ALEX CARTER
                     </h2>
                     <div
                       style={{
@@ -113,18 +113,18 @@ export function ResumePreviewSection() {
                         fontFamily: "'Times New Roman', Georgia, serif",
                       }}
                     >
-                      <span>Jalandhar, Punjab, India (Open to Remote)</span>
+                      <span>Bengaluru, Karnataka, India (Open to Remote)</span>
                       <span>•</span>
-                      <span>alex.developer@email.com</span>
+                      <span>alex.carter@email.com</span>
                       <span>•</span>
                       <span>+91 98765 43210</span>
                       <span>•</span>
                       <span className="resume-link" style={{ color: "#2563eb", textDecoration: "underline", cursor: "pointer" }}>
-                        github.com/alex-dev
+                        github.com/alex-carter
                       </span>
                       <span>•</span>
                       <span className="resume-link" style={{ color: "#2563eb", textDecoration: "underline", cursor: "pointer" }}>
-                        linkedin.com/in/alex-developer
+                        linkedin.com/in/alex-carter
                       </span>
                     </div>
                   </div>
@@ -489,7 +489,7 @@ export function ResumePreviewSection() {
           <div className="lg:col-span-5 space-y-8 text-left">
             <div>
               <div className="text-xs sm:text-sm font-bold uppercase tracking-wider text-blue-600 dark:text-[#0099ff] mb-3">
-                INTERACTIVE OUTPUT
+                INTERACTIVE OUTPUT · SAMPLE
               </div>
               <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold sm:font-bold tracking-tight text-[#171717] dark:text-[#f2efe9] leading-[1.08] mb-5">
                 Recruiter-Ready.<br />
@@ -519,9 +519,9 @@ export function ResumePreviewSection() {
                 <FileCheck size={24} />
               </div>
               <div>
-                <h4 className="text-lg font-bold text-[#171717] dark:text-[#f2efe9] mb-1">ATS Parser Certified</h4>
+                <h4 className="text-lg font-bold text-[#171717] dark:text-[#f2efe9] mb-1">ATS-Friendly Format</h4>
                 <p className="feature-subtext text-sm text-slate-700 dark:text-neutral-300 leading-relaxed">
-                  Conforms strictly to single-page PDF structures, typography limits, and machine-readable content rules.
+                  Single-column format, standard headings, selectable text and no unparseable tables.
                 </p>
               </div>
             </div>
@@ -529,12 +529,12 @@ export function ResumePreviewSection() {
             {/* Live ATS Scorecard Badge */}
             <div className="rounded-xl border border-[#E5E5E5] dark:border-[#27272a] bg-white dark:bg-[#141417] p-5 flex items-center justify-between shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:shadow-2xl transition-colors duration-300">
               <div>
-                <div className="text-xs text-slate-600 dark:text-neutral-400 font-medium">ATS Compliance Score</div>
-                <div className="text-xl font-bold font-mono text-emerald-600 dark:text-emerald-400 mt-0.5">98% Match Rate</div>
+                <div className="text-xs text-slate-600 dark:text-neutral-400 font-medium">ATS Compliance</div>
+                <div className="text-xl font-bold font-mono text-emerald-600 dark:text-emerald-400 mt-0.5">ATS score: sample</div>
               </div>
               <div className="flex items-center gap-2 text-xs font-mono text-slate-600 dark:text-neutral-400">
                 <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                Greenhouse · Lever · Workday
+                Single column · Clean headings
               </div>
             </div>
           </div>

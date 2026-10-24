@@ -96,12 +96,9 @@ export function Footer() {
                   </a>
                 </li>
                 <li>
-                  <span className="inline-flex items-center gap-1.5 text-neutral-400 dark:text-neutral-500">
-                    <span>API</span>
-                    <span className="rounded bg-sky-500/20 px-1.5 py-0.2 text-[10px] text-blue-600 dark:text-sky-400 font-mono">
-                      Soon
-                    </span>
-                  </span>
+                  <a href="#feedback" className="hover:text-[#171717] dark:hover:text-white transition-colors">
+                    Feedback
+                  </a>
                 </li>
               </ul>
             </div>
@@ -126,9 +123,9 @@ export function Footer() {
                   </a>
                 </li>
                 <li>
-                  <a href="https://www.linkedin.com/in/adel-muhammed-71328a2b5" target="_blank" rel="noreferrer" className="hover:text-[#171717] dark:hover:text-white transition-colors">
-                    LinkedIn Contact
-                  </a>
+                  <Link href="/privacy" className="hover:text-[#171717] dark:hover:text-white transition-colors">
+                    Security &amp; Privacy
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -159,7 +156,7 @@ export function Footer() {
           </div>
 
           <div className="flex items-center gap-6 font-mono text-[11px]">
-            <span>{LANDING_CONFIG.realStats.bulletsWritten.toLocaleString()} bullets written</span>
+            <span>Read-only GitHub access</span>
             <span>{LANDING_CONFIG.footer.copyright}</span>
           </div>
         </div>

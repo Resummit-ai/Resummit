@@ -10,23 +10,23 @@ export function FeaturePillarsSection() {
     {
       badge: "GITHUB INTEGRATION",
       title: "GitHub Sync",
-      desc: "Secure OAuth integration that reads repositories, commits, README files, and tech stacks automatically. Strictly read-only.",
+      desc: "Secure OAuth integration that reads public repositories, commits, README files, and tech stacks automatically. Strictly read-only.",
       icon: <GitBranch className="h-4 w-4 text-blue-600 dark:text-sky-400" />,
       subHeader: "weather-app · 142 commits · main",
     },
     {
       badge: "AI RESUME WRITING",
       title: "AI Resume Writing",
-      desc: "Generate recruiter-friendly resume bullets from the systems, projects, and workflows you actually built using the Google XYZ formula.",
+      desc: "Generate recruiter-friendly resume bullets from the systems, projects, and workflows you actually built using accomplishment-focused formatting.",
       icon: <PenTool className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />,
-      subHeader: "Raw Commits → Executive Bullets (98% ATS)",
+      subHeader: "Raw Commits → Executive Bullets (Example)",
     },
     {
       badge: "ATS EXPORT ENGINE",
       title: "PDF Export",
-      desc: "Export clean, professional resumes with consistent single-column formatting, perfect margins, and verified ATS-friendly layouts.",
+      desc: "Export clean, professional resumes with consistent single-column formatting, standard headings, and verified ATS-friendly layouts.",
       icon: <FileDown className="h-4 w-4 text-blue-600 dark:text-blue-400" />,
-      subHeader: "Single-Page PDF · ATS Standard Compliant",
+      subHeader: "Single-Page PDF · ATS-Friendly Format",
     },
   ];
 
@@ -59,7 +59,7 @@ export function FeaturePillarsSection() {
               <div className="relative h-44 overflow-hidden border-b border-[#E5E5E5] dark:border-neutral-800">
                 <img
                   src="/images/fairweather_sky.jpg"
-                  alt="Fairweather sky artwork"
+                  alt="Resummit feature architecture overview"
                   className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-white/90 dark:from-[#111114] via-transparent to-black/10 pointer-events-none" />

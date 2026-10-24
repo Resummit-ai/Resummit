@@ -9,20 +9,20 @@ import ArrowRevealButton from "@/components/ui/ArrowRevealButton";
 export function PricingSection() {
   const earlyAccessFeatures = [
     {
-      title: "Full GitHub Ingestion",
-      desc: "Connect your profile to analyze commits, dependencies, and architecture across public and private repositories.",
+      title: "Public GitHub Repositories",
+      desc: "Connect your profile to analyze commits, languages, and READMEs across your public repositories.",
     },
     {
-      title: "Google XYZ Impact Formula",
-      desc: "Synthesize accomplishments into proven engineering impact: Accomplished [X], measured by [Y], by doing [Z].",
+      title: "Accomplishment Bullets",
+      desc: "Synthesize accomplishments into proven engineering bullets that start with what you built, how, and the result.",
     },
     {
-      title: "5 Targeted Role Variants",
-      desc: "Instantly generate tailored versions for Full-Stack, Backend, Frontend, DevOps, and Data/ML engineering roles.",
+      title: "Tailored to Any Job",
+      desc: "Tailor your CV to any job description. Paste the role and get a tailored version.",
     },
     {
-      title: "Recruiter ATS Compliance",
-      desc: "Automated keyword and format verification calibrated against Greenhouse, Lever, and Workday parsing engines.",
+      title: "ATS-Friendly Format",
+      desc: "ATS-friendly format: single column, standard headings, selectable text.",
     },
     {
       title: "Single-Page PDF Engine",
@@ -30,14 +30,14 @@ export function PricingSection() {
     },
     {
       title: "Read-Only Security Guarantee",
-      desc: "Strict read-only authentication. We never modify code, create branches, or push commits to your repositories.",
+      desc: "Resummit only reads your public GitHub data and never changes your repositories.",
     },
   ];
 
   const honestFaqs = [
     {
       q: "Why is Resummit available at no cost during public beta?",
-      a: "We are actively tuning our AST parsers and bullet point synthesis algorithms with real developer workflows. Public preview enables continuous benchmarking against production repositories.",
+      a: "We are actively tuning our bullet point synthesis with real developer workflows. Public beta enables continuous improvement against real public repositories.",
     },
     {
       q: "Is a payment method or credit card required?",
@@ -45,7 +45,7 @@ export function PricingSection() {
     },
     {
       q: "Will my generated resumes remain accessible?",
-      a: "Yes. All resumes and role variants generated during public preview remain permanently accessible in your account with unlimited PDF re-exports.",
+      a: "Yes. Your resumes stay in your account with PDF exports available whenever you need them.",
     },
   ];
 
@@ -76,7 +76,7 @@ export function PricingSection() {
             Available at no cost during preview.
           </h2>
           <p className="text-base sm:text-lg text-neutral-600 dark:text-[#f2efe9]/70 leading-relaxed font-normal max-w-2xl mx-auto">
-            Connect your GitHub profile to analyze repositories, synthesize bullet points with the Google XYZ formula, and export recruiter-grade single-page resumes.
+            Connect your GitHub profile to analyze public repositories, synthesize accomplishment-focused bullets, tailor your CV to any job description, and export ATS-friendly resumes.
           </p>
         </motion.div>
 
@@ -108,7 +108,7 @@ export function PricingSection() {
                   </span>
                 </div>
                 <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-3 leading-relaxed">
-                  Unrestricted access to all repository intelligence, synthesis pipelines, and single-page ATS exports. No credit card required.
+                  Free during public beta. Access repository intelligence, bullet synthesis, and ATS-friendly PDF exports. No credit card required.
                 </p>
               </div>
 
@@ -140,7 +140,7 @@ export function PricingSection() {
                 />
                 <div className="flex items-center justify-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400 font-mono">
                   <ShieldCheck size={14} className="text-emerald-500 dark:text-emerald-400" />
-                  <span>Read-only GitHub OAuth · Enterprise-grade data protection</span>
+                  <span>Resummit only reads your public GitHub data and never changes your repositories</span>
                 </div>
               </div>
             </div>

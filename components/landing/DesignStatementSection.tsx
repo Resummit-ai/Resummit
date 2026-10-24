@@ -23,11 +23,11 @@ export function DesignStatementSection() {
       <div className="max-w-4xl mx-auto">
         <h2 className="text-2xl sm:text-4xl md:text-5xl font-semibold sm:font-medium tracking-tight text-[#171717]/80 dark:text-[#f2efe9]/70 leading-snug">
           <span className="inline-block bg-[#245DFF] dark:bg-[#5473D1] text-white px-5 py-1 rounded-2xl font-semibold mr-3 align-middle shadow-lg shadow-blue-500/25">
-            Create
+            Turn
           </span>
-          meaningful digital experiences where every line unfolds with{" "}
+          the code you already wrote into a resume{" "}
           <RotatingText
-            texts={["purpose,", "precision,", "vision,", "structure,"]}
+            texts={["recruiters", "interviewers", "hiring teams", "recruiters"]}
             color={theme === "light" ? "#171717" : "#f2efe9"}
             badgeBackground={theme === "light" ? "#ffffff" : "#1c1d22"}
             badgeRadius={14}
@@ -44,7 +44,7 @@ export function DesignStatementSection() {
               verticalAlign: "middle",
             }}
           />
-          {" "}clarity, and a touch of motion.
+          {" "}can read.
         </h2>
       </div>
     </section>

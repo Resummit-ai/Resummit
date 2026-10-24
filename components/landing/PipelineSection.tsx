@@ -11,63 +11,63 @@ export function PipelineSection() {
   const tabs = [
     {
       id: "sync",
-      title: "Auto-sync repositories",
+      title: "Re-sync your GitHub",
       description:
-        "Push commits or merge PRs to GitHub. Resummit listens via webhook, parses your diffs, and updates your accomplishments automatically.",
-      metricTime: "4.8 sec",
+        "Re-sync your GitHub in one click and review new suggestions before adding them to your master resume.",
+      metricTime: "Fast",
       breakdown: [
-        { label: "Scan Git repos", time: "1.2s" },
-        { label: "Parse PRs & diffs", time: "2.1s" },
-        { label: "Quantify impact (XYZ)", time: "1.1s" },
-        { label: "Format ATS bullets", time: "0.4s" },
+        { label: "Scan repositories", time: "Ready" },
+        { label: "Parse README & skills", time: "Done" },
+        { label: "Structure bullets", time: "Ready" },
+        { label: "Format ATS resume", time: "Done" },
       ],
       tag: "github.com/developer/portfolio",
-      footer: "From git push to interview-ready bullet",
+      footer: "From public commits to interview-ready bullet",
     },
     {
       id: "xyz",
-      title: "Google XYZ Impact Formula",
+      title: "Accomplishment-focused bullets",
       description:
-        "Every bullet is structured as 'Accomplished [X] as measured by [Y] by doing [Z]', transforming raw code into recruiter-proven metrics.",
-      metricTime: "94/100",
+        "Every bullet starts with what you built, how you built it, and the resulting impact, transforming raw code into recruiter-friendly accomplishments.",
+      metricTime: "Example",
       breakdown: [
-        { label: "Action verbs extracted", time: "100%" },
-        { label: "Metrics quantified", time: "92%" },
-        { label: "Tech stack highlighted", time: "96%" },
-        { label: "ATS keyword density", time: "94%" },
+        { label: "Action verbs extracted", time: "High" },
+        { label: "Impact highlighted", time: "High" },
+        { label: "Tech stack identified", time: "High" },
+        { label: "ATS format verified", time: "Done" },
       ],
-      tag: "resume.engine/xyz-parser",
-      footer: "Scored against top tech hiring rubrics",
+      tag: "resume.engine/accomplishment-parser",
+      footer: "Aligned with engineering hiring expectations",
     },
     {
       id: "roles",
-      title: "Role-specific tailoring",
+      title: "Tailor to any job description",
       description:
-        "Generate specialized versions for Backend, Frontend, Fullstack, or DevOps without maintaining separate Word documents.",
-      metricTime: "5 presets",
+        "Paste a job description to tailor your CV in seconds. Resummit highlights the exact skills and projects that match the position.",
+      metricTime: "On demand",
       breakdown: [
-        { label: "Senior Full-Stack", time: "Active" },
-        { label: "Backend Systems", time: "Ready" },
-        { label: "Frontend / React", time: "Ready" },
-        { label: "Cloud & DevOps", time: "Ready" },
+        { label: "Full-Stack focus", time: "Ready" },
+        { label: "Backend focus", time: "Ready" },
+        { label: "Frontend focus", time: "Ready" },
+        { label: "DevOps focus", time: "Ready" },
       ],
       tag: "resume.engine/role-matrix",
-      footer: "One source of truth, tailored for every application",
+      footer: "One master CV, tailored for every job application",
     },
     {
       id: "ats",
       title: "ATS-optimized export",
       description:
-        "Single-column, recruiter-scannable PDF and clean plain-text formats designed to glide through Greenhouse, Lever, and Workday.",
-      metricTime: "99.8%",
+        "Single-column, recruiter-scannable PDF and clean plain-text formats with standard headings and selectable text.",
+      metricTime: "Clean",
       breakdown: [
-        { label: "Parse rate on Greenhouse", time: "100%" },
-        { label: "Parse rate on Lever", time: "100%" },
-        { label: "Parse rate on Workday", time: "99.4%" },
-        { label: "Single-page constraint", time: "Enforced" },
+        { label: "Single-column format", time: "Enforced" },
+        { label: "Standard headings", time: "Enforced" },
+        { label: "Selectable text", time: "Verified" },
+        { label: "No unparseable tables", time: "Guaranteed" },
       ],
       tag: "export.resummit.app/pdf-engine",
-      footer: "Zero formatting errors on all applicant trackers",
+      footer: "Clean, readable layout on all applicant tracking systems",
     },
   ];
 
@@ -91,7 +91,7 @@ export function PipelineSection() {
           {/* Mountain Artwork Background */}
           <img
             src="/images/fairweather_sky.jpg"
-            alt="Mountain landscape"
+            alt="Resummit turning commits into resume bullets"
             className="absolute inset-0 h-full w-full object-cover object-center"
           />
           {/* Subtle gradient vignette */}

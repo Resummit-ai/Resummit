@@ -22,7 +22,7 @@ export function MarqueeSection() {
     <section className="relative bg-[#F5F5F3] dark:bg-[#09090b] py-16 overflow-hidden border-b border-[#E5E5E5] dark:border-neutral-900 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-6 mb-8 text-center">
         <p className="text-xs sm:text-sm text-[#707070] dark:text-neutral-400">
-          Serving developers shipping code at
+          Built for developers and students
         </p>
       </div>
 

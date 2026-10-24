@@ -87,11 +87,11 @@ export function RoleVersionsSection() {
             </div>
 
             <h2 className="text-4xl font-extrabold sm:font-bold tracking-tight text-[#171717] dark:text-white sm:text-5xl leading-[1.15]">
-              Every developer role, ready to export
+              Tailor your CV to any job description
             </h2>
 
             <p className="text-base text-[#707070] dark:text-neutral-400 leading-relaxed">
-              Pick from tailored presets for Backend, Frontend, Fullstack, AI/ML, and DevOps. Each version weights your repositories to match recruiter requirements.
+              Paste any job description to get a tailored version. Resummit selects relevant repositories, highlights key technologies, and aligns your bullets to match the role.
             </p>
 
             <div className="flex flex-wrap items-center gap-4 pt-2">

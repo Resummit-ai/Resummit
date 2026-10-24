@@ -127,8 +127,8 @@ export function MagicSection({ hasSession = false }: { hasSession?: boolean }) {
                       <span className="w-4 h-4 rounded-full bg-blue-600 dark:bg-[#0099ff] text-white font-bold flex items-center justify-center text-[9px]">
                         A
                       </span>
-                      <span>Adel-muhammed</span>
-                      <span>committed 4 hours ago</span>
+                      <span>alex-carter</span>
+                      <span>Oct 14, 2025</span>
                       <span className="text-emerald-500 font-bold">✓</span>
                     </div>
                   </div>
@@ -152,8 +152,8 @@ export function MagicSection({ hasSession = false }: { hasSession?: boolean }) {
                       <span className="w-4 h-4 rounded-full bg-blue-600 dark:bg-[#0099ff] text-white font-bold flex items-center justify-center text-[9px]">
                         A
                       </span>
-                      <span>Adel-muhammed</span>
-                      <span>committed 2 hours ago</span>
+                      <span>alex-carter</span>
+                      <span>Oct 14, 2025</span>
                       <span className="text-emerald-500 font-bold">✓</span>
                     </div>
                   </div>
@@ -177,8 +177,8 @@ export function MagicSection({ hasSession = false }: { hasSession?: boolean }) {
                       <span className="w-4 h-4 rounded-full bg-blue-600 dark:bg-[#0099ff] text-white font-bold flex items-center justify-center text-[9px]">
                         A
                       </span>
-                      <span>Adel-muhammed</span>
-                      <span>committed 30 mins ago</span>
+                      <span>alex-carter</span>
+                      <span>Oct 13, 2025</span>
                       <span className="text-emerald-500 font-bold">✓</span>
                     </div>
                   </div>
@@ -231,14 +231,14 @@ export function MagicSection({ hasSession = false }: { hasSession?: boolean }) {
                   className="absolute -top-3.5 right-6 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500 text-white text-xs font-semibold font-mono shadow-lg"
                 >
                   <Check size={12} strokeWidth={3} />
-                  <span>ATS Grade: A+</span>
+                  <span>ATS-Friendly Format</span>
                 </motion.div>
               )}
             </AnimatePresence>
 
             <div className="border-b border-[#E5E5E5] dark:border-[#27272a] pb-3 mb-4">
               <h3 className="text-lg font-bold text-[#171717] dark:text-[#f2efe9] uppercase tracking-wider font-serif">ALEX CARTER</h3>
-              <p className="text-xs text-[#707070] dark:text-[#f2efe9]/50 font-mono">SOFTWARE ENGINEER</p>
+              <p className="text-xs text-[#707070] dark:text-[#f2efe9]/50 font-mono">SOFTWARE ENGINEER · SAMPLE</p>
             </div>
 
             <div className="space-y-3 font-serif text-xs leading-relaxed text-[#52525b] dark:text-[#f2efe9]/85">

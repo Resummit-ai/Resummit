@@ -20,7 +20,7 @@ export function FinalCtaSection() {
           {/* Background Mountain Sky Image */}
           <img
             src="/images/fairweather_sky.jpg"
-            alt="Mountain ridge landscape"
+            alt="Resummit developer resume platform preview"
             className="absolute inset-0 h-full w-full object-cover object-center opacity-85"
           />
           {/* Gradient Overlay */}

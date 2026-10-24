@@ -7,6 +7,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import RotatingText from "@/components/ui/RotatingText";
 import ArrowRevealButton from "@/components/ui/ArrowRevealButton";
 import { DitherCanvas } from "@/components/ui/DitherCanvas";
+import { LANDING_CONFIG } from "@/lib/landing-config";
 
 export function Hero({ hasSession = false }: { hasSession?: boolean }) {
   const heroContainerRef = useRef<HTMLDivElement>(null);
@@ -63,18 +64,20 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
           className="max-w-3xl text-left"
         >
           {/* Huge Left-Aligned Headline */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold sm:font-bold tracking-tight text-[#171717] dark:text-[#f2efe9] leading-[1.08] mb-6">
+          <h1
+            aria-label="Your GitHub already proves your experience. Tailor your CV to every job you apply to."
+            className="text-4xl sm:text-6xl lg:text-7xl font-extrabold sm:font-bold tracking-tight text-[#171717] dark:text-[#f2efe9] leading-[1.08] mb-6"
+          >
             Your GitHub already proves <br />
-            your experience in <br />
+            your experience for <br />
             <span className="inline-block mt-2">
               <RotatingText
                 texts={[
-                  "Full-Stack Systems",
-                  "Cloud Infrastructure",
-                  "Distributed Systems",
-                  "High-Scale APIs",
-                  "AI & Machine Learning",
-                  "Modern Web Apps",
+                  "every job you apply to",
+                  "your next role",
+                  "engineering teams",
+                  "your next job application",
+                  "top tech recruiters",
                 ]}
                 color="#FFFFFF"
                 badgeBackground="#0077ff"
@@ -94,7 +97,7 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
 
           {/* Left-Aligned Subtitle */}
           <p className="hero-subtitle text-base sm:text-lg text-neutral-800 dark:text-[#f2efe9]/80 max-w-2xl mb-8 leading-relaxed font-normal">
-            Resummit analyzes repositories, commits, and architecture to turn real developer work into clean, recruiter-ready resumes. No manual formatting needed—just connect GitHub and watch your resume build itself.
+            Resummit analyzes your public repositories and commits to build a clean, ATS-friendly resume. Paste a job description to tailor your CV in seconds.
           </p>
 
           {/* Left-Aligned Action Buttons with ArrowRevealButton */}
@@ -137,8 +140,7 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
 
             <div className="inline-flex items-center gap-2 text-xs text-neutral-700 dark:text-[#f2efe9]/80 font-normal ml-2">
               <span className="text-amber-500 dark:text-amber-400 text-sm">★</span>
-              <span className="font-bold text-neutral-900 dark:text-[#f2efe9]">4.9</span>
-              <span className="text-neutral-600 dark:text-[#f2efe9]/60">average from 1,200+ developers</span>
+              <span className="font-bold text-neutral-900 dark:text-[#f2efe9]">{LANDING_CONFIG.realStats.userCountText}</span>
             </div>
           </div>
 
@@ -150,7 +152,7 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
             </span>
             <span className="inline-flex items-center gap-1.5">
               <Check size={14} className="text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
-              Read-only GitHub OAuth · Zero code modifications
+              Read-only access to your public repos
             </span>
           </div>
         </motion.div>
@@ -176,11 +178,11 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
               <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 px-3 py-0.5 rounded-full">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse" />
                 <span className="font-mono text-[10px] sm:text-xs font-bold text-emerald-600 dark:text-emerald-400 tracking-wider">
-                  3 REPOS SYNCED · ATS READY
+                  PUBLIC REPOS · ATS-FRIENDLY FORMAT
                 </span>
               </div>
               <div className="font-mono text-[10px] text-[#707070] dark:text-[#f2efe9]/50 font-medium">
-                DEV PREVIEW
+                SAMPLE
               </div>
             </div>
 
@@ -230,11 +232,11 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-bold text-sm text-[#171717] dark:text-[#f2efe9]">Alex Carter</div>
-                    <div className="text-[11px] text-[#707070] dark:text-[#f2efe9]/60">Software Engineer</div>
+                    <div className="text-[11px] text-[#707070] dark:text-[#f2efe9]/60">Full-Stack Engineer · Sample</div>
                   </div>
                   <div className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full font-mono">
                     <Check size={11} strokeWidth={3} />
-                    <span>ATS 98%</span>
+                    <span>ATS score: sample</span>
                   </div>
                 </div>
 
@@ -258,16 +260,16 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
             {/* Verified Resummit Specs Metrics Line */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-5 px-6 sm:px-10 border-t border-[#E5E5E5] dark:border-[#27272a] bg-[#F7F7F6] dark:bg-[#101014] text-center">
               <div className="space-y-1">
-                <div className="text-2xl sm:text-3xl font-bold sm:font-medium text-[#171717] dark:text-[#f2efe9] tracking-tight">94%</div>
-                <div className="text-xs text-[#707070] dark:text-[#f2efe9]/50">Median ATS parse rate across tech recruiters</div>
+                <div className="text-2xl sm:text-3xl font-bold sm:font-medium text-[#171717] dark:text-[#f2efe9] tracking-tight">Free</div>
+                <div className="text-xs text-[#707070] dark:text-[#f2efe9]/50">During public beta</div>
               </div>
               <div className="space-y-1 border-t md:border-t-0 md:border-x border-[#E5E5E5] dark:border-[#27272a] pt-3 md:pt-0">
-                <div className="text-2xl sm:text-3xl font-bold sm:font-medium text-[#171717] dark:text-[#f2efe9] tracking-tight">&lt;60s</div>
-                <div className="text-xs text-[#707070] dark:text-[#f2efe9]/50">Average generation time from public repos</div>
+                <div className="text-2xl sm:text-3xl font-bold sm:font-medium text-[#171717] dark:text-[#f2efe9] tracking-tight">Tailored</div>
+                <div className="text-xs text-[#707070] dark:text-[#f2efe9]/50">To any job description</div>
               </div>
               <div className="space-y-1 border-t md:border-t-0 border-[#E5E5E5] dark:border-[#27272a] pt-3 md:pt-0">
-                <div className="text-2xl sm:text-3xl font-bold sm:font-medium text-[#171717] dark:text-[#f2efe9] tracking-tight">100%</div>
-                <div className="text-xs text-[#707070] dark:text-[#f2efe9]/50">Read-only GitHub access · Never writes to repos</div>
+                <div className="text-2xl sm:text-3xl font-bold sm:font-medium text-[#171717] dark:text-[#f2efe9] tracking-tight">Read-only</div>
+                <div className="text-xs text-[#707070] dark:text-[#f2efe9]/50">GitHub access · Never changes your repos</div>
               </div>
             </div>
           </motion.div>

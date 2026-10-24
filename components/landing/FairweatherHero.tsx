@@ -22,7 +22,7 @@ export default function FairweatherHero({ hasSession, theme }: FairweatherHeroPr
           <div className="fairweather-sky-band">
             <img
               src="/images/fairweather_sky.jpg"
-              alt="Dithered pixel-art sky"
+              alt="Resummit commit to resume conversion overview"
               className="fairweather-sky-image"
             />
             <div className="fairweather-sky-overlay" />
@@ -91,7 +91,7 @@ export default function FairweatherHero({ hasSession, theme }: FairweatherHeroPr
                     </div>
                     <div className="ats-grade-chip">
                       <Check size={11} strokeWidth={3} />
-                      <span>ATS 98%</span>
+                      <span>ATS score: sample</span>
                     </div>
                   </div>
 
@@ -201,18 +201,18 @@ export default function FairweatherHero({ hasSession, theme }: FairweatherHeroPr
             {/* Compact Fairweather Metrics Line (Preserving Verified Resummit Specs) */}
             <div className="fairweather-hero-metrics">
               <div className="metric-item">
-                <div className="metric-val">94%</div>
-                <div className="metric-lbl">Median ATS parse rate across tech recruiters</div>
+                <div className="metric-val">Free</div>
+                <div className="metric-lbl">During public beta</div>
               </div>
               <div className="metric-sep" />
               <div className="metric-item">
-                <div className="metric-val">&lt;60s</div>
-                <div className="metric-lbl">Average generation time from public repos</div>
+                <div className="metric-val">Tailored</div>
+                <div className="metric-lbl">To any job description</div>
               </div>
               <div className="metric-sep" />
               <div className="metric-item">
-                <div className="metric-val">100%</div>
-                <div className="metric-lbl">Read-only GitHub access · Never writes to repos</div>
+                <div className="metric-val">Read-only</div>
+                <div className="metric-lbl">GitHub access · Never changes your repos</div>
               </div>
             </div>
 

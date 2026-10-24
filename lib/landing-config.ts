@@ -163,37 +163,37 @@ export const LANDING_CONFIG = {
     {
       question: "Is my GitHub account safe?",
       answer:
-        "Yes, completely safe. Resummit requests strict read-only access to your public repositories and metadata. We cannot modify your code, commit to branches, or make any changes to your GitHub account.",
+        "Yes, completely safe. Resummit requests strict read-only access to your public repositories and metadata. We cannot modify your code, create branches, or make any changes to your repositories.",
     },
     {
       question: "Does Resummit write to my repositories?",
       answer:
-        "No. We never write, commit, or create pull requests in your repositories. Our connection is strictly read-only to analyze your project code, commit logs, and README descriptions.",
+        "No. We never write, commit, or create branches in your repositories. Our connection is strictly read-only to read your project names, languages, commit messages, and READMEs.",
     },
     {
       question: "Can I manually edit my CV after it's generated?",
       answer:
-        "Yes. Every bullet point, summary sentence, and experience item is completely editable. When GitHub syncs new commits, your personal edits and customizations are preserved and never overwritten.",
+        "Yes. Every bullet point, summary sentence, and experience item is completely editable. Any changes you make are saved in your account and never overwritten when you refresh.",
     },
     {
       question: "Does it work without GitHub?",
       answer:
-        "Yes. You can start with a blank profile, paste existing bullet points, or import an existing resume. Connecting GitHub is optional, but it powers the automatic bullet generation.",
+        "You can sign in with Google or GitHub. If you sign in with Google, you can manually build and edit your resume or paste job descriptions to tailor it. Connecting GitHub is required to import repositories and auto-generate project bullets.",
     },
     {
       question: "How does job tailoring work?",
       answer:
-        "You paste the job description you are targeting. Resummit compares the required skills and qualifications against your real projects and emphasizes the most relevant accomplishments and metrics.",
+        "Paste a job description into the editor. Resummit compares the requirements against your real projects and emphasizes the relevant technical skills and accomplishments.",
     },
     {
       question: "Is Resummit free to use?",
       answer:
-        "Yes, Resummit is 100% free while in public early access. You get full access to GitHub repo ingestion, Google XYZ bullet generation, role tailoring, and ATS compliance audits with no credit card required.",
+        "Yes, Resummit is completely free during public beta. You can sync public repositories, generate tailored resume versions, and export PDFs with no credit card required.",
     },
     {
       question: "Which export formats are supported?",
       answer:
-        "Currently we export clean, ATS-parsed standard PDF and structured JSON. Formats like Word (.docx) are coming soon.",
+        "We export clean, single-column ATS-friendly PDFs with selectable text and standard headings.",
     },
   ] as FaqItem[],
 

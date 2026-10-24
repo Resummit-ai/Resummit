@@ -35,7 +35,7 @@ export function ProofStatementSection() {
         </div>
 
         <p className="mx-auto mt-6 max-w-2xl text-base sm:text-lg text-neutral-400 leading-relaxed">
-          Resummit analyzes repositories, commits, dependencies, and PR structures to generate clean, recruiter-ready resumes directly from the software you already shipped.
+          Resummit analyzes your public repositories, commits, and READMEs to generate clean, recruiter-ready resumes directly from the software you already shipped.
         </p>
 
         {/* Action Buttons */}
@@ -58,23 +58,23 @@ export function ProofStatementSection() {
         {/* 3 Metric Callouts */}
         <div className="mt-16 pt-12 border-t border-neutral-900 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto text-left">
           <div className="p-4 rounded-xl border border-neutral-800/80 bg-[#121217]">
-            <div className="text-3xl font-bold font-mono text-white">94%</div>
+            <div className="text-3xl font-bold font-mono text-white">Free</div>
             <p className="mt-1 text-xs text-neutral-400 leading-normal">
-              Median ATS parse rate across Greenhouse, Lever, and Workday recruiters.
+              During public beta with no credit card required.
             </p>
           </div>
 
           <div className="p-4 rounded-xl border border-neutral-800/80 bg-[#121217]">
-            <div className="text-3xl font-bold font-mono text-white">&lt;60s</div>
+            <div className="text-3xl font-bold font-mono text-white">Tailored</div>
             <p className="mt-1 text-xs text-neutral-400 leading-normal">
-              Average generation time from public GitHub repositories.
+              To any job description you paste in seconds.
             </p>
           </div>
 
           <div className="p-4 rounded-xl border border-neutral-800/80 bg-[#121217]">
-            <div className="text-3xl font-bold font-mono text-white">100%</div>
+            <div className="text-3xl font-bold font-mono text-white">Read-only</div>
             <p className="mt-1 text-xs text-neutral-400 leading-normal">
-              Strict read-only GitHub access. We never write or push to your repos.
+              GitHub access. Resummit never writes to your repositories.
             </p>
           </div>
         </div>
