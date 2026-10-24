@@ -128,6 +128,26 @@ export function NewLandingPage() {
           color: #f2efe9 !important;
         }
 
+        /* Hide browser scroll pad / vertical scrollbar completely across all browsers */
+        html, body, :root {
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+        }
+        ::-webkit-scrollbar {
+          display: none !important;
+          width: 0 !important;
+          height: 0 !important;
+        }
+        * {
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+        }
+        *::-webkit-scrollbar {
+          display: none !important;
+          width: 0 !important;
+          height: 0 !important;
+        }
+
         /* Light mode section and typography overrides */
         .light .landing-root section:not(.preserve-dark),
         [data-theme="light"] .landing-root section:not(.preserve-dark) {
@@ -144,6 +164,10 @@ export function NewLandingPage() {
         [data-theme="light"] .landing-root h3,
         [data-theme="light"] .landing-root h4 {
           color: #171717 !important;
+        }
+        .light .landing-root p:not(.preserve-dark *):not(.resume-paper *),
+        [data-theme="light"] .landing-root p:not(.preserve-dark *):not(.resume-paper *) {
+          color: #374151;
         }
         .light .hero-subtitle,
         [data-theme="light"] .hero-subtitle {

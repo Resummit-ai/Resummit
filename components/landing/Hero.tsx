@@ -6,6 +6,7 @@ import { GitBranch, Check } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import RotatingText from "@/components/ui/RotatingText";
 import ArrowRevealButton from "@/components/ui/ArrowRevealButton";
+import { DitherCanvas } from "@/components/ui/DitherCanvas";
 
 export function Hero({ hasSession = false }: { hasSession?: boolean }) {
   const heroContainerRef = useRef<HTMLDivElement>(null);
@@ -38,26 +39,18 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
       ref={heroContainerRef}
       className="relative min-h-[92vh] flex flex-col justify-between overflow-hidden border-b border-[#E5E5E5] dark:border-[#27272a]/60 bg-[#F5F5F3] dark:bg-[#0a0a0a] transition-colors duration-300"
     >
-      {/* 1. Full-bleed Mountain Canvas Background */}
+      {/* 1. Full-bleed Mountain Dither Background matching Aceternity */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        <img
-          src="/images/hero_mountain_bg.jpg"
-          alt="Majestic mountain landscape"
-          className="w-full h-full object-cover object-[center_35%] opacity-80 dark:opacity-65 scale-105 transition-all duration-1000 ease-out"
-        />
-        {/* Subtle needlepoint tapestry canvas texture overlay */}
-        <div
-          className="absolute inset-0 opacity-10 dark:opacity-20"
-          style={{
-            backgroundImage:
-              "linear-gradient(to right, rgba(0,0,0,0.2) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,0.2) 1px, transparent 1px)",
-            backgroundSize: "3px 3px",
-          }}
+        <DitherCanvas
+          imageSrc="/images/hero_mountain_bg.jpg"
+          theme={theme}
+          pixelSize={3}
+          className="opacity-90 dark:opacity-75 transition-opacity duration-700"
         />
         {/* Soft vignette preserving rich mountain colors while easing transitions */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#F5F5F3]/50 via-transparent to-[#F5F5F3] dark:from-[#0a0a0a]/85 dark:via-[#0a0a0a]/40 dark:to-[#0a0a0a] pointer-events-none transition-colors duration-300" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#F5F5F3]/30 via-transparent to-[#F5F5F3] dark:from-[#0a0a0a]/75 dark:via-[#0a0a0a]/30 dark:to-[#0a0a0a] pointer-events-none transition-colors duration-300" />
         {/* Smooth horizontal gradient to maintain high contrast readability for left-aligned text while allowing mountain landscape to shine */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#F5F5F3]/75 via-[#F5F5F3]/30 to-transparent dark:from-[#0a0a0a]/80 dark:via-[#0a0a0a]/30 dark:to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#F5F5F3]/75 via-[#F5F5F3]/25 to-transparent dark:from-[#0a0a0a]/80 dark:via-[#0a0a0a]/25 dark:to-transparent pointer-events-none" />
       </div>
 
       {/* 2. Main Container with Left-Aligned Content */}
