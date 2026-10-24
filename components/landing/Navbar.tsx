@@ -101,37 +101,37 @@ export function Navbar() {
         <nav className="hidden md:flex items-center gap-8">
           <a
             href="#features"
-            className="text-sm font-medium text-[#707070] dark:text-[#f2efe9]/70 transition-colors hover:text-[#171717] dark:hover:text-[#f2efe9]"
+            className="text-sm font-medium text-[#171717] dark:text-[#f2efe9]/80 transition-colors hover:text-blue-600 dark:hover:text-white"
           >
             Features
           </a>
           <a
             href="#pipeline"
-            className="text-sm font-medium text-[#707070] dark:text-[#f2efe9]/70 transition-colors hover:text-[#171717] dark:hover:text-[#f2efe9]"
+            className="text-sm font-medium text-[#171717] dark:text-[#f2efe9]/80 transition-colors hover:text-blue-600 dark:hover:text-white"
           >
             Workflow
           </a>
           <a
             href="#preview-resume"
-            className="text-sm font-medium text-[#707070] dark:text-[#f2efe9]/70 transition-colors hover:text-[#171717] dark:hover:text-[#f2efe9]"
+            className="text-sm font-medium text-[#171717] dark:text-[#f2efe9]/80 transition-colors hover:text-blue-600 dark:hover:text-white"
           >
             Sample Resume
           </a>
           <a
             href="#pricing"
-            className="text-sm font-medium text-[#707070] dark:text-[#f2efe9]/70 transition-colors hover:text-[#171717] dark:hover:text-[#f2efe9]"
+            className="text-sm font-medium text-[#171717] dark:text-[#f2efe9]/80 transition-colors hover:text-blue-600 dark:hover:text-white"
           >
             Access
           </a>
           <a
             href="#faq"
-            className="text-sm font-medium text-[#707070] dark:text-[#f2efe9]/70 transition-colors hover:text-[#171717] dark:hover:text-[#f2efe9]"
+            className="text-sm font-medium text-[#171717] dark:text-[#f2efe9]/80 transition-colors hover:text-blue-600 dark:hover:text-white"
           >
             FAQ
           </a>
           <a
             href="#feedback"
-            className="text-sm font-medium text-[#707070] dark:text-[#f2efe9]/70 transition-colors hover:text-[#171717] dark:hover:text-[#f2efe9]"
+            className="text-sm font-medium text-[#171717] dark:text-[#f2efe9]/80 transition-colors hover:text-blue-600 dark:hover:text-white"
           >
             Contact
           </a>
@@ -170,7 +170,7 @@ export function Navbar() {
 
           <Link
             href="/login"
-            className="text-sm font-medium text-[#707070] dark:text-[#f2efe9]/70 hover:text-[#171717] dark:hover:text-[#f2efe9] transition-colors"
+            className="text-sm font-medium text-[#171717] dark:text-[#f2efe9]/80 hover:text-blue-600 dark:hover:text-white transition-colors"
           >
             Sign In
           </Link>
@@ -229,42 +229,42 @@ export function Navbar() {
             <a
               href="#features"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-sm text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white py-1"
+              className="text-sm font-medium text-[#171717] dark:text-neutral-200 hover:text-blue-600 dark:hover:text-white py-1 transition-colors"
             >
               Features
             </a>
             <a
               href="#pipeline"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-sm text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white py-1"
+              className="text-sm font-medium text-[#171717] dark:text-neutral-200 hover:text-blue-600 dark:hover:text-white py-1 transition-colors"
             >
               Workflow
             </a>
             <a
               href="#preview-resume"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-sm text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white py-1"
+              className="text-sm font-medium text-[#171717] dark:text-neutral-200 hover:text-blue-600 dark:hover:text-white py-1 transition-colors"
             >
               Sample Resume
             </a>
             <a
               href="#pricing"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-sm text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white py-1"
+              className="text-sm font-medium text-[#171717] dark:text-neutral-200 hover:text-blue-600 dark:hover:text-white py-1 transition-colors"
             >
               Access
             </a>
             <a
               href="#faq"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-sm text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white py-1"
+              className="text-sm font-medium text-[#171717] dark:text-neutral-200 hover:text-blue-600 dark:hover:text-white py-1 transition-colors"
             >
               FAQ
             </a>
             <a
               href="#feedback"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-sm text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white py-1"
+              className="text-sm font-medium text-[#171717] dark:text-neutral-200 hover:text-blue-600 dark:hover:text-white py-1 transition-colors"
             >
               Contact
             </a>
@@ -273,7 +273,7 @@ export function Navbar() {
           <div className="pt-3 border-t border-[#E5E5E5] dark:border-neutral-800 flex items-center justify-between">
             <Link
               href="/login"
-              className="text-sm font-medium text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white"
+              className="text-sm font-medium text-[#171717] dark:text-neutral-200 hover:text-blue-600 dark:hover:text-white transition-colors"
             >
               Sign In
             </Link>
