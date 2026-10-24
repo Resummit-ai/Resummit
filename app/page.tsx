@@ -7,20 +7,19 @@ export default async function Page(props: {
 }) {
   const session = await auth();
   const searchParams = props.searchParams ? await props.searchParams : undefined;
-  const isNewLanding =
-    process.env.NEXT_PUBLIC_NEW_LANDING === "true" ||
-    searchParams?.preview === "new" ||
-    searchParams?.new === "true";
+  
+  // Default to the new landing page for this preview branch
+  const showOldLanding = searchParams?.preview === "old";
 
-  if (isNewLanding) {
-    return <NewLandingPage />;
+  if (showOldLanding) {
+    return (
+      <LandingClient 
+        hasSession={!!session?.user} 
+        userName={session?.user?.name || ""}
+        userEmail={session?.user?.email || ""}
+      />
+    );
   }
 
-  return (
-    <LandingClient 
-      hasSession={!!session?.user} 
-      userName={session?.user?.name || ""}
-      userEmail={session?.user?.email || ""}
-    />
-  );
+  return <NewLandingPage />;
 }
