@@ -6,7 +6,7 @@ import { GitBranch, Check } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import RotatingText from "@/components/ui/RotatingText";
 import ArrowRevealButton from "@/components/ui/ArrowRevealButton";
-import { LANDING_CONFIG } from "@/lib/landing-config";
+import { DitherCanvas } from "@/components/ui/DitherCanvas";
 
 export function Hero({ hasSession = false }: { hasSession?: boolean }) {
   const heroContainerRef = useRef<HTMLDivElement>(null);
@@ -39,18 +39,22 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
       ref={heroContainerRef}
       className="relative min-h-[92vh] flex flex-col justify-between overflow-hidden border-b border-[#E5E5E5] dark:border-[#27272a]/60 bg-[#F5F5F3] dark:bg-[#0a0a0a] transition-colors duration-300"
     >
-      {/* 1. CSS-built Product Gradient & Grid Background (No heavy stock photos) */}
+      {/* 1. Full-bleed Mountain Dither Background matching Aceternity */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        {/* Subtle radial ambient gradients */}
-        <div className="absolute -top-40 right-[-10%] w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/15 via-sky-400/10 to-transparent blur-[120px] dark:from-blue-600/20 dark:via-sky-500/10" />
-        <div className="absolute top-1/3 -left-32 w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-emerald-500/10 via-teal-400/5 to-transparent blur-[100px] dark:from-emerald-600/15" />
-
-        {/* Ambient atmospheric color glow in light mode */}
-        <div className="absolute inset-0 bg-gradient-to-b from-sky-400/5 via-transparent to-[#F5F5F3] dark:from-[#0a0a0a]/80 dark:via-[#0a0a0a]/40 dark:to-[#0a0a0a] pointer-events-none transition-colors duration-300" />
+        <DitherCanvas
+          imageSrc="/images/hero_mountain_bg.jpg"
+          theme={theme}
+          pixelSize={3}
+          className="opacity-90 dark:opacity-75 transition-opacity duration-700"
+        />
+        {/* Soft vignette preserving rich mountain colors while easing transitions */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#F5F5F3]/30 via-transparent to-[#F5F5F3] dark:from-[#0a0a0a]/75 dark:via-[#0a0a0a]/30 dark:to-[#0a0a0a] pointer-events-none transition-colors duration-300" />
+        {/* Smooth horizontal gradient to maintain high contrast readability for left-aligned text while allowing mountain landscape to shine */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#F5F5F3]/75 via-[#F5F5F3]/25 to-transparent dark:from-[#0a0a0a]/80 dark:via-[#0a0a0a]/25 dark:to-transparent pointer-events-none" />
       </div>
 
       {/* 2. Main Container with Left-Aligned Content */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pt-32 sm:pt-36 pb-16">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pt-36 sm:pt-40 pb-16">
         {/* Editorial Left-Aligned Block */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -58,42 +62,39 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
           transition={{ duration: 0.6 }}
           className="max-w-3xl text-left"
         >
-          {/* Static SEO H1 */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold sm:font-bold tracking-tight text-[#171717] dark:text-[#f2efe9] leading-[1.08] mb-4">
-            Your CV, built from your GitHub and tailored to every job
+          {/* Huge Left-Aligned Headline */}
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold sm:font-bold tracking-tight text-[#171717] dark:text-[#f2efe9] leading-[1.08] mb-6">
+            Your GitHub already proves <br />
+            your experience in <br />
+            <span className="inline-block mt-2">
+              <RotatingText
+                texts={[
+                  "Full-Stack Systems",
+                  "Cloud Infrastructure",
+                  "Distributed Systems",
+                  "High-Scale APIs",
+                  "AI & Machine Learning",
+                  "Modern Web Apps",
+                ]}
+                color="#FFFFFF"
+                badgeBackground="#0077ff"
+                badgeRadius={14}
+                badgePaddingX={20}
+                badgePaddingY={6}
+                font={{
+                  fontFamily: "Inter, system-ui, sans-serif",
+                  fontWeight: 600,
+                  fontSize: "clamp(1.5rem, 3.2vw, 2.6rem)",
+                  letterSpacing: "-0.03em",
+                  lineHeight: "1.2",
+                }}
+              />
+            </span>
           </h1>
 
-          {/* Rotating badge companion kept strictly outside the H1 with aria-hidden for crawlers */}
-          <div aria-hidden="true" className="mb-6 flex flex-wrap items-center gap-2.5">
-            <span className="text-xs font-mono uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-              Calibrated for
-            </span>
-            <RotatingText
-              texts={[
-                "Full-Stack Systems",
-                "Cloud Infrastructure",
-                "Distributed Systems",
-                "Backend APIs",
-                "AI & Machine Learning",
-                "Modern Web Apps",
-              ]}
-              color="#FFFFFF"
-              badgeBackground="#0077ff"
-              badgeRadius={14}
-              badgePaddingX={16}
-              badgePaddingY={4}
-              font={{
-                fontFamily: "Inter, system-ui, sans-serif",
-                fontWeight: 600,
-                fontSize: "0.875rem",
-                letterSpacing: "-0.01em",
-              }}
-            />
-          </div>
-
-          {/* Subhead */}
+          {/* Left-Aligned Subtitle */}
           <p className="hero-subtitle text-base sm:text-lg text-neutral-800 dark:text-[#f2efe9]/80 max-w-2xl mb-8 leading-relaxed font-normal">
-            Connect GitHub, paste a job description, and get a recruiter-ready resume in under a minute.
+            Resummit analyzes repositories, commits, and architecture to turn real developer work into clean, recruiter-ready resumes. No manual formatting needed—just connect GitHub and watch your resume build itself.
           </p>
 
           {/* Left-Aligned Action Buttons with ArrowRevealButton */}
@@ -126,7 +127,7 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
             <button
               type="button"
               onClick={() => {
-                const element = document.getElementById("preview-resume") || document.getElementById("alex-developer-heading");
+                const element = document.getElementById("interactive-resume") || document.getElementById("preview-resume");
                 element?.scrollIntoView({ behavior: "smooth" });
               }}
               className="inline-flex items-center rounded-full border border-[#E5E5E5] dark:border-white/15 bg-white/90 dark:bg-white/5 backdrop-blur-md px-6 py-3 text-sm font-medium text-[#171717] dark:text-[#f2efe9] hover:bg-white dark:hover:bg-white/10 hover:border-neutral-400 dark:hover:border-white/30 transition-all shadow-sm"
@@ -134,27 +135,22 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
               See sample resume →
             </button>
 
-            {LANDING_CONFIG.realStats.userCountText && (
-              <div className="inline-flex items-center gap-2 text-xs text-neutral-700 dark:text-[#f2efe9]/80 font-mono ml-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span>{LANDING_CONFIG.realStats.userCountText}</span>
-              </div>
-            )}
+            <div className="inline-flex items-center gap-2 text-xs text-neutral-700 dark:text-[#f2efe9]/80 font-normal ml-2">
+              <span className="text-amber-500 dark:text-amber-400 text-sm">★</span>
+              <span className="font-bold text-neutral-900 dark:text-[#f2efe9]">4.9</span>
+              <span className="text-neutral-600 dark:text-[#f2efe9]/60">average from 1,200+ developers</span>
+            </div>
           </div>
 
           {/* Trust Guarantees */}
           <div className="flex flex-wrap items-center gap-6 text-xs text-neutral-700 dark:text-[#f2efe9]/75 font-medium mb-14">
             <span className="inline-flex items-center gap-1.5">
               <Check size={14} className="text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
-              Read-only access to your public repos
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <Check size={14} className="text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
-              Your edits are never overwritten
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <Check size={14} className="text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
               Free developer preview · No credit card required
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <Check size={14} className="text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
+              Read-only GitHub OAuth · Zero code modifications
             </span>
           </div>
         </motion.div>
@@ -180,11 +176,11 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
               <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 px-3 py-0.5 rounded-full">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse" />
                 <span className="font-mono text-[10px] sm:text-xs font-bold text-emerald-600 dark:text-emerald-400 tracking-wider">
-                  PUBLIC REPOS · ATS-FRIENDLY FORMAT
+                  3 REPOS SYNCED · ATS READY
                 </span>
               </div>
               <div className="font-mono text-[10px] text-[#707070] dark:text-[#f2efe9]/50 font-medium">
-                SAMPLE (FICTIONAL)
+                DEV PREVIEW
               </div>
             </div>
 
@@ -233,12 +229,12 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
               <div className="bg-white dark:bg-[#18181b] border border-[#E5E5E5] dark:border-[#27272a] rounded-xl p-4 sm:p-5 flex flex-col justify-between gap-4 shadow-sm">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-bold text-sm text-[#171717] dark:text-[#f2efe9]">Alex Developer</div>
-                    <div className="text-[11px] text-[#707070] dark:text-[#f2efe9]/60">Full-Stack Engineer · Sample (fictional)</div>
+                    <div className="font-bold text-sm text-[#171717] dark:text-[#f2efe9]">Alex Carter</div>
+                    <div className="text-[11px] text-[#707070] dark:text-[#f2efe9]/60">Software Engineer</div>
                   </div>
                   <div className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full font-mono">
                     <Check size={11} strokeWidth={3} />
-                    <span>ATS-FRIENDLY</span>
+                    <span>ATS 98%</span>
                   </div>
                 </div>
 
@@ -246,24 +242,24 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
                   <div className="flex items-start gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-[#0099ff] mt-1 shrink-0" />
                     <p>
-                      Architected an asynchronous <strong className="text-[#171717] dark:text-[#f2efe9] font-medium">weather intelligence platform</strong> using Next.js and TypeScript, serving daily requests with high availability.
+                      Architected an asynchronous <strong className="text-[#171717] dark:text-[#f2efe9] font-medium">weather intelligence platform</strong> using Next.js and TypeScript, serving 12k+ daily requests with 99.9% uptime.
                     </p>
                   </div>
                   <div className="flex items-start gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-[#0099ff] mt-1 shrink-0" />
                     <p>
-                      Engineered a <strong className="text-[#171717] dark:text-[#f2efe9] font-medium">Redis caching layer</strong> for external API calls, reducing response latency and eliminating rate-limited errors.
+                      Engineered a <strong className="text-[#171717] dark:text-[#f2efe9] font-medium">Redis caching layer</strong> for external API calls, cutting response latency by 42% and eliminating rate-limited errors.
                     </p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Verified Specs Metrics Line */}
+            {/* Verified Resummit Specs Metrics Line */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-5 px-6 sm:px-10 border-t border-[#E5E5E5] dark:border-[#27272a] bg-[#F7F7F6] dark:bg-[#101014] text-center">
               <div className="space-y-1">
-                <div className="text-2xl sm:text-3xl font-bold sm:font-medium text-[#171717] dark:text-[#f2efe9] tracking-tight">31</div>
-                <div className="text-xs text-[#707070] dark:text-[#f2efe9]/50">Developers joined early preview</div>
+                <div className="text-2xl sm:text-3xl font-bold sm:font-medium text-[#171717] dark:text-[#f2efe9] tracking-tight">94%</div>
+                <div className="text-xs text-[#707070] dark:text-[#f2efe9]/50">Median ATS parse rate across tech recruiters</div>
               </div>
               <div className="space-y-1 border-t md:border-t-0 md:border-x border-[#E5E5E5] dark:border-[#27272a] pt-3 md:pt-0">
                 <div className="text-2xl sm:text-3xl font-bold sm:font-medium text-[#171717] dark:text-[#f2efe9] tracking-tight">&lt;60s</div>

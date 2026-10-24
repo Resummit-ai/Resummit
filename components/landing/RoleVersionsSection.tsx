@@ -83,15 +83,15 @@ export function RoleVersionsSection() {
           <div className="lg:col-span-5 space-y-6">
             <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-xs font-semibold text-blue-600 dark:text-sky-400">
               <span>✳</span>
-              <span>Job description tailoring</span>
+              <span>Role catalog</span>
             </div>
 
             <h2 className="text-4xl font-extrabold sm:font-bold tracking-tight text-[#171717] dark:text-white sm:text-5xl leading-[1.15]">
-              One CV per job
+              Every developer role, ready to export
             </h2>
 
             <p className="text-base text-[#707070] dark:text-neutral-400 leading-relaxed">
-              Tailor your CV to any job description. Generate targeted versions for Full-Stack, Backend, Frontend, or DevOps from the same GitHub foundation without maintaining separate files.
+              Pick from tailored presets for Backend, Frontend, Fullstack, AI/ML, and DevOps. Each version weights your repositories to match recruiter requirements.
             </p>
 
             <div className="flex flex-wrap items-center gap-4 pt-2">
@@ -99,7 +99,7 @@ export function RoleVersionsSection() {
                 href={LANDING_CONFIG.brand.primaryCta.href}
                 className="inline-flex items-center gap-2 rounded-full border border-neutral-300 dark:border-neutral-800 bg-[#171717] dark:bg-neutral-900 px-6 py-2.5 text-sm font-semibold text-white transition-all hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-700 shadow-sm"
               >
-                <span>Tailor my CV free</span>
+                <span>Browse all roles</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -117,11 +117,10 @@ export function RoleVersionsSection() {
                       key={role.id}
                       type="button"
                       onClick={() => setActiveRoleIndex(idx)}
-                      className={`flex h-10 w-10 items-center justify-center rounded-xl transition-all ${
-                        isActive
+                      className={`flex h-10 w-10 items-center justify-center rounded-xl transition-all ${isActive
                           ? "bg-white dark:bg-neutral-800 text-blue-600 dark:text-sky-400 shadow-sm border border-[#E5E5E5] dark:border-neutral-700"
                           : "text-[#707070] dark:text-neutral-500 hover:text-black dark:hover:text-neutral-300 hover:bg-neutral-200/50 dark:hover:bg-neutral-900"
-                      }`}
+                        }`}
                       title={role.name}
                     >
                       {idx === 0 && <Layers className="h-5 w-5" />}

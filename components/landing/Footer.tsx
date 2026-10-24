@@ -42,7 +42,7 @@ export function Footer() {
               </div>
             </Link>
             <p className="max-w-sm text-xs sm:text-sm text-[#707070] dark:text-neutral-400 leading-relaxed">
-              Connect GitHub, paste a job description, and tailor your CV in seconds. Designed and built by{" "}
+              Fast resume generation from your code, built for every developer shipping in public. Designed, built, and maintained by{" "}
               <span className="text-[#171717] dark:text-white font-medium">Adel Muhammed</span>.
             </p>
           </div>
@@ -60,12 +60,7 @@ export function Footer() {
                 </li>
                 <li>
                   <a href="#pipeline" className="hover:text-[#171717] dark:hover:text-white transition-colors">
-                    How It Works
-                  </a>
-                </li>
-                <li>
-                  <a href="#roles" className="hover:text-[#171717] dark:hover:text-white transition-colors">
-                    One CV Per Job
+                    Pipeline Workflow
                   </a>
                 </li>
                 <li>
@@ -75,7 +70,7 @@ export function Footer() {
                 </li>
                 <li>
                   <a href="#pricing" className="hover:text-[#171717] dark:hover:text-white transition-colors">
-                    Pricing
+                    Developer Access
                   </a>
                 </li>
               </ul>
@@ -100,6 +95,14 @@ export function Footer() {
                     FAQ
                   </a>
                 </li>
+                <li>
+                  <span className="inline-flex items-center gap-1.5 text-neutral-400 dark:text-neutral-500">
+                    <span>API</span>
+                    <span className="rounded bg-sky-500/20 px-1.5 py-0.2 text-[10px] text-blue-600 dark:text-sky-400 font-mono">
+                      Soon
+                    </span>
+                  </span>
+                </li>
               </ul>
             </div>
 
@@ -120,6 +123,11 @@ export function Footer() {
                 <li>
                   <a href="#feedback" className="hover:text-[#171717] dark:hover:text-white transition-colors">
                     Share Feedback
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.linkedin.com/in/adel-muhammed-71328a2b5" target="_blank" rel="noreferrer" className="hover:text-[#171717] dark:hover:text-white transition-colors">
+                    LinkedIn Contact
                   </a>
                 </li>
               </ul>
@@ -151,9 +159,7 @@ export function Footer() {
           </div>
 
           <div className="flex items-center gap-6 font-mono text-[11px]">
-            {LANDING_CONFIG.realStats.userCountText && (
-              <span>{LANDING_CONFIG.realStats.userCountText}</span>
-            )}
+            <span>{LANDING_CONFIG.realStats.bulletsWritten.toLocaleString()} bullets written</span>
             <span>{LANDING_CONFIG.footer.copyright}</span>
           </div>
         </div>

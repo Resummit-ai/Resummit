@@ -201,11 +201,10 @@ export function WorkflowCanvas() {
               {/* Node 1: GitHub Repos */}
               <div
                 onClick={() => toggleNode("repos")}
-                className={`cursor-pointer rounded-2xl border p-4 transition-all duration-200 select-none ${
-                  connectedNodes.repos
+                className={`cursor-pointer rounded-2xl border p-4 transition-all duration-200 select-none ${connectedNodes.repos
                     ? "border-amber-500/50 bg-[#141417] shadow-[0_0_20px_rgba(245,158,11,0.12)] scale-[1.01]"
                     : "border-neutral-800 bg-[#121215] opacity-70 hover:opacity-100"
-                }`}
+                  }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
@@ -215,49 +214,46 @@ export function WorkflowCanvas() {
                   <span className="text-[10px] text-neutral-500 font-mono">::</span>
                 </div>
                 <div className="mt-2 text-xs text-neutral-300 font-mono">
-                  github.com/developer/portfolio
+                  github.com/developer/core
                 </div>
                 <div className="text-[11px] text-neutral-500 mt-0.5">
-                  Public repositories &amp; project code
+                  12 repositories · 1,420 commits
                 </div>
                 <div className="mt-3 flex items-center justify-end gap-1.5">
                   <span className="text-[10px] font-mono text-neutral-400">repos</span>
                   <span
-                    className={`h-2.5 w-2.5 rounded-full transition-colors ${
-                      connectedNodes.repos ? "bg-amber-400 shadow-[0_0_8px_#f59e0b]" : "bg-neutral-600"
-                    }`}
+                    className={`h-2.5 w-2.5 rounded-full transition-colors ${connectedNodes.repos ? "bg-amber-400 shadow-[0_0_8px_#f59e0b]" : "bg-neutral-600"
+                      }`}
                   />
                 </div>
               </div>
 
-              {/* Node 2: Commits & READMEs */}
+              {/* Node 2: Commits & Diffs */}
               <div
                 onClick={() => toggleNode("commits")}
-                className={`cursor-pointer rounded-2xl border p-4 transition-all duration-200 select-none ${
-                  connectedNodes.commits
+                className={`cursor-pointer rounded-2xl border p-4 transition-all duration-200 select-none ${connectedNodes.commits
                     ? "border-blue-500/50 bg-[#141417] shadow-[0_0_20px_rgba(59,130,246,0.12)] scale-[1.01]"
                     : "border-neutral-800 bg-[#121215] opacity-70 hover:opacity-100"
-                }`}
+                  }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
                     <Cpu className="h-4 w-4 text-blue-400" />
-                    <span className="text-xs font-semibold text-white">Commits &amp; READMEs</span>
+                    <span className="text-xs font-semibold text-white">Key PRs & Diffs</span>
                   </div>
                   <span className="text-[10px] text-neutral-500 font-mono">::</span>
                 </div>
                 <div className="mt-2 text-xs text-neutral-300 font-mono">
-                  Git commit logs · Project docs
+                  89 merged PRs · Releases
                 </div>
                 <div className="text-[11px] text-neutral-500 mt-0.5">
-                  Technical skills, frameworks, achievements
+                  Benchmarks, schema refactors, latency cuts
                 </div>
                 <div className="mt-3 flex items-center justify-end gap-1.5">
-                  <span className="text-[10px] font-mono text-neutral-400">commits</span>
+                  <span className="text-[10px] font-mono text-neutral-400">diffs</span>
                   <span
-                    className={`h-2.5 w-2.5 rounded-full transition-colors ${
-                      connectedNodes.commits ? "bg-blue-400 shadow-[0_0_8px_#3b82f6]" : "bg-neutral-600"
-                    }`}
+                    className={`h-2.5 w-2.5 rounded-full transition-colors ${connectedNodes.commits ? "bg-blue-400 shadow-[0_0_8px_#3b82f6]" : "bg-neutral-600"
+                      }`}
                   />
                 </div>
               </div>
@@ -265,11 +261,10 @@ export function WorkflowCanvas() {
               {/* Node 3: Target Role */}
               <div
                 onClick={() => toggleNode("roles")}
-                className={`cursor-pointer rounded-2xl border p-4 transition-all duration-200 select-none ${
-                  connectedNodes.roles
+                className={`cursor-pointer rounded-2xl border p-4 transition-all duration-200 select-none ${connectedNodes.roles
                     ? "border-emerald-500/50 bg-[#141417] shadow-[0_0_20px_rgba(16,185,129,0.12)] scale-[1.01]"
                     : "border-neutral-800 bg-[#121215] opacity-70 hover:opacity-100"
-                }`}
+                  }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
@@ -292,9 +287,8 @@ export function WorkflowCanvas() {
                 <div className="mt-3 flex items-center justify-end gap-1.5">
                   <span className="text-[10px] font-mono text-neutral-400">roles</span>
                   <span
-                    className={`h-2.5 w-2.5 rounded-full transition-colors ${
-                      connectedNodes.roles ? "bg-emerald-400 shadow-[0_0_8px_#10b981]" : "bg-neutral-600"
-                    }`}
+                    className={`h-2.5 w-2.5 rounded-full transition-colors ${connectedNodes.roles ? "bg-emerald-400 shadow-[0_0_8px_#10b981]" : "bg-neutral-600"
+                      }`}
                   />
                 </div>
               </div>
@@ -302,28 +296,26 @@ export function WorkflowCanvas() {
               {/* Node 4: ATS Rules */}
               <div
                 onClick={() => toggleNode("rules")}
-                className={`cursor-pointer rounded-2xl border p-4 transition-all duration-200 select-none ${
-                  connectedNodes.rules
+                className={`cursor-pointer rounded-2xl border p-4 transition-all duration-200 select-none ${connectedNodes.rules
                     ? "border-purple-500/50 bg-[#141417] shadow-[0_0_20px_rgba(168,85,247,0.12)] scale-[1.01]"
                     : "border-neutral-800 bg-[#121215] opacity-70 hover:opacity-100"
-                }`}
+                  }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
                     <MessageSquareCode className="h-4 w-4 text-purple-400" />
-                    <span className="text-xs font-semibold text-white">Impact Structuring</span>
+                    <span className="text-xs font-semibold text-white">XYZ Formula Rules</span>
                   </div>
                   <span className="text-[10px] text-neutral-500 font-mono">::</span>
                 </div>
                 <div className="mt-2 text-xs text-neutral-400 leading-snug">
-                  Action verbs, technical context, and quantifiable results.
+                  Accomplished [X] as measured by [Y] by doing [Z].
                 </div>
                 <div className="mt-3 flex items-center justify-end gap-1.5">
-                  <span className="text-[10px] font-mono text-neutral-400">bullets</span>
+                  <span className="text-[10px] font-mono text-neutral-400">formula</span>
                   <span
-                    className={`h-2.5 w-2.5 rounded-full transition-colors ${
-                      connectedNodes.rules ? "bg-purple-400 shadow-[0_0_8px_#a855f7]" : "bg-neutral-600"
-                    }`}
+                    className={`h-2.5 w-2.5 rounded-full transition-colors ${connectedNodes.rules ? "bg-purple-400 shadow-[0_0_8px_#a855f7]" : "bg-neutral-600"
+                      }`}
                   />
                 </div>
               </div>
@@ -347,9 +339,8 @@ export function WorkflowCanvas() {
                   <div className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2">
                       <span
-                        className={`h-2 w-2 rounded-full ${
-                          connectedNodes.repos ? "bg-amber-400" : "bg-neutral-600"
-                        }`}
+                        className={`h-2 w-2 rounded-full ${connectedNodes.repos ? "bg-amber-400" : "bg-neutral-600"
+                          }`}
                       />
                       <span className="text-neutral-200">Repository metadata</span>
                     </div>
@@ -359,9 +350,8 @@ export function WorkflowCanvas() {
                   <div className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2">
                       <span
-                        className={`h-2 w-2 rounded-full ${
-                          connectedNodes.commits ? "bg-blue-400" : "bg-neutral-600"
-                        }`}
+                        className={`h-2 w-2 rounded-full ${connectedNodes.commits ? "bg-blue-400" : "bg-neutral-600"
+                          }`}
                       />
                       <span className="text-neutral-200">Commit metrics</span>
                     </div>
@@ -371,9 +361,8 @@ export function WorkflowCanvas() {
                   <div className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2">
                       <span
-                        className={`h-2 w-2 rounded-full ${
-                          connectedNodes.roles ? "bg-emerald-400" : "bg-neutral-600"
-                        }`}
+                        className={`h-2 w-2 rounded-full ${connectedNodes.roles ? "bg-emerald-400" : "bg-neutral-600"
+                          }`}
                       />
                       <span className="text-neutral-200">Target role weighting</span>
                     </div>
@@ -383,9 +372,8 @@ export function WorkflowCanvas() {
                   <div className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2">
                       <span
-                        className={`h-2 w-2 rounded-full ${
-                          connectedNodes.rules ? "bg-purple-400" : "bg-neutral-600"
-                        }`}
+                        className={`h-2 w-2 rounded-full ${connectedNodes.rules ? "bg-purple-400" : "bg-neutral-600"
+                          }`}
                       />
                       <span className="text-neutral-200">ATS formatting schema</span>
                     </div>
@@ -421,39 +409,39 @@ export function WorkflowCanvas() {
                 </div>
                 <div className="mt-1 text-xs text-neutral-400">
                   {connectedCount >= 2
-                    ? "✓ Formatted with clean typography"
+                    ? "✓ Formatted with 14 bullets"
                     : "• Waiting for pipeline inputs"}
                 </div>
               </div>
 
-              {/* Output 2: ATS Scanner Format */}
+              {/* Output 2: ATS Scanner Score */}
               <div className="rounded-2xl border border-neutral-800 bg-[#121215] p-4 opacity-90 hover:opacity-100 transition-opacity">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Bot className="h-4 w-4 text-emerald-400" />
-                    <span className="text-xs font-semibold text-white">ATS-Friendly Layout</span>
+                    <span className="text-xs font-semibold text-white">ATS Scanner Score</span>
                   </div>
                   <span className="text-[10px] text-neutral-500 font-mono">::</span>
                 </div>
                 <div className="mt-1 text-xs text-neutral-400">
                   {connectedCount >= 3
-                    ? "✓ Single-column ATS format"
+                    ? "✓ 98/100 score on Greenhouse"
                     : "• Waiting for pipeline inputs"}
                 </div>
               </div>
 
-              {/* Output 3: On-Demand Refresh */}
+              {/* Output 3: Webhook Auto-Updates */}
               <div className="rounded-2xl border border-neutral-800 bg-[#121215] p-4 opacity-90 hover:opacity-100 transition-opacity">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <BellRing className="h-4 w-4 text-amber-400" />
-                    <span className="text-xs font-semibold text-white">On-Demand Refresh</span>
+                    <span className="text-xs font-semibold text-white">GitHub Webhook</span>
                   </div>
                   <span className="text-[10px] text-neutral-500 font-mono">::</span>
                 </div>
                 <div className="mt-1 text-xs text-neutral-400">
                   {connectedCount === 4
-                    ? "✓ Syncs on-demand (up to 3/hr)"
+                    ? "✓ Auto-updating on every push"
                     : "• Waiting for pipeline inputs"}
                 </div>
               </div>

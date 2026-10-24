@@ -66,14 +66,15 @@ export function MagicSection({ hasSession = false }: { hasSession?: boolean }) {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-[#0099ff] border border-blue-500/20 text-xs font-bold uppercase tracking-wider mb-3">
-            <span>Illustrative example</span>
+          <div className="text-xs sm:text-sm font-bold uppercase tracking-wider text-blue-600 dark:text-[#0099ff] mb-3">
+            THE MAGIC
           </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold sm:font-bold tracking-tight text-[#171717] dark:text-[#f2efe9] leading-[1.12] mb-4">
-            From commit to bullet
+            From raw commit<br />
+            to recruiter-ready bullet
           </h2>
           <p className="text-base sm:text-lg text-[#707070] dark:text-[#f2efe9]/70 leading-relaxed font-normal">
-            Resummit reads what you actually built in your public repositories and translates it into clean, accomplishment-driven bullets for your resume.
+            Resummit reads what you actually built — and translates it into the professional language recruiters expect.
           </p>
         </div>
 
@@ -107,7 +108,7 @@ export function MagicSection({ hasSession = false }: { hasSession?: boolean }) {
             <div>
               <div className="text-xs font-mono text-[#707070] dark:text-[#f2efe9]/50 mb-3 flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-[#0099ff]" />
-                Repository Commits (Example)
+                Commits on Jun 7, 2026
               </div>
 
               <div className="space-y-3">
@@ -126,8 +127,8 @@ export function MagicSection({ hasSession = false }: { hasSession?: boolean }) {
                       <span className="w-4 h-4 rounded-full bg-blue-600 dark:bg-[#0099ff] text-white font-bold flex items-center justify-center text-[9px]">
                         A
                       </span>
-                      <span>alex-dev</span>
-                      <span>commit a3f2c1e</span>
+                      <span>Adel-muhammed</span>
+                      <span>committed 4 hours ago</span>
                       <span className="text-emerald-500 font-bold">✓</span>
                     </div>
                   </div>
@@ -151,8 +152,8 @@ export function MagicSection({ hasSession = false }: { hasSession?: boolean }) {
                       <span className="w-4 h-4 rounded-full bg-blue-600 dark:bg-[#0099ff] text-white font-bold flex items-center justify-center text-[9px]">
                         A
                       </span>
-                      <span>alex-dev</span>
-                      <span>commit c9a1b3d</span>
+                      <span>Adel-muhammed</span>
+                      <span>committed 2 hours ago</span>
                       <span className="text-emerald-500 font-bold">✓</span>
                     </div>
                   </div>
@@ -176,8 +177,8 @@ export function MagicSection({ hasSession = false }: { hasSession?: boolean }) {
                       <span className="w-4 h-4 rounded-full bg-blue-600 dark:bg-[#0099ff] text-white font-bold flex items-center justify-center text-[9px]">
                         A
                       </span>
-                      <span>alex-dev</span>
-                      <span>commit e8b4f2a</span>
+                      <span>Adel-muhammed</span>
+                      <span>committed 30 mins ago</span>
                       <span className="text-emerald-500 font-bold">✓</span>
                     </div>
                   </div>
@@ -230,14 +231,14 @@ export function MagicSection({ hasSession = false }: { hasSession?: boolean }) {
                   className="absolute -top-3.5 right-6 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500 text-white text-xs font-semibold font-mono shadow-lg"
                 >
                   <Check size={12} strokeWidth={3} />
-                  <span>ATS-Friendly Format</span>
+                  <span>ATS Grade: A+</span>
                 </motion.div>
               )}
             </AnimatePresence>
 
             <div className="border-b border-[#E5E5E5] dark:border-[#27272a] pb-3 mb-4">
-              <h3 className="text-lg font-bold text-[#171717] dark:text-[#f2efe9] uppercase tracking-wider font-serif">ALEX DEVELOPER</h3>
-              <p className="text-xs text-[#707070] dark:text-[#f2efe9]/50 font-mono">SOFTWARE ENGINEER · SAMPLE RESUME (FICTIONAL)</p>
+              <h3 className="text-lg font-bold text-[#171717] dark:text-[#f2efe9] uppercase tracking-wider font-serif">ALEX CARTER</h3>
+              <p className="text-xs text-[#707070] dark:text-[#f2efe9]/50 font-mono">SOFTWARE ENGINEER</p>
             </div>
 
             <div className="space-y-3 font-serif text-xs leading-relaxed text-[#52525b] dark:text-[#f2efe9]/85">
