@@ -98,10 +98,13 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
             </span>
           </h1>
 
-          {/* Left-Aligned Subtitle */}
-          <p className="hero-subtitle text-base sm:text-lg text-neutral-900 dark:text-[#f2efe9]/80 max-w-2xl mb-8 leading-relaxed font-medium">
-            Resummit analyzes your public repositories and commits to build a clean, ATS-friendly resume. Paste a job description to tailor your CV in seconds.
-          </p>
+          {/* Left-Aligned Subtitle with frosted glass contrast backdrop */}
+          <div className="relative inline-block max-w-2xl mb-8">
+            <div className="absolute -inset-2.5 rounded-2xl bg-white/75 dark:bg-black/50 backdrop-blur-md border border-white/80 dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.04)] -z-10 pointer-events-none" />
+            <p className="hero-subtitle text-base sm:text-lg text-neutral-950 dark:text-[#f2efe9] leading-relaxed font-medium px-2 py-0.5">
+              Resummit analyzes your public repositories and commits to build a clean, ATS-friendly resume. Paste a job description to tailor your CV in seconds.
+            </p>
+          </div>
 
           {/* Left-Aligned Action Buttons with ArrowRevealButton */}
           <div className="flex flex-wrap items-center gap-4 mb-8">
@@ -148,13 +151,13 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
           </div>
 
           {/* Trust Guarantees */}
-          <div className="flex flex-wrap items-center gap-6 text-xs text-neutral-700 dark:text-[#f2efe9]/75 font-medium mb-14">
+          <div className="flex flex-wrap items-center gap-6 text-xs text-neutral-900 dark:text-[#f2efe9]/85 font-semibold drop-shadow-[0_1px_1px_rgba(255,255,255,0.85)] dark:drop-shadow-none mb-14">
             <span className="inline-flex items-center gap-1.5">
-              <Check size={14} className="text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
+              <Check size={14} className="text-emerald-700 dark:text-emerald-400 stroke-[2.5]" />
               Free developer preview · No credit card required
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <Check size={14} className="text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
+              <Check size={14} className="text-emerald-700 dark:text-emerald-400 stroke-[2.5]" />
               Read-only access to your public repos
             </span>
           </div>
