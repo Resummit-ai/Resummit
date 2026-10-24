@@ -31,9 +31,6 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  const isSystemAdmin = Boolean(
-    process.env.ADMIN_EMAIL && session.user.email === process.env.ADMIN_EMAIL
-  );
 
   const userId = await resolveUserId(session);
   if (!userId) {
@@ -94,6 +91,19 @@ export default async function DashboardPage() {
   if (showOnboarding) {
     return <Onboarding />;
   }
+
+  const ADMIN_EMAILS = [
+    (process.env.ADMIN_EMAIL || "adelmuhammed786@gmail.com").toLowerCase().trim(),
+    "adelmuhammed786@gmail.com"
+  ];
+  const userEmails = [
+    session?.user?.email?.toLowerCase().trim(),
+    dbUser?.email?.toLowerCase().trim()
+  ].filter(Boolean);
+
+  const isSystemAdmin = userEmails.some((e) => ADMIN_EMAILS.includes(e!)) ||
+    dbUser?.githubUsername?.toLowerCase().trim() === "adel-muhammed" ||
+    dbUser?.githubUsername?.toLowerCase().trim() === "adelmuhammed";
 
   return (
     <div className="min-h-screen dashboard-root text-[#171717] dark:text-[#f2efe9] selection:bg-neutral-800 selection:text-white font-sans antialiased transition-colors duration-300">

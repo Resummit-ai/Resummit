@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Mail, Users, Send, AlertCircle, CheckCircle, Search, Calendar, ChevronRight, ShieldAlert, Eye, Loader2 } from "lucide-react";
+import { Mail, Users, Send, AlertCircle, CheckCircle, Search, Calendar, ChevronRight, ShieldAlert, Eye, Loader2, Moon, Sun, ArrowLeft, Shield } from "lucide-react";
 import Link from "next/link";
 
 interface UserItem {
@@ -18,6 +18,31 @@ export default function AdminDashboard() {
   const [users, setUsers] = useState<UserItem[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [theme, setTheme] = useState("light");
+
+  useEffect(() => {
+    const saved = localStorage.getItem("sclade-theme");
+    if (saved === "dark" || saved === "light") {
+      setTheme(saved);
+      if (saved === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    if (next === "dark") {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("sclade-theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("sclade-theme", "light");
+    }
+  };
 
   // Email Form State
   const [subject, setSubject] = useState("Your Workspace Just Got Better 🚀");
@@ -276,10 +301,23 @@ export default function AdminDashboard() {
 
   if (sessionLoading) {
     return (
-      <div className="min-h-screen bg-[var(--sclade-bg)] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
-          <span className="text-xs uppercase tracking-widest text-neutral-400 font-bold">Verifying Admin DNA...</span>
+      <div className="min-h-screen dashboard-root text-[#171717] dark:text-[#f2efe9] flex items-center justify-center p-6">
+        <style>{`
+          .dashboard-root {
+            background-color: #F5F5F3;
+            background-image: radial-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+            background-size: 20px 20px;
+          }
+          .dark .dashboard-root,
+          [data-theme="dark"] .dashboard-root {
+            background-color: #0a0a0a;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+          }
+        `}</style>
+        <div className="flex flex-col items-center gap-4 p-8 rounded-2xl bg-white/95 dark:bg-[#141417]/95 border border-[#E5E5E5] dark:border-[#27272a] shadow-xs">
+          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <span className="text-xs uppercase tracking-widest text-slate-500 dark:text-neutral-400 font-bold">Verifying Admin DNA...</span>
         </div>
       </div>
     );
@@ -287,16 +325,29 @@ export default function AdminDashboard() {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-[var(--sclade-bg)] flex items-center justify-center p-6">
-        <div className="max-w-md w-full glass-panel p-8 rounded-[2rem] border border-red-500/20 bg-red-500/[0.02] text-center">
-          <ShieldAlert className="w-16 h-16 text-red-500 mx-auto mb-6 animate-pulse" />
-          <h1 className="text-2xl font-bold text-red-500 mb-2">Access Denied</h1>
-          <p className="text-neutral-400 text-sm leading-relaxed mb-6">
-            This terminal requires admin-level privileges. If you are the administrator, please ensure you are logged in with the registered admin email.
+      <div className="min-h-screen dashboard-root text-[#171717] dark:text-[#f2efe9] flex items-center justify-center p-6">
+        <style>{`
+          .dashboard-root {
+            background-color: #F5F5F3;
+            background-image: radial-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+            background-size: 20px 20px;
+          }
+          .dark .dashboard-root,
+          [data-theme="dark"] .dashboard-root {
+            background-color: #0a0a0a;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+          }
+        `}</style>
+        <div className="max-w-md w-full p-8 rounded-2xl bg-white/95 dark:bg-[#141417]/95 border border-red-500/20 shadow-xs text-center">
+          <ShieldAlert className="w-14 h-14 text-red-500 mx-auto mb-5" />
+          <h1 className="text-2xl font-extrabold text-red-600 dark:text-red-400 mb-2">Access Denied</h1>
+          <p className="text-slate-600 dark:text-neutral-400 text-xs sm:text-sm leading-relaxed mb-6 font-normal">
+            This terminal is restricted exclusively to the system administrator. If this is your application, ensure you are signed in with your registered admin email.
           </p>
           <Link
             href="/dashboard"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-neutral-900 dark:bg-white text-white dark:text-black font-bold text-xs uppercase tracking-widest rounded-xl hover:opacity-90 transition-all"
+            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all shadow-xs"
           >
             Return to Dashboard
           </Link>
@@ -306,65 +357,138 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--sclade-bg)] text-[var(--sclade-text-primary)] font-outfit p-6 md:p-12">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen dashboard-root text-[#171717] dark:text-[#f2efe9] selection:bg-neutral-800 selection:text-white font-sans antialiased transition-colors duration-300">
+      <style>{`
+        .dashboard-root {
+          background-color: #F5F5F3;
+          background-image: radial-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+          background-size: 20px 20px;
+        }
+        .dark .dashboard-root,
+        [data-theme="dark"] .dashboard-root {
+          background-color: #0a0a0a;
+          background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+          background-size: 20px 20px;
+        }
+      `}</style>
+
+      {/* Top Nav matching Dashboard Theme */}
+      <nav className="relative z-50 border-b border-[#E5E5E5] dark:border-[#27272a] bg-[#F5F5F3]/85 dark:bg-[#0a0a0a]/85 backdrop-blur-xl sticky top-0 transition-colors duration-200 px-3.5 sm:px-6 md:px-8 py-3">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-4 sm:gap-10">
+            <Link
+              href="/"
+              className="logo scale-90 origin-left cursor-pointer hover:opacity-90 transition-opacity"
+            >
+              <svg viewBox="0 0 32 32" className="logo-icon-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7 6C7 4.34315 8.34315 3 10 3H19L25 9V26C25 27.6569 23.6569 29 22 29H10C8.34315 29 7 27.6569 7 26V6Z" className="logo-doc-body" />
+                <path d="M19 3V9H25L19 3Z" className="logo-doc-fold" />
+                <path d="M11 13H17M11 17H21M11 21H18M11 25H20" className="logo-doc-lines" strokeWidth="2" strokeLinecap="round" />
+                <path d="M20 8.5L25 3.5" className="logo-flag-pole" strokeWidth="2" strokeLinecap="round" />
+                <path d="M25 3.5L27 6.5L23.5 5.5Z" className="logo-flag-banner" />
+              </svg>
+              <div className="logo-text-group">
+                <div className="logo-wordmark">RESUMMIT</div>
+                <div className="logo-tagline hidden sm:block">YOUR CAREER. YOUR CONTROL.</div>
+              </div>
+            </Link>
+            <div className="hidden md:flex items-center gap-8 text-[11px] font-bold uppercase tracking-widest text-slate-600 dark:text-neutral-400">
+              <Link href="/dashboard" className="hover:text-[#171717] dark:hover:text-[#f2efe9] transition-colors">Dashboard</Link>
+              <Link href="/editor" className="hover:text-[#171717] dark:hover:text-[#f2efe9] transition-colors">Resume Editor</Link>
+              <Link href="/admin" className="text-blue-600 dark:text-[#0099ff] border-b-2 border-blue-600 dark:border-[#0099ff] pb-1 -mb-[18px]">Admin</Link>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button
+              onClick={toggleTheme}
+              className="p-1.5 sm:p-2 rounded-lg border border-[#E5E5E5] dark:border-[#27272a] bg-white/95 dark:bg-[#141417]/95 hover:bg-[#E7EDFF] hover:border-[#CFD9FF] hover:text-[#5473D1] transition-all text-slate-600 dark:text-neutral-400 cursor-pointer"
+              title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            >
+              {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#E5E5E5] dark:border-[#27272a] bg-white/95 dark:bg-[#141417]/95 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold transition-all shadow-xs text-slate-700 dark:text-neutral-200"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Back to Dashboard</span>
+              <span className="sm:hidden">Dashboard</span>
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-3.5 sm:px-6 md:px-8 py-6 md:py-10 space-y-6 md:space-y-8">
 
         {/* Header */}
-        <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-[var(--sclade-border)]">
+        <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#E5E5E5] dark:border-[#27272a]">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--sclade-selected-bg)] border border-[var(--sclade-selected-border)] text-[var(--sclade-primary)] text-[11px] uppercase font-bold tracking-wider mb-3">
-              Control Panel
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/60 text-blue-600 dark:text-blue-400 text-[11px] uppercase font-bold tracking-wider mb-2">
+              <Shield className="w-3 h-3" />
+              <span>Superadmin Control Terminal</span>
             </div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-[var(--sclade-text-primary)]">Admin Update Center</h1>
-            <p className="text-[var(--sclade-text-secondary)] mt-1 font-normal text-sm">
-              Broadcast product announcements and manage subscribers.
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#171717] dark:text-[#f2efe9]">
+              Admin Operations Center
+            </h1>
+            <p className="text-slate-600 dark:text-neutral-400 mt-1 font-normal text-xs sm:text-sm">
+              Broadcast product announcements, manage email campaigns, and inspect platform accounts.
             </p>
           </div>
-          <Link
-            href="/dashboard"
-            className="self-start md:self-auto px-4 py-2.5 border border-[var(--sclade-border)] bg-[var(--sclade-card-bg)] rounded-xl text-xs font-bold uppercase tracking-wider text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-[var(--sclade-subtle-bg)] transition-all flex items-center gap-2"
-          >
-            ← Back to Dashboard
-          </Link>
         </header>
 
         {/* Overview Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div className="p-5 rounded-2xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] flex items-center justify-between shadow-sm">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5">
+          <div className="p-5 rounded-2xl bg-white/95 dark:bg-[#141417]/95 border border-[#E5E5E5] dark:border-[#27272a] flex items-center justify-between shadow-xs">
             <div>
-              <span className="text-[11px] font-bold text-[var(--sclade-text-secondary)] uppercase tracking-wider block">Total Registered Users</span>
-              <span className="text-3xl font-extrabold text-[var(--sclade-text-primary)] mt-1 block">{users.length}</span>
+              <span className="text-[11px] font-bold text-slate-500 dark:text-neutral-400 uppercase tracking-wider block">Total Registered Users</span>
+              <span className="text-3xl font-extrabold text-[#171717] dark:text-[#f2efe9] mt-1 block">{users.length}</span>
             </div>
-            <div className="w-11 h-11 rounded-xl bg-[var(--sclade-selected-bg)] border border-[var(--sclade-selected-border)] flex items-center justify-center text-[var(--sclade-primary)]">
+            <div className="w-11 h-11 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/60 flex items-center justify-center text-blue-600 dark:text-blue-400">
               <Users className="w-5 h-5" />
             </div>
           </div>
 
-          <div className="p-5 rounded-2xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] flex items-center justify-between shadow-sm">
+          <div className="p-5 rounded-2xl bg-white/95 dark:bg-[#141417]/95 border border-[#E5E5E5] dark:border-[#27272a] flex items-center justify-between shadow-xs">
             <div>
-              <span className="text-[11px] font-bold text-[var(--sclade-text-secondary)] uppercase tracking-wider block">Mailing Service</span>
-              <span className="text-sm font-bold text-[var(--sclade-success-text,#32704F)] mt-2 block">Resend API Connected</span>
+              <span className="text-[11px] font-bold text-slate-500 dark:text-neutral-400 uppercase tracking-wider block">Mailing Gateway</span>
+              <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400 mt-2 block flex items-center gap-1.5">
+                <CheckCircle className="w-4 h-4" />
+                Resend / SMTP Ready
+              </span>
             </div>
-            <div className="w-11 h-11 rounded-xl bg-[var(--sclade-success-bg,#E4F2E9)] border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-[var(--sclade-success-text,#32704F)]">
-              <CheckCircle className="w-5 h-5" />
+            <div className="w-11 h-11 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+              <Mail className="w-5 h-5" />
+            </div>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-white/95 dark:bg-[#141417]/95 border border-[#E5E5E5] dark:border-[#27272a] flex items-center justify-between shadow-xs sm:col-span-2 md:col-span-1">
+            <div>
+              <span className="text-[11px] font-bold text-slate-500 dark:text-neutral-400 uppercase tracking-wider block">System Authority</span>
+              <span className="text-sm font-bold text-blue-600 dark:text-[#0099ff] mt-2 block truncate">
+                adelmuhammed786@gmail.com
+              </span>
+            </div>
+            <div className="w-11 h-11 rounded-xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-900/60 flex items-center justify-center text-purple-600 dark:text-purple-400">
+              <Shield className="w-5 h-5" />
             </div>
           </div>
         </div>
 
         {/* Content Columns */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
 
           {/* Email Composer (Left Column) */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="p-6 rounded-2xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] shadow-sm">
-              <h3 className="text-base font-bold mb-5 flex items-center gap-2 text-[var(--sclade-text-primary)]">
-                <Mail className="w-5 h-5 text-[var(--sclade-primary)]" />
-                Compose Announcement
+            <div className="p-5 sm:p-6 rounded-2xl bg-white/95 dark:bg-[#141417]/95 border border-[#E5E5E5] dark:border-[#27272a] shadow-xs">
+              <h3 className="text-base font-bold mb-5 flex items-center gap-2 text-[#171717] dark:text-[#f2efe9]">
+                <Mail className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                <span>Compose Announcement</span>
               </h3>
 
               <form onSubmit={handleSend} className="space-y-5">
                 <div>
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--sclade-text-secondary)] block mb-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-neutral-400 block mb-1.5">
                     Email Subject
                   </label>
                   <input
@@ -373,28 +497,28 @@ export default function AdminDashboard() {
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
                     placeholder="Enter email subject..."
-                    className="w-full px-3.5 py-2.5 bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] text-[var(--sclade-text-primary)] rounded-lg text-sm outline-none focus:border-[var(--sclade-primary)] focus:ring-2 focus:ring-[var(--sclade-primary)]/10 transition-all font-medium"
+                    className="w-full px-3.5 py-2.5 bg-neutral-50 dark:bg-neutral-900 border border-[#E5E5E5] dark:border-[#27272a] text-[#171717] dark:text-[#f2efe9] rounded-xl text-sm outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10 transition-all font-medium"
                   />
                 </div>
 
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--sclade-text-secondary)]">
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-neutral-400">
                       Email Body (HTML)
                     </label>
                     <button
                       type="button"
                       onClick={() => setPreviewMode(!previewMode)}
-                      className="text-[10px] font-bold uppercase tracking-wider text-[var(--sclade-primary)] hover:underline transition-colors flex items-center gap-1 cursor-pointer"
+                      className="text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 hover:underline transition-colors flex items-center gap-1 cursor-pointer"
                     >
                       <Eye className="w-3.5 h-3.5" />
-                      {previewMode ? "Edit Code" : "Preview Visual"}
+                      <span>{previewMode ? "Edit Code" : "Preview Visual"}</span>
                     </button>
                   </div>
 
                   {previewMode ? (
                     <div
-                      className="w-full min-h-[300px] p-6 bg-white text-black rounded-xl border border-[var(--sclade-border)] overflow-y-auto"
+                      className="w-full min-h-[300px] p-6 bg-white text-black rounded-xl border border-[#E5E5E5] overflow-y-auto max-h-[460px]"
                       dangerouslySetInnerHTML={{ __html: htmlContent }}
                     />
                   ) : (
@@ -404,61 +528,62 @@ export default function AdminDashboard() {
                       onChange={(e) => setHtmlContent(e.target.value)}
                       placeholder="<h1>Hi!</h1>..."
                       rows={12}
-                      className="w-full px-3.5 py-3 bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] text-[var(--sclade-text-primary)] rounded-lg text-xs font-mono outline-none focus:border-[var(--sclade-primary)] focus:ring-2 focus:ring-[var(--sclade-primary)]/10 transition-all leading-relaxed"
+                      className="w-full px-3.5 py-3 bg-neutral-50 dark:bg-neutral-900 border border-[#E5E5E5] dark:border-[#27272a] text-[#171717] dark:text-[#f2efe9] rounded-xl text-xs font-mono outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10 transition-all leading-relaxed"
                     />
                   )}
+
                   {sendResult && (
-                  <div className={`p-4 mt-5 rounded-xl border ${sendResult.error
-                    ? "bg-red-500/5 border-red-500/10 text-red-600"
-                    : "bg-emerald-500/5 border-emerald-500/10 text-emerald-700"
-                    }`}>
-                    <div className="flex items-start gap-3">
-                      {sendResult.error ? (
-                        <AlertCircle className="w-5 h-5 mt-0.5 text-red-500" />
-                      ) : (
-                        <CheckCircle className="w-5 h-5 mt-0.5 text-emerald-600" />
-                      )}
-                      <div>
-                        <span className="text-xs font-bold block">
-                          {sendResult.error ? "Failed to dispatch emails" : "Broadcast Dispatched"}
-                        </span>
+                    <div className={`p-4 mt-5 rounded-xl border ${sendResult.error
+                      ? "bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400"
+                      : "bg-emerald-500/10 border-emerald-500/20 text-emerald-700 dark:text-emerald-400"
+                      }`}>
+                      <div className="flex items-start gap-3">
                         {sendResult.error ? (
-                          <p className="text-[11px] opacity-80 mt-1 font-semibold">{sendResult.error}</p>
+                          <AlertCircle className="w-5 h-5 mt-0.5 text-red-500 shrink-0" />
                         ) : (
-                          <div>
-                            <p className="text-[11px] opacity-80 mt-1 font-semibold">
-                              Sent to {sendResult.sent} users. Failures: {sendResult.failed}.
-                            </p>
-                            {sendResult.failed > 0 && sendResult.results && (
-                              <div className="mt-3 text-[10px] space-y-1 bg-red-500/10 p-2.5 rounded-lg border border-red-500/20 max-h-32 overflow-y-auto">
-                                <span className="font-bold block text-red-600">SMTP Error Log:</span>
-                                {Array.from(new Set(sendResult.results.filter(r => !r.success).map(r => r.error))).map((err, i) => (
-                                  <p key={i} className="font-mono text-red-700 break-all">{err || "Unknown error"}</p>
-                                ))}
-                              </div>
-                            )}
-                          </div>
+                          <CheckCircle className="w-5 h-5 mt-0.5 text-emerald-600 shrink-0" />
                         )}
+                        <div>
+                          <span className="text-xs font-bold block">
+                            {sendResult.error ? "Failed to dispatch emails" : "Broadcast Dispatched"}
+                          </span>
+                          {sendResult.error ? (
+                            <p className="text-[11px] opacity-80 mt-1 font-semibold">{sendResult.error}</p>
+                          ) : (
+                            <div>
+                              <p className="text-[11px] opacity-80 mt-1 font-semibold">
+                                Sent to {sendResult.sent} users. Failures: {sendResult.failed}.
+                              </p>
+                              {sendResult.failed > 0 && sendResult.results && (
+                                <div className="mt-3 text-[10px] space-y-1 bg-red-500/10 p-2.5 rounded-lg border border-red-500/20 max-h-32 overflow-y-auto">
+                                  <span className="font-bold block text-red-600">SMTP Error Log:</span>
+                                  {Array.from(new Set(sendResult.results.filter(r => !r.success).map(r => r.error))).map((err, i) => (
+                                    <p key={i} className="font-mono text-red-700 break-all">{err || "Unknown error"}</p>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
                 </div>
 
                 <button
                   type="submit"
                   disabled={sending || selectedUserIds.length === 0}
-                  className="w-full py-3 bg-[#5473D1] hover:bg-[#4261C0] disabled:bg-neutral-300 dark:disabled:bg-neutral-800 disabled:text-neutral-500 disabled:cursor-not-allowed text-white font-bold text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
+                  className="w-full py-3 bg-blue-600 hover:bg-blue-500 disabled:bg-neutral-300 dark:disabled:bg-neutral-800 disabled:text-neutral-500 disabled:cursor-not-allowed text-white font-bold text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer"
                 >
                   {sending ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      Dispatching Batch...
+                      <span>Dispatching Batch...</span>
                     </>
                   ) : (
                     <>
                       <Send className="w-4 h-4" />
-                      Send to {selectedUserIds.length} selected users
+                      <span>Send to {selectedUserIds.length} selected users</span>
                     </>
                   )}
                 </button>
@@ -468,26 +593,26 @@ export default function AdminDashboard() {
 
           {/* User Directory (Right Column) */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="p-6 rounded-2xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] flex flex-col max-h-[640px] shadow-sm">
-              <div className="mb-5">
+            <div className="p-5 sm:p-6 rounded-2xl bg-white/95 dark:bg-[#141417]/95 border border-[#E5E5E5] dark:border-[#27272a] flex flex-col max-h-[640px] shadow-xs">
+              <div className="mb-4">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-base font-bold flex items-center gap-2 text-[var(--sclade-text-primary)]">
-                    <Users className="w-5 h-5 text-[var(--sclade-primary)]" />
-                    User Registry
+                  <h3 className="text-base font-bold flex items-center gap-2 text-[#171717] dark:text-[#f2efe9]">
+                    <Users className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                    <span>User Registry</span>
                   </h3>
                   <div className="flex gap-2">
                     <button
                       type="button"
                       onClick={() => setSelectedUserIds(users.map(u => u.id))}
-                      className="text-[10px] font-bold uppercase tracking-wider text-[var(--sclade-primary)] hover:underline transition-colors cursor-pointer"
+                      className="text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 hover:underline transition-colors cursor-pointer"
                     >
                       Select All
                     </button>
-                    <span className="text-[var(--sclade-text-muted)] text-[10px]">|</span>
+                    <span className="text-slate-400 dark:text-neutral-600 text-[10px]">|</span>
                     <button
                       type="button"
                       onClick={() => setSelectedUserIds([])}
-                      className="text-[10px] font-bold uppercase tracking-wider text-[var(--sclade-text-muted)] hover:text-[var(--sclade-text-primary)] transition-colors cursor-pointer"
+                      className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-neutral-400 hover:text-[#171717] dark:hover:text-[#f2efe9] transition-colors cursor-pointer"
                     >
                       Clear
                     </button>
@@ -496,21 +621,21 @@ export default function AdminDashboard() {
 
                 {/* Search Bar */}
                 <div className="relative">
-                  <Search className="w-4 h-4 text-[var(--sclade-text-muted)] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <Search className="w-4 h-4 text-slate-400 dark:text-neutral-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search by name, email, github..."
-                    className="w-full pl-10 pr-3.5 py-2.5 bg-[var(--sclade-input-bg)] border border-[var(--sclade-input-border)] text-[var(--sclade-text-primary)] placeholder:text-[var(--sclade-text-muted)] rounded-lg text-xs outline-none focus:border-[var(--sclade-primary)] focus:ring-2 focus:ring-[var(--sclade-primary)]/10 transition-all font-medium"
+                    className="w-full pl-10 pr-3.5 py-2.5 bg-neutral-50 dark:bg-neutral-900 border border-[#E5E5E5] dark:border-[#27272a] text-[#171717] dark:text-[#f2efe9] placeholder:text-slate-400 dark:placeholder:text-neutral-500 rounded-xl text-xs outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10 transition-all font-medium"
                   />
                 </div>
               </div>
 
               {/* User List Scrollable */}
-              <div className="flex-1 overflow-y-auto space-y-2.5 pr-1 custom-scrollbar">
+              <div className="flex-1 overflow-y-auto space-y-2.5 pr-1">
                 {filteredUsers.length === 0 ? (
-                  <div className="text-center py-10 text-[var(--sclade-text-muted)] text-xs font-semibold uppercase tracking-wider">
+                  <div className="text-center py-10 text-slate-400 dark:text-neutral-500 text-xs font-semibold uppercase tracking-wider">
                     No users found
                   </div>
                 ) : (
@@ -518,8 +643,8 @@ export default function AdminDashboard() {
                     <div
                       key={u.id}
                       className={`p-3.5 rounded-xl border transition-all flex justify-between items-center ${selectedUserIds.includes(u.id)
-                        ? "border-[var(--sclade-selected-border)] bg-[var(--sclade-selected-bg)]"
-                        : "border-[var(--sclade-border)] bg-[var(--sclade-card-bg)] hover:bg-[var(--sclade-subtle-bg)]"
+                        ? "border-blue-300 dark:border-blue-800 bg-blue-50/70 dark:bg-blue-950/30"
+                        : "border-[#E5E5E5] dark:border-[#27272a] bg-neutral-50/50 dark:bg-neutral-900/40 hover:bg-neutral-100/60 dark:hover:bg-neutral-800/60"
                         }`}
                     >
                       <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -533,26 +658,26 @@ export default function AdminDashboard() {
                                 : [...prev, u.id]
                             );
                           }}
-                          className="w-4 h-4 rounded border-[var(--sclade-border)] text-[var(--sclade-primary)] focus:ring-[var(--sclade-primary)] cursor-pointer accent-[var(--sclade-primary)]"
+                          className="w-4 h-4 rounded border-neutral-300 text-blue-600 focus:ring-blue-500 cursor-pointer accent-blue-600 shrink-0"
                         />
                         <div className="space-y-0.5 min-w-0 flex-1">
-                          <span className="text-xs font-bold text-[var(--sclade-text-primary)] block truncate">
+                          <span className="text-xs font-bold text-[#171717] dark:text-[#f2efe9] block truncate">
                             {u.name || "Anonymous User"}
                           </span>
-                          <span className="text-[11px] text-[var(--sclade-text-secondary)] block truncate">
+                          <span className="text-[11px] text-slate-500 dark:text-neutral-400 block truncate">
                             {u.email}
                           </span>
                           {u.githubUsername && (
-                            <span className="inline-block px-1.5 py-0.5 rounded bg-[var(--sclade-subtle-bg)] border border-[var(--sclade-border)] text-[9px] text-[var(--sclade-text-secondary)] font-bold uppercase tracking-wider">
+                            <span className="inline-block px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 border border-[#E5E5E5] dark:border-[#27272a] text-[9px] text-slate-600 dark:text-neutral-300 font-bold uppercase tracking-wider">
                               github: {u.githubUsername}
                             </span>
                           )}
                         </div>
                       </div>
                       <div className="text-right flex-shrink-0 ml-3">
-                        <div className="text-[10px] text-[var(--sclade-text-muted)] font-bold uppercase tracking-wide flex items-center gap-1">
+                        <div className="text-[10px] text-slate-400 dark:text-neutral-500 font-bold uppercase tracking-wide flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
-                          {new Date(u.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+                          <span>{new Date(u.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span>
                         </div>
                       </div>
                     </div>
@@ -564,7 +689,7 @@ export default function AdminDashboard() {
 
         </div>
 
-      </div>
+      </main>
     </div>
   );
 }

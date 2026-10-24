@@ -18,12 +18,36 @@ const schema = z.object({
  */
 export const dynamic = "force-dynamic";
 
+async function isAuthorizedAdmin(session: any): Promise<boolean> {
+  if (!session?.user) return false;
+  const ADMIN_EMAILS = [
+    (process.env.ADMIN_EMAIL || "adelmuhammed786@gmail.com").toLowerCase().trim(),
+    "adelmuhammed786@gmail.com"
+  ];
+  const sessionEmail = session.user.email?.toLowerCase().trim();
+  if (sessionEmail && ADMIN_EMAILS.includes(sessionEmail)) {
+    return true;
+  }
+  if (session.user.id) {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { email: true, githubUsername: true }
+      });
+      const dbEmail = user?.email?.toLowerCase().trim();
+      const ghUser = user?.githubUsername?.toLowerCase().trim();
+      if ((dbEmail && ADMIN_EMAILS.includes(dbEmail)) || ghUser === "adel-muhammed" || ghUser === "adelmuhammed") {
+        return true;
+      }
+    } catch {}
+  }
+  return false;
+}
+
 export async function POST(req: Request) {
   const session = await auth();
 
-  // Only you can call this — hardcoded admin guard
-  const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "adelmuhammed786@gmail.com";
-  if (!session?.user?.email || session.user.email !== ADMIN_EMAIL) {
+  if (!(await isAuthorizedAdmin(session))) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
@@ -104,8 +128,7 @@ export async function POST(req: Request) {
  */
 export async function GET(req: Request) {
   const session = await auth();
-  const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "adelmuhammed786@gmail.com";
-  if (!session?.user?.email || session.user.email !== ADMIN_EMAIL) {
+  if (!(await isAuthorizedAdmin(session))) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 

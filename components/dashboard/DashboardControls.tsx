@@ -463,7 +463,7 @@ export function DashboardControls({ user, isAdmin }: DashboardControlsProps) {
 
                 {/* Dropdown Items */}
                 <div className="space-y-0.5">
-                  {(isAdmin || user.email === "adelmuhammed786@gmail.com") && (
+                  {Boolean(isAdmin) && (
                     <a
                       href="/admin"
                       className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-blue-600 dark:text-[#0099ff] hover:bg-blue-50 dark:hover:bg-blue-950/20 rounded-lg transition-colors cursor-pointer text-left"
