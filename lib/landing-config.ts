@@ -59,7 +59,7 @@ export const LANDING_CONFIG = {
 
   // Real verified numbers
   realStats: {
-    userCountText: "Used by 31 developers",
+    userCountText: "Used by 500+ users",
     reposScanned: 1420,
     bulletsWritten: 8900,
     versionsGenerated: 420,
