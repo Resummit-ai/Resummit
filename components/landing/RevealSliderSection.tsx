@@ -118,13 +118,13 @@ export function RevealSliderSection() {
         <SectionReveal className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-[#0099ff] border border-blue-500/20 text-xs font-bold uppercase tracking-wider mb-4">
             <SlidersHorizontal size={14} />
-            <span>Interactive Resume Audit</span>
+            <span>Illustrative example</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#171717] dark:text-[#f2efe9] leading-[1.12] mb-4">
-            Before &amp; After AI Synthesis
+            Before &amp; After Resume Formatting
           </h2>
           <p className="text-base sm:text-lg text-slate-700 dark:text-neutral-300 font-normal leading-relaxed">
-            Drag the comparison slider across the CV to reveal how Resummit transforms a rejected, uncalibrated developer draft into a 98% ATS-optimized recruiter resume.
+            Drag the comparison slider across the CV to see how Resummit transforms an uncalibrated draft into an ATS-friendly, single-column recruiter resume.
           </p>
         </SectionReveal>
 
@@ -143,11 +143,11 @@ export function RevealSliderSection() {
                 {/* Top Recruiter Verification Pill */}
                 <div className="flex items-center justify-between pb-2 border-b border-neutral-200 font-sans">
                   <span className="cv-muted text-[10px] font-mono font-bold tracking-wider uppercase">
-                    RESUMMIT SYNTHESIS ENGINE · V2.4
+                    RESUMMIT SYNTHESIS · SAMPLE RESUME (FICTIONAL)
                   </span>
                   <span className="cv-green-badge inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold font-sans">
                     <CheckCircle2 size={13} className="text-emerald-600" />
-                    <span>98% ATS MATCH · RECRUITER CERTIFIED</span>
+                    <span>ATS-FRIENDLY · SINGLE-COLUMN FORMAT</span>
                   </span>
                 </div>
 
@@ -159,12 +159,12 @@ export function RevealSliderSection() {
                       className="cv-heading text-2xl font-bold tracking-wider uppercase"
                       style={{ letterSpacing: "1.5px" }}
                     >
-                      ALEX M. DEVELOPER
+                      ALEX DEVELOPER
                     </h3>
                     <p className="cv-muted text-[11px] mt-1 font-sans">
                       San Francisco, CA (Open to Remote) · alex@developer.com · +1 (555) 019-2834 ·{" "}
                       <span className="cv-link underline">github.com/alex-dev</span> ·{" "}
-                      <span className="cv-link underline">linkedin.com/in/alex-dev</span>
+                      <span className="cv-link underline">linkedin.com/in/alex-developer</span>
                     </p>
                   </div>
 
@@ -194,13 +194,13 @@ export function RevealSliderSection() {
                         </div>
                         <ul className="list-disc ml-5 space-y-1 text-[11.5px] text-[#334155] leading-snug">
                           <li>
-                            <strong className="text-emerald-800 font-semibold">[Google XYZ]</strong> Architected distributed Redis caching layer with optimistic cache warming, cutting database read latency by 42% across 14,000+ daily events.
+                            Architected distributed Redis caching layer with optimistic cache warming, cutting database read latency by 42% across high-traffic API requests.
                           </li>
                           <li>
-                            Automated GitHub Actions CI/CD workflows conforming to strict WCAG 2.1 AA standards, shortening release cycle times from 35m to 8m (77% speedup).
+                            Automated GitHub Actions CI/CD workflows conforming to strict testing standards, shortening release cycle times from 35m to 8m (77% speedup).
                           </li>
                           <li>
-                            Implemented Next.js 15 App Router server actions with optimistic UI mutations, lowering overall TTFB to 180ms.
+                            Implemented Next.js App Router server actions with optimistic UI mutations, lowering overall TTFB to 180ms.
                           </li>
                         </ul>
                       </div>
@@ -222,10 +222,10 @@ export function RevealSliderSection() {
                 {/* Bottom Telemetry Footer */}
                 <div className="pt-2.5 border-t border-neutral-200 flex items-center justify-between text-[11px] text-[#475569] font-sans">
                   <span className="text-emerald-800 font-semibold">
-                    ✓ Greenhouse · Lever · Workday ATS Parser Certified
+                    ✓ Single-column ATS format · Clean standard hierarchy
                   </span>
                   <span className="font-mono text-emerald-800 font-bold">
-                    0 Formatting Errors · 100% Parsed
+                    Clean PDF Export
                   </span>
                 </div>
               </div>
@@ -251,10 +251,10 @@ export function RevealSliderSection() {
                 <div className="flex items-center justify-between pb-2 border-b border-red-200">
                   <span className="cv-red-badge inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-[11px] font-bold">
                     <AlertTriangle size={13} className="text-red-600" />
-                    <span>34% ATS MATCH · HIGH REJECTION RISK</span>
+                    <span>UNSTRUCTURED DRAFT · ILLUSTRATIVE EXAMPLE</span>
                   </span>
                   <span className="cv-red-text text-[10px] font-mono font-bold">
-                    FLAGGED BY APPLICANT TRACKERS
+                    UNCALIBRATED RESUME FORMAT
                   </span>
                 </div>
 
@@ -263,7 +263,7 @@ export function RevealSliderSection() {
                   {/* Draft Header */}
                   <div className="text-center pb-2 border-b border-red-300">
                     <h3 className="cv-heading cv-strike text-2xl font-bold tracking-tight">
-                      Alex Developer
+                      Alex Developer (Draft)
                     </h3>
                     <p className="cv-muted text-[11px] mt-1">
                       Alex&apos;s Resume | Email: alex@gmail.com | Phone: 555-0192 | Portfolio: (in progress)

@@ -489,14 +489,14 @@ export function ResumePreviewSection() {
           <div className="lg:col-span-5 space-y-8 text-left">
             <div>
               <div className="text-xs sm:text-sm font-bold uppercase tracking-wider text-blue-600 dark:text-[#0099ff] mb-3">
-                INTERACTIVE OUTPUT
+                SAMPLE RESUME (FICTIONAL)
               </div>
               <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold sm:font-bold tracking-tight text-[#171717] dark:text-[#f2efe9] leading-[1.08] mb-5">
-                Recruiter-Ready.<br />
-                ATS-Optimized.
+                ATS-friendly,<br />
+                single-column format
               </h2>
               <p className="lead-text text-base sm:text-lg text-slate-800 dark:text-neutral-200 leading-relaxed font-normal">
-                Here is a real resume generated from developer commits. It uses professional formatting, clean sections, and is fully calibrated for Applicant Tracking Systems (ATS).
+                Here is a sample resume generated from public developer commits. It uses standard single-column layout, clean sections, and is built for recruiter readability.
               </p>
             </div>
 
@@ -506,9 +506,9 @@ export function ResumePreviewSection() {
                 <Cpu size={24} />
               </div>
               <div>
-                <h4 className="text-lg font-bold text-[#171717] dark:text-[#f2efe9] mb-1">AI Bullets Generation</h4>
+                <h3 className="text-lg font-bold text-[#171717] dark:text-[#f2efe9] mb-1">AI Bullets Generation</h3>
                 <p className="feature-subtext text-sm text-slate-700 dark:text-neutral-300 leading-relaxed">
-                  Parses your GitHub commits to write structured, accomplishment-focused resume points automatically.
+                  Parses your public GitHub commits and READMEs to write structured, accomplishment-focused resume points.
                 </p>
               </div>
             </div>
@@ -519,22 +519,22 @@ export function ResumePreviewSection() {
                 <FileCheck size={24} />
               </div>
               <div>
-                <h4 className="text-lg font-bold text-[#171717] dark:text-[#f2efe9] mb-1">ATS Parser Certified</h4>
+                <h3 className="text-lg font-bold text-[#171717] dark:text-[#f2efe9] mb-1">Single-Column PDF</h3>
                 <p className="feature-subtext text-sm text-slate-700 dark:text-neutral-300 leading-relaxed">
-                  Conforms strictly to single-page PDF structures, typography limits, and machine-readable content rules.
+                  Conforms strictly to single-column layout rules, standard headings, and clean text for recruiter screening.
                 </p>
               </div>
             </div>
 
-            {/* Live ATS Scorecard Badge */}
+            {/* Live ATS Format Card */}
             <div className="rounded-xl border border-[#E5E5E5] dark:border-[#27272a] bg-white dark:bg-[#141417] p-5 flex items-center justify-between shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:shadow-2xl transition-colors duration-300">
               <div>
-                <div className="text-xs text-slate-600 dark:text-neutral-400 font-medium">ATS Compliance Score</div>
-                <div className="text-xl font-bold font-mono text-emerald-600 dark:text-emerald-400 mt-0.5">98% Match Rate</div>
+                <div className="text-xs text-slate-600 dark:text-neutral-400 font-medium">Layout Standards</div>
+                <div className="text-lg font-bold font-mono text-emerald-600 dark:text-emerald-400 mt-0.5">Single-Column A4 / Letter</div>
               </div>
               <div className="flex items-center gap-2 text-xs font-mono text-slate-600 dark:text-neutral-400">
                 <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                Greenhouse · Lever · Workday
+                Standard Typography
               </div>
             </div>
           </div>

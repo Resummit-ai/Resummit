@@ -215,10 +215,10 @@ export function WorkflowCanvas() {
                   <span className="text-[10px] text-neutral-500 font-mono">::</span>
                 </div>
                 <div className="mt-2 text-xs text-neutral-300 font-mono">
-                  github.com/developer/core
+                  github.com/developer/portfolio
                 </div>
                 <div className="text-[11px] text-neutral-500 mt-0.5">
-                  12 repositories · 1,420 commits
+                  Public repositories &amp; project code
                 </div>
                 <div className="mt-3 flex items-center justify-end gap-1.5">
                   <span className="text-[10px] font-mono text-neutral-400">repos</span>
@@ -230,7 +230,7 @@ export function WorkflowCanvas() {
                 </div>
               </div>
 
-              {/* Node 2: Commits & Diffs */}
+              {/* Node 2: Commits & READMEs */}
               <div
                 onClick={() => toggleNode("commits")}
                 className={`cursor-pointer rounded-2xl border p-4 transition-all duration-200 select-none ${
@@ -242,18 +242,18 @@ export function WorkflowCanvas() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
                     <Cpu className="h-4 w-4 text-blue-400" />
-                    <span className="text-xs font-semibold text-white">Key PRs & Diffs</span>
+                    <span className="text-xs font-semibold text-white">Commits &amp; READMEs</span>
                   </div>
                   <span className="text-[10px] text-neutral-500 font-mono">::</span>
                 </div>
                 <div className="mt-2 text-xs text-neutral-300 font-mono">
-                  89 merged PRs · Releases
+                  Git commit logs · Project docs
                 </div>
                 <div className="text-[11px] text-neutral-500 mt-0.5">
-                  Benchmarks, schema refactors, latency cuts
+                  Technical skills, frameworks, achievements
                 </div>
                 <div className="mt-3 flex items-center justify-end gap-1.5">
-                  <span className="text-[10px] font-mono text-neutral-400">diffs</span>
+                  <span className="text-[10px] font-mono text-neutral-400">commits</span>
                   <span
                     className={`h-2.5 w-2.5 rounded-full transition-colors ${
                       connectedNodes.commits ? "bg-blue-400 shadow-[0_0_8px_#3b82f6]" : "bg-neutral-600"
@@ -311,15 +311,15 @@ export function WorkflowCanvas() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
                     <MessageSquareCode className="h-4 w-4 text-purple-400" />
-                    <span className="text-xs font-semibold text-white">XYZ Formula Rules</span>
+                    <span className="text-xs font-semibold text-white">Impact Structuring</span>
                   </div>
                   <span className="text-[10px] text-neutral-500 font-mono">::</span>
                 </div>
                 <div className="mt-2 text-xs text-neutral-400 leading-snug">
-                  Accomplished [X] as measured by [Y] by doing [Z].
+                  Action verbs, technical context, and quantifiable results.
                 </div>
                 <div className="mt-3 flex items-center justify-end gap-1.5">
-                  <span className="text-[10px] font-mono text-neutral-400">formula</span>
+                  <span className="text-[10px] font-mono text-neutral-400">bullets</span>
                   <span
                     className={`h-2.5 w-2.5 rounded-full transition-colors ${
                       connectedNodes.rules ? "bg-purple-400 shadow-[0_0_8px_#a855f7]" : "bg-neutral-600"
@@ -421,39 +421,39 @@ export function WorkflowCanvas() {
                 </div>
                 <div className="mt-1 text-xs text-neutral-400">
                   {connectedCount >= 2
-                    ? "✓ Formatted with 14 bullets"
+                    ? "✓ Formatted with clean typography"
                     : "• Waiting for pipeline inputs"}
                 </div>
               </div>
 
-              {/* Output 2: ATS Scanner Score */}
+              {/* Output 2: ATS Scanner Format */}
               <div className="rounded-2xl border border-neutral-800 bg-[#121215] p-4 opacity-90 hover:opacity-100 transition-opacity">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Bot className="h-4 w-4 text-emerald-400" />
-                    <span className="text-xs font-semibold text-white">ATS Scanner Score</span>
+                    <span className="text-xs font-semibold text-white">ATS-Friendly Layout</span>
                   </div>
                   <span className="text-[10px] text-neutral-500 font-mono">::</span>
                 </div>
                 <div className="mt-1 text-xs text-neutral-400">
                   {connectedCount >= 3
-                    ? "✓ 98/100 score on Greenhouse"
+                    ? "✓ Single-column ATS format"
                     : "• Waiting for pipeline inputs"}
                 </div>
               </div>
 
-              {/* Output 3: Webhook Auto-Updates */}
+              {/* Output 3: On-Demand Refresh */}
               <div className="rounded-2xl border border-neutral-800 bg-[#121215] p-4 opacity-90 hover:opacity-100 transition-opacity">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <BellRing className="h-4 w-4 text-amber-400" />
-                    <span className="text-xs font-semibold text-white">GitHub Webhook</span>
+                    <span className="text-xs font-semibold text-white">On-Demand Refresh</span>
                   </div>
                   <span className="text-[10px] text-neutral-500 font-mono">::</span>
                 </div>
                 <div className="mt-1 text-xs text-neutral-400">
                   {connectedCount === 4
-                    ? "✓ Auto-updating on every push"
+                    ? "✓ Syncs on-demand (up to 3/hr)"
                     : "• Waiting for pipeline inputs"}
                 </div>
               </div>

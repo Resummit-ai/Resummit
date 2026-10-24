@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight, CheckCircle2, ShieldCheck, Sparkles, FileText, GitBranch } from "lucide-react";
 import { LANDING_CONFIG } from "@/lib/landing-config";
 
 export function PipelineSection() {
@@ -11,63 +11,63 @@ export function PipelineSection() {
   const tabs = [
     {
       id: "sync",
-      title: "Auto-sync repositories",
+      title: "1. Read public repositories",
       description:
-        "Push commits or merge PRs to GitHub. Resummit listens via webhook, parses your diffs, and updates your accomplishments automatically.",
-      metricTime: "4.8 sec",
+        "Connect your GitHub profile with read-only access. Resummit reads repository READMEs, tech stacks, and commit messages to identify what you built.",
+      metricTime: "Read-only",
       breakdown: [
-        { label: "Scan Git repos", time: "1.2s" },
-        { label: "Parse PRs & diffs", time: "2.1s" },
-        { label: "Quantify impact (XYZ)", time: "1.1s" },
-        { label: "Format ATS bullets", time: "0.4s" },
+        { label: "Scan public repositories", time: "Included" },
+        { label: "Analyze project READMEs", time: "Included" },
+        { label: "Extract tech stack & tools", time: "Included" },
+        { label: "Safe read-only permissions", time: "Enforced" },
       ],
       tag: "github.com/developer/portfolio",
-      footer: "From git push to interview-ready bullet",
+      footer: "Safe read-only access · Never modifies your code",
     },
     {
-      id: "xyz",
-      title: "Google XYZ Impact Formula",
+      id: "tailor",
+      title: "2. Tailor CV to job description",
       description:
-        "Every bullet is structured as 'Accomplished [X] as measured by [Y] by doing [Z]', transforming raw code into recruiter-proven metrics.",
-      metricTime: "94/100",
+        "Paste any job description you are targeting. Resummit aligns your projects and highlights the exact technologies and accomplishments recruiters want to see.",
+      metricTime: "Targeted",
       breakdown: [
-        { label: "Action verbs extracted", time: "100%" },
-        { label: "Metrics quantified", time: "92%" },
-        { label: "Tech stack highlighted", time: "96%" },
-        { label: "ATS keyword density", time: "94%" },
+        { label: "Analyze job requirements", time: "Semantic" },
+        { label: "Match candidate projects", time: "Targeted" },
+        { label: "Highlight core competencies", time: "Optimized" },
+        { label: "Identify technical skill gaps", time: "Active" },
       ],
-      tag: "resume.engine/xyz-parser",
-      footer: "Scored against top tech hiring rubrics",
+      tag: "resume.engine/tailor",
+      footer: "Tailor your CV to any job description in seconds",
     },
     {
       id: "roles",
-      title: "Role-specific tailoring",
+      title: "3. Role-specific versions",
       description:
-        "Generate specialized versions for Backend, Frontend, Fullstack, or DevOps without maintaining separate Word documents.",
-      metricTime: "5 presets",
+        "Generate specialized versions for Full-Stack, Backend, Frontend, or DevOps from the same GitHub foundation without maintaining separate files.",
+      metricTime: "Multi-Role",
       breakdown: [
-        { label: "Senior Full-Stack", time: "Active" },
-        { label: "Backend Systems", time: "Ready" },
-        { label: "Frontend / React", time: "Ready" },
+        { label: "Full-Stack focus", time: "Ready" },
+        { label: "Backend & Systems", time: "Ready" },
+        { label: "Frontend & UI", time: "Ready" },
         { label: "Cloud & DevOps", time: "Ready" },
       ],
-      tag: "resume.engine/role-matrix",
+      tag: "resume.engine/roles",
       footer: "One source of truth, tailored for every application",
     },
     {
       id: "ats",
-      title: "ATS-optimized export",
+      title: "4. ATS-friendly export",
       description:
-        "Single-column, recruiter-scannable PDF and clean plain-text formats designed to glide through Greenhouse, Lever, and Workday.",
-      metricTime: "99.8%",
+        "Export a clean, single-column standard PDF with standard section headers, legible system typography, and zero unparseable layout artifacts.",
+      metricTime: "A4 / Standard",
       breakdown: [
-        { label: "Parse rate on Greenhouse", time: "100%" },
-        { label: "Parse rate on Lever", time: "100%" },
-        { label: "Parse rate on Workday", time: "99.4%" },
-        { label: "Single-page constraint", time: "Enforced" },
+        { label: "Single-column structure", time: "Standard" },
+        { label: "Standard ATS font hierarchy", time: "Clean" },
+        { label: "Zero unparseable tables", time: "Verified" },
+        { label: "Crisp vector PDF export", time: "Instant" },
       ],
       tag: "export.resummit.app/pdf-engine",
-      footer: "Zero formatting errors on all applicant trackers",
+      footer: "ATS-friendly, single-column format",
     },
   ];
 
@@ -81,67 +81,75 @@ export function PipelineSection() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         {/* Section Header */}
         <div className="max-w-3xl">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-[#0099ff] border border-blue-500/20 text-xs font-bold uppercase tracking-wider mb-3">
+            <span>Workflow pipeline</span>
+          </div>
           <h2 className="text-4xl font-extrabold sm:font-bold tracking-tight text-[#171717] dark:text-white sm:text-5xl leading-[1.15]">
-            Everything between your commits and your next offer
+            How it works
           </h2>
+          <p className="mt-4 text-base sm:text-lg text-neutral-600 dark:text-neutral-400 font-normal">
+            Connect GitHub, paste a job description, and tailor your CV to any role in seconds.
+          </p>
         </div>
 
-        {/* Mountain Container with Floating Live Status Card */}
-        <div className="mt-12 relative rounded-3xl overflow-hidden border border-[#E5E5E5] dark:border-white/10 shadow-2xl min-h-[460px] sm:min-h-[500px] flex items-center justify-center p-6 sm:p-12">
-          {/* Mountain Artwork Background */}
-          <img
-            src="/images/fairweather_sky.jpg"
-            alt="Mountain landscape"
-            className="absolute inset-0 h-full w-full object-cover object-center"
+        {/* Product Workflow Container with Floating Live Status Card */}
+        <div className="mt-12 relative rounded-3xl overflow-hidden border border-[#E5E5E5] dark:border-neutral-800 bg-gradient-to-br from-neutral-900 via-neutral-950 to-neutral-900 shadow-2xl min-h-[460px] sm:min-h-[500px] flex items-center justify-center p-6 sm:p-12">
+          {/* Subtle grid background pattern */}
+          <div
+            className="absolute inset-0 opacity-20 pointer-events-none"
+            style={{
+              backgroundImage: "radial-gradient(#38bdf8 1px, transparent 1px)",
+              backgroundSize: "24px 24px",
+            }}
           />
-          {/* Subtle gradient vignette */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 pointer-events-none" />
+          <div className="absolute top-1/4 left-1/4 w-80 h-80 rounded-full bg-blue-500/15 blur-[90px] pointer-events-none" />
+          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-emerald-500/10 blur-[90px] pointer-events-none" />
 
           {/* Floating White Card */}
-          <div className="relative z-10 w-full max-w-md rounded-2xl bg-white/95 dark:bg-[#fafafa]/95 backdrop-blur-md p-6 text-neutral-900 shadow-2xl border border-white/60 transition-all duration-300">
+          <div className="relative z-10 w-full max-w-md rounded-2xl bg-white/95 dark:bg-[#16161a]/95 backdrop-blur-md p-6 text-neutral-900 dark:text-neutral-100 shadow-2xl border border-neutral-200 dark:border-neutral-800 transition-all duration-300">
             {/* Card Header */}
             <div className="flex items-center justify-between">
-              <span className="font-mono text-xs text-neutral-500 font-medium">
+              <span className="font-mono text-xs text-neutral-500 dark:text-neutral-400 font-medium">
                 {currentTab.tag}
               </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 border border-emerald-500/20">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                Live
+                Active
               </span>
             </div>
 
             {/* Big Metric Display */}
             <div className="mt-4 flex items-baseline gap-2">
-              <span className="text-4xl font-bold tracking-tight text-neutral-950">
+              <span className="text-3xl font-bold tracking-tight text-neutral-950 dark:text-white">
                 {currentTab.metricTime}
               </span>
-              <span className="text-xs text-neutral-500 uppercase tracking-wider font-medium">
-                execution
+              <span className="text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wider font-medium">
+                pipeline phase
               </span>
             </div>
 
-            {/* Checklist Items with Durations */}
-            <div className="mt-5 space-y-2.5 border-t border-neutral-200/80 pt-4">
+            {/* Checklist Items */}
+            <div className="mt-5 space-y-2.5 border-t border-neutral-200/80 dark:border-neutral-800 pt-4">
               {currentTab.breakdown.map((item, i) => (
                 <div key={i} className="flex items-center justify-between text-xs sm:text-sm">
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
-                    <span className="text-neutral-700 font-medium">{item.label}</span>
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                    <span className="text-neutral-700 dark:text-neutral-300 font-medium">{item.label}</span>
                   </div>
-                  <span className="font-mono text-xs text-neutral-500">{item.time}</span>
+                  <span className="font-mono text-xs text-neutral-500 dark:text-neutral-400">{item.time}</span>
                 </div>
               ))}
             </div>
 
             {/* Card Footer */}
-            <div className="mt-5 border-t border-neutral-200/80 pt-3 text-center">
-              <p className="text-[11px] text-neutral-500">{currentTab.footer}</p>
+            <div className="mt-5 border-t border-neutral-200/80 dark:border-neutral-800 pt-3 text-center">
+              <p className="text-[11px] text-neutral-500 dark:text-neutral-400">{currentTab.footer}</p>
             </div>
           </div>
         </div>
 
-        {/* 4 Horizontal Tabs below Mountain Card */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-4 gap-6 sm:gap-8">
+        {/* 4 Interactive Clickable Process Cards */}
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {tabs.map((tab, idx) => {
             const isActive = activeTab === idx;
             return (
@@ -149,50 +157,33 @@ export function PipelineSection() {
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(idx)}
-                className="text-left group transition-all"
+                className={`text-left rounded-2xl border p-6 transition-all duration-300 cursor-pointer ${
+                  isActive
+                    ? "border-blue-600 dark:border-[#0099ff] bg-white dark:bg-[#141417] shadow-lg scale-[1.01]"
+                    : "border-[#E5E5E5] dark:border-neutral-800/80 bg-white/60 dark:bg-[#111114]/60 hover:border-neutral-400 dark:hover:border-neutral-700"
+                }`}
               >
-                {/* Active indicator top bar */}
-                <div
-                  className={`h-[2px] w-full transition-all duration-300 ${
-                    isActive
-                      ? "bg-blue-600 dark:bg-white"
-                      : "bg-[#E5E5E5] dark:bg-neutral-800 group-hover:bg-neutral-400 dark:group-hover:bg-neutral-700"
-                  }`}
-                />
-                <h3
-                  className={`mt-4 text-base font-semibold tracking-tight transition-colors ${
-                    isActive
-                      ? "text-[#171717] dark:text-white"
-                      : "text-[#707070] dark:text-neutral-400 group-hover:text-black dark:group-hover:text-neutral-200"
-                  }`}
-                >
+                <div className="flex items-center justify-between">
+                  <span
+                    className={`font-mono text-xs font-semibold ${
+                      isActive ? "text-blue-600 dark:text-[#0099ff]" : "text-neutral-500"
+                    }`}
+                  >
+                    0{idx + 1}
+                  </span>
+                  {isActive && (
+                    <span className="h-2 w-2 rounded-full bg-blue-600 dark:bg-[#0099ff] shadow-[0_0_8px_#0099ff]" />
+                  )}
+                </div>
+                <h3 className="mt-4 text-base font-bold text-[#171717] dark:text-white">
                   {tab.title}
                 </h3>
-                {isActive && (
-                  <p className="mt-2 text-xs sm:text-sm text-[#52525b] dark:text-neutral-400 leading-relaxed animate-fadeIn">
-                    {tab.description}
-                  </p>
-                )}
+                <p className="mt-2 text-xs text-[#707070] dark:text-neutral-400 leading-relaxed font-normal">
+                  {tab.description}
+                </p>
               </button>
             );
           })}
-        </div>
-
-        {/* Action Buttons below Tabs */}
-        <div className="mt-10 flex flex-wrap items-center gap-6">
-          <Link
-            href={LANDING_CONFIG.brand.primaryCta.href}
-            className="inline-flex items-center gap-2 rounded-full border border-neutral-300 dark:border-white/20 bg-[#171717] dark:bg-neutral-900 px-6 py-2.5 text-sm font-semibold text-white transition-all hover:bg-neutral-800 hover:border-neutral-500 dark:hover:border-white/40 shadow-sm"
-          >
-            <span>Start auto-syncing</span>
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-          <a
-            href="#workflow"
-            className="text-sm font-semibold text-[#707070] dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors"
-          >
-            Explore the pipeline workflow →
-          </a>
         </div>
       </div>
     </section>
