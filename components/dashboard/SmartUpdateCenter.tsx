@@ -466,9 +466,9 @@ export function SmartUpdateCenter({
     return (
       <div 
         key={suggestion.id}
-        className="group relative bg-white dark:bg-[#18181c] border border-neutral-200/90 dark:border-neutral-800 hover:border-blue-500 rounded-2xl p-4 md:p-5 transition-all shadow-sm flex items-center justify-between gap-4"
+        className="group relative bg-white dark:bg-[#18181c] border border-neutral-200/90 dark:border-neutral-800 hover:border-blue-500 rounded-2xl p-4 md:p-5 transition-all shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4"
       >
-        <div className="flex items-start gap-3.5 min-w-0">
+        <div className="flex items-start gap-3.5 min-w-0 w-full sm:w-auto flex-1">
           <div className="w-10 h-10 rounded-full bg-neutral-900 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
             <GithubIcon className="w-5 h-5 text-white" />
           </div>
@@ -492,7 +492,7 @@ export function SmartUpdateCenter({
 
         <button
           onClick={() => setReviewing(suggestion)}
-          className="px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-blue-600 dark:text-[#0099ff] text-xs font-medium flex items-center gap-1 transition-colors cursor-pointer shrink-0"
+          className="w-full sm:w-auto justify-center px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-blue-600 dark:text-[#0099ff] text-xs font-medium flex items-center gap-1 transition-colors cursor-pointer shrink-0"
         >
           Review <ChevronRight className="w-3.5 h-3.5" />
         </button>
@@ -508,9 +508,9 @@ export function SmartUpdateCenter({
     return (
       <div 
         key={suggestion.id}
-        className="group relative bg-white dark:bg-[#18181c] border border-neutral-200/90 dark:border-neutral-800 hover:border-blue-500 rounded-2xl p-4 md:p-5 transition-all shadow-sm flex items-center justify-between gap-4"
+        className="group relative bg-white dark:bg-[#18181c] border border-neutral-200/90 dark:border-neutral-800 hover:border-blue-500 rounded-2xl p-4 md:p-5 transition-all shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4"
       >
-        <div className="flex items-start gap-3.5 min-w-0">
+        <div className="flex items-start gap-3.5 min-w-0 w-full sm:w-auto flex-1">
           <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-[#0099ff] flex items-center justify-center font-mono font-bold text-xs shrink-0 mt-0.5 border border-blue-500/20 shadow-xs">
             &lt;/&gt;
           </div>
@@ -534,7 +534,7 @@ export function SmartUpdateCenter({
 
         <button
           onClick={() => setReviewing(suggestion)}
-          className="px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-blue-600 dark:text-[#0099ff] text-xs font-medium flex items-center gap-1 transition-colors cursor-pointer shrink-0"
+          className="w-full sm:w-auto justify-center px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-blue-600 dark:text-[#0099ff] text-xs font-medium flex items-center gap-1 transition-colors cursor-pointer shrink-0"
         >
           Review <ChevronRight className="w-3.5 h-3.5" />
         </button>
@@ -592,7 +592,7 @@ export function SmartUpdateCenter({
           {topSlot}
 
           {/* Engineering Insights Card */}
-          <div className="p-6 md:p-7 rounded-2xl bg-white/95 dark:bg-[#141417]/95 backdrop-blur-md border border-white/60 dark:border-white/10 shadow-2xl text-neutral-900 dark:text-[#f2efe9] transition-colors">
+          <div className="p-4 sm:p-6 md:p-7 rounded-2xl bg-white/95 dark:bg-[#141417]/95 backdrop-blur-md border border-white/60 dark:border-white/10 shadow-2xl text-neutral-900 dark:text-[#f2efe9] transition-colors">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div className="flex items-center gap-3.5">
                 <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-600 dark:text-[#0099ff] shrink-0 border border-blue-500/20">
@@ -617,10 +617,10 @@ export function SmartUpdateCenter({
 
             {/* Bottom Tab Row */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-neutral-200/80 dark:border-neutral-800">
-              <div className="flex items-center gap-1.5 p-1 bg-neutral-100 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700 rounded-xl self-start">
+              <div className="flex items-center gap-1.5 p-1 bg-neutral-100 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700 rounded-xl self-start max-w-full overflow-x-auto">
                 <button
                   onClick={() => setActiveTab("all")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer shrink-0 ${
                     activeTab === "all"
                       ? "bg-blue-600 dark:bg-[#0099ff] text-white shadow-xs"
                       : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200/50 dark:hover:bg-neutral-700/50"
@@ -630,7 +630,7 @@ export function SmartUpdateCenter({
                 </button>
                 <button
                   onClick={() => setActiveTab("projects")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer shrink-0 ${
                     activeTab === "projects"
                       ? "bg-blue-600 dark:bg-[#0099ff] text-white shadow-xs"
                       : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200/50 dark:hover:bg-neutral-700/50"
@@ -640,7 +640,7 @@ export function SmartUpdateCenter({
                 </button>
                 <button
                   onClick={() => setActiveTab("skills")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer shrink-0 ${
                     activeTab === "skills"
                       ? "bg-blue-600 dark:bg-[#0099ff] text-white shadow-xs"
                       : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200/50 dark:hover:bg-neutral-700/50"
@@ -660,7 +660,7 @@ export function SmartUpdateCenter({
       </div>
 
       {/* Lower Section: Full-Width Discoveries Card */}
-      <div id="discoveries" className="p-6 md:p-7 rounded-2xl bg-white/95 dark:bg-[#141417]/95 backdrop-blur-md border border-white/60 dark:border-white/10 shadow-2xl text-neutral-900 dark:text-[#f2efe9] transition-colors">
+      <div id="discoveries" className="p-4 sm:p-6 md:p-7 rounded-2xl bg-white/95 dark:bg-[#141417]/95 backdrop-blur-md border border-white/60 dark:border-white/10 shadow-2xl text-neutral-900 dark:text-[#f2efe9] transition-colors">
         {/* Header */}
         <div className="flex items-center justify-between pb-5 border-b border-neutral-200/80 dark:border-neutral-800 mb-6">
           <div className="flex items-center gap-2">
@@ -747,9 +747,9 @@ export function SmartUpdateCenter({
 
       {/* Review Modal */}
       {reviewing && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-          <div className="bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] rounded-xl w-full max-w-xl overflow-hidden shadow-xl text-[var(--sclade-text-primary)]">
-            <div className="p-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] rounded-2xl w-full max-w-xl max-h-[92vh] flex flex-col overflow-hidden shadow-2xl text-[var(--sclade-text-primary)]">
+            <div className="p-4 sm:p-6 overflow-y-auto">
               <div className="flex items-center justify-between mb-5 pb-3 border-b border-[var(--sclade-card-border)]">
                 <div>
                   <h3 className="text-sm font-semibold text-[var(--sclade-text-primary)]">Review suggestion</h3>
@@ -863,9 +863,9 @@ export function SmartUpdateCenter({
 
       {/* 409 Conflict Modal: Keep Mine vs Replace */}
       {conflictModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm">
-          <div className="bg-[var(--sclade-bg)] border border-[var(--sclade-card-border)] rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
-            <div className="p-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-sm">
+          <div className="bg-[var(--sclade-bg)] border border-[var(--sclade-card-border)] rounded-2xl w-full max-w-2xl max-h-[92vh] flex flex-col overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
+            <div className="p-4 sm:p-6 overflow-y-auto">
               <div className="flex items-center justify-between mb-5">
                 <div>
                   <h3 className="text-sm font-bold text-[var(--sclade-text-primary)] mb-0.5">Confirm Project Replacement</h3>

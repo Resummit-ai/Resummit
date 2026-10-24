@@ -139,7 +139,7 @@ export function RevealSliderSection() {
             className="relative w-full max-w-4xl mx-auto min-h-[640px] sm:min-h-[660px] bg-white rounded-2xl overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_25px_60px_rgba(0,0,0,0.6)] border border-[#E5E5E5] dark:border-[#27272a] select-none cursor-ew-resize touch-none"
           >
             {/* 1. UNDERLAYER: Recruiter-Ready ATS Resume Paper (Full 100% Width & Height) */}
-            <div className="cv-sheet-paper absolute inset-0 w-full h-full bg-white text-[#0f172a] p-6 sm:p-10 md:p-12 flex flex-col justify-between font-serif select-text">
+            <div className="cv-sheet-paper absolute inset-0 w-full h-full bg-white text-[#0f172a] p-4 sm:p-10 md:p-12 flex flex-col justify-between font-serif select-text">
               {/* Top Recruiter Verification Pill */}
               <div className="flex items-center justify-between pb-2 border-b border-neutral-200 font-sans">
                 <span className="cv-muted text-[10px] font-mono font-bold tracking-wider uppercase">
@@ -232,7 +232,7 @@ export function RevealSliderSection() {
 
             {/* 2. OVERLAYER: Rejected Draft Paper (Clipped with polygon) */}
             <div
-              className="cv-sheet-paper absolute inset-0 w-full h-full bg-[#FAF9F5] text-[#334155] p-6 sm:p-10 md:p-12 flex flex-col justify-between font-sans select-text pointer-events-none"
+              className="cv-sheet-paper absolute inset-0 w-full h-full bg-[#FAF9F5] text-[#334155] p-4 sm:p-10 md:p-12 flex flex-col justify-between font-sans select-text pointer-events-none"
               style={{
                 clipPath:
                   sliderPosition <= 0

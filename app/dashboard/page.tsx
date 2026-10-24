@@ -120,7 +120,7 @@ export default async function DashboardPage() {
       />
 
       {/* Top Nav matching Landing Page Theme */}
-      <nav className="relative z-50 border-b border-[#E5E5E5] dark:border-[#27272a] bg-[#F5F5F3]/85 dark:bg-[#0a0a0a]/85 backdrop-blur-xl sticky top-0 transition-colors duration-200 px-6 md:px-8 py-3.5">
+      <nav className="relative z-50 border-b border-[#E5E5E5] dark:border-[#27272a] bg-[#F5F5F3]/85 dark:bg-[#0a0a0a]/85 backdrop-blur-xl sticky top-0 transition-colors duration-200 px-4 sm:px-6 md:px-8 py-3.5">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-10">
             <Link
@@ -147,21 +147,39 @@ export default async function DashboardPage() {
               )}
             </div>
           </div>
-          <DashboardControls user={dbUser} />
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <Link
+              href="/editor"
+              className="md:hidden inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-xs"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span>Editor</span>
+            </Link>
+            <DashboardControls user={dbUser} />
+          </div>
         </div>
       </nav>
 
       {/* Main Content */}
-      <main className="relative z-10 max-w-7xl mx-auto px-6 py-8 md:px-8 md:py-10 xl:py-12">
-        <header className="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <main className="relative z-10 max-w-7xl mx-auto px-3.5 sm:px-6 md:px-8 py-6 md:py-10 xl:py-12">
+        <header className="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
-            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#171717] dark:text-[#f2efe9]">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-[#171717] dark:text-[#f2efe9]">
               Welcome back, {dbUser.name?.split(' ')[0] || "Adel"}
             </h1>
-            <p className="text-slate-600 dark:text-neutral-400 mt-1.5 text-sm sm:text-base font-normal">
+            <p className="text-slate-600 dark:text-neutral-400 mt-1.5 text-xs sm:text-sm md:text-base font-normal">
               Orchestrate your professional impact and career logic.
             </p>
           </div>
+          {/* Quick jump to editor button for easy mobile access */}
+          <Link
+            href="/editor"
+            className="sm:hidden inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-xs transition-colors"
+          >
+            <FileText className="w-4 h-4" />
+            <span>Open Resume Editor</span>
+            <ChevronRight className="w-4 h-4 ml-auto" />
+          </Link>
         </header>
 
         {/* Pixel Graphics Canvas Container hosting the ENTIRE dashboard cards */}

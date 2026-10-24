@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Target, RefreshCw, AlertTriangle, Check, Zap } from "lucide-react";
+import Link from "next/link";
+import { Target, RefreshCw, AlertTriangle, Check, Zap, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ATSResult {
@@ -115,11 +116,11 @@ export function ATSScoreCard({ storedScore, versionId, resumeName, versionName }
   }, []);
 
   return (
-    <div className="p-6 sm:p-7 md:p-8 rounded-2xl bg-white/95 dark:bg-[#141417]/95 backdrop-blur-md border border-white/60 dark:border-white/10 relative overflow-hidden transition-all shadow-2xl text-[#171717] dark:text-[#f2efe9]">
+    <div className="p-4 sm:p-6 md:p-8 rounded-2xl bg-white/95 dark:bg-[#141417]/95 backdrop-blur-md border border-white/60 dark:border-white/10 relative overflow-hidden transition-all shadow-2xl text-[#171717] dark:text-[#f2efe9]">
       <div className="relative z-10">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6 gap-4">
-          <div className="flex items-center gap-2.5 flex-wrap">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
             <div className="flex items-center gap-2">
               <div className="w-5 h-5 rounded-full border border-blue-500 flex items-center justify-center">
                 <Target className="w-3 h-3 text-blue-600 dark:text-[#0099ff]" />
@@ -135,7 +136,7 @@ export function ATSScoreCard({ storedScore, versionId, resumeName, versionName }
           <button
             onClick={fetchScore}
             disabled={loading}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white bg-neutral-100 dark:bg-neutral-800 hover:bg-blue-50 dark:hover:bg-blue-950/40 hover:text-blue-600 dark:hover:text-[#0099ff] border border-neutral-200 dark:border-neutral-700 transition-all cursor-pointer disabled:opacity-50"
+            className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white bg-neutral-100 dark:bg-neutral-800 hover:bg-blue-50 dark:hover:bg-blue-950/40 hover:text-blue-600 dark:hover:text-[#0099ff] border border-neutral-200 dark:border-neutral-700 transition-all cursor-pointer disabled:opacity-50 self-start sm:self-auto shrink-0"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
             {loading ? "Scoring…" : "Refresh"}
@@ -246,6 +247,20 @@ export function ATSScoreCard({ storedScore, versionId, resumeName, versionName }
             </div>
           </div>
         )}
+
+        {/* Quick Link to Resume Editor */}
+        <div className="pt-3.5 mt-4 border-t border-neutral-200/80 dark:border-neutral-800 flex items-center justify-between">
+          <span className="text-[11px] text-neutral-500 dark:text-neutral-400">
+            Apply recommendations
+          </span>
+          <Link
+            href="/editor"
+            className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 dark:text-[#0099ff] hover:underline"
+          >
+            <span>Open Resume Editor</span>
+            <ChevronRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
       </div>
     </div>
   );

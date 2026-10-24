@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { Bell, Settings, User, X, Check, Shield, Cpu, RefreshCw, Moon, Brain, Sun, LogOut, HelpCircle } from "lucide-react";
+import { Bell, Settings, User, X, Check, Shield, Cpu, RefreshCw, Moon, Brain, Sun, LogOut, HelpCircle, FileText } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { signOut } from "next-auth/react";
 
@@ -151,7 +151,7 @@ export function DashboardControls({ user }: DashboardControlsProps) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                 transition={{ duration: 0.15 }}
-                className="absolute right-0 mt-2 w-80 md:w-96 rounded-2xl bg-white dark:bg-[#181B20] border border-neutral-200 dark:border-neutral-800 shadow-2xl z-50 p-5 overflow-hidden"
+                className="absolute right-0 mt-2 w-[calc(100vw-2rem)] max-w-sm sm:w-80 md:w-96 rounded-2xl bg-white dark:bg-[#181B20] border border-neutral-200 dark:border-neutral-800 shadow-2xl z-50 p-4 sm:p-5 overflow-hidden"
               >
                 <div className="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800 pb-3 mb-4">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
@@ -462,6 +462,13 @@ export function DashboardControls({ user }: DashboardControlsProps) {
 
                 {/* Dropdown Items */}
                 <div className="space-y-0.5">
+                  <a
+                    href="/editor"
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] hover:bg-[var(--sclade-subtle-bg)] rounded-lg transition-colors cursor-pointer text-left"
+                  >
+                    <FileText className="w-4 h-4 text-[var(--sclade-text-muted)]" />
+                    Resume Editor
+                  </a>
                   <button
                     onClick={() => {
                       setShowUserMenu(false);

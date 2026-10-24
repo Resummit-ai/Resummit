@@ -8,7 +8,7 @@ interface DashboardPixelBannerProps {
 
 export function DashboardPixelBanner({ children }: DashboardPixelBannerProps) {
   return (
-    <div className="relative rounded-3xl overflow-hidden border border-[#E5E5E5] dark:border-white/10 shadow-2xl p-4 sm:p-6 md:p-8 lg:p-10 transition-all duration-300">
+    <div className="relative rounded-3xl overflow-hidden border border-[#E5E5E5] dark:border-white/10 shadow-2xl p-3 sm:p-6 md:p-8 lg:p-10 transition-all duration-300">
       {/* Pixel Sky Art Background matching landing page pipeline */}
       <img
         src="/images/fairweather_sky.jpg"
