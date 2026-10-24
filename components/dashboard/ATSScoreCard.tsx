@@ -115,27 +115,27 @@ export function ATSScoreCard({ storedScore, versionId, resumeName, versionName }
   }, []);
 
   return (
-    <div className="p-6 md:p-7 rounded-2xl bg-[var(--sclade-card-bg)] border border-[var(--sclade-card-border)] relative overflow-hidden transition-all shadow-xs">
+    <div className="p-6 sm:p-7 md:p-8 rounded-2xl bg-white/95 dark:bg-[#141417]/95 backdrop-blur-md border border-white/60 dark:border-white/10 relative overflow-hidden transition-all shadow-2xl text-[#171717] dark:text-[#f2efe9]">
       <div className="relative z-10">
         {/* Header */}
         <div className="flex items-center justify-between mb-6 gap-4">
           <div className="flex items-center gap-2.5 flex-wrap">
             <div className="flex items-center gap-2">
-              <div className="w-5 h-5 rounded-full border border-[#5473D1] flex items-center justify-center">
-                <Target className="w-3 h-3 text-[#5473D1]" />
+              <div className="w-5 h-5 rounded-full border border-blue-500 flex items-center justify-center">
+                <Target className="w-3 h-3 text-blue-600 dark:text-[#0099ff]" />
               </div>
-              <h3 className="text-xs font-bold text-[var(--sclade-text-primary)] uppercase tracking-wider">
+              <h3 className="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-wider">
                 Resume ATS Score
               </h3>
             </div>
-            <span className="px-2.5 py-0.5 bg-[#E7EDFF] text-[#5473D1] border border-[#CFD9FF] rounded-full text-[10px] font-bold tracking-wide">
-              {resumeName || "Your resume"}{versionName ? ` (${versionName})` : ''}
+            <span className="px-2.5 py-0.5 bg-blue-500/10 text-blue-700 dark:text-[#0099ff] border border-blue-500/20 rounded-full text-[10px] font-bold tracking-wide">
+              {resumeName || "My Professional Resume"}{versionName ? ` (${versionName})` : ' (Main)'}
             </span>
           </div>
           <button
             onClick={fetchScore}
             disabled={loading}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-[var(--sclade-text-secondary)] hover:text-[var(--sclade-text-primary)] bg-[var(--sclade-btn-secondary-bg)] hover:bg-[#E7EDFF] hover:text-[#5473D1] border border-[var(--sclade-card-border)] transition-all cursor-pointer disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white bg-neutral-100 dark:bg-neutral-800 hover:bg-blue-50 dark:hover:bg-blue-950/40 hover:text-blue-600 dark:hover:text-[#0099ff] border border-neutral-200 dark:border-neutral-700 transition-all cursor-pointer disabled:opacity-50"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
             {loading ? "Scoring…" : "Refresh"}
@@ -153,12 +153,12 @@ export function ATSScoreCard({ storedScore, versionId, resumeName, versionName }
                   key={displayScore}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="text-2xl font-black leading-none text-[var(--sclade-text-primary)]"
+                  className="text-2xl font-black leading-none text-neutral-950 dark:text-white"
                 >
                   {displayScore}
                 </motion.span>
               </AnimatePresence>
-              <span className="text-[10px] font-bold text-[var(--sclade-text-muted)] tracking-wider mt-0.5">
+              <span className="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 tracking-wider mt-0.5">
                 /100
               </span>
             </div>
@@ -166,10 +166,10 @@ export function ATSScoreCard({ storedScore, versionId, resumeName, versionName }
 
           {/* Label + breakdown */}
           <div className="flex-1 min-w-0">
-            <h4 className="text-base font-bold text-[var(--sclade-text-primary)] mb-0.5">
+            <h4 className="text-base font-bold text-neutral-950 dark:text-white mb-0.5">
               {loading && !result ? "Analyzing…" : scoreLabel}
             </h4>
-            <p className="text-xs text-[var(--sclade-text-secondary)] mb-4">
+            <p className="text-xs text-neutral-600 dark:text-neutral-400 mb-4">
               {scoreDesc}
             </p>
 
@@ -180,18 +180,18 @@ export function ATSScoreCard({ storedScore, versionId, resumeName, versionName }
                 { label: "IMPACT",   value: breakdown.impact },
               ].map(({ label, value }) => (
                 <div key={label} className="flex items-center gap-3">
-                  <span className="text-[10px] font-bold tracking-wider text-[var(--sclade-text-secondary)] w-16 flex-shrink-0">
+                  <span className="text-[10px] font-bold tracking-wider text-neutral-500 dark:text-neutral-400 w-16 flex-shrink-0">
                     {label}
                   </span>
-                  <div className="flex-1 h-2 bg-[#F0F3F8] dark:bg-white/5 rounded-full overflow-hidden">
+                  <div className="flex-1 h-2 bg-neutral-200/70 dark:bg-neutral-800 rounded-full overflow-hidden">
                     <motion.div
-                      className="h-full bg-[#5473D1] rounded-full"
+                      className="h-full bg-blue-600 dark:bg-[#0099ff] rounded-full"
                       initial={{ width: 0 }}
                       animate={{ width: `${value}%` }}
                       transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
                     />
                   </div>
-                  <span className="text-[10px] font-bold text-[var(--sclade-text-primary)] w-12 text-right">
+                  <span className="text-[10px] font-bold text-neutral-900 dark:text-neutral-100 w-12 text-right">
                     {value}/100
                   </span>
                 </div>
@@ -202,23 +202,23 @@ export function ATSScoreCard({ storedScore, versionId, resumeName, versionName }
 
         {/* Error state */}
         {error && (
-          <div className="flex items-center gap-2 p-3 rounded-lg bg-[#FEF3C7] border border-[#92400E]/20 mb-4">
-            <AlertTriangle className="w-4 h-4 text-[#92400E] flex-shrink-0" />
-            <p className="text-xs text-[#92400E] font-medium">{error}</p>
+          <div className="flex items-center gap-2 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 mb-4">
+            <AlertTriangle className="w-4 h-4 text-amber-700 dark:text-amber-400 flex-shrink-0" />
+            <p className="text-xs text-amber-800 dark:text-amber-300 font-medium">{error}</p>
           </div>
         )}
 
         {/* Weak signals / Flags detected */}
         {weakSignals.length > 0 && (
-          <div className="space-y-2 mb-5 pt-2 border-t border-[var(--sclade-card-border)]/60">
-            <p className="text-[11px] font-bold tracking-wider text-[var(--sclade-text-secondary)]">
+          <div className="space-y-2 mb-5 pt-2 border-t border-neutral-200/80 dark:border-neutral-800">
+            <p className="text-[11px] font-bold tracking-wider text-neutral-600 dark:text-neutral-400">
               Flags detected
             </p>
             <div className="flex flex-wrap gap-2">
               {weakSignals.map((sig) => (
                 <span
                   key={sig}
-                  className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md bg-[#FFF6E5] text-[#D97706] border border-[#FDE68A]"
+                  className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/30"
                 >
                   {SIGNAL_LABELS[sig] ?? sig}
                 </span>
@@ -227,20 +227,20 @@ export function ATSScoreCard({ storedScore, versionId, resumeName, versionName }
           </div>
         )}
 
-        {/* Quick wins */}
+        {/* Quick wins / Recommended Actions */}
         {quickFixes.length > 0 && (
           <div className="space-y-2.5 pt-2">
-            <div className="flex items-center gap-1.5 text-[#5473D1]">
-              <Target className="w-3.5 h-3.5 text-[#5473D1]" />
-              <p className="text-xs font-bold tracking-wider text-[var(--sclade-text-primary)]">
+            <div className="flex items-center gap-1.5 text-blue-600 dark:text-[#0099ff]">
+              <Target className="w-3.5 h-3.5" />
+              <p className="text-xs font-bold tracking-wider text-neutral-900 dark:text-white">
                 Recommended Actions
               </p>
             </div>
             <div className="space-y-1.5 pl-0.5">
               {quickFixes.slice(0, 2).map((fix, i) => (
                 <div key={i} className="flex items-start gap-2">
-                  <Check className="w-3.5 h-3.5 text-[#5473D1] flex-shrink-0 mt-0.5 stroke-[2.5]" />
-                  <p className="text-xs text-[var(--sclade-text-secondary)] leading-relaxed">{fix}</p>
+                  <Check className="w-3.5 h-3.5 text-blue-600 dark:text-[#0099ff] flex-shrink-0 mt-0.5 stroke-[2.5]" />
+                  <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">{fix}</p>
                 </div>
               ))}
             </div>
