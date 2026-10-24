@@ -61,7 +61,7 @@ export function Navbar() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
           ? "bg-[#F5F5F3]/90 dark:bg-[#0a0a0a]/90 backdrop-blur-md border-b border-[#E5E5E5] dark:border-[#27272a] py-3 shadow-[0_2px_10px_rgba(0,0,0,0.03)]"
-          : "bg-transparent py-5"
+          : "bg-white/45 dark:bg-transparent backdrop-blur-[6px] border-b border-black/[0.04] dark:border-transparent py-4"
         }`}
     >
       <div className="mx-auto flex h-12 max-w-7xl items-center justify-between px-6 lg:px-8">
@@ -100,37 +100,37 @@ export function Navbar() {
         <nav className="hidden md:flex items-center gap-8">
           <a
             href="#features"
-            className="text-sm font-semibold text-black dark:text-[#f2efe9]/80 transition-colors hover:text-blue-600 dark:hover:text-blue-400"
+            className="text-sm font-bold text-neutral-950 dark:text-[#f2efe9]/80 transition-colors hover:!text-blue-600 dark:hover:!text-blue-400 drop-shadow-[0_1px_1px_rgba(255,255,255,0.85)] dark:drop-shadow-none hover:drop-shadow-[0_1px_2px_rgba(37,99,235,0.3)]"
           >
             Features
           </a>
           <a
             href="#pipeline"
-            className="text-sm font-semibold text-black dark:text-[#f2efe9]/80 transition-colors hover:text-blue-600 dark:hover:text-blue-400"
+            className="text-sm font-bold text-neutral-950 dark:text-[#f2efe9]/80 transition-colors hover:!text-blue-600 dark:hover:!text-blue-400 drop-shadow-[0_1px_1px_rgba(255,255,255,0.85)] dark:drop-shadow-none hover:drop-shadow-[0_1px_2px_rgba(37,99,235,0.3)]"
           >
             Workflow
           </a>
           <a
             href="#preview-resume"
-            className="text-sm font-semibold text-black dark:text-[#f2efe9]/80 transition-colors hover:text-blue-600 dark:hover:text-blue-400"
+            className="text-sm font-bold text-neutral-950 dark:text-[#f2efe9]/80 transition-colors hover:!text-blue-600 dark:hover:!text-blue-400 drop-shadow-[0_1px_1px_rgba(255,255,255,0.85)] dark:drop-shadow-none hover:drop-shadow-[0_1px_2px_rgba(37,99,235,0.3)]"
           >
             Sample Resume
           </a>
           <a
             href="#pricing"
-            className="text-sm font-semibold text-black dark:text-[#f2efe9]/80 transition-colors hover:text-blue-600 dark:hover:text-blue-400"
+            className="text-sm font-bold text-neutral-950 dark:text-[#f2efe9]/80 transition-colors hover:!text-blue-600 dark:hover:!text-blue-400 drop-shadow-[0_1px_1px_rgba(255,255,255,0.85)] dark:drop-shadow-none hover:drop-shadow-[0_1px_2px_rgba(37,99,235,0.3)]"
           >
             Access
           </a>
           <a
             href="#faq"
-            className="text-sm font-semibold text-black dark:text-[#f2efe9]/80 transition-colors hover:text-blue-600 dark:hover:text-blue-400"
+            className="text-sm font-bold text-neutral-950 dark:text-[#f2efe9]/80 transition-colors hover:!text-blue-600 dark:hover:!text-blue-400 drop-shadow-[0_1px_1px_rgba(255,255,255,0.85)] dark:drop-shadow-none hover:drop-shadow-[0_1px_2px_rgba(37,99,235,0.3)]"
           >
             FAQ
           </a>
           <a
             href="#feedback"
-            className="text-sm font-semibold text-black dark:text-[#f2efe9]/80 transition-colors hover:text-blue-600 dark:hover:text-blue-400"
+            className="text-sm font-bold text-neutral-950 dark:text-[#f2efe9]/80 transition-colors hover:!text-blue-600 dark:hover:!text-blue-400 drop-shadow-[0_1px_1px_rgba(255,255,255,0.85)] dark:drop-shadow-none hover:drop-shadow-[0_1px_2px_rgba(37,99,235,0.3)]"
           >
             Contact
           </a>
@@ -166,7 +166,7 @@ export function Navbar() {
 
           <Link
             href="/login"
-            className="text-sm font-semibold text-black dark:text-[#f2efe9]/80 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            className="text-sm font-bold text-neutral-950 dark:text-[#f2efe9]/80 hover:!text-blue-600 dark:hover:!text-blue-400 transition-colors drop-shadow-[0_1px_1px_rgba(255,255,255,0.85)] dark:drop-shadow-none hover:drop-shadow-[0_1px_2px_rgba(37,99,235,0.3)]"
           >
             Sign In
           </Link>
@@ -225,42 +225,42 @@ export function Navbar() {
             <a
               href="#features"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-sm font-semibold text-black dark:text-neutral-100 hover:text-blue-600 dark:hover:text-blue-400 py-1 transition-colors"
+              className="text-sm font-bold text-black dark:text-neutral-100 hover:!text-blue-600 dark:hover:!text-blue-400 py-1 transition-colors"
             >
               Features
             </a>
             <a
               href="#pipeline"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-sm font-semibold text-black dark:text-neutral-100 hover:text-blue-600 dark:hover:text-blue-400 py-1 transition-colors"
+              className="text-sm font-bold text-black dark:text-neutral-100 hover:!text-blue-600 dark:hover:!text-blue-400 py-1 transition-colors"
             >
               Workflow
             </a>
             <a
               href="#preview-resume"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-sm font-semibold text-black dark:text-neutral-100 hover:text-blue-600 dark:hover:text-blue-400 py-1 transition-colors"
+              className="text-sm font-bold text-black dark:text-neutral-100 hover:!text-blue-600 dark:hover:!text-blue-400 py-1 transition-colors"
             >
               Sample Resume
             </a>
             <a
               href="#pricing"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-sm font-semibold text-black dark:text-neutral-100 hover:text-blue-600 dark:hover:text-blue-400 py-1 transition-colors"
+              className="text-sm font-bold text-black dark:text-neutral-100 hover:!text-blue-600 dark:hover:!text-blue-400 py-1 transition-colors"
             >
               Access
             </a>
             <a
               href="#faq"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-sm font-semibold text-black dark:text-neutral-100 hover:text-blue-600 dark:hover:text-blue-400 py-1 transition-colors"
+              className="text-sm font-bold text-black dark:text-neutral-100 hover:!text-blue-600 dark:hover:!text-blue-400 py-1 transition-colors"
             >
               FAQ
             </a>
             <a
               href="#feedback"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-sm font-semibold text-black dark:text-neutral-100 hover:text-blue-600 dark:hover:text-blue-400 py-1 transition-colors"
+              className="text-sm font-bold text-black dark:text-neutral-100 hover:!text-blue-600 dark:hover:!text-blue-400 py-1 transition-colors"
             >
               Contact
             </a>
@@ -269,7 +269,7 @@ export function Navbar() {
           <div className="pt-3 border-t border-[#E5E5E5] dark:border-neutral-800 flex items-center justify-between">
             <Link
               href="/login"
-              className="text-sm font-semibold text-black dark:text-neutral-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              className="text-sm font-bold text-black dark:text-neutral-100 hover:!text-blue-600 dark:hover:!text-blue-400 transition-colors"
             >
               Sign In
             </Link>

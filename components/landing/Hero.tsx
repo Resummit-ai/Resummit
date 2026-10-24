@@ -49,9 +49,9 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
           className="opacity-100 dark:opacity-80 transition-opacity duration-700"
         />
 
-        {/* Ambient atmospheric color glow in light mode to bring vibrant sky and alpine warmth */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-sky-500/10 to-blue-600/15 dark:hidden pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-b from-sky-400/10 via-transparent to-[#F5F5F3] dark:from-[#0a0a0a]/75 dark:via-[#0a0a0a]/30 dark:to-[#0a0a0a] pointer-events-none transition-colors duration-300" />
+        {/* Ambient atmospheric color glow in light mode across BOTH left and right sides so left side matches right side richness */}
+        <div className="absolute inset-0 bg-gradient-to-r from-sky-500/20 via-blue-500/15 to-blue-600/20 dark:hidden pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-sky-400/15 via-transparent to-[#F5F5F3] dark:from-[#0a0a0a]/75 dark:via-[#0a0a0a]/30 dark:to-[#0a0a0a] pointer-events-none transition-colors duration-300" />
 
         {/* In dark mode, soft horizontal gradient on the left; in light mode, left side preserves the same natural mountain and sky colors as the right side */}
         <div className="absolute inset-0 hidden dark:block bg-gradient-to-r dark:from-[#0a0a0a]/80 dark:via-[#0a0a0a]/25 dark:to-transparent pointer-events-none" />
@@ -99,7 +99,7 @@ export function Hero({ hasSession = false }: { hasSession?: boolean }) {
           </h1>
 
           {/* Left-Aligned Subtitle */}
-          <p className="hero-subtitle text-base sm:text-lg text-neutral-800 dark:text-[#f2efe9]/80 max-w-2xl mb-8 leading-relaxed font-normal">
+          <p className="hero-subtitle text-base sm:text-lg text-neutral-900 dark:text-[#f2efe9]/80 max-w-2xl mb-8 leading-relaxed font-medium">
             Resummit analyzes your public repositories and commits to build a clean, ATS-friendly resume. Paste a job description to tailor your CV in seconds.
           </p>
 
