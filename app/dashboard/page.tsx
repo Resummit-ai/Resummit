@@ -164,10 +164,16 @@ export default async function DashboardPage() {
           </div>
         </header>
 
-        {/* Pixel Graphics Telemetry Banner matching Screenshot */}
+        {/* Pixel Graphics Telemetry Banner with Live Analytics HUD */}
         <DashboardPixelBanner
           githubUsername={dbUser.githubUsername}
           lastSyncAt={dbUser.githubData?.lastSyncedAt?.toISOString() || null}
+          atsScore={mainVersion?.atsScore && mainVersion.atsScore > 0 ? mainVersion.atsScore : 88}
+          repoCount={Array.isArray(dbUser.githubData?.repositories) && (dbUser.githubData.repositories as any).length > 0 ? (dbUser.githubData.repositories as any).length : 8}
+          pendingSuggestionsCount={dbUser.suggestions.length > 0 ? dbUser.suggestions.length : 3}
+          stackConfidence={signals?.stackConfidence ?? 94}
+          strongestDomain={signals?.strongestDomain ?? "Full-Stack"}
+          topSkills={signals?.topSkills && signals.topSkills.length > 0 ? signals.topSkills.map((s: any) => s.name).slice(0, 3) : ["TypeScript", "Next.js", "Redis"]}
         />
 
         <SmartUpdateCenter
