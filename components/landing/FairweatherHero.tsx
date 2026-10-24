@@ -86,12 +86,12 @@ export default function FairweatherHero({ hasSession, theme }: FairweatherHeroPr
                 <div className="fairweather-panel right-panel">
                   <div className="panel-header">
                     <div>
-                      <div className="candidate-name">Alex Carter</div>
-                      <div className="candidate-role">Software Engineer</div>
+                      <div className="candidate-name">Alex Developer</div>
+                      <div className="candidate-role">Software Engineer · Sample (fictional)</div>
                     </div>
                     <div className="ats-grade-chip">
                       <Check size={11} strokeWidth={3} />
-                      <span>ATS 98%</span>
+                      <span>ATS-Friendly</span>
                     </div>
                   </div>
 

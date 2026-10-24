@@ -89,7 +89,7 @@ export function ResumePreviewSection() {
                 >
                   {/* Header */}
                   <div style={{ textAlign: "center", marginBottom: "14px" }}>
-                    <h2
+                    <h3
                       id="alex-developer-heading"
                       style={{
                         fontSize: "22px",
@@ -101,7 +101,7 @@ export function ResumePreviewSection() {
                       }}
                     >
                       ALEX DEVELOPER
-                    </h2>
+                    </h3>
                     <div
                       style={{
                         fontSize: "11px",
